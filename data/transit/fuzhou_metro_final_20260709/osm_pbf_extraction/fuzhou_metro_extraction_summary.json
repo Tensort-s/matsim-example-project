@@ -1,0 +1,348 @@
+{
+  "input_pbf": "data\\osm\\fuzhou_city_23\\fujian-latest.osm.pbf",
+  "boundary": "data\\osm\\fuzhou_city_23\\fuzhou_city_23_boundary.geojson",
+  "output_dir": "data\\transit\\fuzhou_metro",
+  "route_relations_found": 24,
+  "route_masters_found": 9,
+  "relation_member_way_ids": 147,
+  "station_features": 265,
+  "station_group_features": 80,
+  "unique_station_names": 80,
+  "line_way_features": 185,
+  "route_relation_features": 16,
+  "way_sources": {
+    "route_member": 48,
+    "railway_tag": 137
+  },
+  "railway_tags": {
+    "subway": 171,
+    "rail": 14
+  },
+  "way_errors": {},
+  "route_member_match_diagnostics": {
+    "6028932": {
+      "total_way_members": 9,
+      "matched_way_members": 9
+    },
+    "6441135": {
+      "total_way_members": 2,
+      "matched_way_members": 1
+    },
+    "7895187": {
+      "total_way_members": 8,
+      "matched_way_members": 8
+    },
+    "8110557": {
+      "total_way_members": 4,
+      "matched_way_members": 0
+    },
+    "8337168": {
+      "total_way_members": 5,
+      "matched_way_members": 0
+    },
+    "10458586": {
+      "total_way_members": 3,
+      "matched_way_members": 2
+    },
+    "10488714": {
+      "total_way_members": 3,
+      "matched_way_members": 0
+    },
+    "10488726": {
+      "total_way_members": 2,
+      "matched_way_members": 0
+    },
+    "12888045": {
+      "total_way_members": 0,
+      "matched_way_members": 0
+    },
+    "12893647": {
+      "total_way_members": 3,
+      "matched_way_members": 0
+    },
+    "12893654": {
+      "total_way_members": 3,
+      "matched_way_members": 0
+    },
+    "14085416": {
+      "total_way_members": 5,
+      "matched_way_members": 5
+    },
+    "14085417": {
+      "total_way_members": 5,
+      "matched_way_members": 5
+    },
+    "14509134": {
+      "total_way_members": 6,
+      "matched_way_members": 1
+    },
+    "14509135": {
+      "total_way_members": 6,
+      "matched_way_members": 1
+    },
+    "14934588": {
+      "total_way_members": 43,
+      "matched_way_members": 0
+    },
+    "15700253": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    },
+    "16253268": {
+      "total_way_members": 2,
+      "matched_way_members": 2
+    },
+    "16253269": {
+      "total_way_members": 2,
+      "matched_way_members": 2
+    },
+    "18957312": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    },
+    "19658164": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    },
+    "19658165": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    },
+    "19658166": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    },
+    "19658167": {
+      "total_way_members": 16,
+      "matched_way_members": 5
+    }
+  },
+  "routes": [
+    {
+      "osm_id": 6028932,
+      "name": "福州轨道交通一号线",
+      "ref": "1",
+      "network": null,
+      "operator": null,
+      "matched_way_members": 9,
+      "total_way_members": 9
+    },
+    {
+      "osm_id": 6441135,
+      "name": "福州轨道交通二号线",
+      "ref": null,
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 1,
+      "total_way_members": 2
+    },
+    {
+      "osm_id": 7895187,
+      "name": "福州轨道交通一号线",
+      "ref": "1",
+      "network": null,
+      "operator": null,
+      "matched_way_members": 8,
+      "total_way_members": 8
+    },
+    {
+      "osm_id": 10458586,
+      "name": "福州轨道交通二号线",
+      "ref": null,
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 2,
+      "total_way_members": 3
+    },
+    {
+      "osm_id": 14085416,
+      "name": "福州地铁5号线: 荆溪厚屿 → 福州火车南站",
+      "ref": "5",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 5,
+      "total_way_members": 5
+    },
+    {
+      "osm_id": 14085417,
+      "name": "福州地铁5号线: 福州火车南站 → 荆溪厚屿",
+      "ref": "5",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 5,
+      "total_way_members": 5
+    },
+    {
+      "osm_id": 14509134,
+      "name": "福州地铁6号线: 潘墩 → 万寿",
+      "ref": "6",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 1,
+      "total_way_members": 6
+    },
+    {
+      "osm_id": 14509135,
+      "name": "福州地铁6号线: 万寿 → 潘墩",
+      "ref": "6",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 1,
+      "total_way_members": 6
+    },
+    {
+      "osm_id": 15700253,
+      "name": "城际 滨海快线 (大站快车）: 福州火车站 → 文岭",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    },
+    {
+      "osm_id": 16253268,
+      "name": "福州地铁4号线: 帝封江 → 半洲",
+      "ref": "4",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 2,
+      "total_way_members": 2
+    },
+    {
+      "osm_id": 16253269,
+      "name": "福州地铁4号线: 半洲 → 帝封江",
+      "ref": "4",
+      "network": "福州地铁",
+      "operator": null,
+      "matched_way_members": 2,
+      "total_way_members": 2
+    },
+    {
+      "osm_id": 18957312,
+      "name": "城际 滨海快线 (大站快车）: 文岭 → 福州火车站",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    },
+    {
+      "osm_id": 19658164,
+      "name": "城际 滨海快线 (普通列车）: 福州火车站 → 文岭",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    },
+    {
+      "osm_id": 19658165,
+      "name": "城际 滨海快线 (普通列车）: 文岭 → 福州火车站",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    },
+    {
+      "osm_id": 19658166,
+      "name": "城际 滨海快线 (直达快车）: 福州火车站 → 文岭",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    },
+    {
+      "osm_id": 19658167,
+      "name": "城际 滨海快线 (直达快车）: 文岭 → 福州火车站",
+      "ref": "F1",
+      "network": "福州地铁",
+      "operator": "福州地铁",
+      "matched_way_members": 5,
+      "total_way_members": 16
+    }
+  ],
+  "station_name_counts": {
+    "象峰": 3,
+    "东街口": 5,
+    "祥坂": 3,
+    "宁化": 3,
+    "水部": 3,
+    "西洋": 3,
+    "南门兜": 5,
+    "桔园洲": 3,
+    "洪湾": 3,
+    "金山": 5,
+    "屏山": 3,
+    "树兜": 3,
+    "秀山": 3,
+    "下洋": 5,
+    "罗汉山": 3,
+    "福州火车站": 6,
+    "安平": 3,
+    "梁厝": 5,
+    "排下": 3,
+    "达道": 3,
+    "上藤": 3,
+    "三叉街": 3,
+    "城门": 5,
+    "黄山": 3,
+    "葫芦阵": 3,
+    "三角埕": 3,
+    "胪雷": 3,
+    "白湖亭": 3,
+    "斗门": 3,
+    "潘墩": 3,
+    "樟岚": 3,
+    "林浦": 5,
+    "茶亭": 3,
+    "鼓山": 2,
+    "前屿": 5,
+    "五里亭": 2,
+    "紫阳": 3,
+    "金祥": 3,
+    "台屿": 3,
+    "东岭": 3,
+    "霞镜": 3,
+    "凤岗里": 3,
+    "马榕": 3,
+    "阵坂": 3,
+    "会展中心": 3,
+    "花海公园": 3,
+    "鳌峰洲": 3,
+    "竹屿": 3,
+    "三角池": 3,
+    "东门": 6,
+    "西门": 3,
+    "陆庄": 3,
+    "凤凰池": 3,
+    "福州火车南站": 5,
+    "洋里站": 2,
+    "上洋": 2,
+    "螺洲温泉": 3,
+    "农林大学": 3,
+    "光明港": 3,
+    "后屿": 3,
+    "横屿": 3,
+    "省立医院": 3,
+    "荆溪厚屿": 3,
+    "洪塘": 5,
+    "浦上大道": 3,
+    "盘屿": 3,
+    "吴山": 3,
+    "盖山竹榄": 3,
+    "义序": 3,
+    "帝封江": 8,
+    "螺洲古镇": 3,
+    "前锦站": 3,
+    "龙江": 3,
+    "闽都": 3,
+    "南公园": 3,
+    "三叉街（滨海快线）": 3,
+    "盖山": 1,
+    "半洲": 3,
+    "建新": 3,
+    "金牛山": 3
+  }
+}

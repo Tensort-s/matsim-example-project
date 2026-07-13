@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "681路(福州外语外贸学院--龙福机电交易市场)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "681路(福州外语外贸学院--龙福机电交易市场)",
+    "target_start_stop": "福州外语外贸学院",
+    "target_end_stop": "龙福机电交易市场"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=681路(福州外语外贸学院--龙福机电交易市场)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "681路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0127_681路(福州外语外贸学院--龙福机电交易市场)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:15:48"
+}

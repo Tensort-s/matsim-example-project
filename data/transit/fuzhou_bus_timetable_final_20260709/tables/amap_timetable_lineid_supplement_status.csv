@@ -1,0 +1,176 @@
+﻿query,target_sources,matched_line_records,matched_frequency_rows,headway_rows_added,status,matched_line_names,notes
+10路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,10路(火车站北广场--鳌峰洲公交总站) | 10路(鳌峰洲公交总站--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+127路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,127路(教院二附中--汤畲) | 127路(汤畲--教院二附中),amap_bus_lines_full/service_frequency has line but no explicit headway
+137路,failed_or_manual_review_lines.csv,2,64,0,matched_line_no_headway,137路(马尾青洲公交总站--高湖友谊路口) | 137路(高湖友谊路口--马尾青洲公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+138路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,138路(尤溪洲(东)停车场--福晟钱隆樽品) | 138路(福晟钱隆樽品--尤溪洲(东)停车场),amap_bus_lines_full/service_frequency has line but no explicit headway
+139快线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,139快线(金山公交总站--马尾青洲公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+13路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站) | 13路(敬老线路)(鳌峰洲公交总站--洪塘公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+153路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,153路(敬老线路)(西园公交总站--金融街万达广场(曙光路)) | 153路(敬老线路)(金融街万达广场(曙光路)--西园公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+15路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,15路(洪山桥西公交总站--鳌峰洲公交总站) | 15路(鳌峰洲公交总站--洪山桥西公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+160路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,160路(动物园--火车站南广场) | 160路(火车站南广场--动物园),amap_bus_lines_full/service_frequency has line but no explicit headway
+162路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,162路(市妇幼保健院门诊楼--廨院公交总站) | 162路(廨院公交总站--市妇幼保健院门诊楼),amap_bus_lines_full/service_frequency has line but no explicit headway
+163路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,163路(东部办公区--洪塘公交总站) | 163路(洪塘公交总站--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+166路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,166路(敬老线路)(坂中村--湖塘村) | 166路(敬老线路)(福新公交枢纽站--厦坊路北),amap_bus_lines_full/service_frequency has line but no explicit headway
+169路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,169路(敬老线路)(东山新苑公交站--尤溪洲(东)停车场) | 169路(敬老线路)(尤溪洲(东)停车场--东山新苑公交站),amap_bus_lines_full/service_frequency has line but no explicit headway
+171路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,171路(敬老线路)(公交仁德站--旗山万佛寺) | 171路(敬老线路)(旗山万佛寺--公交仁德站),amap_bus_lines_full/service_frequency has line but no explicit headway
+176路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,176路(敬老线路)(公交大学城总站--火车南站东广场) | 176路(敬老线路)(火车南站西广场--公交大学城总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+181路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,181路(敬老线路)(尤溪洲(西)公交站--淮安科贡) | 181路(敬老线路)(淮安科贡--尤溪洲(西)公交站),amap_bus_lines_full/service_frequency has line but no explicit headway
+182路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,182路(敬老线路)(动物园--火车站北广场) | 182路(敬老线路)(火车站北广场--动物园),amap_bus_lines_full/service_frequency has line but no explicit headway
+183路快线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,183路快线(敬老线路)(公交大学城总站--火车站北广场) | 183路快线(敬老线路)(火车站北广场--公交大学城总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+186路快线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,186路快线(敬老线路)(公交海峡国际会展中心东站--福晟钱隆樽品) | 186路快线(敬老线路)(福晟钱隆樽品--公交海峡国际会展中心东站),amap_bus_lines_full/service_frequency has line but no explicit headway
+187路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,187路(敬老线路)(警森苑--远东丽景公交站) | 187路(敬老线路)(远东丽景公交站--警森苑),amap_bus_lines_full/service_frequency has line but no explicit headway
+188路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆) | 188路(敬老线路)(利嘉国际商业城12号馆--公交海峡国际会展中心东站),amap_bus_lines_full/service_frequency has line but no explicit headway
+190路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,190路(敬老线路)(东部办公区(南社二路)--金山公交总站) | 190路(敬老线路)(金山公交总站--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+196路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,196路(桂山--火车站北广场) | 196路(火车站北广场--桂山),amap_bus_lines_full/service_frequency has line but no explicit headway
+197路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,197路(奥体路公交总站--高意) | 197路(福新公交枢纽站--奥体路公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+199路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,199路(敬老线路)(地铁葫芦阵站--长乐下洋) | 199路(敬老线路)(长乐下洋--地铁葫芦阵站),amap_bus_lines_full/service_frequency has line but no explicit headway
+207路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,207路(火车站北广场(东侧候车处)--闽侯六中) | 207路(闽侯六中--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+209路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,209路(燎原路水岸路口--金融街万达广场(曙光路)) | 209路(金融街万达广场(曙光路)--燎原路水岸路口),amap_bus_lines_full/service_frequency has line but no explicit headway
+20路夜间区间车,failed_or_manual_review_lines.csv,1,3,0,matched_line_no_headway,20路夜间区间车(火车站北广场--公交仁德站),amap_bus_lines_full/service_frequency has line but no explicit headway
+25路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,25路(敬老线路)(公交福湾站--尤溪洲(西)公交站) | 25路(敬老线路)(尤溪洲(西)公交站--公交福湾站),amap_bus_lines_full/service_frequency has line but no explicit headway
+27路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,27路(敬老线路)(福大东门--湖塘村) | 27路(敬老线路)(福新公交枢纽站--福大东门),amap_bus_lines_full/service_frequency has line but no explicit headway
+28路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,28路(敬老线路)(地铁葫芦阵站--新厦二区社区) | 28路(敬老线路)(新厦二区社区--后坂),amap_bus_lines_full/service_frequency has line but no explicit headway
+29路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,29路(敬老线路)(金牛山公园--鼓山公交总站) | 29路(敬老线路)(鼓山公交总站--金牛山公园),amap_bus_lines_full/service_frequency has line but no explicit headway
+301路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,301路(左海公园西门--白湖亭) | 301路(白湖亭--左海公园西门),amap_bus_lines_full/service_frequency has line but no explicit headway
+302路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,302路(公交福湾站--鼓山公交总站) | 302路(鼓山公交总站--公交福湾站),amap_bus_lines_full/service_frequency has line but no explicit headway
+303路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,303路(洪山桥小区--鼓山公交总站) | 303路(鼓山公交总站--洪山桥小区),amap_bus_lines_full/service_frequency has line but no explicit headway
+305路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,305路(公交鹤林站--火车南站东广场) | 305路(火车南站西广场--公交鹤林站),amap_bus_lines_full/service_frequency has line but no explicit headway
+306路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,306路(义序公交综合车场--公交仁德站) | 306路(公交仁德站--义序公交综合车场),amap_bus_lines_full/service_frequency has line but no explicit headway
+307路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,307路(公交海峡国际会展中心东站--洪山桥小区) | 307路(洪山桥小区--公交海峡国际会展中心东站),amap_bus_lines_full/service_frequency has line but no explicit headway
+308路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,308路(火车站北广场--金山金桔站) | 308路(金山金桔站--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+309路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,309路(尤溪洲(东)停车场--雁头路东) | 309路(雁头路东--尤溪洲(东)停车场),amap_bus_lines_full/service_frequency has line but no explicit headway
+310路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,310路(动物园--潭桥公交总站) | 310路(潭桥公交总站--动物园),amap_bus_lines_full/service_frequency has line but no explicit headway
+312路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,312路(淮安公交总站--鳌峰洲公交总站) | 312路(鳌峰洲公交总站--淮安公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+313路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,313路(公交鹤林站--金山公交总站) | 313路(金山公交总站--公交鹤林站),amap_bus_lines_full/service_frequency has line but no explicit headway
+315路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,315路(王庄公交总站--金山金桔站) | 315路(金山金桔站--王庄公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+316路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,316路(东山新苑公交站--福大东门) | 316路(福大东门--东山新苑公交站),amap_bus_lines_full/service_frequency has line but no explicit headway
+317路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,317路(福建理工大学鼓山校区--金山浦上公交枢纽站) | 317路(金山浦上公交枢纽站--福建理工大学鼓山校区),amap_bus_lines_full/service_frequency has line but no explicit headway
+31路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,31路(台江广场--青口公交总站) | 31路(青口公交总站--台江广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+323路快线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,323路快线(公交大学城总站--火车站南广场) | 323路快线(火车站南广场--公交大学城总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+325路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,325路(公交福湾站--桔园洲港湾站) | 325路(桔园洲港湾站--公交福湾站),amap_bus_lines_full/service_frequency has line but no explicit headway
+332路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,332路(斗顶--后屿福光路口) | 332路(福新公交枢纽站--斗顶),amap_bus_lines_full/service_frequency has line but no explicit headway
+339路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,339路(三坊七巷(澳门路)--尤溪洲(东)停车场) | 339路(尤溪洲(东)停车场--三坊七巷(澳门路)),amap_bus_lines_full/service_frequency has line but no explicit headway
+352路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,352路(敬老线路)(公交福湾站--金山浦上公交枢纽站) | 352路(敬老线路)(金山浦上公交枢纽站--公交福湾站),amap_bus_lines_full/service_frequency has line but no explicit headway
+357路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,357路(仙宗禅寺--白湖亭) | 357路(白湖亭地铁站D口--仙宗禅寺),amap_bus_lines_full/service_frequency has line but no explicit headway
+358路区间,failed_or_manual_review_lines.csv,2,36,0,matched_line_no_headway,358路区间(砂之船小镇5号门--福大东门) | 358路区间(福大东门--砂之船小镇5号门),amap_bus_lines_full/service_frequency has line but no explicit headway
+359路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,359路(市妇幼保健院门诊楼--金山公交总站) | 359路(金山公交总站--市妇幼保健院门诊楼),amap_bus_lines_full/service_frequency has line but no explicit headway
+35路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,35路(敬老线路)(三江口地铁站--地铁葫芦阵) | 35路(敬老线路)(地铁葫芦阵--三江口地铁站),amap_bus_lines_full/service_frequency has line but no explicit headway
+381路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,381路(地铁安平站--福建商学院连江校区) | 381路(福建商学院连江校区--地铁安平站),amap_bus_lines_full/service_frequency has line but no explicit headway
+382路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,382路(火车站北广场--连江汽车站) | 382路(连江汽车站--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+383路快线,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,383路快线(连江汽车站--闽运汽车北站) | 383路快线(闽运汽车北站--连江汽车站),amap_bus_lines_full/service_frequency has line but no explicit headway
+385路快线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,385路快线(闽运连江汽车站--鳌峰洲公交总站) | 385路快线(鳌峰洲公交总站--闽运连江汽车站),amap_bus_lines_full/service_frequency has line but no explicit headway
+39路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,39路(台江广场--地铁沙堤站) | 39路(地铁沙堤站--台江广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+47路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,47路(曙光支路东站--金山公交总站) | 47路(金山公交总站--曙光支路东),amap_bus_lines_full/service_frequency has line but no explicit headway
+51路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,51路(敬老线路)(火车站北广场--曙光支路东站) | 51路(敬老线路)(鳌峰大桥--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+527路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,527路(森林公园站--火车站北广场) | 527路(火车站北广场--森林公园站),amap_bus_lines_full/service_frequency has line but no explicit headway
+53路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,53路(敬老线路)(福州温泉博物馆--西山部队) | 53路(敬老线路)(西山部队--福州温泉博物馆),amap_bus_lines_full/service_frequency has line but no explicit headway
+551路,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,551路(公交大学城总站--两园兆元),amap_bus_lines_full/service_frequency has line but no explicit headway
+57路区间,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,57路区间(连坂村--连坂村),amap_bus_lines_full/service_frequency has line but no explicit headway
+58路区间,failed_or_manual_review_lines.csv,2,36,0,matched_line_no_headway,58路区间(万科紫台--马尾青洲公交总站) | 58路区间(马尾青洲公交总站--万科紫台),amap_bus_lines_full/service_frequency has line but no explicit headway
+598路,ungrabbed_lines.csv,1,1,0,matched_line_no_headway,598路(公交大学城西停车场--马保村南),amap_bus_lines_full/service_frequency has line but no explicit headway
+602路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,602路(工业区二期路口--闽侯客运中心) | 602路(闽侯客运中心--工业区二期路口),amap_bus_lines_full/service_frequency has line but no explicit headway
+681路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,681路(福州外语外贸学院--龙福机电交易市场) | 681路(龙福机电交易市场--福州外语外贸学院),amap_bus_lines_full/service_frequency has line but no explicit headway
+6路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,6路(敬老线路)(公交仁德站--金山浦上公交枢纽站) | 6路(敬老线路)(金山浦上公交枢纽站--公交仁德站),amap_bus_lines_full/service_frequency has line but no explicit headway
+707路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,707路(闽侯客运中心--鸿尾客运站) | 707路(鸿尾客运站--闽侯客运中心),amap_bus_lines_full/service_frequency has line but no explicit headway
+711路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,711路(大义--龙福机电交易市场) | 711路(龙福机电交易市场--大义),amap_bus_lines_full/service_frequency has line but no explicit headway
+716路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,716路(上岐村朱厝顶--白沙) | 716路(白沙--上岐村朱厝顶),amap_bus_lines_full/service_frequency has line but no explicit headway
+72路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,72路(公交鹤林站--森林公园) | 72路(森林公园--公交鹤林站),amap_bus_lines_full/service_frequency has line but no explicit headway
+730路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,730路(阳光路东--高新大道南) | 730路(高新大道南--阳光路东),amap_bus_lines_full/service_frequency has line but no explicit headway
+73路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,73路(公交仁德站--马尾青洲公交总站) | 73路(马尾青洲公交总站--公交仁德站),amap_bus_lines_full/service_frequency has line but no explicit headway
+750路,failed_or_manual_review_lines.csv,2,8,8,supplemented_from_lineid_timedesc,750路(五都村口--公交大学城总站) | 750路(公交大学城总站--五都村口),
+75路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,75路(敬老线路)(淮安公交总站--火车站北广场) | 75路(敬老线路)(火车站北广场--淮安公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+762路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,762路(县法院--金牛山公园) | 762路(金牛山公园--县法院),amap_bus_lines_full/service_frequency has line but no explicit headway
+766路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,766路(大数据科技园--闽侯经开区管委会) | 766路(闽侯经开区管委会--大数据科技园),amap_bus_lines_full/service_frequency has line but no explicit headway
+766路区间,failed_or_manual_review_lines.csv,2,5,0,matched_line_no_headway,766路区间(省卫生职业技术学校--荆溪厚屿地铁站) | 766路区间(荆溪厚屿地铁站--省卫生职业技术学校),amap_bus_lines_full/service_frequency has line but no explicit headway
+767路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,767路(闽侯客运中心--闽江一号) | 767路(闽江一号--闽侯客运中心),amap_bus_lines_full/service_frequency has line but no explicit headway
+767路支线,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,767路支线(闽侯县老年大学--闽侯客运中心) | 767路支线(闽侯客运中心--闽侯县老年大学),amap_bus_lines_full/service_frequency has line but no explicit headway
+7686闽江之心环线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,7686闽江之心环线(南园路--南园路),amap_bus_lines_full/service_frequency has line but no explicit headway
+769路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,769路(上街玉皇宫--砂之船小镇5号门) | 769路(砂之船小镇5号门--上街玉皇宫),amap_bus_lines_full/service_frequency has line but no explicit headway
+772路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,772路(地铁苏洋站--岚口桥头) | 772路(岚口桥头--地铁苏洋站),amap_bus_lines_full/service_frequency has line but no explicit headway
+78路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,78路(动物园--后屿福光路口) | 78路(福新公交枢纽站--动物园),amap_bus_lines_full/service_frequency has line but no explicit headway
+79路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,79路(公交鹤林站--金山浦上公交枢纽站) | 79路(金山浦上公交枢纽站--公交鹤林站),amap_bus_lines_full/service_frequency has line but no explicit headway
+M5路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,M5路(船坞边路--魁岐佳园) | M5路(魁岐佳园--船坞边路),amap_bus_lines_full/service_frequency has line but no explicit headway
+M6路高峰快线,failed_or_manual_review_lines.csv,2,30,0,matched_line_no_headway,M6路高峰快线(快安公交站--福州理工学院马尾校区) | M6路高峰快线(福州理工学院马尾校区--快安公交站),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部14号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部14号线(北环专线)(东部办公区--天泉路口) | 东部14号线(北环专线)(市刑侦支队--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部15号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部15号线(北环专线)(东部办公区--北尚新宿小区) | 东部15号线(北环专线)(北尚新宿小区--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部17号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部17号线(郭厝里专线)(东部办公区(东部专线北侧上下点)--阵北洪塘路口) | 东部17号线(郭厝里专线)(阵北洪塘路口--东部办公区(东部专线北侧上下点)),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部18号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部18号线(东部办公区--金山金桔(金桔路)) | 东部18号线(金山金桔(金桔路)--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部19号线,ungrabbed_lines.csv,2,2,0,matched_line_no_headway,东部19号线(东部办公区--金山金桔(金桔路)) | 东部19号线(金山金桔(金桔路)--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部22号线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,东部22号线(工作日班车)(东部办公区--融信第一城),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部23号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部23号线(东部办公区--左海公园西门) | 东部23号线(左海公园西门--东部办公区(石碑兜)),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部25号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部25号线(东部办公区--厚美村) | 东部25号线(厚美村--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部26号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部26号线(卫生厅专线)(东部办公区--省卫健委) | 东部26号线(卫生厅专线)(省卫健委--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部27号线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,东部27号线(大学城专线)(东部办公区--春江御园),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部28号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部28号线(东部办公区--福道7号口) | 东部28号线(福道6号口--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部2号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部2号线(东部办公区--东部办公区上车点(西洋)) | 东部2号线(东部办公区上车点(西洋)--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部31号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部31号线(保福专线)(东部办公区--保福) | 东部31号线(保福专线)(保福--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部34号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部34号线(东部办公区--后山村) | 东部34号线(后山村--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部36号专线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,东部36号专线(东部办公区--中溪),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部36号线,ungrabbed_lines.csv,1,1,0,matched_line_no_headway,东部36号线(南屿专线)(中溪--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部37号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部37号线(古三座--福州规划馆) | 东部37号线(福州规划馆--古三座),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部38号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部38号专线(东部办公区(江边洲路)--市政府加洋路停靠点) | 东部38号专线(市政府加洋路停靠点--东部办公区(江边洲路)),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部4号线,failed_or_manual_review_lines.csv,2,3,0,matched_line_no_headway,东部4号线(东部办公区--西门) | 东部4号线(西门--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部6号线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,东部6号线(西门专线)(西门--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+东部7号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,东部7号线(洪山梁厝专线)(东部办公区--九〇〇分院) | 东部7号线(洪山梁厝专线)(九〇〇分院--东部办公区),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳14号专线,failed_or_manual_review_lines.csv,2,8,0,matched_line_no_headway,地铁接驳14号专线(埠兴路--安铺村) | 地铁接驳14号专线(安铺村--埠兴路),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳17号专线,failed_or_manual_review_lines.csv,2,4,2,supplemented_from_lineid_timedesc,地铁接驳17号专线(火车站北广场--省人才公寓) | 地铁接驳17号专线(省人才公寓--火车站北广场),
+地铁接驳18号专线,failed_or_manual_review_lines.csv,2,5,2,supplemented_from_lineid_timedesc,地铁接驳18号专线(敬老线路)(天御城--王庄公交总站) | 地铁接驳18号专线(敬老线路)(王庄公交总站--天御城),
+地铁接驳1号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁接驳1号专线(市军休中心--金山浦上公交枢纽站) | 地铁接驳1号专线(金山浦上公交枢纽站--市军休中心),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳22号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁接驳22号专线(敬老线路)(台江体育公园--鼓四村) | 地铁接驳22号专线(敬老线路)(盛辉大厦--台江体育公园),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳24号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁接驳24号专线(三江口植物园--下洋地铁站) | 地铁接驳24号专线(下洋地铁站--三江口植物园),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳28号专线,failed_or_manual_review_lines.csv,2,16,0,matched_line_no_headway,地铁接驳28号专线(软件园公交总站--金牛山公园) | 地铁接驳28号专线(金牛山公园--软件园公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳29号专线,failed_or_manual_review_lines.csv,1,3,0,matched_line_no_headway,地铁接驳29号专线(樟岚公交总站--清华附中小学二部),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳29号专线内环,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,地铁接驳29号专线内环(清华附中小学二部--樟岚公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳2号专线,failed_or_manual_review_lines.csv,2,4,2,supplemented_from_lineid_timedesc,地铁接驳2号专线(洪塘公交总站--省立医院南院) | 地铁接驳2号专线(省立医院南院--洪塘公交总站),
+地铁接驳31号专线,failed_or_manual_review_lines.csv,2,8,0,matched_line_no_headway,地铁接驳31号专线(前横路--远洋) | 地铁接驳31号专线(远洋--前横路),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳3号专线,failed_or_manual_review_lines.csv,3,3,0,matched_line_no_headway,地铁接驳3号专线(洪塘公交总站--金山金桔站) | 地铁接驳3号专线(金山金桔--洪塘公交总站) | 地铁接驳3号专线(金山金桔站--洪塘公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳5号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁接驳5号专线(桔园洲港湾站--淮安高沙) | 地铁接驳5号专线(淮安高沙--桔园洲港湾站),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳6号专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁接驳6号专线(东斗--华威花花世界) | 地铁接驳6号专线(华威花花世界--东斗),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁接驳9号专线,failed_or_manual_review_lines.csv,1,10,0,matched_line_no_headway,地铁接驳9号专线(登云四季--登云四季),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁江南水都接驳专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,地铁江南水都接驳专线(横江路东--金山体育场) | 地铁江南水都接驳专线(金山体育场--横江路东),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁烟台山接驳环线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,地铁烟台山接驳环线(上藤地铁口--上藤地铁口),amap_bus_lines_full/service_frequency has line but no explicit headway
+地铁熊猫世界接驳环线,failed_or_manual_review_lines.csv,1,2,0,matched_line_no_headway,地铁熊猫世界接驳环线(陆庄地铁站B口站--陆庄地铁站B口),amap_bus_lines_full/service_frequency has line but no explicit headway
+夜班2号线,failed_or_manual_review_lines.csv,2,20,0,matched_line_no_headway,夜班2号线(火车站北广场(西侧)--金山浦上公交枢纽站) | 夜班2号线(金山浦上公交枢纽站--火车站北广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+大学城2号环线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,大学城2号环线(上行)(福州科技职业技术学院站--公交大学城总站) | 大学城2号环线(下行)(公交大学城总站--福州科技职业技术学院站),amap_bus_lines_full/service_frequency has line but no explicit headway
+捷坂线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,捷坂线(北峰客运站--捷坂) | 捷坂线(捷坂--新店永辉),amap_bus_lines_full/service_frequency has line but no explicit headway
+旅游快线,ungrabbed_lines.csv,2,2,0,matched_line_no_headway,旅游快线(平潭车站夜市--福州汽车北站) | 旅游快线(福州汽车北站--平潭车站夜市),amap_bus_lines_full/service_frequency has line but no explicit headway
+永泰旅游专线,failed_or_manual_review_lines.csv,4,110,0,matched_line_no_headway,永泰旅游专线(新国线)(苏宁广场--香米拉酒店) | 永泰旅游专线(新国线)(香米拉酒店--西二环站) | 永泰旅游专线(闽运线)(苏宁广场--香米拉酒店) | 永泰旅游专线(闽运线)(香米拉酒店--西二环配客站),amap_bus_lines_full/service_frequency has line but no explicit headway
+滨海十三号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,滨海十三号线(漳港--火车站北广场) | 滨海十三号线(火车站北广场--漳港),amap_bus_lines_full/service_frequency has line but no explicit headway
+滨海十二号线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,滨海十二号线(漳港--火车南站),amap_bus_lines_full/service_frequency has line but no explicit headway
+琅岐公交旅游专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,琅岐公交旅游专线(火车站南广场--红蟳公社) | 琅岐公交旅游专线(红蟳公社--火车站南广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+看病就医专线,ungrabbed_lines.csv,2,2,0,matched_line_no_headway,看病就医专线(平潭车站夜市--西二环配客站) | 看病就医专线(西二环配客站--平潭车站夜市),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线三坊七巷专线,failed_or_manual_review_lines.csv,1,27,0,matched_line_no_headway,空港快线三坊七巷专线(三坊七巷(营房里)--空港快线长乐机场站),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线五四北专线,ungrabbed_lines.csv,2,42,0,matched_line_no_headway,空港快线五四北专线(五四北悦溪廷酒店--长乐机场) | 空港快线五四北专线(长乐机场--五四北悦溪廷酒店),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线仓山师大专线,failed_or_manual_review_lines.csv,2,9,0,matched_line_no_headway,空港快线仓山师大专线(仓山师大--空港快线长乐机场站) | 空港快线仓山师大专线(空港快线长乐机场站--仓山师大),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线怡山梅园专线,failed_or_manual_review_lines.csv,2,58,0,matched_line_no_headway,空港快线怡山梅园专线(空港快线怡山梅园站--空港快线长乐机场站) | 空港快线怡山梅园专线(空港快线长乐机场站--空港快线怡山梅园站),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线梅园国际大酒店专线,failed_or_manual_review_lines.csv,2,48,0,matched_line_no_headway,空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站) | 空港快线梅园国际大酒店专线(空港快线长乐机场站--空港快线光明港梅园酒店站),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线海峡都市报专线,failed_or_manual_review_lines.csv,2,6,3,supplemented_from_lineid_timedesc,空港快线海峡都市报专线(海峡都市报社--长乐国际机场候机楼) | 空港快线海峡都市报专线(长乐国际机场候机楼--海峡都市报社),
+空港快线火车南站专线,failed_or_manual_review_lines.csv,2,42,0,matched_line_no_headway,空港快线火车南站专线(福州南站西广场--空港快线长乐机场站) | 空港快线火车南站专线(空港快线长乐机场站--福州南站西广场),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线火车站专线,failed_or_manual_review_lines.csv,1,5,1,supplemented_from_lineid_timedesc,空港快线火车站专线(福州长乐国际机场--火车站北广场站),
+空港快线锦颐大酒店专线,failed_or_manual_review_lines.csv,2,52,0,matched_line_no_headway,空港快线锦颐大酒店专线(福州机场站--空港快线锦颐酒店站) | 空港快线锦颐大酒店专线(锦颐大酒店--福州机场站),amap_bus_lines_full/service_frequency has line but no explicit headway
+空港快线闽江饭店专线,failed_or_manual_review_lines.csv,1,4,1,supplemented_from_lineid_timedesc,空港快线闽江饭店专线(空港快线长乐机场站--空港快线闽江饭店站),
+空港快线阿弥陀佛大饭店专线,failed_or_manual_review_lines.csv,2,62,0,matched_line_no_headway,空港快线阿弥陀佛大饭店专线(空港快线长乐机场站--空港快线金山正祥站) | 空港快线阿弥陀佛大饭店专线(金山正祥--空港快线长乐机场站),amap_bus_lines_full/service_frequency has line but no explicit headway
+螺洲吴石故居接驳专线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,螺洲吴石故居接驳专线(杜园山--螺洲古镇) | 螺洲吴石故居接驳专线(螺洲古镇--杜园山),amap_bus_lines_full/service_frequency has line but no explicit headway
+贵安旅游6号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,贵安旅游6号线(义井公交总站--福州理工学院) | 贵安旅游6号线(福州理工学院--义井公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线12路,failed_or_manual_review_lines.csv,2,18,0,matched_line_no_headway,通勤快线12路(上柳路北--省妇幼保健院) | 通勤快线12路(省妇幼保健院--上柳路北),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线13路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,通勤快线13路(一都镇状元街--齐安公交总站) | 通勤快线13路(齐安公交总站--一都镇状元街),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线14路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,通勤快线14路(乌龙江公园管理处--桔园洲港湾站) | 通勤快线14路(桔园洲港湾站--乌龙江公园管理处),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线17路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,通勤快线17路(软件园E区--软件园公交总站) | 通勤快线17路(软件园公交总站--软件园E区),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线25路,failed_or_manual_review_lines.csv,2,12,0,matched_line_no_headway,通勤快线25路(地铁象峰站--晋安社会福利中心) | 通勤快线25路(晋安社会福利中心--地铁象峰站),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线27路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,通勤快线27路(东街口--福建开放大学桂山校区) | 通勤快线27路(福建开放大学桂山校区--东街口),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线3路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,通勤快线3路(检察官学院(岭下)--软件园鲲鹏大厦) | 通勤快线3路(软件园鲲鹏大厦--检察官学院(岭下)),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线4路,failed_or_manual_review_lines.csv,2,6,0,matched_line_no_headway,通勤快线4路(软件园公交总站--金港路口) | 通勤快线4路(金港路口--软件园公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway
+通勤快线7路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,通勤快线7路(软件园鲲鹏大厦--鑫图光电) | 通勤快线7路(鑫图光电--软件园鲲鹏大厦),amap_bus_lines_full/service_frequency has line but no explicit headway
+通学专线1路,failed_or_manual_review_lines.csv,2,3,0,matched_line_no_headway,通学专线1路(仓山区实验中学--公交福湾站) | 通学专线1路(公交福湾站--仓山区实验中学),amap_bus_lines_full/service_frequency has line but no explicit headway
+通学专线2路,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,通学专线2路(东山村--茶会小区) | 通学专线2路(茶会小区--东山村),amap_bus_lines_full/service_frequency has line but no explicit headway
+通学专线4路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,通学专线4路(正祥香槟风范--淮安会议中心) | 通学专线4路(淮安会议中心--正祥香槟风范),amap_bus_lines_full/service_frequency has line but no explicit headway
+金山便民通勤线,ungrabbed_lines.csv,2,2,0,matched_line_no_headway,金山便民通勤线(洪湾中路--海峡城雍景苑) | 金山便民通勤线(海峡城雍景苑--洪湾中路),amap_bus_lines_full/service_frequency has line but no explicit headway
+长乐617路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,长乐617路(洞湖西店--融信上江城) | 长乐617路(融信·上江城站--洞湖西店),amap_bus_lines_full/service_frequency has line but no explicit headway
+闽侯地铁专线4路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,闽侯地铁专线4路(侯官村--公交大学城西停车场) | 闽侯地铁专线4路(公交大学城西停车场--侯官村),amap_bus_lines_full/service_frequency has line but no explicit headway
+闽侯地铁专线5路,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,闽侯地铁专线5路(久策大厦--浦口洲) | 闽侯地铁专线5路(融汇山水--久策大厦),amap_bus_lines_full/service_frequency has line but no explicit headway
+闽江之心·夜景线,failed_or_manual_review_lines.csv,1,1,0,matched_line_no_headway,闽江之心·夜景线(三坊七巷--三坊七巷),amap_bus_lines_full/service_frequency has line but no explicit headway
+马尾快线2号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,马尾快线2号线(海军医院--西门) | 马尾快线2号线(西门--海军医院),amap_bus_lines_full/service_frequency has line but no explicit headway
+马尾快线3号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,马尾快线3号线(屏东--海军医院) | 马尾快线3号线(马尾区图书馆--屏东),amap_bus_lines_full/service_frequency has line but no explicit headway
+马尾快线5号线,failed_or_manual_review_lines.csv,2,2,0,matched_line_no_headway,马尾快线5号线(华林高架--海军医院) | 马尾快线5号线(海军医院--华林高架),amap_bus_lines_full/service_frequency has line but no explicit headway
+鼓山下院至长乐机场直通车,failed_or_manual_review_lines.csv,1,8,0,matched_line_no_headway,鼓山下院至长乐机场直通车(鼓山下院--长乐机场),amap_bus_lines_full/service_frequency has line but no explicit headway
+鼓岭旅游度假区公交专线,failed_or_manual_review_lines.csv,2,4,0,matched_line_no_headway,鼓岭旅游度假区公交专线(鼓山公交总站--鼓岭柳杉王公园) | 鼓岭旅游度假区公交专线(鼓岭柳杉王公园--鼓山公交总站),amap_bus_lines_full/service_frequency has line but no explicit headway

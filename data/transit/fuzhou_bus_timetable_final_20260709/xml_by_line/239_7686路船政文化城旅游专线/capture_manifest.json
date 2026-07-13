@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站)",
+    "target_start_stop": "三坊七巷(澳门路)",
+    "target_end_stop": "马尾青洲公交总站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站)",
+      "observed_line": "7686路船政文化城旅游专线",
+      "direction_from": "马尾青洲公交总站",
+      "direction_to": "三坊七巷(澳门路)",
+      "service_start": "10:30",
+      "service_end": "17:10",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "马尾青洲公交总站→三坊七巷(澳门路)",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站)",
+      "observed_line": "7686路船政文化城旅游专线",
+      "direction_from": "三坊七巷(澳门路)",
+      "direction_to": "马尾青洲公交总站",
+      "service_start": "09:00",
+      "service_end": "15:30",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "三坊七巷(澳门路)→马尾青洲公交总站"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "马尾青洲公交总站→三坊七巷(澳门路)",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "三坊七巷(澳门路)→马尾青洲公交总站",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "7686路船政文化城旅游专线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0181_7686路船政文化城旅游专线(三坊七巷(澳门路)--马尾青洲公交总站)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:15:54"
+}

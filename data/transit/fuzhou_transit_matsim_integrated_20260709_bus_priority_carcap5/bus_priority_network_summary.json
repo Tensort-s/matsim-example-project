@@ -1,0 +1,61 @@
+{
+  "created_by": "scripts/build_fuzhou_bus_priority_network.py",
+  "created_at_epoch": 1783678557.8788357,
+  "runtime_seconds": 11.192,
+  "inputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2_split_modes\\network_with_car_bus_metro.xml.gz",
+    "schedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2_split_modes\\transitSchedule.xml.gz",
+    "vehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2_split_modes\\transitVehicles.xml.gz",
+    "population": "F:\\Matsim\\matsim-example-project\\data\\matsim_routes\\fuzhou_city_23_greenspace_grid_multi_activity_2pct_same_day_night\\mode_choice_plans_bus_metro_2pct.xml.gz"
+  },
+  "outputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\network_with_car_busprio_metro.xml.gz",
+    "transitSchedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\transitSchedule.xml.gz",
+    "transitVehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\transitVehicles.xml.gz",
+    "link_mapping": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\bus_priority_link_mapping.csv",
+    "qa": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\bus_priority_network_qa.csv",
+    "summary": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5\\bus_priority_network_summary.json"
+  },
+  "parameters": {
+    "car_capacity_factor": 0.05,
+    "bus_priority_min_capacity": 3600.0,
+    "bus_priority_min_permlanes": 1.0,
+    "qsim_flow_storage_factor_expected": 1.0
+  },
+  "counts": {
+    "bus_routes": 709,
+    "bus_route_original_links_unique": 15497,
+    "bus_priority_links_created": 15497,
+    "bus_stop_facilities_rewired": 14363,
+    "bus_route_link_refs_rewired": 206040,
+    "bus_routes_rewired": 709,
+    "car_links_scaled": 37417,
+    "car_links_removed_pt_mode": 17033,
+    "final_links": 54043,
+    "population_missing_route_links": 0
+  },
+  "capacity": {
+    "car_capacity_before_sum": 59950300.0,
+    "car_capacity_after_sum": 2997515.0,
+    "car_capacity_after_over_before": 0.05,
+    "car_permlanes_before_sum": 49931.0,
+    "car_permlanes_after_sum": 2496.550000000491,
+    "car_permlanes_after_over_before": 0.05000000000000983
+  },
+  "modes": {
+    "before": {
+      "car,pt": 17033,
+      "car": 20384,
+      "pt": 16626
+    },
+    "after": {
+      "car": 37417,
+      "pt": 16626
+    }
+  },
+  "validation": {
+    "all_bus_stops_rewired": true,
+    "all_bus_route_links_rewired": true,
+    "population_route_links_all_exist": true
+  }
+}

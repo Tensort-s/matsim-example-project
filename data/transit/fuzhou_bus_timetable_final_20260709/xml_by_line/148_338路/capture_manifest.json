@@ -1,0 +1,125 @@
+{
+  "target": {
+    "query": "338路(义井公交总站--得贵路)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "338路(义井公交总站--得贵路)",
+    "target_start_stop": "义井公交总站",
+    "target_end_stop": "得贵路"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=338路(义井公交总站--得贵路);entry=visible_result",
+  "scrolls": 9,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "338路(义井公交总站--得贵路)",
+      "observed_line": "338路",
+      "direction_from": "得贵路",
+      "direction_to": "义井公交总站",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 1元",
+      "latest_departure_text": "第1班次预计",
+      "note": "时刻表基于历史数据统计，仅供参考，请提前候车",
+      "expand_action": "expanded:20:00-24:00;expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "338路(义井公交总站--得贵路)",
+      "observed_line": "338路",
+      "direction_from": "义井公交总站",
+      "direction_to": "得贵路",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 1元",
+      "latest_departure_text": "第1班次预计",
+      "note": "时刻表基于历史数据统计，仅供参考，请提前候车",
+      "expand_action": "visible_times_no_expand",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "义井公交总站→得贵路"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "expand_action": "expanded:20:00-24:00;expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_03.xml",
+      "scroll_index": 3,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_04.xml",
+      "scroll_index": 4,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "得贵路→义井公交总站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "义井公交总站→得贵路",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "义井公交总站→得贵路",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "义井公交总站→得贵路",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_03.xml",
+      "scroll_index": 3,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "义井公交总站→得贵路",
+      "expand_action": "visible_times_no_expand"
+    }
+  ],
+  "final_query": "338路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0122_338路(义井公交总站--得贵路)",
+  "final_copied_xml_count": 26,
+  "final_generated_at": "2026-07-09T11:15:28"
+}

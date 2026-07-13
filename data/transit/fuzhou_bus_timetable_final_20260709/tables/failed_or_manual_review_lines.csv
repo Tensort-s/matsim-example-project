@@ -1,0 +1,169 @@
+﻿query,target_line_names,statuses,messages,header_rows
+10路,10路(火车站北广场--鳌峰洲公交总站) | 10路(鳌峰洲公交总站--火车站北广场),needs_manual_review,opened_schedule;search_phrase=10路(火车站北广场--鳌峰洲公交总站);entry=visible_result,1
+127路,127路(汤畲--教院二附中),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=127路(汤畲--教院二附中),1
+137路,137路(马尾青洲公交总站--高湖友谊路口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=137路(马尾青洲公交总站--高湖友谊路口);expected_line=137路,1
+138路,138路(福晟钱隆樽品--尤溪洲(东)停车场),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=138路(福晟钱隆樽品--尤溪洲(东)停车场);expected_line=138路,1
+139快线,139快线(金山公交总站--马尾青洲公交总站),navigation_failed,uri_search_failed_for_query=139快线(金山公交总站--马尾青洲公交总站): adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0012_139快线(金山公交总站--马尾青洲公交总站)\visible_result_0.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0012_139快线(金山公交总站--马尾青洲公交总站)\visible_result_0.xml': No such file or directory,1
+13路,13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站) | 13路(敬老线路)(鳌峰洲公交总站--洪塘公交总站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站);expected_line=13路,1
+153路,153路(敬老线路)(西园公交总站--金融街万达广场(曙光路)),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=153路(敬老线路)(西园公交总站--金融街万达广场(曙光路));expected_line=153路,1
+15路,15路(鳌峰洲公交总站--洪山桥西公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=15路(鳌峰洲公交总站--洪山桥西公交总站);expected_line=15路,1
+160路,160路(火车站南广场--动物园),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=160路(火车站南广场--动物园),1
+162路,162路(市妇幼保健院门诊楼--廨院公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=162路(市妇幼保健院门诊楼--廨院公交总站);expected_line=162路,1
+163路,163路(洪塘公交总站--东部办公区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=163路(洪塘公交总站--东部办公区);expected_line=163路,1
+166路,166路(敬老线路)(福新公交枢纽站--厦坊路北),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=166路(敬老线路)(福新公交枢纽站--厦坊路北),1
+169路,169路(敬老线路)(尤溪洲(东)停车场--东山新苑公交站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=169路(敬老线路)(尤溪洲(东)停车场--东山新苑公交站);expected_line=169路,1
+171路,171路(敬老线路)(旗山万佛寺--公交仁德站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=171路(敬老线路)(旗山万佛寺--公交仁德站);expected_line=171路,1
+176路,176路(敬老线路)(火车南站西广场--公交大学城总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=176路(敬老线路)(火车南站西广场--公交大学城总站);expected_line=176路,1
+181路,181路(敬老线路)(尤溪洲(西)公交站--淮安科贡),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=181路(敬老线路)(尤溪洲(西)公交站--淮安科贡);expected_line=181路,1
+182路,182路(敬老线路)(火车站北广场--动物园),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=182路(敬老线路)(火车站北广场--动物园),1
+183路快线,183路快线(敬老线路)(火车站北广场--公交大学城总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=183路快线(敬老线路)(火车站北广场--公交大学城总站),1
+186路快线,186路快线(敬老线路)(福晟钱隆樽品--公交海峡国际会展中心东站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=186路快线(敬老线路)(福晟钱隆樽品--公交海峡国际会展中心东站);expected_line=186路快线,1
+187路,187路(敬老线路)(远东丽景公交站--警森苑),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=187路(敬老线路)(远东丽景公交站--警森苑);expected_line=187路,1
+188路,188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆);expected_line=188路,1
+190路,190路(敬老线路)(东部办公区(南社二路)--金山公交总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=190路(敬老线路)(东部办公区(南社二路)--金山公交总站),1
+196路,196路(火车站北广场--桂山),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=196路(火车站北广场--桂山);expected_line=196路,1
+197路,197路(福新公交枢纽站--奥体路公交总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=197路(福新公交枢纽站--奥体路公交总站),1
+199路,199路(敬老线路)(地铁葫芦阵站--长乐下洋),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=199路(敬老线路)(地铁葫芦阵站--长乐下洋);expected_line=199路,1
+207路,207路(火车站北广场(东侧候车处)--闽侯六中),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=207路(火车站北广场(东侧候车处)--闽侯六中);expected_line=207路,1
+209路,209路(燎原路水岸路口--金融街万达广场(曙光路)),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=209路(燎原路水岸路口--金融街万达广场(曙光路)),1
+20路夜间区间车,20路夜间区间车(火车站北广场--公交仁德站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=20路夜间区间车(火车站北广场--公交仁德站);expected_line=20路夜间区间车,1
+25路,25路(敬老线路)(公交福湾站--尤溪洲(西)公交站) | 25路(敬老线路)(尤溪洲(西)公交站--公交福湾站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=25路(敬老线路)(公交福湾站--尤溪洲(西)公交站);expected_line=25路,1
+27路,27路(敬老线路)(福大东门--湖塘村) | 27路(敬老线路)(福新公交枢纽站--福大东门),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=27路(敬老线路)(福大东门--湖塘村);expected_line=27路,1
+28路,28路(敬老线路)(地铁葫芦阵站--新厦二区社区) | 28路(敬老线路)(新厦二区社区--后坂),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=28路(敬老线路)(地铁葫芦阵站--新厦二区社区);expected_line=28路,1
+29路,29路(敬老线路)(金牛山公园--鼓山公交总站) | 29路(敬老线路)(鼓山公交总站--金牛山公园),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=29路(敬老线路)(金牛山公园--鼓山公交总站);expected_line=29路,1
+301路,301路(左海公园西门--白湖亭),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交301路,1
+302路,302路(公交福湾站--鼓山公交总站) | 302路(鼓山公交总站--公交福湾站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=302路(公交福湾站--鼓山公交总站);expected_line=302路,1
+303路,303路(洪山桥小区--鼓山公交总站) | 303路(鼓山公交总站--洪山桥小区),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=303路(洪山桥小区--鼓山公交总站);expected_line=303路,1
+305路,305路(火车南站西广场--公交鹤林站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交305路,1
+306路,306路(义序公交综合车场--公交仁德站) | 306路(公交仁德站--义序公交综合车场),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=306路(义序公交综合车场--公交仁德站);expected_line=306路,1
+307路,307路(公交海峡国际会展中心东站--洪山桥小区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=307路(公交海峡国际会展中心东站--洪山桥小区);expected_line=307路,1
+308路,308路(火车站北广场--金山金桔站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=308路(火车站北广场--金山金桔站);expected_line=308路,1
+309路,309路(尤溪洲(东)停车场--雁头路东) | 309路(雁头路东--尤溪洲(东)停车场),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=309路(尤溪洲(东)停车场--雁头路东);expected_line=309路,1
+310路,310路(潭桥公交总站--动物园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=310路(潭桥公交总站--动物园);expected_line=310路,1
+312路,312路(鳌峰洲公交总站--淮安公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=312路(鳌峰洲公交总站--淮安公交总站);expected_line=312路,1
+313路,313路(公交鹤林站--金山公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=313路(公交鹤林站--金山公交总站);expected_line=313路,1
+315路,315路(金山金桔站--王庄公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=315路(金山金桔站--王庄公交总站);expected_line=315路,1
+316路,316路(东山新苑公交站--福大东门),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=316路(东山新苑公交站--福大东门);expected_line=316路,1
+317路,317路(金山浦上公交枢纽站--福建理工大学鼓山校区),navigation_failed,user_confirmed_line_not_found_skipped; expected_line=317?,1
+31路,31路(台江广场--青口公交总站) | 31路(青口公交总站--台江广场),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=31路(台江广场--青口公交总站);expected_line=31路,1
+323路快线,323路快线(公交大学城总站--火车站南广场),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=323路快线(公交大学城总站--火车站南广场);expected_line=323路快线,1
+325路,325路(桔园洲港湾站--公交福湾站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=325路(桔园洲港湾站--公交福湾站),1
+332路,332路(斗顶--后屿福光路口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=332路(斗顶--后屿福光路口);expected_line=332路,1
+339路,339路(尤溪洲(东)停车场--三坊七巷(澳门路)),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=339路(尤溪洲(东)停车场--三坊七巷(澳门路)),1
+352路,352路(敬老线路)(公交福湾站--金山浦上公交枢纽站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=352路(敬老线路)(公交福湾站--金山浦上公交枢纽站);expected_line=352路,1
+357路,357路(仙宗禅寺--白湖亭),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=357路(仙宗禅寺--白湖亭),1
+358路区间,358路区间(砂之船小镇5号门--福大东门),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=358路区间(砂之船小镇5号门--福大东门);expected_line=358路区间,1
+359路,359路(市妇幼保健院门诊楼--金山公交总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=359路(市妇幼保健院门诊楼--金山公交总站),1
+35路,35路(敬老线路)(三江口地铁站--地铁葫芦阵),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=35路(敬老线路)(三江口地铁站--地铁葫芦阵);expected_line=35路,1
+381路,381路(地铁安平站--福建商学院连江校区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=381路(地铁安平站--福建商学院连江校区);expected_line=381路,1
+382路,382路(火车站北广场--连江汽车站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=382路(火车站北广场--连江汽车站);expected_line=382路,1
+383路快线,383路快线(连江汽车站--闽运汽车北站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=383路快线(连江汽车站--闽运汽车北站);expected_line=383路快线,1
+385路快线,385路快线(闽运连江汽车站--鳌峰洲公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=385路快线(闽运连江汽车站--鳌峰洲公交总站);expected_line=385路快线,1
+39路,39路(台江广场--地铁沙堤站) | 39路(地铁沙堤站--台江广场),needs_manual_review,schedule_button_not_found_from_visible_results;search_phrase=39路(台江广场--地铁沙堤站),1
+47路,47路(曙光支路东站--金山公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=47路(曙光支路东站--金山公交总站);expected_line=47路,1
+51路,51路(敬老线路)(火车站北广场--曙光支路东站) | 51路(敬老线路)(鳌峰大桥--火车站北广场),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=51路(敬老线路)(火车站北广场--曙光支路东站);expected_line=51路,1
+527路,527路(火车站北广场--森林公园站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=527路(火车站北广场--森林公园站);expected_line=527路,1
+53路,53路(敬老线路)(福州温泉博物馆--西山部队) | 53路(敬老线路)(西山部队--福州温泉博物馆),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=53路(敬老线路)(福州温泉博物馆--西山部队);expected_line=53路,1
+551路,551路(公交大学城总站--两园兆元),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=551路(公交大学城总站--两园兆元),1
+57路区间,57路区间(连坂村--连坂村),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=57路区间(连坂村--连坂村);expected_line=57路区间,1
+58路区间,58路区间(马尾青洲公交总站--万科紫台),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=58路区间(马尾青洲公交总站--万科紫台);expected_line=58路区间,1
+602路,602路(闽侯客运中心--工业区二期路口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=602路(闽侯客运中心--工业区二期路口);expected_line=602路,1
+681路,681路(福州外语外贸学院--龙福机电交易市场),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=681路(福州外语外贸学院--龙福机电交易市场),1
+6路,6路(敬老线路)(公交仁德站--金山浦上公交枢纽站) | 6路(敬老线路)(金山浦上公交枢纽站--公交仁德站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=6路(敬老线路)(公交仁德站--金山浦上公交枢纽站);expected_line=6路,1
+707路,707路(闽侯客运中心--鸿尾客运站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=707路(闽侯客运中心--鸿尾客运站),1
+711路,711路(大义--龙福机电交易市场),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=711路(大义--龙福机电交易市场);expected_line=711路,1
+716路,716路(上岐村朱厝顶--白沙),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=716路(上岐村朱厝顶--白沙);expected_line=716路,1
+72路,72路(公交鹤林站--森林公园) | 72路(森林公园--公交鹤林站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=72路(公交鹤林站--森林公园);expected_line=72路,1
+730路,730路(高新大道南--阳光路东),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=730路(高新大道南--阳光路东),1
+73路,73路(公交仁德站--马尾青洲公交总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交73路,1
+750路,750路(公交大学城总站--五都村口),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=750路(公交大学城总站--五都村口),1
+75路,75路(敬老线路)(淮安公交总站--火车站北广场) | 75路(敬老线路)(火车站北广场--淮安公交总站),needs_manual_review,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=75路(敬老线路)(淮安公交总站--火车站北广场);expected_line=75路,1
+762路,762路(县法院--金牛山公园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=762路(县法院--金牛山公园);expected_line=762路,1
+766路,766路(闽侯经开区管委会--大数据科技园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=766路(闽侯经开区管委会--大数据科技园);expected_line=766路,1
+766路区间,766路区间(省卫生职业技术学校--荆溪厚屿地铁站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=766路区间(省卫生职业技术学校--荆溪厚屿地铁站);expected_line=766路区间,1
+767路,767路(闽江一号--闽侯客运中心),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=767路(闽江一号--闽侯客运中心);expected_line=767路,1
+767路支线,767路支线(闽侯客运中心--闽侯县老年大学),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=767路支线(闽侯客运中心--闽侯县老年大学);expected_line=767路支线,1
+7686闽江之心环线,7686闽江之心环线(南园路--南园路),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=7686闽江之心环线(南园路--南园路),1
+769路,769路(上街玉皇宫--砂之船小镇5号门),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=769路(上街玉皇宫--砂之船小镇5号门);expected_line=769路,1
+772路,772路(地铁苏洋站--岚口桥头),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=772路(地铁苏洋站--岚口桥头);expected_line=772路,1
+78路,78路(福新公交枢纽站--动物园),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交78路,1
+79路,79路(金山浦上公交枢纽站--公交鹤林站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交79路,1
+M5路,M5路(魁岐佳园--船坞边路),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=M5路(魁岐佳园--船坞边路),1
+M6路高峰快线,M6路高峰快线(快安公交站--福州理工学院马尾校区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=M6路高峰快线(快安公交站--福州理工学院马尾校区),1
+东部14号线,东部14号线(北环专线)(东部办公区--天泉路口),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部14号线(北环专线)(东部办公区--天泉路口),1
+东部15号线,东部15号线(北环专线)(北尚新宿小区--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部15号线(北环专线)(北尚新宿小区--东部办公区),1
+东部17号线,东部17号线(郭厝里专线)(阵北洪塘路口--东部办公区(东部专线北侧上下点)),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部17号线(郭厝里专线)(阵北洪塘路口--东部办公区(东部专线北侧上下点)),1
+东部18号线,东部18号线(金山金桔(金桔路)--东部办公区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部18号线(金山金桔(金桔路)--东部办公区);expected_line=东部18号线,1
+东部22号线,东部22号线(工作日班车)(东部办公区--融信第一城),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部22号线(工作日班车)(东部办公区--融信第一城);expected_line=东部22号线,1
+东部23号线,东部23号线(左海公园西门--东部办公区(石碑兜)),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部23号线(左海公园西门--东部办公区(石碑兜));expected_line=东部23号线,1
+东部25号线,东部25号线(厚美村--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部25号线(厚美村--东部办公区),1
+东部26号线,东部26号线(卫生厅专线)(省卫健委--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部26号线(卫生厅专线)(省卫健委--东部办公区),1
+东部27号线,东部27号线(大学城专线)(东部办公区--春江御园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部27号线(大学城专线)(东部办公区--春江御园);expected_line=东部27号线,1
+东部28号线,东部28号线(福道6号口--东部办公区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部28号线(福道6号口--东部办公区);expected_line=东部28号线,1
+东部2号线,东部2号线(东部办公区--东部办公区上车点(西洋)),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部2号线(东部办公区--东部办公区上车点(西洋));expected_line=东部2号线,1
+东部31号线,东部31号线(保福专线)(保福--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部31号线(保福专线)(保福--东部办公区),1
+东部34号线,东部34号线(后山村--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部34号线(后山村--东部办公区),1
+东部36号专线,东部36号专线(东部办公区--中溪),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部36号专线(东部办公区--中溪),1
+东部37号线,东部37号线(福州规划馆--古三座),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部37号线(福州规划馆--古三座);expected_line=东部37号线,1
+东部38号专线,东部38号专线(东部办公区(江边洲路)--市政府加洋路停靠点),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部38号专线(东部办公区(江边洲路)--市政府加洋路停靠点);expected_line=东部38号专线,1
+东部4号线,东部4号线(西门--东部办公区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=东部4号线(西门--东部办公区),1
+东部6号线,东部6号线(西门专线)(西门--东部办公区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部6号线(西门专线)(西门--东部办公区);expected_line=东部6号线,1
+东部7号线,东部7号线(洪山梁厝专线)(九〇〇分院--东部办公区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=东部7号线(洪山梁厝专线)(九〇〇分院--东部办公区);expected_line=东部7号线,1
+地铁接驳14号专线,地铁接驳14号专线(埠兴路--安铺村),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳14号专线(埠兴路--安铺村);expected_line=地铁接驳14号专线,1
+地铁接驳17号专线,地铁接驳17号专线(省人才公寓--火车站北广场),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=地铁接驳17号专线(省人才公寓--火车站北广场),1
+地铁接驳18号专线,地铁接驳18号专线(敬老线路)(天御城--王庄公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳18号专线(敬老线路)(天御城--王庄公交总站);expected_line=地铁接驳18号专线,1
+地铁接驳1号专线,地铁接驳1号专线(金山浦上公交枢纽站--市军休中心),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳1号专线(金山浦上公交枢纽站--市军休中心);expected_line=地铁接驳1号专线,1
+地铁接驳22号专线,地铁接驳22号专线(敬老线路)(台江体育公园--鼓四村),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=地铁接驳22号专线(敬老线路)(台江体育公园--鼓四村),1
+地铁接驳24号专线,地铁接驳24号专线(三江口植物园--下洋地铁站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳24号专线(三江口植物园--下洋地铁站);expected_line=地铁接驳24号专线,1
+地铁接驳28号专线,地铁接驳28号专线(软件园公交总站--金牛山公园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳28号专线(软件园公交总站--金牛山公园);expected_line=地铁接驳28号专线,1
+地铁接驳29号专线,地铁接驳29号专线(樟岚公交总站--清华附中小学二部),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=地铁接驳29号专线(樟岚公交总站--清华附中小学二部),1
+地铁接驳29号专线内环,地铁接驳29号专线内环(清华附中小学二部--樟岚公交总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳29号专线内环(清华附中小学二部--樟岚公交总站);expected_line=地铁接驳29号专线内环,1
+地铁接驳2号专线,地铁接驳2号专线(洪塘公交总站--省立医院南院),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳2号专线(洪塘公交总站--省立医院南院);expected_line=地铁接驳2号专线,1
+地铁接驳31号专线,地铁接驳31号专线(远洋--前横路),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳31号专线(远洋--前横路);expected_line=地铁接驳31号专线,1
+地铁接驳3号专线,地铁接驳3号专线(洪塘公交总站--金山金桔站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳3号专线(洪塘公交总站--金山金桔站);expected_line=地铁接驳3号专线,1
+地铁接驳5号专线,地铁接驳5号专线(淮安高沙--桔园洲港湾站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳5号专线(淮安高沙--桔园洲港湾站);expected_line=地铁接驳5号专线,1
+地铁接驳6号专线,地铁接驳6号专线(华威花花世界--东斗),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳6号专线(华威花花世界--东斗);expected_line=地铁接驳6号专线,1
+地铁接驳9号专线,地铁接驳9号专线(登云四季--登云四季),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳9号专线(登云四季--登云四季);expected_line=地铁接驳9号专线,1
+地铁江南水都接驳专线,地铁江南水都接驳专线(横江路东--金山体育场),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=地铁江南水都接驳专线(横江路东--金山体育场),1
+地铁烟台山接驳环线,地铁烟台山接驳环线(上藤地铁口--上藤地铁口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁烟台山接驳环线(上藤地铁口--上藤地铁口);expected_line=地铁烟台山接驳环线,1
+地铁熊猫世界接驳环线,地铁熊猫世界接驳环线(陆庄地铁站B口站--陆庄地铁站B口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁熊猫世界接驳环线(陆庄地铁站B口站--陆庄地铁站B口);expected_line=地铁熊猫世界接驳环线,1
+夜班2号线,夜班2号线(火车站北广场(西侧)--金山浦上公交枢纽站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=福州公交夜班2号线,1
+大学城2号环线,大学城2号环线(上行)(福州科技职业技术学院站--公交大学城总站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=大学城2号环线(上行)(福州科技职业技术学院站--公交大学城总站);expected_line=大学城2号环线,1
+捷坂线,捷坂线(捷坂--新店永辉),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=捷坂线(捷坂--新店永辉);expected_line=捷坂线,1
+永泰旅游专线,永泰旅游专线(闽运线)(香米拉酒店--西二环配客站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=永泰旅游专线(闽运线)(香米拉酒店--西二环配客站);expected_line=永泰旅游专线,1
+滨海十三号线,滨海十三号线(漳港--火车站北广场),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=滨海十三号线(漳港--火车站北广场);expected_line=滨海十三号线,1
+滨海十二号线,滨海十二号线(漳港--火车南站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=滨海十二号线(漳港--火车南站),1
+琅岐公交旅游专线,琅岐公交旅游专线(火车站南广场--红蟳公社),navigation_failed,uri_search_failed_for_query=琅岐公交旅游专线(火车站南广场--红蟳公社): adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0067_琅岐公交旅游专线(火车站南广场--红蟳公社)\visible_result_0.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0067_琅岐公交旅游专线(火车站南广场--红蟳公社)\visible_result_0.xml': No such file or directory,1
+空港快线三坊七巷专线,空港快线三坊七巷专线(三坊七巷(营房里)--空港快线长乐机场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线三坊七巷专线(三坊七巷(营房里)--空港快线长乐机场站);expected_line=空港快线三坊七巷专线,1
+空港快线仓山师大专线,空港快线仓山师大专线(仓山师大--空港快线长乐机场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线仓山师大专线(仓山师大--空港快线长乐机场站);expected_line=空港快线仓山师大专线,1
+空港快线怡山梅园专线,空港快线怡山梅园专线(空港快线怡山梅园站--空港快线长乐机场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线怡山梅园专线(空港快线怡山梅园站--空港快线长乐机场站);expected_line=空港快线怡山梅园专线,1
+空港快线梅园国际大酒店专线,空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站);expected_line=空港快线梅园国际大酒店专线,1
+空港快线海峡都市报专线,空港快线海峡都市报专线(海峡都市报社--长乐国际机场候机楼),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线海峡都市报专线(海峡都市报社--长乐国际机场候机楼);expected_line=空港快线海峡都市报专线,1
+空港快线火车南站专线,空港快线火车南站专线(福州南站西广场--空港快线长乐机场站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=空港快线火车南站专线(福州南站西广场--空港快线长乐机场站),1
+空港快线火车站专线,空港快线火车站专线(福州长乐国际机场--火车站北广场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线火车站专线(福州长乐国际机场--火车站北广场站);expected_line=空港快线火车站专线,1
+空港快线锦颐大酒店专线,空港快线锦颐大酒店专线(锦颐大酒店--福州机场站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线锦颐大酒店专线(锦颐大酒店--福州机场站);expected_line=空港快线锦颐大酒店专线,1
+空港快线闽江饭店专线,空港快线闽江饭店专线(空港快线长乐机场站--空港快线闽江饭店站),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线闽江饭店专线(空港快线长乐机场站--空港快线闽江饭店站);expected_line=空港快线闽江饭店专线,1
+空港快线阿弥陀佛大饭店专线,空港快线阿弥陀佛大饭店专线(金山正祥--空港快线长乐机场站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=空港快线阿弥陀佛大饭店专线(金山正祥--空港快线长乐机场站),1
+螺洲吴石故居接驳专线,螺洲吴石故居接驳专线(螺洲古镇--杜园山),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=螺洲吴石故居接驳专线(螺洲古镇--杜园山);expected_line=螺洲吴石故居接驳专线,1
+贵安旅游6号线,贵安旅游6号线(义井公交总站--福州理工学院),navigation_failed,uri_search_failed_for_query=贵安旅游6号线(义井公交总站--福州理工学院): adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0090_贵安旅游6号线(义井公交总站--福州理工学院)\visible_result_0.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0090_贵安旅游6号线(义井公交总站--福州理工学院)\visible_result_0.xml': No such file or directory,1
+通勤快线12路,通勤快线12路(省妇幼保健院--上柳路北),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线12路(省妇幼保健院--上柳路北);expected_line=通勤快线12路,1
+通勤快线13路,通勤快线13路(齐安公交总站--一都镇状元街),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线13路(齐安公交总站--一都镇状元街);expected_line=通勤快线13路,1
+通勤快线14路,通勤快线14路(乌龙江公园管理处--桔园洲港湾站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通勤快线14路(乌龙江公园管理处--桔园洲港湾站),1
+通勤快线17路,通勤快线17路(软件园公交总站--软件园E区),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线17路(软件园公交总站--软件园E区);expected_line=通勤快线17路,1
+通勤快线25路,通勤快线25路(晋安社会福利中心--地铁象峰站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通勤快线25路(晋安社会福利中心--地铁象峰站),1
+通勤快线27路,通勤快线27路(福建开放大学桂山校区--东街口),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线27路(福建开放大学桂山校区--东街口);expected_line=通勤快线27路,1
+通勤快线3路,通勤快线3路(软件园鲲鹏大厦--检察官学院(岭下)),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线3路(软件园鲲鹏大厦--检察官学院(岭下));expected_line=通勤快线3路,1
+通勤快线4路,通勤快线4路(金港路口--软件园公交总站),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通勤快线4路(金港路口--软件园公交总站),1
+通勤快线7路,通勤快线7路(鑫图光电--软件园鲲鹏大厦),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=通勤快线7路(鑫图光电--软件园鲲鹏大厦);expected_line=通勤快线7路,1
+通学专线1路,通学专线1路(公交福湾站--仓山区实验中学),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通学专线1路(公交福湾站--仓山区实验中学),1
+通学专线2路,通学专线2路(东山村--茶会小区),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通学专线2路(东山村--茶会小区),1
+通学专线4路,通学专线4路(正祥香槟风范--淮安会议中心),navigation_failed,schedule_button_not_found_from_visible_results;search_phrase=通学专线4路(正祥香槟风范--淮安会议中心),1
+长乐617路,长乐617路(洞湖西店--融信上江城),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=长乐617路(洞湖西店--融信上江城);expected_line=长乐617路,1
+闽侯地铁专线4路,闽侯地铁专线4路(公交大学城西停车场--侯官村),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=闽侯地铁专线4路(公交大学城西停车场--侯官村);expected_line=闽侯地铁专线4路,1
+闽侯地铁专线5路,闽侯地铁专线5路(久策大厦--浦口洲),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=闽侯地铁专线5路(久策大厦--浦口洲);expected_line=闽侯地铁专线5路,1
+闽江之心·夜景线,闽江之心·夜景线(三坊七巷--三坊七巷),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=闽江之心·夜景线(三坊七巷--三坊七巷);expected_line=闽江之心·夜景线,1
+马尾快线2号线,马尾快线2号线(西门--海军医院),failed,adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0042_马尾快线2号线(西门--海军医院)\dir_1_pre_00.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0042_马尾快线2号线(西门--海军医院)\dir_1_pre_00.xml': No such file or directory,1
+马尾快线3号线,马尾快线3号线(屏东--海军医院),failed,adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0005_马尾快线3号线(屏东--海军医院)\dir_1_pre_00.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0005_马尾快线3号线(屏东--海军医院)\dir_1_pre_00.xml': No such file or directory,1
+马尾快线5号线,马尾快线5号线(华林高架--海军医院),failed,adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0022_马尾快线5号线(华林高架--海军医院)\direction_tabs.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0022_马尾快线5号线(华林高架--海军医院)\direction_tabs.xml': No such file or directory,1
+鼓山下院至长乐机场直通车,鼓山下院至长乐机场直通车(鼓山下院--长乐机场),navigation_failed,uri_search_failed_for_query=鼓山下院至长乐机场直通车(鼓山下院--长乐机场): adb pull /sdcard/amap_mobile_timetable_dump.xml data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0054_鼓山下院至长乐机场直通车(鼓山下院--长乐机场)\visible_result_0.xml failed: adb: error: cannot create file/directory 'data\transit\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\0054_鼓山下院至长乐机场直通车(鼓山下院--长乐机场)\visible_result_0.xml': No such file or directory,1
+鼓岭旅游度假区公交专线,鼓岭旅游度假区公交专线(鼓山公交总站--鼓岭柳杉王公园),navigation_failed,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=鼓岭旅游度假区公交专线(鼓山公交总站--鼓岭柳杉王公园);expected_line=鼓岭旅游度假区公交专线,1

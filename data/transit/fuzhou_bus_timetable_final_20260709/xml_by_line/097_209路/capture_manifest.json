@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "209路(燎原路水岸路口--金融街万达广场(曙光路))",
+    "target_line_id": "350100000000.0",
+    "target_line_name": "209路(燎原路水岸路口--金融街万达广场(曙光路))",
+    "target_start_stop": "燎原路水岸路口",
+    "target_end_stop": "金融街万达广场(曙光路)"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=209路(燎原路水岸路口--金融街万达广场(曙光路))",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "209路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0005_209路(燎原路水岸路口--金融街万达广场(曙光路))",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:15:15"
+}

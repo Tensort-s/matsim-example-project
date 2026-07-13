@@ -1,0 +1,1365 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3206163,
+          26.0391236
+        ]
+      },
+      "properties": {
+        "name": "三叉街",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025503,5923594077,7114145347",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3177853,
+          26.0386034
+        ]
+      },
+      "properties": {
+        "name": "三叉街（滨海快线）",
+        "raw_feature_count": 3,
+        "osm_ids": "9521852844,13178986361,13178986362",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3635661,
+          25.9937681
+        ]
+      },
+      "properties": {
+        "name": "三角埕",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025508,5923594342,9157637267",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3214128,
+          26.0939746
+        ]
+      },
+      "properties": {
+        "name": "三角池",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648617,6448648704,11137495977",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.35785045,
+          26.06977465
+        ]
+      },
+      "properties": {
+        "name": "上洋",
+        "raw_feature_count": 2,
+        "osm_ids": "7247336346,11401256684",
+        "railway_values": "stop",
+        "public_transport_values": "stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157983,
+          26.0467931
+        ]
+      },
+      "properties": {
+        "name": "上藤",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025502,5923594083,9157637265",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4156178,
+          25.9874602
+        ]
+      },
+      "properties": {
+        "name": "下洋",
+        "raw_feature_count": 5,
+        "osm_ids": "4043021690,9409868672,9409868673,9409868675,9409868676",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2725526,
+          26.0165148
+        ]
+      },
+      "properties": {
+        "name": "东岭",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648424,9402502258,9699560176",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2945129,
+          26.0890606
+        ]
+      },
+      "properties": {
+        "name": "东街口",
+        "raw_feature_count": 5,
+        "osm_ids": "3077735709,6448648622,6448648709,9157637256,9157637257",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3118473,
+          26.0899167
+        ]
+      },
+      "properties": {
+        "name": "东门",
+        "raw_feature_count": 6,
+        "osm_ids": "6448648620,6448648707,9521852841,11137504281,13178986355,13178986356",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3227062,
+          25.9899172
+        ]
+      },
+      "properties": {
+        "name": "义序",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502272,9402502273,9409891386",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3356692,
+          26.07730605
+        ]
+      },
+      "properties": {
+        "name": "五里亭",
+        "raw_feature_count": 2,
+        "osm_ids": "5923593685,7236578365",
+        "railway_values": "stop",
+        "public_transport_values": "stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3546265,
+          26.03289
+        ]
+      },
+      "properties": {
+        "name": "会展中心",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648583,6448648670,11141094242",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3418369,
+          26.0676193
+        ]
+      },
+      "properties": {
+        "name": "光明港",
+        "raw_feature_count": 3,
+        "osm_ids": "8427224754,8427224755,11124986635",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2422506,
+          26.0879265
+        ]
+      },
+      "properties": {
+        "name": "农林大学",
+        "raw_feature_count": 3,
+        "osm_ids": "8427168176,9402502240,9402502241",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2677931,
+          26.0814237
+        ]
+      },
+      "properties": {
+        "name": "凤凰池",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648626,6448648713,11137538110",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2622177,
+          26.0418345
+        ]
+      },
+      "properties": {
+        "name": "凤岗里",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648426,9402502251,9402502252",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3456051,
+          26.0756299
+        ]
+      },
+      "properties": {
+        "name": "前屿",
+        "raw_feature_count": 5,
+        "osm_ids": "5923593182,6448648601,6448648688,7236578362,11125071112",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3577471,
+          25.987386
+        ]
+      },
+      "properties": {
+        "name": "前锦站",
+        "raw_feature_count": 3,
+        "osm_ids": "9409891395,9409891396,11152381692",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2330531,
+          26.0599539
+        ]
+      },
+      "properties": {
+        "name": "半洲",
+        "raw_feature_count": 3,
+        "osm_ids": "13366366043,13366366046,13366366047",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3150143,
+          26.06701
+        ]
+      },
+      "properties": {
+        "name": "南公园",
+        "raw_feature_count": 3,
+        "osm_ids": "9521852843,13178986359,13178986360",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2972792,
+          26.0793696
+        ]
+      },
+      "properties": {
+        "name": "南门兜",
+        "raw_feature_count": 5,
+        "osm_ids": "3945319515,5809007359,5923594302,7076314534,7412704908",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2768801,
+          26.0088971
+        ]
+      },
+      "properties": {
+        "name": "台屿",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648423,9402502259,9402502260",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3475558,
+          26.0842357
+        ]
+      },
+      "properties": {
+        "name": "后屿",
+        "raw_feature_count": 3,
+        "osm_ids": "8427224759,8427224760,11139161337",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3061426,
+          26.0003125
+        ]
+      },
+      "properties": {
+        "name": "吴山",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502266,9402502267,9402502268",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3552464,
+          25.9991484
+        ]
+      },
+      "properties": {
+        "name": "城门",
+        "raw_feature_count": 5,
+        "osm_ids": "4043025504,5923594051,6448648653,8427020329,9157637268",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2886166,
+          26.0656523
+        ]
+      },
+      "properties": {
+        "name": "宁化",
+        "raw_feature_count": 3,
+        "osm_ids": "3945318427,5923593707,7076285139",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3971444,
+          25.9951585
+        ]
+      },
+      "properties": {
+        "name": "安平",
+        "raw_feature_count": 3,
+        "osm_ids": "4043022037,5923594024,9157637261",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2922196,
+          26.0994477
+        ]
+      },
+      "properties": {
+        "name": "屏山",
+        "raw_feature_count": 3,
+        "osm_ids": "4043006149,5923594316,9157637255",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.33054450000002,
+          25.991146849999996
+        ]
+      },
+      "properties": {
+        "name": "帝封江",
+        "raw_feature_count": 8,
+        "osm_ids": "9409891387,9409891388,9409891389,9409891390,9521852846,9521852847,13178986363,13178986364",
+        "railway_values": "stop",
+        "public_transport_values": "stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2334148,
+          26.0678091
+        ]
+      },
+      "properties": {
+        "name": "建新",
+        "raw_feature_count": 3,
+        "osm_ids": "13366366048,13366366051,13366366052",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3491589,
+          26.0043753
+        ]
+      },
+      "properties": {
+        "name": "排下",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025498,5923594052,9157637269",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3089068,
+          26.1070614
+        ]
+      },
+      "properties": {
+        "name": "斗门",
+        "raw_feature_count": 3,
+        "osm_ids": "4209767944,5923593760,9157637253",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.360214,
+          26.018205
+        ]
+      },
+      "properties": {
+        "name": "林浦",
+        "raw_feature_count": 5,
+        "osm_ids": "4345238080,9409868679,9409868680,9409868681,9409868682",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3007527,
+          26.1052203
+        ]
+      },
+      "properties": {
+        "name": "树兜",
+        "raw_feature_count": 3,
+        "osm_ids": "4043006170,5923594333,9157637254",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.237806,
+          26.0499776
+        ]
+      },
+      "properties": {
+        "name": "桔园洲",
+        "raw_feature_count": 3,
+        "osm_ids": "3945319836,5923593719,7076285145",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4101237,
+          25.9971624
+        ]
+      },
+      "properties": {
+        "name": "梁厝",
+        "raw_feature_count": 5,
+        "osm_ids": "4043022040,5923593402,5923594011,9157637260,9409868674",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3838238,
+          26.0091845
+        ]
+      },
+      "properties": {
+        "name": "樟岚",
+        "raw_feature_count": 3,
+        "osm_ids": "4343830370,9409868677,9409868678",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3473878,
+          26.0929003
+        ]
+      },
+      "properties": {
+        "name": "横屿",
+        "raw_feature_count": 3,
+        "osm_ids": "8427224781,8427224783,11125122401",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3092623,
+          26.0794796
+        ]
+      },
+      "properties": {
+        "name": "水部",
+        "raw_feature_count": 3,
+        "osm_ids": "3945318448,5923593689,7076285136",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3673998,
+          26.04822105
+        ]
+      },
+      "properties": {
+        "name": "洋里站",
+        "raw_feature_count": 2,
+        "osm_ids": "7236606978,9168430532",
+        "railway_values": "stop",
+        "public_transport_values": "stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2453003,
+          26.0766227
+        ]
+      },
+      "properties": {
+        "name": "洪塘",
+        "raw_feature_count": 5,
+        "osm_ids": "9402502242,9402502243,9402502244,13366366053,13366366054",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2452271,
+          26.0504683
+        ]
+      },
+      "properties": {
+        "name": "洪湾",
+        "raw_feature_count": 3,
+        "osm_ids": "3945319837,5923593718,7076285144",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2680161,
+          26.0370679
+        ]
+      },
+      "properties": {
+        "name": "浦上大道",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502253,9402502254,9402502255",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3529273,
+          26.0237944
+        ]
+      },
+      "properties": {
+        "name": "潘墩",
+        "raw_feature_count": 3,
+        "osm_ids": "4343830360,9409868684,9409868685",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3305371,
+          26.0287844
+        ]
+      },
+      "properties": {
+        "name": "白湖亭",
+        "raw_feature_count": 3,
+        "osm_ids": "4209767915,5923594075,9157637266",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3241688,
+          26.0120031
+        ]
+      },
+      "properties": {
+        "name": "盖山",
+        "raw_feature_count": 1,
+        "osm_ids": "9521852845",
+        "railway_values": "station",
+        "public_transport_values": "station"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157923,
+          25.9968006
+        ]
+      },
+      "properties": {
+        "name": "盖山竹榄",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502269,9402502270,9402502271",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2885033,
+          26.0024415
+        ]
+      },
+      "properties": {
+        "name": "盘屿",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502263,9402502264,9402502265",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3025513,
+          26.08988
+        ]
+      },
+      "properties": {
+        "name": "省立医院",
+        "raw_feature_count": 3,
+        "osm_ids": "8427224825,8427224827,11137518057",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2812631,
+          26.0638845
+        ]
+      },
+      "properties": {
+        "name": "祥坂",
+        "raw_feature_count": 3,
+        "osm_ids": "3945315725,7076285141,7076285142",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3856361,
+          25.9888037
+        ]
+      },
+      "properties": {
+        "name": "福州火车南站",
+        "raw_feature_count": 5,
+        "osm_ids": "7076314532,9409891400,9409891401,10177885645,10177885646",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3134033,
+          26.1158714
+        ]
+      },
+      "properties": {
+        "name": "福州火车站",
+        "raw_feature_count": 6,
+        "osm_ids": "4043021706,5923593775,9157637252,9521844139,9521844144,9521852837",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3162421,
+          26.1369486
+        ]
+      },
+      "properties": {
+        "name": "秀山",
+        "raw_feature_count": 3,
+        "osm_ids": "4043019079,5923594004,9157637251",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3330371,
+          26.0961144
+        ]
+      },
+      "properties": {
+        "name": "竹屿",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648613,6448648700,11137504571",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3221389,
+          26.0795663
+        ]
+      },
+      "properties": {
+        "name": "紫阳",
+        "raw_feature_count": 3,
+        "osm_ids": "5923593686,7076285135,11401256685",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3138064,
+          26.1286151
+        ]
+      },
+      "properties": {
+        "name": "罗汉山",
+        "raw_feature_count": 3,
+        "osm_ids": "4043021696,5923593996,9157637250",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3750219,
+          25.9872305
+        ]
+      },
+      "properties": {
+        "name": "胪雷",
+        "raw_feature_count": 3,
+        "osm_ids": "4209767679,5923594032,9157637262",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.344854,
+          26.0435945
+        ]
+      },
+      "properties": {
+        "name": "花海公园",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648588,6448648675,11141033418",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2995424,
+          26.0723188
+        ]
+      },
+      "properties": {
+        "name": "茶亭",
+        "raw_feature_count": 3,
+        "osm_ids": "4398913143,5923594294,9157637263",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2244259,
+          26.1145537
+        ]
+      },
+      "properties": {
+        "name": "荆溪厚屿",
+        "raw_feature_count": 3,
+        "osm_ids": "9402502235,9402502236,9402502237",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3387761,
+          26.0198693
+        ]
+      },
+      "properties": {
+        "name": "葫芦阵",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025507,5923594061,9157637271",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3466012,
+          25.9891962
+        ]
+      },
+      "properties": {
+        "name": "螺洲古镇",
+        "raw_feature_count": 3,
+        "osm_ids": "9409891392,9409891393,9409891394",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3445573,
+          25.993371
+        ]
+      },
+      "properties": {
+        "name": "螺洲温泉",
+        "raw_feature_count": 3,
+        "osm_ids": "8427020321,8427020322,11141118917",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2920293,
+          26.0748184
+        ]
+      },
+      "properties": {
+        "name": "西洋",
+        "raw_feature_count": 3,
+        "osm_ids": "3945319374,5923593702,7076285138",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.285364,
+          26.0878161
+        ]
+      },
+      "properties": {
+        "name": "西门",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648623,6448648710,11137530963",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.324619,
+          26.1463371
+        ]
+      },
+      "properties": {
+        "name": "象峰",
+        "raw_feature_count": 3,
+        "osm_ids": "2898968010,5923594338,6727006927",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3049552,
+          26.0600785
+        ]
+      },
+      "properties": {
+        "name": "达道",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025499,5923594287,9157637264",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2574677,
+          26.0505965
+        ]
+      },
+      "properties": {
+        "name": "金山",
+        "raw_feature_count": 5,
+        "osm_ids": "3945319839,5923593717,7076285143,9402502249,9402502250",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2573435,
+          26.0794741
+        ]
+      },
+      "properties": {
+        "name": "金牛山",
+        "raw_feature_count": 3,
+        "osm_ids": "13366366055,13366366056,13366366057",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2661003,
+          26.0515185
+        ]
+      },
+      "properties": {
+        "name": "金祥",
+        "raw_feature_count": 3,
+        "osm_ids": "5923593715,7076285140,9168430533",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3145328,
+          26.0783475
+        ]
+      },
+      "properties": {
+        "name": "闽都",
+        "raw_feature_count": 3,
+        "osm_ids": "9521852842,13178986357,13178986358",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2470995,
+          26.0693201
+        ]
+      },
+      "properties": {
+        "name": "阵坂",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648438,9402502245,9402502246",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2788002,
+          26.0854634
+        ]
+      },
+      "properties": {
+        "name": "陆庄",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648625,8427224829,11137539002",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2717434,
+          26.0280267
+        ]
+      },
+      "properties": {
+        "name": "霞镜",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648425,9402502256,9402502257",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2537906,
+          26.0585316
+        ]
+      },
+      "properties": {
+        "name": "马榕",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648427,9402502247,9402502248",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3398029,
+          26.0575778
+        ]
+      },
+      "properties": {
+        "name": "鳌峰洲",
+        "raw_feature_count": 3,
+        "osm_ids": "6448648596,6448648683,11125049501",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.343713,
+          26.0134248
+        ]
+      },
+      "properties": {
+        "name": "黄山",
+        "raw_feature_count": 3,
+        "osm_ids": "4043025506,5923594057,9157637270",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.37006915,
+          26.05626115
+        ]
+      },
+      "properties": {
+        "name": "鼓山",
+        "raw_feature_count": 2,
+        "osm_ids": "5923593174,7236606853",
+        "railway_values": "stop",
+        "public_transport_values": "stop_position"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3674205,
+          25.9873751
+        ]
+      },
+      "properties": {
+        "name": "龙江",
+        "raw_feature_count": 3,
+        "osm_ids": "9409891397,9409891398,9409891399",
+        "railway_values": "station,stop",
+        "public_transport_values": "station,stop_position"
+      }
+    }
+  ]
+}

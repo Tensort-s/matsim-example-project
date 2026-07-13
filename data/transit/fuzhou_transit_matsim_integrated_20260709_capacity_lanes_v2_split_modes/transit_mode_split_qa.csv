@@ -1,0 +1,8 @@
+metric,value
+bus_lines,709
+metro_lines,6
+bus_routes,709
+metro_routes,12
+routes_before_pt,721
+transport_modes_replaced,721
+bad_route_count,0

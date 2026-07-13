@@ -1,0 +1,29 @@
+{
+  "backup_dir": "data\\transit\\fuzhou_bus_amap_mobile_timetables_all_lines_20260708\\backup_before_remaining_capture_merge_20260708_224643",
+  "capture_dir": "data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708",
+  "captured_sources_merged": 280,
+  "captured_sources": 280,
+  "success_sources": 135,
+  "failed_sources": 145,
+  "capture_rows": {
+    "amap_mobile_timetable_headers.csv": 412,
+    "amap_mobile_timetable_departures.csv": 7003,
+    "amap_mobile_timetable_rules.csv": 459,
+    "amap_mobile_timetable_regularized_rules.csv": 734,
+    "amap_mobile_timetable_raw_text.csv": 60838
+  },
+  "main_rows_before": {
+    "amap_mobile_timetable_headers.csv": 227,
+    "amap_mobile_timetable_departures.csv": 9871,
+    "amap_mobile_timetable_rules.csv": 228,
+    "amap_mobile_timetable_regularized_rules.csv": 585,
+    "amap_mobile_timetable_raw_text.csv": 191333
+  },
+  "main_rows_after": {
+    "amap_mobile_timetable_headers.csv": 639,
+    "amap_mobile_timetable_departures.csv": 16874,
+    "amap_mobile_timetable_rules.csv": 687,
+    "amap_mobile_timetable_regularized_rules.csv": 1319,
+    "amap_mobile_timetable_raw_text.csv": 252171
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "通学专线4路(正祥香槟风范--淮安会议中心)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "通学专线4路(正祥香槟风范--淮安会议中心)",
+    "target_start_stop": "正祥香槟风范",
+    "target_end_stop": "淮安会议中心"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=通学专线4路(正祥香槟风范--淮安会议中心)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "通学专线4路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0019_通学专线4路(正祥香槟风范--淮安会议中心)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:16:25"
+}

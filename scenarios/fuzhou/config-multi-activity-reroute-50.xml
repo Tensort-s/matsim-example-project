@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+
+	<module name="global">
+		<param name="randomSeed" value="20260704" />
+		<param name="coordinateSystem" value="EPSG:32650" />
+	</module>
+
+	<module name="network">
+		<param name="inputNetworkFile" value="../../data/matsim_routes/fuzhou_city_23_greenspace_grid_multi_activity/network.xml.gz" />
+	</module>
+
+	<module name="plans">
+		<param name="inputPlansFile" value="../../data/matsim_routes/fuzhou_city_23_greenspace_grid_multi_activity/routed_multi_activity_plans.xml.gz" />
+	</module>
+
+	<module name="controller">
+		<param name="outputDirectory" value="output-fuzhou-multi-activity-reroute-50" />
+		<param name="lastIteration" value="50" />
+	</module>
+
+	<module name="qsim">
+		<param name="mainMode" value="car" />
+	</module>
+
+	<module name="scoring">
+		<parameterset type="activityParams" >
+			<param name="activityType" value="h" />
+			<param name="typicalDuration" value="12:00:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="w" />
+			<param name="typicalDuration" value="08:00:00" />
+			<param name="openingTime" value="07:00:00" />
+			<param name="closingTime" value="19:00:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="school" />
+			<param name="typicalDuration" value="07:00:00" />
+			<param name="openingTime" value="07:00:00" />
+			<param name="closingTime" value="18:30:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="shop" />
+			<param name="typicalDuration" value="01:00:00" />
+			<param name="openingTime" value="09:00:00" />
+			<param name="closingTime" value="22:00:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="leisure" />
+			<param name="typicalDuration" value="02:00:00" />
+			<param name="openingTime" value="08:00:00" />
+			<param name="closingTime" value="24:00:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="restaurant" />
+			<param name="typicalDuration" value="01:00:00" />
+			<param name="openingTime" value="10:00:00" />
+			<param name="closingTime" value="24:00:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="medical" />
+			<param name="typicalDuration" value="01:00:00" />
+			<param name="openingTime" value="08:00:00" />
+			<param name="closingTime" value="17:30:00" />
+		</parameterset>
+		<parameterset type="activityParams" >
+			<param name="activityType" value="other" />
+			<param name="typicalDuration" value="01:00:00" />
+		</parameterset>
+	</module>
+
+	<module name="replanning">
+		<param name="maxAgentPlanMemorySize" value="5" />
+		<parameterset type="strategysettings" >
+			<param name="strategyName" value="BestScore" />
+			<param name="subpopulation" value="default" />
+			<param name="weight" value="0.75" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="strategyName" value="ReRoute" />
+			<param name="subpopulation" value="default" />
+			<param name="weight" value="0.20" />
+			<param name="disableAfterIteration" value="40" />
+		</parameterset>
+		<parameterset type="strategysettings" >
+			<param name="strategyName" value="TimeAllocationMutator" />
+			<param name="subpopulation" value="default" />
+			<param name="weight" value="0.05" />
+			<param name="disableAfterIteration" value="40" />
+		</parameterset>
+	</module>
+
+</config>

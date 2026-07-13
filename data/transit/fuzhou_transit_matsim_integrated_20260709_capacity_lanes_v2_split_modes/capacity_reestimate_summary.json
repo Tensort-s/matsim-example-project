@@ -1,0 +1,246 @@
+{
+  "created_by": "scripts/reestimate_fuzhou_network_capacity_by_lanes.py",
+  "inputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709\\network_with_car_bus_metro.xml.gz",
+    "osm_roads": "F:\\Matsim\\matsim-example-project\\data\\osm\\fuzhou_city_23\\fuzhou_city_23_osm_roads.geojson",
+    "schedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709\\transitSchedule.xml.gz",
+    "vehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_ptcap20\\transitVehicles.xml.gz"
+  },
+  "outputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\network_with_car_bus_metro.xml.gz",
+    "transitSchedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\transitSchedule.xml.gz",
+    "transitVehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\transitVehicles.xml.gz",
+    "qa_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\capacity_reestimate_link_qa.csv",
+    "distribution_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\capacity_distribution_before_after.csv",
+    "by_highway_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\capacity_reestimate_by_highway.csv",
+    "bus_priority_candidates_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2\\bus_priority_candidate_links.csv"
+  },
+  "rules": {
+    "default_direction_lanes": {
+      "motorway": 3.0,
+      "trunk": 3.0,
+      "primary": 3.0,
+      "secondary": 2.0,
+      "tertiary": 1.0,
+      "unclassified": 1.0,
+      "residential": 1.0,
+      "service": 1.0,
+      "living_street": 1.0,
+      "motorway_link": 1.0,
+      "trunk_link": 1.0,
+      "primary_link": 1.0,
+      "secondary_link": 1.0,
+      "tertiary_link": 1.0
+    },
+    "per_lane_capacity": {
+      "motorway": 2200.0,
+      "motorway_link": 1800.0,
+      "trunk": 2000.0,
+      "trunk_link": 1500.0,
+      "primary": 1800.0,
+      "primary_link": 1200.0,
+      "secondary": 1500.0,
+      "secondary_link": 900.0,
+      "tertiary": 1200.0,
+      "tertiary_link": 700.0,
+      "unclassified": 900.0,
+      "residential": 700.0,
+      "living_street": 300.0,
+      "service": 400.0
+    },
+    "lane_caps": {
+      "motorway": 5.0,
+      "trunk": 5.0,
+      "primary": 4.0,
+      "secondary": 4.0,
+      "tertiary": 3.0,
+      "unclassified": 3.0,
+      "residential": 3.0,
+      "service": 3.0,
+      "living_street": 3.0,
+      "motorway_link": 3.0,
+      "trunk_link": 3.0,
+      "primary_link": 3.0,
+      "secondary_link": 3.0,
+      "tertiary_link": 3.0
+    },
+    "synthetic_bus_link_capacity": 1200.0,
+    "synthetic_bus_connector_capacity": 1800.0,
+    "metro_pt_only_capacity_policy": "unchanged",
+    "bus_peak_priority_policy": "not implemented in v1; static MATSim network cannot set time-dependent bus-only link speed by mode"
+  },
+  "counts": {
+    "links_total": 38546,
+    "links_changed": 37717,
+    "problematic_links": 0,
+    "link_class_counts": {
+      "osm_road": 34056,
+      "synthetic_bus_trajectory": 3108,
+      "synthetic_bus_connector": 1152,
+      "metro_pt_only": 230
+    },
+    "lane_source_counts": {
+      "dominant_highway_default": 30268,
+      "osm_lanes_oneway_total": 3124,
+      "osm_lanes_bidirectional_half": 538,
+      "osm_lanes_forward": 103,
+      "osm_lanes_backward": 23,
+      "synthetic_bus_trajectory_default": 3108,
+      "synthetic_bus_connector_default": 1152,
+      "metro_unchanged": 230
+    }
+  },
+  "old_capacity": {
+    "count": 38546,
+    "min": 300.0,
+    "mean": 1426.2854770923052,
+    "median": 900.0,
+    "p90": 1500.0,
+    "p95": 1500.0,
+    "max": 100000.0
+  },
+  "new_capacity": {
+    "count": 38546,
+    "min": 300.0,
+    "mean": 2179.9693872256526,
+    "median": 1200.0,
+    "p90": 3600.0,
+    "p95": 5400.0,
+    "max": 100000.0
+  },
+  "old_permlanes": {
+    "count": 38546,
+    "min": 1.0,
+    "mean": 1.1960670367872153,
+    "median": 1.0,
+    "p90": 1.5,
+    "p95": 2.0,
+    "max": 2.0
+  },
+  "new_permlanes": {
+    "count": 38546,
+    "min": 1.0,
+    "mean": 1.3246510662584963,
+    "median": 1.0,
+    "p90": 2.0,
+    "p95": 3.0,
+    "max": 5.0
+  },
+  "osm_metadata": {
+    "osm_road_rows_after_filter": 11389,
+    "lane_coverage_by_highway": [
+      {
+        "highway": "service",
+        "rows": 2748,
+        "with_lanes": 3,
+        "with_forward_backward": 2,
+        "with_any_lane_info": 3,
+        "coverage_pct": 0.10917030567685589
+      },
+      {
+        "highway": "tertiary",
+        "rows": 1904,
+        "with_lanes": 74,
+        "with_forward_backward": 8,
+        "with_any_lane_info": 74,
+        "coverage_pct": 3.8865546218487395
+      },
+      {
+        "highway": "residential",
+        "rows": 1640,
+        "with_lanes": 24,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 24,
+        "coverage_pct": 1.4634146341463417
+      },
+      {
+        "highway": "secondary",
+        "rows": 1619,
+        "with_lanes": 503,
+        "with_forward_backward": 26,
+        "with_any_lane_info": 503,
+        "coverage_pct": 31.068560840024706
+      },
+      {
+        "highway": "primary",
+        "rows": 872,
+        "with_lanes": 396,
+        "with_forward_backward": 7,
+        "with_any_lane_info": 396,
+        "coverage_pct": 45.412844036697244
+      },
+      {
+        "highway": "trunk_link",
+        "rows": 586,
+        "with_lanes": 93,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 93,
+        "coverage_pct": 15.870307167235495
+      },
+      {
+        "highway": "trunk",
+        "rows": 521,
+        "with_lanes": 277,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 277,
+        "coverage_pct": 53.16698656429942
+      },
+      {
+        "highway": "unclassified",
+        "rows": 453,
+        "with_lanes": 6,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 6,
+        "coverage_pct": 1.3245033112582782
+      },
+      {
+        "highway": "secondary_link",
+        "rows": 331,
+        "with_lanes": 14,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 14,
+        "coverage_pct": 4.229607250755287
+      },
+      {
+        "highway": "primary_link",
+        "rows": 269,
+        "with_lanes": 26,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 26,
+        "coverage_pct": 9.66542750929368
+      },
+      {
+        "highway": "motorway",
+        "rows": 213,
+        "with_lanes": 165,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 165,
+        "coverage_pct": 77.46478873239437
+      },
+      {
+        "highway": "motorway_link",
+        "rows": 153,
+        "with_lanes": 15,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 15,
+        "coverage_pct": 9.803921568627452
+      },
+      {
+        "highway": "tertiary_link",
+        "rows": 52,
+        "with_lanes": 0,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 0,
+        "coverage_pct": 0.0
+      },
+      {
+        "highway": "living_street",
+        "rows": 28,
+        "with_lanes": 1,
+        "with_forward_backward": 0,
+        "with_any_lane_info": 1,
+        "coverage_pct": 3.571428571428571
+      }
+    ]
+  }
+}

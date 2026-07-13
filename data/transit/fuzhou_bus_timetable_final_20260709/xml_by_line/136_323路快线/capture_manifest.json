@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "323路快线(公交大学城总站--火车站南广场)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "323路快线(公交大学城总站--火车站南广场)",
+    "target_start_stop": "公交大学城总站",
+    "target_end_stop": "火车站南广场"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=323路快线(公交大学城总站--火车站南广场);expected_line=323路快线",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "323路快线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0064_323路快线(公交大学城总站--火车站南广场)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:15:23"
+}

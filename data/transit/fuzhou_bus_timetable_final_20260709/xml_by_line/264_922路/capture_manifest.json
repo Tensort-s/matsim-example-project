@@ -1,0 +1,117 @@
+{
+  "target": {
+    "query": "922路(厚庭地铁口--南屿公交站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "922路(厚庭地铁口--南屿公交站)",
+    "target_start_stop": "厚庭地铁口",
+    "target_end_stop": "南屿公交站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=922路(厚庭地铁口--南屿公交站);entry=visible_result",
+  "scrolls": 8,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "922路(厚庭地铁口--南屿公交站)",
+      "observed_line": "922路",
+      "direction_from": "南屿公交站",
+      "direction_to": "厚庭地铁口",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:20:00-24:00;expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "南屿公交站→厚庭地铁口",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "922路(厚庭地铁口--南屿公交站)",
+      "observed_line": "922路",
+      "direction_from": "厚庭地铁口",
+      "direction_to": "南屿公交站",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "visible_times_no_expand",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "厚庭地铁口→南屿公交站"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "南屿公交站→厚庭地铁口",
+      "expand_action": "expanded:20:00-24:00;expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "南屿公交站→厚庭地铁口",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "南屿公交站→厚庭地铁口",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_03.xml",
+      "scroll_index": 3,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "南屿公交站→厚庭地铁口",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "厚庭地铁口→南屿公交站",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "厚庭地铁口→南屿公交站",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "厚庭地铁口→南屿公交站",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_03.xml",
+      "scroll_index": 3,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "厚庭地铁口→南屿公交站",
+      "expand_action": "visible_times_no_expand"
+    }
+  ],
+  "final_query": "922路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0002_922路(厚庭地铁口--南屿公交站)",
+  "final_copied_xml_count": 24,
+  "final_generated_at": "2026-07-09T11:16:04"
+}

@@ -1,0 +1,60 @@
+{
+  "backup_dir": "data\\transit\\fuzhou_bus_amap_mobile_timetables_all_lines_20260708\\backup_before_high_confidence_fix_20260708_172343",
+  "mismatch_sources": [
+    "10路",
+    "11路",
+    "13路",
+    "25路",
+    "27路",
+    "28路",
+    "29路",
+    "302路",
+    "303路",
+    "306路",
+    "309路",
+    "31路",
+    "39路",
+    "51路",
+    "53路",
+    "6路",
+    "72路",
+    "75路"
+  ],
+  "valid_replacements": [
+    "11路"
+  ],
+  "not_replaced_marked_needs_manual_review": [
+    "10路",
+    "13路",
+    "25路",
+    "27路",
+    "28路",
+    "29路",
+    "302路",
+    "303路",
+    "306路",
+    "309路",
+    "31路",
+    "39路",
+    "51路",
+    "53路",
+    "6路",
+    "72路",
+    "75路"
+  ],
+  "old_rows": {
+    "amap_mobile_timetable_headers.csv": 243,
+    "amap_mobile_timetable_departures.csv": 9719,
+    "amap_mobile_timetable_rules.csv": 364,
+    "amap_mobile_timetable_regularized_rules.csv": 614,
+    "amap_mobile_timetable_raw_text.csv": 206868
+  },
+  "new_rows": {
+    "headers": 227,
+    "departures": 9871,
+    "rules": 228,
+    "regularized_rules": 585,
+    "raw_text": 191333
+  },
+  "fix_output_dir": "data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708"
+}

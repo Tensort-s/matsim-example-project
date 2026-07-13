@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "148路(海峡奥体公交枢纽站--大樟村)",
+    "target_line_id": "350100000000.0",
+    "target_line_name": "148路(海峡奥体公交枢纽站--大樟村)",
+    "target_start_stop": "海峡奥体公交枢纽站",
+    "target_end_stop": "大樟村"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=148路(海峡奥体公交枢纽站--大樟村);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "148路(海峡奥体公交枢纽站--大樟村)",
+      "observed_line": "148路",
+      "direction_from": "大樟村",
+      "direction_to": "海峡奥体公交枢纽站",
+      "service_start": "06:15",
+      "service_end": "18:00",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "大樟村→海峡奥体公交枢纽站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "148路(海峡奥体公交枢纽站--大樟村)",
+      "observed_line": "148路",
+      "direction_from": "海峡奥体公交枢纽站",
+      "direction_to": "大樟村",
+      "service_start": "06:00",
+      "service_end": "18:00",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "海峡奥体公交枢纽站→大樟村"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "大樟村→海峡奥体公交枢纽站",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "海峡奥体公交枢纽站→大樟村",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "148路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0054_148路(海峡奥体公交枢纽站--大樟村)",
+  "final_copied_xml_count": 5,
+  "final_generated_at": "2026-07-09T11:15:02"
+}

@@ -1,0 +1,6675 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.426122,
+            25.978861
+          ],
+          [
+            119.420776,
+            25.984204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_001_16dd62d3__350100020613_002_0452c958",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV11473936",
+        "from_station_name": "三江口",
+        "to_station_id": "BV10687392",
+        "to_station_name": "下洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.420776,
+            25.984204
+          ],
+          [
+            119.415109,
+            25.994261
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_002_0452c958__350100020613_003_15e94606",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10687392",
+        "from_station_name": "下洋",
+        "to_station_id": "BV10687393",
+        "to_station_name": "梁厝"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.415109,
+            25.994261
+          ],
+          [
+            119.402224,
+            25.992335
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_003_15e94606__350100020613_004_3229d4ec",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10687393",
+        "from_station_name": "梁厝",
+        "to_station_id": "BV11473935",
+        "to_station_name": "安平"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.402224,
+            25.992335
+          ],
+          [
+            119.391878,
+            25.986372
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_004_3229d4ec__350100020613_005_661d67a9",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV11473935",
+        "from_station_name": "安平",
+        "to_station_id": "BV10603792",
+        "to_station_name": "福州火车南站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.391878,
+            25.986372
+          ],
+          [
+            119.380086,
+            25.984504
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_005_661d67a9__350100020613_006_163b5d8b",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10603792",
+        "from_station_name": "福州火车南站",
+        "to_station_id": "BV10210905",
+        "to_station_name": "胪雷"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.380086,
+            25.984504
+          ],
+          [
+            119.368306,
+            25.990796
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_006_163b5d8b__350100020613_007_1273a2e4",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10210905",
+        "from_station_name": "胪雷",
+        "to_station_id": "BV10208689",
+        "to_station_name": "三角埕"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.368306,
+            25.990796
+          ],
+          [
+            119.36022,
+            25.996158
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_007_1273a2e4__350100020613_008_b9adb293",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10208689",
+        "from_station_name": "三角埕",
+        "to_station_id": "BV10208691",
+        "to_station_name": "城门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.36022,
+            25.996158
+          ],
+          [
+            119.354008,
+            26.001603
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_008_b9adb293__350100020613_009_feb21562",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10208691",
+        "from_station_name": "城门",
+        "to_station_id": "BV10208471",
+        "to_station_name": "排下"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.354008,
+            26.001603
+          ],
+          [
+            119.348788,
+            26.010176
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_009_feb21562__350100020613_010_58db90d7",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10208471",
+        "from_station_name": "排下",
+        "to_station_id": "BV10208454",
+        "to_station_name": "黄山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.348788,
+            26.010176
+          ],
+          [
+            119.343548,
+            26.017116
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_010_58db90d7__350100020613_011_17a844bf",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10208454",
+        "from_station_name": "黄山",
+        "to_station_id": "BV10208456",
+        "to_station_name": "葫芦阵"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.343548,
+            26.017116
+          ],
+          [
+            119.335262,
+            26.025916
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_011_17a844bf__350100020613_012_c71414f1",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10208456",
+        "from_station_name": "葫芦阵",
+        "to_station_id": "BV10208407",
+        "to_station_name": "白湖亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.335262,
+            26.025916
+          ],
+          [
+            119.326693,
+            26.034785
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_012_c71414f1__350100020613_013_1804a7ca",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10208407",
+        "from_station_name": "白湖亭",
+        "to_station_id": "BV10210904",
+        "to_station_name": "三叉街"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.326693,
+            26.034785
+          ],
+          [
+            119.320579,
+            26.043708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_013_1804a7ca__350100020613_014_9937d803",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10210904",
+        "from_station_name": "三叉街",
+        "to_station_id": "BV10687405",
+        "to_station_name": "上藤"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.320579,
+            26.043708
+          ],
+          [
+            119.309855,
+            26.056982
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_014_9937d803__350100020613_015_f2c1144e",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10687405",
+        "from_station_name": "上藤",
+        "to_station_id": "BV10687404",
+        "to_station_name": "达道"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.309855,
+            26.056982
+          ],
+          [
+            119.304376,
+            26.069167
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_015_f2c1144e__350100020613_016_f8b5ecc2",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10687404",
+        "from_station_name": "达道",
+        "to_station_id": "BV10687399",
+        "to_station_name": "茶亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.304376,
+            26.069167
+          ],
+          [
+            119.301619,
+            26.077774
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_016_f8b5ecc2__350100020613_017_ae3c0151",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10687399",
+        "from_station_name": "茶亭",
+        "to_station_id": "BV10210902",
+        "to_station_name": "南门兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.301619,
+            26.077774
+          ],
+          [
+            119.299259,
+            26.08596
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_017_ae3c0151__350100020613_018_f654cbb6",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10210902",
+        "from_station_name": "南门兜",
+        "to_station_id": "BV10687403",
+        "to_station_name": "东街口"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.299259,
+            26.08596
+          ],
+          [
+            119.297038,
+            26.096256
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_018_f654cbb6__350100020613_019_a6a50a31",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10687403",
+        "from_station_name": "东街口",
+        "to_station_id": "BV10687400",
+        "to_station_name": "屏山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.297038,
+            26.096256
+          ],
+          [
+            119.305985,
+            26.102208
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_019_a6a50a31__350100020613_020_dffd5e6e",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10687400",
+        "from_station_name": "屏山",
+        "to_station_id": "BV10687402",
+        "to_station_name": "树兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.305985,
+            26.102208
+          ],
+          [
+            119.313723,
+            26.103973
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_020_dffd5e6e__350100020613_021_0d912d6d",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10687402",
+        "from_station_name": "树兜",
+        "to_station_id": "BV10687401",
+        "to_station_name": "斗门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.313723,
+            26.103973
+          ],
+          [
+            119.318133,
+            26.112978
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_021_0d912d6d__350100020613_022_c9eabb90",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV10687401",
+        "from_station_name": "斗门",
+        "to_station_id": "BV10687408",
+        "to_station_name": "福州火车站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.318133,
+            26.112978
+          ],
+          [
+            119.318365,
+            26.126091
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_022_c9eabb90__350100020613_023_bac5df12",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 22,
+        "to_sequence": 23,
+        "from_station_id": "BV10687408",
+        "from_station_name": "福州火车站",
+        "to_station_id": "BV10687407",
+        "to_station_name": "罗汉山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.318365,
+            26.126091
+          ],
+          [
+            119.321016,
+            26.133785
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_023_bac5df12__350100020613_024_4a173dbf",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 23,
+        "to_sequence": 24,
+        "from_station_id": "BV10687407",
+        "from_station_name": "罗汉山",
+        "to_station_id": "BV10687406",
+        "to_station_name": "秀山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.321016,
+            26.133785
+          ],
+          [
+            119.329639,
+            26.143436
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020613_024_4a173dbf__350100020613_025_9d0a99df",
+        "line_id": "350100020613",
+        "line_name": "地铁1号线(三江口--象峰)",
+        "direction_start": "三江口",
+        "direction_end": "象峰",
+        "from_sequence": 24,
+        "to_sequence": 25,
+        "from_station_id": "BV10687406",
+        "from_station_name": "秀山",
+        "to_station_id": "BV10687409",
+        "to_station_name": "象峰"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.329639,
+            26.143436
+          ],
+          [
+            119.321016,
+            26.133785
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_001_9d0a99df__350100020612_002_4a173dbf",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10687409",
+        "from_station_name": "象峰",
+        "to_station_id": "BV10687406",
+        "to_station_name": "秀山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.321016,
+            26.133785
+          ],
+          [
+            119.318365,
+            26.126091
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_002_4a173dbf__350100020612_003_bac5df12",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10687406",
+        "from_station_name": "秀山",
+        "to_station_id": "BV10687407",
+        "to_station_name": "罗汉山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.318365,
+            26.126091
+          ],
+          [
+            119.318133,
+            26.112978
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_003_bac5df12__350100020612_004_c9eabb90",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10687407",
+        "from_station_name": "罗汉山",
+        "to_station_id": "BV10687408",
+        "to_station_name": "福州火车站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.318133,
+            26.112978
+          ],
+          [
+            119.313723,
+            26.103973
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_004_c9eabb90__350100020612_005_0d912d6d",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10687408",
+        "from_station_name": "福州火车站",
+        "to_station_id": "BV10687401",
+        "to_station_name": "斗门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.313723,
+            26.103973
+          ],
+          [
+            119.305985,
+            26.102208
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_005_0d912d6d__350100020612_006_dffd5e6e",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10687401",
+        "from_station_name": "斗门",
+        "to_station_id": "BV10687402",
+        "to_station_name": "树兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.305985,
+            26.102208
+          ],
+          [
+            119.297038,
+            26.096256
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_006_dffd5e6e__350100020612_007_a6a50a31",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10687402",
+        "from_station_name": "树兜",
+        "to_station_id": "BV10687400",
+        "to_station_name": "屏山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.297038,
+            26.096256
+          ],
+          [
+            119.299259,
+            26.08596
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_007_a6a50a31__350100020612_008_f654cbb6",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10687400",
+        "from_station_name": "屏山",
+        "to_station_id": "BV10687403",
+        "to_station_name": "东街口"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.299259,
+            26.08596
+          ],
+          [
+            119.301619,
+            26.077774
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_008_f654cbb6__350100020612_009_ae3c0151",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10687403",
+        "from_station_name": "东街口",
+        "to_station_id": "BV10210902",
+        "to_station_name": "南门兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.301619,
+            26.077774
+          ],
+          [
+            119.304376,
+            26.069167
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_009_ae3c0151__350100020612_010_f8b5ecc2",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10210902",
+        "from_station_name": "南门兜",
+        "to_station_id": "BV10687399",
+        "to_station_name": "茶亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.304376,
+            26.069167
+          ],
+          [
+            119.309855,
+            26.056982
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_010_f8b5ecc2__350100020612_011_f2c1144e",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10687399",
+        "from_station_name": "茶亭",
+        "to_station_id": "BV10687404",
+        "to_station_name": "达道"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.309855,
+            26.056982
+          ],
+          [
+            119.320579,
+            26.043708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_011_f2c1144e__350100020612_012_9937d803",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10687404",
+        "from_station_name": "达道",
+        "to_station_id": "BV10687405",
+        "to_station_name": "上藤"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.320579,
+            26.043708
+          ],
+          [
+            119.326693,
+            26.034785
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_012_9937d803__350100020612_013_1804a7ca",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10687405",
+        "from_station_name": "上藤",
+        "to_station_id": "BV10210904",
+        "to_station_name": "三叉街"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.326693,
+            26.034785
+          ],
+          [
+            119.335262,
+            26.025916
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_013_1804a7ca__350100020612_014_c71414f1",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10210904",
+        "from_station_name": "三叉街",
+        "to_station_id": "BV10208407",
+        "to_station_name": "白湖亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.335262,
+            26.025916
+          ],
+          [
+            119.343548,
+            26.017116
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_014_c71414f1__350100020612_015_17a844bf",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10208407",
+        "from_station_name": "白湖亭",
+        "to_station_id": "BV10208456",
+        "to_station_name": "葫芦阵"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.343548,
+            26.017116
+          ],
+          [
+            119.348788,
+            26.010176
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_015_17a844bf__350100020612_016_58db90d7",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10208456",
+        "from_station_name": "葫芦阵",
+        "to_station_id": "BV10208454",
+        "to_station_name": "黄山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.348788,
+            26.010176
+          ],
+          [
+            119.354008,
+            26.001603
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_016_58db90d7__350100020612_017_feb21562",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10208454",
+        "from_station_name": "黄山",
+        "to_station_id": "BV10208471",
+        "to_station_name": "排下"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.354008,
+            26.001603
+          ],
+          [
+            119.36022,
+            25.996158
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_017_feb21562__350100020612_018_b9adb293",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10208471",
+        "from_station_name": "排下",
+        "to_station_id": "BV10208691",
+        "to_station_name": "城门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.36022,
+            25.996158
+          ],
+          [
+            119.368306,
+            25.990796
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_018_b9adb293__350100020612_019_1273a2e4",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10208691",
+        "from_station_name": "城门",
+        "to_station_id": "BV10208689",
+        "to_station_name": "三角埕"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.368306,
+            25.990796
+          ],
+          [
+            119.380086,
+            25.984504
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_019_1273a2e4__350100020612_020_163b5d8b",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10208689",
+        "from_station_name": "三角埕",
+        "to_station_id": "BV10210905",
+        "to_station_name": "胪雷"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.380086,
+            25.984504
+          ],
+          [
+            119.391878,
+            25.986372
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_020_163b5d8b__350100020612_021_661d67a9",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10210905",
+        "from_station_name": "胪雷",
+        "to_station_id": "BV10603792",
+        "to_station_name": "福州火车南站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.391878,
+            25.986372
+          ],
+          [
+            119.402224,
+            25.992335
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_021_661d67a9__350100020612_022_3229d4ec",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV10603792",
+        "from_station_name": "福州火车南站",
+        "to_station_id": "BV11473935",
+        "to_station_name": "安平"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.402224,
+            25.992335
+          ],
+          [
+            119.415109,
+            25.994261
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_022_3229d4ec__350100020612_023_15e94606",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 22,
+        "to_sequence": 23,
+        "from_station_id": "BV11473935",
+        "from_station_name": "安平",
+        "to_station_id": "BV10687393",
+        "to_station_name": "梁厝"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.415109,
+            25.994261
+          ],
+          [
+            119.420776,
+            25.984204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_023_15e94606__350100020612_024_0452c958",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 23,
+        "to_sequence": 24,
+        "from_station_id": "BV10687393",
+        "from_station_name": "梁厝",
+        "to_station_id": "BV10687392",
+        "to_station_name": "下洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.420776,
+            25.984204
+          ],
+          [
+            119.426122,
+            25.978861
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020612_024_0452c958__350100020612_025_16dd62d3",
+        "line_id": "350100020612",
+        "line_name": "地铁1号线(象峰--三江口)",
+        "direction_start": "象峰",
+        "direction_end": "三江口",
+        "from_sequence": 24,
+        "to_sequence": 25,
+        "from_station_id": "BV10687392",
+        "from_station_name": "下洋",
+        "to_station_id": "BV11473936",
+        "to_station_name": "三江口"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.372233,
+            26.045254
+          ],
+          [
+            119.375054,
+            26.053312
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_001_2762ac7d__350100020746_002_df757507",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10744868",
+        "from_station_name": "洋里",
+        "to_station_id": "BV10210924",
+        "to_station_name": "鼓山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.375054,
+            26.053312
+          ],
+          [
+            119.363035,
+            26.066498
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_002_df757507__350100020746_003_75b3df53",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10210924",
+        "from_station_name": "鼓山",
+        "to_station_id": "BV10208603",
+        "to_station_name": "上洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.363035,
+            26.066498
+          ],
+          [
+            119.350588,
+            26.07256
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_003_75b3df53__350100020746_004_d296f84f",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10208603",
+        "from_station_name": "上洋",
+        "to_station_id": "BV10208537",
+        "to_station_name": "前屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350588,
+            26.07256
+          ],
+          [
+            119.340276,
+            26.074265
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_004_d296f84f__350100020746_005_1a9beab1",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10208537",
+        "from_station_name": "前屿",
+        "to_station_id": "BV10210923",
+        "to_station_name": "五里亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.340276,
+            26.074265
+          ],
+          [
+            119.327173,
+            26.076378
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_005_1a9beab1__350100020746_006_3f914008",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10210923",
+        "from_station_name": "五里亭",
+        "to_station_id": "BV10604608",
+        "to_station_name": "紫阳"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.327173,
+            26.076378
+          ],
+          [
+            119.314169,
+            26.076428
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_006_3f914008__350100020746_007_00acb2eb",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10604608",
+        "from_station_name": "紫阳",
+        "to_station_id": "BV10210922",
+        "to_station_name": "水部"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.314169,
+            26.076428
+          ],
+          [
+            119.303745,
+            26.076251
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_007_00acb2eb__350100020746_008_47e9d24b",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10210922",
+        "from_station_name": "水部",
+        "to_station_id": "BV10210902",
+        "to_station_name": "南门兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.303745,
+            26.076251
+          ],
+          [
+            119.296889,
+            26.071661
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_008_47e9d24b__350100020746_009_1be52ed0",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10210902",
+        "from_station_name": "南门兜",
+        "to_station_id": "BV10210921",
+        "to_station_name": "西洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.296889,
+            26.071661
+          ],
+          [
+            119.293343,
+            26.06265
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_009_1be52ed0__350100020746_010_c0d479be",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10210921",
+        "from_station_name": "西洋",
+        "to_station_id": "BV10210920",
+        "to_station_name": "宁化"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.293343,
+            26.06265
+          ],
+          [
+            119.286022,
+            26.060749
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_010_c0d479be__350100020746_011_ddc38c30",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10210920",
+        "from_station_name": "宁化",
+        "to_station_id": "BV10210919",
+        "to_station_name": "祥坂"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.286022,
+            26.060749
+          ],
+          [
+            119.271125,
+            26.048518
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_011_ddc38c30__350100020746_012_bdcd334f",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10210919",
+        "from_station_name": "祥坂",
+        "to_station_id": "BV10210918",
+        "to_station_name": "金祥"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.271125,
+            26.048518
+          ],
+          [
+            119.262331,
+            26.047449
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_012_bdcd334f__350100020746_013_8d806ffb",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10210918",
+        "from_station_name": "金祥",
+        "to_station_id": "BV10210917",
+        "to_station_name": "金山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.262331,
+            26.047449
+          ],
+          [
+            119.250071,
+            26.047386
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_013_8d806ffb__350100020746_014_a20eb391",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10210917",
+        "from_station_name": "金山",
+        "to_station_id": "BV10210916",
+        "to_station_name": "洪湾"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.250071,
+            26.047386
+          ],
+          [
+            119.242783,
+            26.046869
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_014_a20eb391__350100020746_015_7a52aaae",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10210916",
+        "from_station_name": "洪湾",
+        "to_station_id": "BV10210915",
+        "to_station_name": "桔园洲"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.242783,
+            26.046869
+          ],
+          [
+            119.214929,
+            26.04133
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_015_7a52aaae__350100020746_016_4a50937b",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10210915",
+        "from_station_name": "桔园洲",
+        "to_station_id": "BV10210914",
+        "to_station_name": "厚庭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.214929,
+            26.04133
+          ],
+          [
+            119.207305,
+            26.041328
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_016_4a50937b__350100020746_017_a14d1226",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10210914",
+        "from_station_name": "厚庭",
+        "to_station_id": "BV10210913",
+        "to_station_name": "董屿·福建师大"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.207305,
+            26.041328
+          ],
+          [
+            119.20348,
+            26.058382
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_017_a14d1226__350100020746_018_ccb3d372",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10210913",
+        "from_station_name": "董屿·福建师大",
+        "to_station_id": "BV10604609",
+        "to_station_name": "福州大学"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.20348,
+            26.058382
+          ],
+          [
+            119.199991,
+            26.067353
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_018_ccb3d372__350100020746_019_1e5f7900",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10604609",
+        "from_station_name": "福州大学",
+        "to_station_id": "BV10604610",
+        "to_station_name": "金屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.199991,
+            26.067353
+          ],
+          [
+            119.187292,
+            26.075713
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_019_1e5f7900__350100020746_020_032726fc",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10604610",
+        "from_station_name": "金屿",
+        "to_station_id": "BV10208880",
+        "to_station_name": "上街"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.187292,
+            26.075713
+          ],
+          [
+            119.173983,
+            26.085788
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_020_032726fc__350100020746_021_443b4023",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10208880",
+        "from_station_name": "上街",
+        "to_station_id": "BV10208894",
+        "to_station_name": "沙堤"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.173983,
+            26.085788
+          ],
+          [
+            119.15963,
+            26.098509
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020746_021_443b4023__350100020746_022_0b82d3da",
+        "line_id": "350100020746",
+        "line_name": "地铁2号线(洋里--苏洋)",
+        "direction_start": "洋里",
+        "direction_end": "苏洋",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV10208894",
+        "from_station_name": "沙堤",
+        "to_station_id": "BV10210910",
+        "to_station_name": "苏洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.15963,
+            26.098509
+          ],
+          [
+            119.173983,
+            26.085788
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_001_0b82d3da__350100020745_002_443b4023",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10210910",
+        "from_station_name": "苏洋",
+        "to_station_id": "BV10208894",
+        "to_station_name": "沙堤"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.173983,
+            26.085788
+          ],
+          [
+            119.187292,
+            26.075713
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_002_443b4023__350100020745_003_032726fc",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10208894",
+        "from_station_name": "沙堤",
+        "to_station_id": "BV10208880",
+        "to_station_name": "上街"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.187292,
+            26.075713
+          ],
+          [
+            119.199991,
+            26.067353
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_003_032726fc__350100020745_004_1e5f7900",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10208880",
+        "from_station_name": "上街",
+        "to_station_id": "BV10604610",
+        "to_station_name": "金屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.199991,
+            26.067353
+          ],
+          [
+            119.20348,
+            26.058382
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_004_1e5f7900__350100020745_005_ccb3d372",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10604610",
+        "from_station_name": "金屿",
+        "to_station_id": "BV10604609",
+        "to_station_name": "福州大学"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.20348,
+            26.058382
+          ],
+          [
+            119.207305,
+            26.041328
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_005_ccb3d372__350100020745_006_a14d1226",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10604609",
+        "from_station_name": "福州大学",
+        "to_station_id": "BV10210913",
+        "to_station_name": "董屿·福建师大"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.207305,
+            26.041328
+          ],
+          [
+            119.214929,
+            26.04133
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_006_a14d1226__350100020745_007_4a50937b",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10210913",
+        "from_station_name": "董屿·福建师大",
+        "to_station_id": "BV10210914",
+        "to_station_name": "厚庭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.214929,
+            26.04133
+          ],
+          [
+            119.242783,
+            26.046869
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_007_4a50937b__350100020745_008_7a52aaae",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10210914",
+        "from_station_name": "厚庭",
+        "to_station_id": "BV10210915",
+        "to_station_name": "桔园洲"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.242783,
+            26.046869
+          ],
+          [
+            119.250071,
+            26.047386
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_008_7a52aaae__350100020745_009_a20eb391",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10210915",
+        "from_station_name": "桔园洲",
+        "to_station_id": "BV10210916",
+        "to_station_name": "洪湾"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.250071,
+            26.047386
+          ],
+          [
+            119.262331,
+            26.047449
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_009_a20eb391__350100020745_010_8d806ffb",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10210916",
+        "from_station_name": "洪湾",
+        "to_station_id": "BV10210917",
+        "to_station_name": "金山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.262331,
+            26.047449
+          ],
+          [
+            119.271125,
+            26.048518
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_010_8d806ffb__350100020745_011_bdcd334f",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10210917",
+        "from_station_name": "金山",
+        "to_station_id": "BV10210918",
+        "to_station_name": "金祥"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.271125,
+            26.048518
+          ],
+          [
+            119.286022,
+            26.060749
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_011_bdcd334f__350100020745_012_ddc38c30",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10210918",
+        "from_station_name": "金祥",
+        "to_station_id": "BV10210919",
+        "to_station_name": "祥坂"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.286022,
+            26.060749
+          ],
+          [
+            119.293343,
+            26.06265
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_012_ddc38c30__350100020745_013_c0d479be",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10210919",
+        "from_station_name": "祥坂",
+        "to_station_id": "BV10210920",
+        "to_station_name": "宁化"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.293343,
+            26.06265
+          ],
+          [
+            119.296889,
+            26.071661
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_013_c0d479be__350100020745_014_1be52ed0",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10210920",
+        "from_station_name": "宁化",
+        "to_station_id": "BV10210921",
+        "to_station_name": "西洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.296889,
+            26.071661
+          ],
+          [
+            119.303745,
+            26.076251
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_014_1be52ed0__350100020745_015_47e9d24b",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10210921",
+        "from_station_name": "西洋",
+        "to_station_id": "BV10210902",
+        "to_station_name": "南门兜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.303745,
+            26.076251
+          ],
+          [
+            119.314169,
+            26.076428
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_015_47e9d24b__350100020745_016_00acb2eb",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10210902",
+        "from_station_name": "南门兜",
+        "to_station_id": "BV10210922",
+        "to_station_name": "水部"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.314169,
+            26.076428
+          ],
+          [
+            119.327173,
+            26.076378
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_016_00acb2eb__350100020745_017_3f914008",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10210922",
+        "from_station_name": "水部",
+        "to_station_id": "BV10604608",
+        "to_station_name": "紫阳"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.327173,
+            26.076378
+          ],
+          [
+            119.340276,
+            26.074265
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_017_3f914008__350100020745_018_1a9beab1",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10604608",
+        "from_station_name": "紫阳",
+        "to_station_id": "BV10210923",
+        "to_station_name": "五里亭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.340276,
+            26.074265
+          ],
+          [
+            119.350588,
+            26.07256
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_018_1a9beab1__350100020745_019_d296f84f",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10210923",
+        "from_station_name": "五里亭",
+        "to_station_id": "BV10208537",
+        "to_station_name": "前屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350588,
+            26.07256
+          ],
+          [
+            119.363035,
+            26.066498
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_019_d296f84f__350100020745_020_75b3df53",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10208537",
+        "from_station_name": "前屿",
+        "to_station_id": "BV10208603",
+        "to_station_name": "上洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.363035,
+            26.066498
+          ],
+          [
+            119.375054,
+            26.053312
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_020_75b3df53__350100020745_021_df757507",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10208603",
+        "from_station_name": "上洋",
+        "to_station_id": "BV10210924",
+        "to_station_name": "鼓山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.375054,
+            26.053312
+          ],
+          [
+            119.372233,
+            26.045254
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "350100020745_021_df757507__350100020745_022_2762ac7d",
+        "line_id": "350100020745",
+        "line_name": "地铁2号线(苏洋--洋里)",
+        "direction_start": "苏洋",
+        "direction_end": "洋里",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV10210924",
+        "from_station_name": "鼓山",
+        "to_station_id": "BV10744868",
+        "to_station_name": "洋里"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.237833,
+            26.056572
+          ],
+          [
+            119.237864,
+            26.064362
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_001_53fadfdf__900000090237_002_51f8c049",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10972437",
+        "from_station_name": "半洲",
+        "to_station_id": "BV10972425",
+        "to_station_name": "建新"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.237864,
+            26.064362
+          ],
+          [
+            119.248816,
+            26.073328
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_002_51f8c049__900000090237_003_14432173",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10972425",
+        "from_station_name": "建新",
+        "to_station_id": "BV11352892",
+        "to_station_name": "洪塘"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.248816,
+            26.073328
+          ],
+          [
+            119.261723,
+            26.076302
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_003_14432173__900000090237_004_138c13d2",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV11352892",
+        "from_station_name": "洪塘",
+        "to_station_id": "BV10972432",
+        "to_station_name": "金牛山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.261723,
+            26.076302
+          ],
+          [
+            119.27271,
+            26.078389
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_004_138c13d2__900000090237_005_41bca9a4",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10972432",
+        "from_station_name": "金牛山",
+        "to_station_id": "BV10972420",
+        "to_station_name": "凤凰池"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.27271,
+            26.078389
+          ],
+          [
+            119.283452,
+            26.082467
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_005_41bca9a4__900000090237_006_3fdbbc59",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10972420",
+        "from_station_name": "凤凰池",
+        "to_station_id": "BV10972429",
+        "to_station_name": "陆庄"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.283452,
+            26.082467
+          ],
+          [
+            119.290055,
+            26.0847
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_006_3fdbbc59__900000090237_007_02b70e0f",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10972429",
+        "from_station_name": "陆庄",
+        "to_station_id": "BV10972428",
+        "to_station_name": "西门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.290055,
+            26.0847
+          ],
+          [
+            119.299259,
+            26.08596
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_007_02b70e0f__900000090237_008_f654cbb6",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10972428",
+        "from_station_name": "西门",
+        "to_station_id": "BV10687403",
+        "to_station_name": "东街口"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.299259,
+            26.08596
+          ],
+          [
+            119.307142,
+            26.086704
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_008_f654cbb6__900000090237_009_822424c1",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10687403",
+        "from_station_name": "东街口",
+        "to_station_id": "BV10972435",
+        "to_station_name": "省立医院"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.307142,
+            26.086704
+          ],
+          [
+            119.315019,
+            26.08759
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_009_822424c1__900000090237_010_b7e8a913",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10972435",
+        "from_station_name": "省立医院",
+        "to_station_id": "BV11352891",
+        "to_station_name": "东门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.315019,
+            26.08759
+          ],
+          [
+            119.326262,
+            26.090976
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_010_b7e8a913__900000090237_011_7974138a",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV11352891",
+        "from_station_name": "东门",
+        "to_station_id": "BV10972421",
+        "to_station_name": "三角池"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.326262,
+            26.090976
+          ],
+          [
+            119.337675,
+            26.09304
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_011_7974138a__900000090237_012_7754235e",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10972421",
+        "from_station_name": "三角池",
+        "to_station_id": "BV10972423",
+        "to_station_name": "竹屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.337675,
+            26.09304
+          ],
+          [
+            119.352237,
+            26.089831
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_012_7754235e__900000090237_013_95876114",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10972423",
+        "from_station_name": "竹屿",
+        "to_station_id": "BV10972422",
+        "to_station_name": "横屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.352237,
+            26.089831
+          ],
+          [
+            119.352461,
+            26.081212
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_013_95876114__900000090237_014_962e6daf",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10972422",
+        "from_station_name": "横屿",
+        "to_station_id": "BV10972434",
+        "to_station_name": "后屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.352461,
+            26.081212
+          ],
+          [
+            119.350356,
+            26.071935
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_014_962e6daf__900000090237_015_f809d435",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10972434",
+        "from_station_name": "后屿",
+        "to_station_id": "BV10208537",
+        "to_station_name": "前屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350356,
+            26.071935
+          ],
+          [
+            119.346742,
+            26.064404
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_015_f809d435__900000090237_016_9c23f60e",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10208537",
+        "from_station_name": "前屿",
+        "to_station_id": "BV10972431",
+        "to_station_name": "光明港"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.346742,
+            26.064404
+          ],
+          [
+            119.344516,
+            26.054747
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_016_9c23f60e__900000090237_017_c8ebd053",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10972431",
+        "from_station_name": "光明港",
+        "to_station_id": "BV10972424",
+        "to_station_name": "鳌峰洲"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.344516,
+            26.054747
+          ],
+          [
+            119.350335,
+            26.040098
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_017_c8ebd053__900000090237_018_3fb5729f",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10972424",
+        "from_station_name": "鳌峰洲",
+        "to_station_id": "BV10972430",
+        "to_station_name": "花海公园"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350335,
+            26.040098
+          ],
+          [
+            119.359563,
+            26.029607
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_018_3fb5729f__900000090237_019_813355a5",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10972430",
+        "from_station_name": "花海公园",
+        "to_station_id": "BV10972426",
+        "to_station_name": "会展中心"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.359563,
+            26.029607
+          ],
+          [
+            119.365369,
+            26.015993
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_019_813355a5__900000090237_020_719ed633",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10972426",
+        "from_station_name": "会展中心",
+        "to_station_id": "BV10877575",
+        "to_station_name": "林浦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.365369,
+            26.015993
+          ],
+          [
+            119.36022,
+            25.996158
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_020_719ed633__900000090237_021_b9adb293",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10877575",
+        "from_station_name": "林浦",
+        "to_station_id": "BV10208691",
+        "to_station_name": "城门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.36022,
+            25.996158
+          ],
+          [
+            119.349023,
+            25.990339
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_021_b9adb293__900000090237_022_253ac21a",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV10208691",
+        "from_station_name": "城门",
+        "to_station_id": "BV10972427",
+        "to_station_name": "螺洲温泉"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.349023,
+            25.990339
+          ],
+          [
+            119.33544,
+            25.987382
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090237_022_253ac21a__900000090237_023_b861383e",
+        "line_id": "900000090237",
+        "line_name": "地铁4号线(半洲--帝封江)",
+        "direction_start": "半洲",
+        "direction_end": "帝封江",
+        "from_sequence": 22,
+        "to_sequence": 23,
+        "from_station_id": "BV10972427",
+        "from_station_name": "螺洲温泉",
+        "to_station_id": "BV11506304",
+        "to_station_name": "帝封江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.33544,
+            25.987382
+          ],
+          [
+            119.349023,
+            25.990339
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_001_b861383e__900000090236_002_253ac21a",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV11506304",
+        "from_station_name": "帝封江",
+        "to_station_id": "BV10972427",
+        "to_station_name": "螺洲温泉"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.349023,
+            25.990339
+          ],
+          [
+            119.36022,
+            25.996158
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_002_253ac21a__900000090236_003_b9adb293",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10972427",
+        "from_station_name": "螺洲温泉",
+        "to_station_id": "BV10208691",
+        "to_station_name": "城门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.36022,
+            25.996158
+          ],
+          [
+            119.365369,
+            26.015993
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_003_b9adb293__900000090236_004_719ed633",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10208691",
+        "from_station_name": "城门",
+        "to_station_id": "BV10877575",
+        "to_station_name": "林浦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.365369,
+            26.015993
+          ],
+          [
+            119.359563,
+            26.029607
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_004_719ed633__900000090236_005_813355a5",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10877575",
+        "from_station_name": "林浦",
+        "to_station_id": "BV10972426",
+        "to_station_name": "会展中心"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.359563,
+            26.029607
+          ],
+          [
+            119.350335,
+            26.040098
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_005_813355a5__900000090236_006_3fb5729f",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10972426",
+        "from_station_name": "会展中心",
+        "to_station_id": "BV10972430",
+        "to_station_name": "花海公园"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350335,
+            26.040098
+          ],
+          [
+            119.344516,
+            26.054747
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_006_3fb5729f__900000090236_007_c8ebd053",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10972430",
+        "from_station_name": "花海公园",
+        "to_station_id": "BV10972424",
+        "to_station_name": "鳌峰洲"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.344516,
+            26.054747
+          ],
+          [
+            119.346742,
+            26.064404
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_007_c8ebd053__900000090236_008_9c23f60e",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10972424",
+        "from_station_name": "鳌峰洲",
+        "to_station_id": "BV10972431",
+        "to_station_name": "光明港"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.346742,
+            26.064404
+          ],
+          [
+            119.350356,
+            26.071935
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_008_9c23f60e__900000090236_009_f809d435",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10972431",
+        "from_station_name": "光明港",
+        "to_station_id": "BV10208537",
+        "to_station_name": "前屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.350356,
+            26.071935
+          ],
+          [
+            119.352461,
+            26.081212
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_009_f809d435__900000090236_010_962e6daf",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10208537",
+        "from_station_name": "前屿",
+        "to_station_id": "BV10972434",
+        "to_station_name": "后屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.352461,
+            26.081212
+          ],
+          [
+            119.352237,
+            26.089831
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_010_962e6daf__900000090236_011_95876114",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10972434",
+        "from_station_name": "后屿",
+        "to_station_id": "BV10972422",
+        "to_station_name": "横屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.352237,
+            26.089831
+          ],
+          [
+            119.337675,
+            26.09304
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_011_95876114__900000090236_012_7754235e",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10972422",
+        "from_station_name": "横屿",
+        "to_station_id": "BV10972423",
+        "to_station_name": "竹屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.337675,
+            26.09304
+          ],
+          [
+            119.326262,
+            26.090976
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_012_7754235e__900000090236_013_7974138a",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10972423",
+        "from_station_name": "竹屿",
+        "to_station_id": "BV10972421",
+        "to_station_name": "三角池"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.326262,
+            26.090976
+          ],
+          [
+            119.315019,
+            26.08759
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_013_7974138a__900000090236_014_b7e8a913",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10972421",
+        "from_station_name": "三角池",
+        "to_station_id": "BV11352891",
+        "to_station_name": "东门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.315019,
+            26.08759
+          ],
+          [
+            119.307142,
+            26.086704
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_014_b7e8a913__900000090236_015_822424c1",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV11352891",
+        "from_station_name": "东门",
+        "to_station_id": "BV10972435",
+        "to_station_name": "省立医院"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.307142,
+            26.086704
+          ],
+          [
+            119.299259,
+            26.08596
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_015_822424c1__900000090236_016_f654cbb6",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10972435",
+        "from_station_name": "省立医院",
+        "to_station_id": "BV10687403",
+        "to_station_name": "东街口"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.299259,
+            26.08596
+          ],
+          [
+            119.290055,
+            26.0847
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_016_f654cbb6__900000090236_017_02b70e0f",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10687403",
+        "from_station_name": "东街口",
+        "to_station_id": "BV10972428",
+        "to_station_name": "西门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.290055,
+            26.0847
+          ],
+          [
+            119.283452,
+            26.082467
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_017_02b70e0f__900000090236_018_3fdbbc59",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10972428",
+        "from_station_name": "西门",
+        "to_station_id": "BV10972429",
+        "to_station_name": "陆庄"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.283452,
+            26.082467
+          ],
+          [
+            119.27271,
+            26.078389
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_018_3fdbbc59__900000090236_019_41bca9a4",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV10972429",
+        "from_station_name": "陆庄",
+        "to_station_id": "BV10972420",
+        "to_station_name": "凤凰池"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.27271,
+            26.078389
+          ],
+          [
+            119.261723,
+            26.076302
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_019_41bca9a4__900000090236_020_138c13d2",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10972420",
+        "from_station_name": "凤凰池",
+        "to_station_id": "BV10972432",
+        "to_station_name": "金牛山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.261723,
+            26.076302
+          ],
+          [
+            119.248816,
+            26.073328
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_020_138c13d2__900000090236_021_14432173",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 20,
+        "to_sequence": 21,
+        "from_station_id": "BV10972432",
+        "from_station_name": "金牛山",
+        "to_station_id": "BV11352892",
+        "to_station_name": "洪塘"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.248816,
+            26.073328
+          ],
+          [
+            119.237864,
+            26.064362
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_021_14432173__900000090236_022_51f8c049",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 21,
+        "to_sequence": 22,
+        "from_station_id": "BV11352892",
+        "from_station_name": "洪塘",
+        "to_station_id": "BV10972425",
+        "to_station_name": "建新"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.237864,
+            26.064362
+          ],
+          [
+            119.237833,
+            26.056572
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000090236_022_51f8c049__900000090236_023_53fadfdf",
+        "line_id": "900000090236",
+        "line_name": "地铁4号线(帝封江--半洲)",
+        "direction_start": "帝封江",
+        "direction_end": "半洲",
+        "from_sequence": 22,
+        "to_sequence": 23,
+        "from_station_id": "BV10972425",
+        "from_station_name": "建新",
+        "to_station_id": "BV10972437",
+        "to_station_name": "半洲"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.391878,
+            25.986372
+          ],
+          [
+            119.372382,
+            25.984442
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_001_661d67a9__900000088654_002_a43a88c7",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10603792",
+        "from_station_name": "福州火车南站",
+        "to_station_id": "BV11623385",
+        "to_station_name": "龙江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.372382,
+            25.984442
+          ],
+          [
+            119.362402,
+            25.984426
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_002_a43a88c7__900000088654_003_e1bd7445",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV11623385",
+        "from_station_name": "龙江",
+        "to_station_id": "BV11623384",
+        "to_station_name": "前锦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.362402,
+            25.984426
+          ],
+          [
+            119.35138,
+            25.986273
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_003_e1bd7445__900000088654_004_a7ce8e81",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV11623384",
+        "from_station_name": "前锦",
+        "to_station_id": "BV10961096",
+        "to_station_name": "螺洲古镇"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.35138,
+            25.986273
+          ],
+          [
+            119.33544,
+            25.987382
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_004_a7ce8e81__900000088654_005_b861383e",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10961096",
+        "from_station_name": "螺洲古镇",
+        "to_station_id": "BV11506304",
+        "to_station_name": "帝封江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.33544,
+            25.987382
+          ],
+          [
+            119.32743,
+            25.986895
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_005_b861383e__900000088654_006_7ef4092a",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV11506304",
+        "from_station_name": "帝封江",
+        "to_station_id": "BV11505097",
+        "to_station_name": "义序"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.32743,
+            25.986895
+          ],
+          [
+            119.320584,
+            25.993747
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_006_7ef4092a__900000088654_007_534e9558",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV11505097",
+        "from_station_name": "义序",
+        "to_station_id": "BV11505098",
+        "to_station_name": "盖山竹榄"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.320584,
+            25.993747
+          ],
+          [
+            119.311356,
+            25.997459
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_007_534e9558__900000088654_008_aa49c784",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV11505098",
+        "from_station_name": "盖山竹榄",
+        "to_station_id": "BV10961090",
+        "to_station_name": "吴山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.311356,
+            25.997459
+          ],
+          [
+            119.292994,
+            25.999391
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_008_aa49c784__900000088654_009_70dd9986",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10961090",
+        "from_station_name": "吴山",
+        "to_station_id": "BV10961098",
+        "to_station_name": "盘屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.292994,
+            25.999391
+          ],
+          [
+            119.281334,
+            26.005975
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_009_70dd9986__900000088654_010_be874954",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10961098",
+        "from_station_name": "盘屿",
+        "to_station_id": "BV10961089",
+        "to_station_name": "台屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.281334,
+            26.005975
+          ],
+          [
+            119.277347,
+            26.013371
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_010_be874954__900000088654_011_81732063",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10961089",
+        "from_station_name": "台屿",
+        "to_station_id": "BV10961085",
+        "to_station_name": "东岭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.277347,
+            26.013371
+          ],
+          [
+            119.276478,
+            26.025311
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_011_81732063__900000088654_012_73cd936d",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10961085",
+        "from_station_name": "东岭",
+        "to_station_id": "BV10961097",
+        "to_station_name": "霞镜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.276478,
+            26.025311
+          ],
+          [
+            119.272675,
+            26.034091
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_012_73cd936d__900000088654_013_2faa29a3",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10961097",
+        "from_station_name": "霞镜",
+        "to_station_id": "BV10961091",
+        "to_station_name": "浦上大道"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.272675,
+            26.034091
+          ],
+          [
+            119.266951,
+            26.038708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_013_2faa29a3__900000088654_014_a3f6b2a0",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10961091",
+        "from_station_name": "浦上大道",
+        "to_station_id": "BV10961083",
+        "to_station_name": "凤岗里"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.266951,
+            26.038708
+          ],
+          [
+            119.262331,
+            26.047449
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_014_a3f6b2a0__900000088654_015_8d806ffb",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10961083",
+        "from_station_name": "凤岗里",
+        "to_station_id": "BV10210917",
+        "to_station_name": "金山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.262331,
+            26.047449
+          ],
+          [
+            119.258374,
+            26.055436
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_015_8d806ffb__900000088654_016_faf74e67",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10210917",
+        "from_station_name": "金山",
+        "to_station_id": "BV10961093",
+        "to_station_name": "马榕"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.258374,
+            26.055436
+          ],
+          [
+            119.251769,
+            26.065387
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_016_faf74e67__900000088654_017_93b4b3e4",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV10961093",
+        "from_station_name": "马榕",
+        "to_station_id": "BV10961084",
+        "to_station_name": "阵坂"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.251769,
+            26.065387
+          ],
+          [
+            119.250149,
+            26.073332
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_017_93b4b3e4__900000088654_018_2648a7c0",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10961084",
+        "from_station_name": "阵坂",
+        "to_station_id": "BV11352892",
+        "to_station_name": "洪塘"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.250149,
+            26.073332
+          ],
+          [
+            119.247234,
+            26.084851
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_018_2648a7c0__900000088654_019_7aece28c",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV11352892",
+        "from_station_name": "洪塘",
+        "to_station_id": "BV10961088",
+        "to_station_name": "农林大学"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.247234,
+            26.084851
+          ],
+          [
+            119.231542,
+            26.109727
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088654_019_7aece28c__900000088654_020_29150a4e",
+        "line_id": "900000088654",
+        "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+        "direction_start": "福州火车南站",
+        "direction_end": "荆溪厚屿",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV10961088",
+        "from_station_name": "农林大学",
+        "to_station_id": "BV10961087",
+        "to_station_name": "荆溪厚屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.231542,
+            26.109727
+          ],
+          [
+            119.247234,
+            26.084851
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_001_29150a4e__900000088653_002_7aece28c",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10961087",
+        "from_station_name": "荆溪厚屿",
+        "to_station_id": "BV10961088",
+        "to_station_name": "农林大学"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.247234,
+            26.084851
+          ],
+          [
+            119.250149,
+            26.073332
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_002_7aece28c__900000088653_003_2648a7c0",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10961088",
+        "from_station_name": "农林大学",
+        "to_station_id": "BV11352892",
+        "to_station_name": "洪塘"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.250149,
+            26.073332
+          ],
+          [
+            119.251769,
+            26.065387
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_003_2648a7c0__900000088653_004_93b4b3e4",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV11352892",
+        "from_station_name": "洪塘",
+        "to_station_id": "BV10961084",
+        "to_station_name": "阵坂"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.251769,
+            26.065387
+          ],
+          [
+            119.258374,
+            26.055436
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_004_93b4b3e4__900000088653_005_faf74e67",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10961084",
+        "from_station_name": "阵坂",
+        "to_station_id": "BV10961093",
+        "to_station_name": "马榕"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.258374,
+            26.055436
+          ],
+          [
+            119.262331,
+            26.047449
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_005_faf74e67__900000088653_006_8d806ffb",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10961093",
+        "from_station_name": "马榕",
+        "to_station_id": "BV10210917",
+        "to_station_name": "金山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.262331,
+            26.047449
+          ],
+          [
+            119.266951,
+            26.038708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_006_8d806ffb__900000088653_007_a3f6b2a0",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10210917",
+        "from_station_name": "金山",
+        "to_station_id": "BV10961083",
+        "to_station_name": "凤岗里"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.266951,
+            26.038708
+          ],
+          [
+            119.272675,
+            26.034091
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_007_a3f6b2a0__900000088653_008_2faa29a3",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10961083",
+        "from_station_name": "凤岗里",
+        "to_station_id": "BV10961091",
+        "to_station_name": "浦上大道"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.272675,
+            26.034091
+          ],
+          [
+            119.276478,
+            26.025311
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_008_2faa29a3__900000088653_009_73cd936d",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10961091",
+        "from_station_name": "浦上大道",
+        "to_station_id": "BV10961097",
+        "to_station_name": "霞镜"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.276478,
+            26.025311
+          ],
+          [
+            119.277347,
+            26.013371
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_009_73cd936d__900000088653_010_81732063",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10961097",
+        "from_station_name": "霞镜",
+        "to_station_id": "BV10961085",
+        "to_station_name": "东岭"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.277347,
+            26.013371
+          ],
+          [
+            119.281334,
+            26.005975
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_010_81732063__900000088653_011_be874954",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10961085",
+        "from_station_name": "东岭",
+        "to_station_id": "BV10961089",
+        "to_station_name": "台屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.281334,
+            26.005975
+          ],
+          [
+            119.292994,
+            25.999391
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_011_be874954__900000088653_012_70dd9986",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10961089",
+        "from_station_name": "台屿",
+        "to_station_id": "BV10961098",
+        "to_station_name": "盘屿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.292994,
+            25.999391
+          ],
+          [
+            119.311356,
+            25.997459
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_012_70dd9986__900000088653_013_aa49c784",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10961098",
+        "from_station_name": "盘屿",
+        "to_station_id": "BV10961090",
+        "to_station_name": "吴山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.311356,
+            25.997459
+          ],
+          [
+            119.320584,
+            25.993747
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_013_aa49c784__900000088653_014_534e9558",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10961090",
+        "from_station_name": "吴山",
+        "to_station_id": "BV11505098",
+        "to_station_name": "盖山竹榄"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.320584,
+            25.993747
+          ],
+          [
+            119.32743,
+            25.986895
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_014_534e9558__900000088653_015_7ef4092a",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV11505098",
+        "from_station_name": "盖山竹榄",
+        "to_station_id": "BV11505097",
+        "to_station_name": "义序"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.32743,
+            25.986895
+          ],
+          [
+            119.33544,
+            25.987382
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_015_7ef4092a__900000088653_016_b861383e",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV11505097",
+        "from_station_name": "义序",
+        "to_station_id": "BV11506304",
+        "to_station_name": "帝封江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.33544,
+            25.987382
+          ],
+          [
+            119.35138,
+            25.986273
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_016_b861383e__900000088653_017_a7ce8e81",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 16,
+        "to_sequence": 17,
+        "from_station_id": "BV11506304",
+        "from_station_name": "帝封江",
+        "to_station_id": "BV10961096",
+        "to_station_name": "螺洲古镇"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.35138,
+            25.986273
+          ],
+          [
+            119.362402,
+            25.984426
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_017_a7ce8e81__900000088653_018_e1bd7445",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 17,
+        "to_sequence": 18,
+        "from_station_id": "BV10961096",
+        "from_station_name": "螺洲古镇",
+        "to_station_id": "BV11623384",
+        "to_station_name": "前锦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.362402,
+            25.984426
+          ],
+          [
+            119.372382,
+            25.984442
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_018_e1bd7445__900000088653_019_a43a88c7",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 18,
+        "to_sequence": 19,
+        "from_station_id": "BV11623384",
+        "from_station_name": "前锦",
+        "to_station_id": "BV11623385",
+        "to_station_name": "龙江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.372382,
+            25.984442
+          ],
+          [
+            119.391878,
+            25.986372
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000088653_019_a43a88c7__900000088653_020_661d67a9",
+        "line_id": "900000088653",
+        "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+        "direction_start": "荆溪厚屿",
+        "direction_end": "福州火车南站",
+        "from_sequence": 19,
+        "to_sequence": 20,
+        "from_station_id": "BV11623385",
+        "from_station_name": "龙江",
+        "to_station_id": "BV10603792",
+        "to_station_name": "福州火车南站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.60263,
+            25.899952
+          ],
+          [
+            119.593335,
+            25.905685
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_001_5b0dc334__900000076583_002_2eb6dade",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10877581",
+        "from_station_name": "万寿",
+        "to_station_id": "BV10877566",
+        "to_station_name": "壶井"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.593335,
+            25.905685
+          ],
+          [
+            119.582616,
+            25.912233
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_002_2eb6dade__900000076583_003_1aae7c5e",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10877566",
+        "from_station_name": "壶井",
+        "to_station_id": "BV10877578",
+        "to_station_name": "下吴"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.582616,
+            25.912233
+          ],
+          [
+            119.571059,
+            25.91924
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_003_1aae7c5e__900000076583_004_963b0479",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV10877578",
+        "from_station_name": "下吴",
+        "to_station_id": "BV10877571",
+        "to_station_name": "莲花"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.571059,
+            25.91924
+          ],
+          [
+            119.54656,
+            25.930828
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_004_963b0479__900000076583_005_82a21ef4",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10877571",
+        "from_station_name": "莲花",
+        "to_station_id": "BV10877570",
+        "to_station_name": "沙京"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.54656,
+            25.930828
+          ],
+          [
+            119.538539,
+            25.940531
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_005_82a21ef4__900000076583_006_a96c54d6",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10877570",
+        "from_station_name": "沙京",
+        "to_station_id": "BV10877580",
+        "to_station_name": "鹤上"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.538539,
+            25.940531
+          ],
+          [
+            119.528927,
+            25.951181
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_006_a96c54d6__900000076583_007_dca5184f",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10877580",
+        "from_station_name": "鹤上",
+        "to_station_id": "BV10877577",
+        "to_station_name": "吴航"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.528927,
+            25.951181
+          ],
+          [
+            119.515221,
+            25.958195
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_007_dca5184f__900000076583_008_b1cd85f0",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10877577",
+        "from_station_name": "吴航",
+        "to_station_id": "BV10877573",
+        "to_station_name": "十洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.515221,
+            25.958195
+          ],
+          [
+            119.503077,
+            25.958179
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_008_b1cd85f0__900000076583_009_2d979dea",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10877573",
+        "from_station_name": "十洋",
+        "to_station_id": "BV10877572",
+        "to_station_name": "郑和"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.503077,
+            25.958179
+          ],
+          [
+            119.491172,
+            25.951756
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_009_2d979dea__900000076583_010_293f73b3",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10877572",
+        "from_station_name": "郑和",
+        "to_station_id": "BV10877568",
+        "to_station_name": "航城"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.491172,
+            25.951756
+          ],
+          [
+            119.474237,
+            25.956739
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_010_293f73b3__900000076583_011_fa410d04",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10877568",
+        "from_station_name": "航城",
+        "to_station_id": "BV10877576",
+        "to_station_name": "营前"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.474237,
+            25.956739
+          ],
+          [
+            119.420776,
+            25.984204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_011_fa410d04__900000076583_012_0452c958",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10877576",
+        "from_station_name": "营前",
+        "to_station_id": "BV10687392",
+        "to_station_name": "下洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.420776,
+            25.984204
+          ],
+          [
+            119.415109,
+            25.994261
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_012_0452c958__900000076583_013_15e94606",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10687392",
+        "from_station_name": "下洋",
+        "to_station_id": "BV10687393",
+        "to_station_name": "梁厝"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.415109,
+            25.994261
+          ],
+          [
+            119.389454,
+            26.006301
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_013_15e94606__900000076583_014_215e985a",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10687393",
+        "from_station_name": "梁厝",
+        "to_station_id": "BV11667315",
+        "to_station_name": "樟岚"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.389454,
+            26.006301
+          ],
+          [
+            119.365098,
+            26.015231
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_014_215e985a__900000076583_015_0d51f679",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV11667315",
+        "from_station_name": "樟岚",
+        "to_station_id": "BV10877575",
+        "to_station_name": "林浦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.365098,
+            26.015231
+          ],
+          [
+            119.357766,
+            26.020812
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076583_015_0d51f679__900000076583_016_874dc42f",
+        "line_id": "900000076583",
+        "line_name": "地铁6号线(万寿--潘墩)",
+        "direction_start": "万寿",
+        "direction_end": "潘墩",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10877575",
+        "from_station_name": "林浦",
+        "to_station_id": "BV11667316",
+        "to_station_name": "潘墩"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.357766,
+            26.020812
+          ],
+          [
+            119.365098,
+            26.015231
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_001_874dc42f__900000076581_002_0d51f679",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV11667316",
+        "from_station_name": "潘墩",
+        "to_station_id": "BV10877575",
+        "to_station_name": "林浦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.365098,
+            26.015231
+          ],
+          [
+            119.389454,
+            26.006301
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_002_0d51f679__900000076581_003_215e985a",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV10877575",
+        "from_station_name": "林浦",
+        "to_station_id": "BV11667315",
+        "to_station_name": "樟岚"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.389454,
+            26.006301
+          ],
+          [
+            119.415109,
+            25.994261
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_003_215e985a__900000076581_004_15e94606",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV11667315",
+        "from_station_name": "樟岚",
+        "to_station_id": "BV10687393",
+        "to_station_name": "梁厝"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.415109,
+            25.994261
+          ],
+          [
+            119.420776,
+            25.984204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_004_15e94606__900000076581_005_0452c958",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV10687393",
+        "from_station_name": "梁厝",
+        "to_station_id": "BV10687392",
+        "to_station_name": "下洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.420776,
+            25.984204
+          ],
+          [
+            119.474237,
+            25.956739
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_005_0452c958__900000076581_006_fa410d04",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV10687392",
+        "from_station_name": "下洋",
+        "to_station_id": "BV10877576",
+        "to_station_name": "营前"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.474237,
+            25.956739
+          ],
+          [
+            119.491172,
+            25.951756
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_006_fa410d04__900000076581_007_293f73b3",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV10877576",
+        "from_station_name": "营前",
+        "to_station_id": "BV10877568",
+        "to_station_name": "航城"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.491172,
+            25.951756
+          ],
+          [
+            119.503077,
+            25.958179
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_007_293f73b3__900000076581_008_2d979dea",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV10877568",
+        "from_station_name": "航城",
+        "to_station_id": "BV10877572",
+        "to_station_name": "郑和"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.503077,
+            25.958179
+          ],
+          [
+            119.515221,
+            25.958195
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_008_2d979dea__900000076581_009_b1cd85f0",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV10877572",
+        "from_station_name": "郑和",
+        "to_station_id": "BV10877573",
+        "to_station_name": "十洋"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.515221,
+            25.958195
+          ],
+          [
+            119.528927,
+            25.951181
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_009_b1cd85f0__900000076581_010_dca5184f",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV10877573",
+        "from_station_name": "十洋",
+        "to_station_id": "BV10877577",
+        "to_station_name": "吴航"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.528927,
+            25.951181
+          ],
+          [
+            119.538539,
+            25.940531
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_010_dca5184f__900000076581_011_a96c54d6",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV10877577",
+        "from_station_name": "吴航",
+        "to_station_id": "BV10877580",
+        "to_station_name": "鹤上"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.538539,
+            25.940531
+          ],
+          [
+            119.54656,
+            25.930828
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_011_a96c54d6__900000076581_012_82a21ef4",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV10877580",
+        "from_station_name": "鹤上",
+        "to_station_id": "BV10877570",
+        "to_station_name": "沙京"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.54656,
+            25.930828
+          ],
+          [
+            119.571059,
+            25.91924
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_012_82a21ef4__900000076581_013_963b0479",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV10877570",
+        "from_station_name": "沙京",
+        "to_station_id": "BV10877571",
+        "to_station_name": "莲花"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.571059,
+            25.91924
+          ],
+          [
+            119.582616,
+            25.912233
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_013_963b0479__900000076581_014_1aae7c5e",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV10877571",
+        "from_station_name": "莲花",
+        "to_station_id": "BV10877578",
+        "to_station_name": "下吴"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.582616,
+            25.912233
+          ],
+          [
+            119.593335,
+            25.905685
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_014_1aae7c5e__900000076581_015_2eb6dade",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV10877578",
+        "from_station_name": "下吴",
+        "to_station_id": "BV10877566",
+        "to_station_name": "壶井"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.593335,
+            25.905685
+          ],
+          [
+            119.60263,
+            25.899952
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000076581_015_2eb6dade__900000076581_016_5b0dc334",
+        "line_id": "900000076581",
+        "line_name": "地铁6号线(潘墩--万寿)",
+        "direction_start": "潘墩",
+        "direction_end": "万寿",
+        "from_sequence": 15,
+        "to_sequence": 16,
+        "from_station_id": "BV10877566",
+        "from_station_name": "壶井",
+        "to_station_id": "BV10877581",
+        "to_station_name": "万寿"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.695267,
+            25.973998
+          ],
+          [
+            119.67529,
+            25.92792
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_001_7760d1ec__900000139164_002_c135cefa",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV11339275",
+        "from_station_name": "文岭",
+        "to_station_id": "BV11339272",
+        "to_station_name": "机场"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.67529,
+            25.92792
+          ],
+          [
+            119.609675,
+            25.884204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_002_c135cefa__900000139164_003_526ee247",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV11339272",
+        "from_station_name": "机场",
+        "to_station_id": "BV09198673",
+        "to_station_name": "滨海中央商务区"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.609675,
+            25.884204
+          ],
+          [
+            119.597792,
+            25.891571
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_003_526ee247__900000139164_004_ec4741c6",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV09198673",
+        "from_station_name": "滨海中央商务区",
+        "to_station_id": "BV11339280",
+        "to_station_name": "大数据"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.597792,
+            25.891571
+          ],
+          [
+            119.568892,
+            25.907859
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_004_ec4741c6__900000139164_005_cbee3d46",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV11339280",
+        "from_station_name": "大数据",
+        "to_station_id": "BV11339281",
+        "to_station_name": "滨海西"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.568892,
+            25.907859
+          ],
+          [
+            119.557451,
+            25.914093
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_005_cbee3d46__900000139164_006_7fc06264",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV11339281",
+        "from_station_name": "滨海西",
+        "to_station_id": "BV11339271",
+        "to_station_name": "莲花山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.557451,
+            25.914093
+          ],
+          [
+            119.485139,
+            25.924026
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_006_7fc06264__900000139164_007_098b408a",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV11339271",
+        "from_station_name": "莲花山",
+        "to_station_id": "BV11339276",
+        "to_station_name": "首占"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.485139,
+            25.924026
+          ],
+          [
+            119.386657,
+            25.930472
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_007_098b408a__900000139164_008_b76143fb",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV11339276",
+        "from_station_name": "首占",
+        "to_station_id": "BV11339273",
+        "to_station_name": "祥谦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.386657,
+            25.930472
+          ],
+          [
+            119.335897,
+            25.988708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_008_b76143fb__900000139164_009_87bda8d8",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV11339273",
+        "from_station_name": "祥谦",
+        "to_station_id": "BV11506304",
+        "to_station_name": "帝封江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.335897,
+            25.988708
+          ],
+          [
+            119.329926,
+            26.008613
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_009_87bda8d8__900000139164_010_070b9d24",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV11506304",
+        "from_station_name": "帝封江",
+        "to_station_id": "BV11339278",
+        "to_station_name": "盖山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.329926,
+            26.008613
+          ],
+          [
+            119.322679,
+            26.035376
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_010_070b9d24__900000139164_011_30a0c067",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV11339278",
+        "from_station_name": "盖山",
+        "to_station_id": "BV09434317",
+        "to_station_name": "三叉街(滨海快线)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.322679,
+            26.035376
+          ],
+          [
+            119.319896,
+            26.064099
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_011_30a0c067__900000139164_012_5686b3d8",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV09434317",
+        "from_station_name": "三叉街(滨海快线)",
+        "to_station_id": "BV11339279",
+        "to_station_name": "南公园"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.319896,
+            26.064099
+          ],
+          [
+            119.319328,
+            26.075525
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_012_5686b3d8__900000139164_013_1c6a2449",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV11339279",
+        "from_station_name": "南公园",
+        "to_station_id": "BV11339274",
+        "to_station_name": "闽都"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.319328,
+            26.075525
+          ],
+          [
+            119.316656,
+            26.087023
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_013_1c6a2449__900000139164_014_d3c3e23d",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV11339274",
+        "from_station_name": "闽都",
+        "to_station_id": "BV11352891",
+        "to_station_name": "东门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.316656,
+            26.087023
+          ],
+          [
+            119.318352,
+            26.110549
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139164_014_d3c3e23d__900000139164_015_b7319bc8",
+        "line_id": "900000139164",
+        "line_name": "滨海快线(文岭--福州火车站)",
+        "direction_start": "文岭",
+        "direction_end": "福州火车站",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV11352891",
+        "from_station_name": "东门",
+        "to_station_id": "BV10687408",
+        "to_station_name": "福州火车站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.318352,
+            26.110549
+          ],
+          [
+            119.316656,
+            26.087023
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_001_b7319bc8__900000139163_002_d3c3e23d",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 1,
+        "to_sequence": 2,
+        "from_station_id": "BV10687408",
+        "from_station_name": "福州火车站",
+        "to_station_id": "BV11352891",
+        "to_station_name": "东门"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.316656,
+            26.087023
+          ],
+          [
+            119.319328,
+            26.075525
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_002_d3c3e23d__900000139163_003_1c6a2449",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 2,
+        "to_sequence": 3,
+        "from_station_id": "BV11352891",
+        "from_station_name": "东门",
+        "to_station_id": "BV11339274",
+        "to_station_name": "闽都"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.319328,
+            26.075525
+          ],
+          [
+            119.319896,
+            26.064099
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_003_1c6a2449__900000139163_004_5686b3d8",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 3,
+        "to_sequence": 4,
+        "from_station_id": "BV11339274",
+        "from_station_name": "闽都",
+        "to_station_id": "BV11339279",
+        "to_station_name": "南公园"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.319896,
+            26.064099
+          ],
+          [
+            119.322679,
+            26.035376
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_004_5686b3d8__900000139163_005_30a0c067",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 4,
+        "to_sequence": 5,
+        "from_station_id": "BV11339279",
+        "from_station_name": "南公园",
+        "to_station_id": "BV09434317",
+        "to_station_name": "三叉街(滨海快线)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.322679,
+            26.035376
+          ],
+          [
+            119.329926,
+            26.008613
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_005_30a0c067__900000139163_006_070b9d24",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 5,
+        "to_sequence": 6,
+        "from_station_id": "BV09434317",
+        "from_station_name": "三叉街(滨海快线)",
+        "to_station_id": "BV11339278",
+        "to_station_name": "盖山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.329926,
+            26.008613
+          ],
+          [
+            119.335897,
+            25.988708
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_006_070b9d24__900000139163_007_87bda8d8",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 6,
+        "to_sequence": 7,
+        "from_station_id": "BV11339278",
+        "from_station_name": "盖山",
+        "to_station_id": "BV11506304",
+        "to_station_name": "帝封江"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.335897,
+            25.988708
+          ],
+          [
+            119.386657,
+            25.930472
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_007_87bda8d8__900000139163_008_b76143fb",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 7,
+        "to_sequence": 8,
+        "from_station_id": "BV11506304",
+        "from_station_name": "帝封江",
+        "to_station_id": "BV11339273",
+        "to_station_name": "祥谦"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.386657,
+            25.930472
+          ],
+          [
+            119.485139,
+            25.924026
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_008_b76143fb__900000139163_009_098b408a",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 8,
+        "to_sequence": 9,
+        "from_station_id": "BV11339273",
+        "from_station_name": "祥谦",
+        "to_station_id": "BV11339276",
+        "to_station_name": "首占"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.485139,
+            25.924026
+          ],
+          [
+            119.557451,
+            25.914093
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_009_098b408a__900000139163_010_7fc06264",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 9,
+        "to_sequence": 10,
+        "from_station_id": "BV11339276",
+        "from_station_name": "首占",
+        "to_station_id": "BV11339271",
+        "to_station_name": "莲花山"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.557451,
+            25.914093
+          ],
+          [
+            119.568892,
+            25.907859
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_010_7fc06264__900000139163_011_cbee3d46",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 10,
+        "to_sequence": 11,
+        "from_station_id": "BV11339271",
+        "from_station_name": "莲花山",
+        "to_station_id": "BV11339281",
+        "to_station_name": "滨海西"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.568892,
+            25.907859
+          ],
+          [
+            119.597792,
+            25.891571
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_011_cbee3d46__900000139163_012_ec4741c6",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 11,
+        "to_sequence": 12,
+        "from_station_id": "BV11339281",
+        "from_station_name": "滨海西",
+        "to_station_id": "BV11339280",
+        "to_station_name": "大数据"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.597792,
+            25.891571
+          ],
+          [
+            119.609675,
+            25.884204
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_012_ec4741c6__900000139163_013_526ee247",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 12,
+        "to_sequence": 13,
+        "from_station_id": "BV11339280",
+        "from_station_name": "大数据",
+        "to_station_id": "BV09198673",
+        "to_station_name": "滨海中央商务区"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.609675,
+            25.884204
+          ],
+          [
+            119.67529,
+            25.92792
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_013_526ee247__900000139163_014_c135cefa",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 13,
+        "to_sequence": 14,
+        "from_station_id": "BV09198673",
+        "from_station_name": "滨海中央商务区",
+        "to_station_id": "BV11339272",
+        "to_station_name": "机场"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.67529,
+            25.92792
+          ],
+          [
+            119.695267,
+            25.973998
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "900000139163_014_c135cefa__900000139163_015_7760d1ec",
+        "line_id": "900000139163",
+        "line_name": "滨海快线(福州火车站--文岭)",
+        "direction_start": "福州火车站",
+        "direction_end": "文岭",
+        "from_sequence": 14,
+        "to_sequence": 15,
+        "from_station_id": "BV11339272",
+        "from_station_name": "机场",
+        "to_station_id": "BV11339275",
+        "to_station_name": "文岭"
+      }
+    }
+  ]
+}

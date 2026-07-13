@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "72路(公交鹤林站--森林公园)",
+    "target_line_id": "fix_72路",
+    "target_line_name": "72路(公交鹤林站--森林公园)",
+    "target_start_stop": "公交鹤林站",
+    "target_end_stop": "森林公园"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=72路(公交鹤林站--森林公园);expected_line=72路",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "72路",
+  "final_source_label": "high_confidence_fix_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708\\0017_72路(公交鹤林站--森林公园)",
+  "final_copied_xml_count": 3,
+  "final_generated_at": "2026-07-09T11:15:51"
+}

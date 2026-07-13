@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "320路(鳌峰洲公交总站--洪山桥小区)",
+    "target_line_id": "350100000000.0",
+    "target_line_name": "320路(鳌峰洲公交总站--洪山桥小区)",
+    "target_start_stop": "鳌峰洲公交总站",
+    "target_end_stop": "洪山桥小区"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=320路(鳌峰洲公交总站--洪山桥小区);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "320路(鳌峰洲公交总站--洪山桥小区)",
+      "observed_line": "320路",
+      "direction_from": "洪山桥小区",
+      "direction_to": "鳌峰洲公交总站",
+      "service_start": "06:00",
+      "service_end": "21:30",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "洪山桥小区→鳌峰洲公交总站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "320路(鳌峰洲公交总站--洪山桥小区)",
+      "observed_line": "320路",
+      "direction_from": "鳌峰洲公交总站",
+      "direction_to": "洪山桥小区",
+      "service_start": "06:00",
+      "service_end": "22:00",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "鳌峰洲公交总站→洪山桥小区"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "洪山桥小区→鳌峰洲公交总站",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "鳌峰洲公交总站→洪山桥小区",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "320路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0004_320路(鳌峰洲公交总站--洪山桥小区)",
+  "final_copied_xml_count": 5,
+  "final_generated_at": "2026-07-09T11:15:22"
+}

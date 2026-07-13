@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "306路(义序公交综合车场--公交仁德站)",
+    "target_line_id": "fix_306路",
+    "target_line_name": "306路(义序公交综合车场--公交仁德站)",
+    "target_start_stop": "义序公交综合车场",
+    "target_end_stop": "公交仁德站"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=306路(义序公交综合车场--公交仁德站);expected_line=306路",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "306路",
+  "final_source_label": "high_confidence_fix_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708\\0010_306路(义序公交综合车场--公交仁德站)",
+  "final_copied_xml_count": 3,
+  "final_generated_at": "2026-07-09T11:15:20"
+}

@@ -1,0 +1,85 @@
+{
+  "target": {
+    "query": "马尾快线4号线(海军医院(马尾快线停车场)--文化宫)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "马尾快线4号线(海军医院(马尾快线停车场)--文化宫)",
+    "target_start_stop": "海军医院(马尾快线停车场)",
+    "target_end_stop": "文化宫"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=马尾快线4号线(海军医院(马尾快线停车场)--文化宫);entry=visible_result",
+  "scrolls": 4,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "马尾快线4号线(海军医院(马尾快线停车场)--文化宫)",
+      "observed_line": "马尾快线4号线",
+      "direction_from": "文化宫站",
+      "direction_to": "海军医院站",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "文化宫站→海军医院站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "马尾快线4号线(海军医院(马尾快线停车场)--文化宫)",
+      "observed_line": "马尾快线4号线",
+      "direction_from": "文化宫",
+      "direction_to": "时刻表(发车预测)",
+      "service_start": "17:45",
+      "service_end": "17:45",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "文化宫→时刻表(发车预测)"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "文化宫站→海军医院站",
+      "expand_action": "expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "文化宫站→海军医院站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "文化宫站→海军医院站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "文化宫→时刻表(发车预测)",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "马尾快线4号线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0016_马尾快线4号线(海军医院(马尾快线停车场)--文化宫)",
+  "final_copied_xml_count": 17,
+  "final_generated_at": "2026-07-09T11:16:27"
+}

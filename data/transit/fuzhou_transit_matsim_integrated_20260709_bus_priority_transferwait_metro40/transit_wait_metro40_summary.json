@@ -1,0 +1,11 @@
+{
+  "bus_routes_trimmed": 233,
+  "bus_links_removed": 4474,
+  "bus_routes_with_index_warnings": 0,
+  "regular_bus_routes_densified": 48,
+  "metro_routes": 12,
+  "metro_speed_factor": 1.35,
+  "metro_headway_factor": 0.75,
+  "profile_warnings": [],
+  "target_metric": "metro in-vehicle plus waiting speed approximately 40 km/h; verify after simulation"
+}

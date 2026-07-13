@@ -1,0 +1,95 @@
+{
+  "created_at": "2026-07-09T17:46:26",
+  "line_count": 12,
+  "needs_supplement": 0,
+  "complete": 0,
+  "complete_with_estimated_or_derivable_fields": 12,
+  "needs_supplement_lines": [],
+  "estimated_or_derivable_lines": [
+    {
+      "line_id": "350100020613",
+      "line_name": "地铁1号线(三江口--象峰)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "350100020612",
+      "line_name": "地铁1号线(象峰--三江口)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "350100020746",
+      "line_name": "地铁2号线(洋里--苏洋)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "350100020745",
+      "line_name": "地铁2号线(苏洋--洋里)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "900000090237",
+      "line_name": "地铁4号线(半洲--帝封江)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "900000090236",
+      "line_name": "地铁4号线(帝封江--半洲)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "900000088654",
+      "line_name": "地铁5号线(福州火车南站--荆溪厚屿)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "900000088653",
+      "line_name": "地铁5号线(荆溪厚屿--福州火车南站)",
+      "frequency_sources": "amap_timedesc",
+      "audit_warnings": "line_csv_start_time_end_time_blank_but_derivable_from_frequency_periods",
+      "coverage_remaining_missing_items": ""
+    },
+    {
+      "line_id": "900000076583",
+      "line_name": "地铁6号线(万寿--潘墩)",
+      "frequency_sources": "estimated_from_existing_active_metro_profiles_20260709",
+      "audit_warnings": "frequency_estimated_requires_official_validation",
+      "coverage_remaining_missing_items": "official validation of estimated full-day frequency"
+    },
+    {
+      "line_id": "900000076581",
+      "line_name": "地铁6号线(潘墩--万寿)",
+      "frequency_sources": "estimated_from_existing_active_metro_profiles_20260709;user_screenshot_amap_mobile",
+      "audit_warnings": "frequency_estimated_requires_official_validation",
+      "coverage_remaining_missing_items": "official validation of estimated full-day frequency"
+    },
+    {
+      "line_id": "900000139164",
+      "line_name": "滨海快线(文岭--福州火车站)",
+      "frequency_sources": "estimated_from_existing_active_metro_profiles_20260709",
+      "audit_warnings": "frequency_estimated_requires_official_validation",
+      "coverage_remaining_missing_items": "official validation of estimated full-day frequency"
+    },
+    {
+      "line_id": "900000139163",
+      "line_name": "滨海快线(福州火车站--文岭)",
+      "frequency_sources": "estimated_from_existing_active_metro_profiles_20260709",
+      "audit_warnings": "frequency_estimated_requires_official_validation",
+      "coverage_remaining_missing_items": "official validation of estimated full-day frequency"
+    }
+  ],
+  "interpretation": "After supplement, every active metro direction has geometry, station order, adjacent edges, and full-day headway rows. Line 6 and Binhai Express frequencies are estimated from existing active metro profiles and require official validation."
+}

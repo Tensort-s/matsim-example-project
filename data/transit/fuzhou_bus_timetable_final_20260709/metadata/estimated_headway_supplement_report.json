@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-07-09T16:31:24",
+  "operation": "estimate_remaining_bus_timetable_headways",
+  "summary": {
+    "applied_at": "2026-07-09T16:31:24",
+    "target_lines_without_direct_lineid_headway": 168,
+    "estimated_lines": 168,
+    "remaining_without_estimation": 0,
+    "header_rows_added": 319,
+    "rule_rows_added": 1108,
+    "regularized_rule_rows_added": 1108,
+    "raw_text_rows_added": 319,
+    "merge_source": "estimated_headway_supplement_20260709",
+    "annotation": "All estimated rows are marked correction_status=estimated_headway_no_direct_amap_timedesc and rule_source/rule_type=estimated_headway.",
+    "method_summary": {
+      "reference_basis": "nearby regular routes by numeric route id when possible; otherwise same route-category observed medians; otherwise explicit category defaults",
+      "first_last_time_basis": "AMap line start_time/end_time when available; otherwise route category defaults with night/school/commuter hints",
+      "no_direct_source_claim": "These are estimates, not operator-published schedules."
+    }
+  },
+  "default_profile": {
+    "regular": {
+      "early": 18,
+      "morning_peak": 9,
+      "midday": 12,
+      "evening_peak": 10,
+      "night": 18
+    },
+    "special": {
+      "early": 30,
+      "morning_peak": 20,
+      "midday": 25,
+      "evening_peak": 20,
+      "night": 30
+    },
+    "metro_connector": {
+      "early": 20,
+      "morning_peak": 12,
+      "midday": 15,
+      "evening_peak": 12,
+      "night": 30
+    },
+    "airport": {
+      "early": 60,
+      "morning_peak": 30,
+      "midday": 30,
+      "evening_peak": 30,
+      "night": 60
+    },
+    "tourist": {
+      "early": 60,
+      "morning_peak": 30,
+      "midday": 30,
+      "evening_peak": 30,
+      "night": 60
+    },
+    "school_special": {
+      "school_morning": 15,
+      "school_evening": 20,
+      "morning_peak": 15,
+      "evening_peak": 20
+    },
+    "commuter_special": {
+      "commute_morning": 15,
+      "commute_evening": 20,
+      "morning_peak": 15,
+      "evening_peak": 20
+    },
+    "night": {
+      "night": 20,
+      "early": 30,
+      "morning_peak": 30,
+      "midday": 30,
+      "evening_peak": 25
+    }
+  },
+  "default_service_minutes": {
+    "regular": [
+      360,
+      1320
+    ],
+    "special": [
+      390,
+      1260
+    ],
+    "metro_connector": [
+      390,
+      1320
+    ],
+    "airport": [
+      360,
+      1380
+    ],
+    "tourist": [
+      510,
+      1080
+    ],
+    "school_special": [
+      390,
+      1110
+    ],
+    "commuter_special": [
+      390,
+      1170
+    ],
+    "night": [
+      1200,
+      1439
+    ]
+  }
+}

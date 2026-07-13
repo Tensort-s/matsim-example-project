@@ -1,0 +1,52 @@
+{
+  "created_at": "2026-07-09T11:31:37",
+  "final_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709",
+  "source_stop_pois_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_stop_pois_amap",
+  "source_stopid_lineid_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_stopid_lineid",
+  "validation": {
+    "stop_summary_counts": {
+      "unique_poi_count": 1831,
+      "inside_boundary_count": 1641,
+      "inside_boundary_500m_buffer_count": 1669
+    },
+    "line_summary_counts": {
+      "selected_stop_ids": 1739,
+      "unique_line_ids_discovered": 802,
+      "line_records_full": 801,
+      "line_trajectories": 801,
+      "stops_by_line_records": 19180,
+      "adjacent_stop_edges": 18379,
+      "service_frequency_rows": 2143,
+      "complete_stop_count": 2625
+    },
+    "known_sample_presence": {
+      "BV10208391": true,
+      "BV10553038": true,
+      "BV10665298": true
+    },
+    "table_counts": {
+      "amap_bus_stop_pois_unique_rows": 1831,
+      "amap_bus_stop_ids_selected_2km_buffer_rows": 1739,
+      "amap_bus_lines_full_rows": 801,
+      "amap_bus_stops_by_line_full_rows": 19180,
+      "amap_bus_adjacent_stop_edges_full_rows": 18379,
+      "amap_bus_service_frequency_full_rows": 2143,
+      "amap_bus_stops_complete_rows": 2625
+    },
+    "summary_output_missing": [],
+    "final_file_manifest_rows": 28,
+    "actual_final_file_count": 28,
+    "passed": true
+  },
+  "delete_after_validation": [
+    "fuzhou_bus_stop_pois_amap",
+    "fuzhou_bus_amap_stopid_lineid",
+    "fuzhou_bus_amap_pilot",
+    "fuzhou_bus_amap_citywide_300",
+    "fuzhou_bus_amap_wikipedia_discovery",
+    "fuzhou_bus_amap_wikipedia_30",
+    "fuzhou_bus_amap_wikipedia_30_retry_20260707",
+    "fuzhou_bus_amap_wikipedia_31_90_20260707",
+    "fuzhou_bus_amap_8684_discovery"
+  ]
+}

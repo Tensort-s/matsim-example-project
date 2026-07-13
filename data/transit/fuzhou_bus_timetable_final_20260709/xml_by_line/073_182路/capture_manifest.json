@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "182路(敬老线路)(火车站北广场--动物园)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "182路(敬老线路)(火车站北广场--动物园)",
+    "target_start_stop": "火车站北广场",
+    "target_end_stop": "动物园"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=182路(敬老线路)(火车站北广场--动物园)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "182路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0065_182路(敬老线路)(火车站北广场--动物园)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:15:09"
+}

@@ -1,0 +1,5 @@
+vehicle_type,old_seats,old_standingRoomInPersons,new_seats,new_standingRoomInPersons,old_total_capacity,new_total_capacity
+bus_standard_capacity_80,28,52,6,10,80,16
+metro_b_4car_capacity_1358,340,1018,68,204,1358,272
+metro_b_b2_6car_capacity_1460,365,1095,73,219,1460,292
+metro_f1_4car_capacity_1084,271,813,54,163,1084,217

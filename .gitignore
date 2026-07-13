@@ -18,8 +18,27 @@ hs_err_pid*
 
 /target/
 /output/
+/output-*/
+/outputs/
 /test/output/
 /bin/
+/dependency-reduced-pom.xml
+/.venv_geo311/
+/.venv_wedan/
+/.dgl/
+/.tools/
+/run_logs/
+/docs/pdf-text/
+/data/osm/
+/data/worldcommuting_od/
+/data/models/
+/data/imagery/
+/data/gee/
+/data/matsim_agents/
+/data/matsim_routes/
+tmp_*.txt
+__pycache__/
+*.py[cod]
 
 # IntelliJ
 /.idea/

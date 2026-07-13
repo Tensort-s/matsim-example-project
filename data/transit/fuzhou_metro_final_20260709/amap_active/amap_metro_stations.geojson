@@ -1,0 +1,1931 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.60263,
+          25.899952
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877581",
+        "amap_stop_id": "BV10877581",
+        "station_name": "万寿",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.326693,
+          26.034785
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210904",
+        "amap_stop_id": "BV10210904",
+        "station_name": "三叉街",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.322679,
+          26.035376
+        ]
+      },
+      "properties": {
+        "station_id": "BV09434317",
+        "amap_stop_id": "BV09434317",
+        "station_name": "三叉街(滨海快线)",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.426122,
+          25.978861
+        ]
+      },
+      "properties": {
+        "station_id": "BV11473936",
+        "amap_stop_id": "BV11473936",
+        "station_name": "三江口",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.368306,
+          25.990796
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208689",
+        "amap_stop_id": "BV10208689",
+        "station_name": "三角埕",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.326262,
+          26.090976
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972421",
+        "amap_stop_id": "BV10972421",
+        "station_name": "三角池",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.363035,
+          26.066498
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208603",
+        "amap_stop_id": "BV10208603",
+        "station_name": "上洋",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.320579,
+          26.043708
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687405",
+        "amap_stop_id": "BV10687405",
+        "station_name": "上藤",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.187292,
+          26.075713
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208880",
+        "amap_stop_id": "BV10208880",
+        "station_name": "上街",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.582616,
+          25.912233
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877578",
+        "amap_stop_id": "BV10877578",
+        "station_name": "下吴",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.420776,
+          25.984204
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687392",
+        "amap_stop_id": "BV10687392",
+        "station_name": "下洋",
+        "line_ids": "350100020612;350100020613;900000076581;900000076583",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.277347,
+          26.013371
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961085",
+        "amap_stop_id": "BV10961085",
+        "station_name": "东岭",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.299259,
+          26.08596
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687403",
+        "amap_stop_id": "BV10687403",
+        "station_name": "东街口",
+        "line_ids": "350100020612;350100020613;900000090236;900000090237",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.315019,
+          26.08759
+        ]
+      },
+      "properties": {
+        "station_id": "BV11352891",
+        "amap_stop_id": "BV11352891",
+        "station_name": "东门",
+        "line_ids": "900000090236;900000090237;900000139163;900000139164",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲);滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.32743,
+          25.986895
+        ]
+      },
+      "properties": {
+        "station_id": "BV11505097",
+        "amap_stop_id": "BV11505097",
+        "station_name": "义序",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.340276,
+          26.074265
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210923",
+        "amap_stop_id": "BV10210923",
+        "station_name": "五里亭",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.359563,
+          26.029607
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972426",
+        "amap_stop_id": "BV10972426",
+        "station_name": "会展中心",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.346742,
+          26.064404
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972431",
+        "amap_stop_id": "BV10972431",
+        "station_name": "光明港",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.247234,
+          26.084851
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961088",
+        "amap_stop_id": "BV10961088",
+        "station_name": "农林大学",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.27271,
+          26.078389
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972420",
+        "amap_stop_id": "BV10972420",
+        "station_name": "凤凰池",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.266951,
+          26.038708
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961083",
+        "amap_stop_id": "BV10961083",
+        "station_name": "凤岗里",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.350588,
+          26.07256
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208537",
+        "amap_stop_id": "BV10208537",
+        "station_name": "前屿",
+        "line_ids": "350100020745;350100020746;900000090236;900000090237",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里);地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.362402,
+          25.984426
+        ]
+      },
+      "properties": {
+        "station_id": "BV11623384",
+        "amap_stop_id": "BV11623384",
+        "station_name": "前锦",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.515221,
+          25.958195
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877573",
+        "amap_stop_id": "BV10877573",
+        "station_name": "十洋",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.237833,
+          26.056572
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972437",
+        "amap_stop_id": "BV10972437",
+        "station_name": "半洲",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.319896,
+          26.064099
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339279",
+        "amap_stop_id": "BV11339279",
+        "station_name": "南公园",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.301619,
+          26.077774
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210902",
+        "amap_stop_id": "BV10210902",
+        "station_name": "南门兜",
+        "line_ids": "350100020612;350100020613;350100020745;350100020746",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.214929,
+          26.04133
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210914",
+        "amap_stop_id": "BV10210914",
+        "station_name": "厚庭",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.281334,
+          26.005975
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961089",
+        "amap_stop_id": "BV10961089",
+        "station_name": "台屿",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.352461,
+          26.081212
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972434",
+        "amap_stop_id": "BV10972434",
+        "station_name": "后屿",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.311356,
+          25.997459
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961090",
+        "amap_stop_id": "BV10961090",
+        "station_name": "吴山",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.528927,
+          25.951181
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877577",
+        "amap_stop_id": "BV10877577",
+        "station_name": "吴航",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.36022,
+          25.996158
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208691",
+        "amap_stop_id": "BV10208691",
+        "station_name": "城门",
+        "line_ids": "350100020612;350100020613;900000090236;900000090237",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.593335,
+          25.905685
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877566",
+        "amap_stop_id": "BV10877566",
+        "station_name": "壶井",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.597792,
+          25.891571
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339280",
+        "amap_stop_id": "BV11339280",
+        "station_name": "大数据",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.293343,
+          26.06265
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210920",
+        "amap_stop_id": "BV10210920",
+        "station_name": "宁化",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.402224,
+          25.992335
+        ]
+      },
+      "properties": {
+        "station_id": "BV11473935",
+        "amap_stop_id": "BV11473935",
+        "station_name": "安平",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.297038,
+          26.096256
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687400",
+        "amap_stop_id": "BV10687400",
+        "station_name": "屏山",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.33544,
+          25.987382
+        ]
+      },
+      "properties": {
+        "station_id": "BV11506304",
+        "amap_stop_id": "BV11506304",
+        "station_name": "帝封江",
+        "line_ids": "900000088653;900000088654;900000090236;900000090237;900000139163;900000139164",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲);地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站);滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.237864,
+          26.064362
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972425",
+        "amap_stop_id": "BV10972425",
+        "station_name": "建新",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.354008,
+          26.001603
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208471",
+        "amap_stop_id": "BV10208471",
+        "station_name": "排下",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.695267,
+          25.973998
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339275",
+        "amap_stop_id": "BV11339275",
+        "station_name": "文岭",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.313723,
+          26.103973
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687401",
+        "amap_stop_id": "BV10687401",
+        "station_name": "斗门",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.67529,
+          25.92792
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339272",
+        "amap_stop_id": "BV11339272",
+        "station_name": "机场",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.365369,
+          26.015993
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877575",
+        "amap_stop_id": "BV10877575",
+        "station_name": "林浦",
+        "line_ids": "900000076581;900000076583;900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲);地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.305985,
+          26.102208
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687402",
+        "amap_stop_id": "BV10687402",
+        "station_name": "树兜",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.242783,
+          26.046869
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210915",
+        "amap_stop_id": "BV10210915",
+        "station_name": "桔园洲",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.415109,
+          25.994261
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687393",
+        "amap_stop_id": "BV10687393",
+        "station_name": "梁厝",
+        "line_ids": "350100020612;350100020613;900000076581;900000076583",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.389454,
+          26.006301
+        ]
+      },
+      "properties": {
+        "station_id": "BV11667315",
+        "amap_stop_id": "BV11667315",
+        "station_name": "樟岚",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.352237,
+          26.089831
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972422",
+        "amap_stop_id": "BV10972422",
+        "station_name": "横屿",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.314169,
+          26.076428
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210922",
+        "amap_stop_id": "BV10210922",
+        "station_name": "水部",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.54656,
+          25.930828
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877570",
+        "amap_stop_id": "BV10877570",
+        "station_name": "沙京",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.173983,
+          26.085788
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208894",
+        "amap_stop_id": "BV10208894",
+        "station_name": "沙堤",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.372233,
+          26.045254
+        ]
+      },
+      "properties": {
+        "station_id": "BV10744868",
+        "amap_stop_id": "BV10744868",
+        "station_name": "洋里",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.248816,
+          26.073328
+        ]
+      },
+      "properties": {
+        "station_id": "BV11352892",
+        "amap_stop_id": "BV11352892",
+        "station_name": "洪塘",
+        "line_ids": "900000088653;900000088654;900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲);地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.250071,
+          26.047386
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210916",
+        "amap_stop_id": "BV10210916",
+        "station_name": "洪湾",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.272675,
+          26.034091
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961091",
+        "amap_stop_id": "BV10961091",
+        "station_name": "浦上大道",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.609675,
+          25.884204
+        ]
+      },
+      "properties": {
+        "station_id": "BV09198673",
+        "amap_stop_id": "BV09198673",
+        "station_name": "滨海中央商务区",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.568892,
+          25.907859
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339281",
+        "amap_stop_id": "BV11339281",
+        "station_name": "滨海西",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.357766,
+          26.020812
+        ]
+      },
+      "properties": {
+        "station_id": "BV11667316",
+        "amap_stop_id": "BV11667316",
+        "station_name": "潘墩",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.335262,
+          26.025916
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208407",
+        "amap_stop_id": "BV10208407",
+        "station_name": "白湖亭",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.329926,
+          26.008613
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339278",
+        "amap_stop_id": "BV11339278",
+        "station_name": "盖山",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.320584,
+          25.993747
+        ]
+      },
+      "properties": {
+        "station_id": "BV11505098",
+        "amap_stop_id": "BV11505098",
+        "station_name": "盖山竹榄",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.292994,
+          25.999391
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961098",
+        "amap_stop_id": "BV10961098",
+        "station_name": "盘屿",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.307142,
+          26.086704
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972435",
+        "amap_stop_id": "BV10972435",
+        "station_name": "省立医院",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.286022,
+          26.060749
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210919",
+        "amap_stop_id": "BV10210919",
+        "station_name": "祥坂",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.386657,
+          25.930472
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339273",
+        "amap_stop_id": "BV11339273",
+        "station_name": "祥谦",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.20348,
+          26.058382
+        ]
+      },
+      "properties": {
+        "station_id": "BV10604609",
+        "amap_stop_id": "BV10604609",
+        "station_name": "福州大学",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.391878,
+          25.986372
+        ]
+      },
+      "properties": {
+        "station_id": "BV10603792",
+        "amap_stop_id": "BV10603792",
+        "station_name": "福州火车南站",
+        "line_ids": "350100020612;350100020613;900000088653;900000088654",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.318133,
+          26.112978
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687408",
+        "amap_stop_id": "BV10687408",
+        "station_name": "福州火车站",
+        "line_ids": "350100020612;350100020613;900000139163;900000139164",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口);滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.321016,
+          26.133785
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687406",
+        "amap_stop_id": "BV10687406",
+        "station_name": "秀山",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.337675,
+          26.09304
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972423",
+        "amap_stop_id": "BV10972423",
+        "station_name": "竹屿",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.327173,
+          26.076378
+        ]
+      },
+      "properties": {
+        "station_id": "BV10604608",
+        "amap_stop_id": "BV10604608",
+        "station_name": "紫阳",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.318365,
+          26.126091
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687407",
+        "amap_stop_id": "BV10687407",
+        "station_name": "罗汉山",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.380086,
+          25.984504
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210905",
+        "amap_stop_id": "BV10210905",
+        "station_name": "胪雷",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.491172,
+          25.951756
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877568",
+        "amap_stop_id": "BV10877568",
+        "station_name": "航城",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.350335,
+          26.040098
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972430",
+        "amap_stop_id": "BV10972430",
+        "station_name": "花海公园",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.15963,
+          26.098509
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210910",
+        "amap_stop_id": "BV10210910",
+        "station_name": "苏洋",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.304376,
+          26.069167
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687399",
+        "amap_stop_id": "BV10687399",
+        "station_name": "茶亭",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.231542,
+          26.109727
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961087",
+        "amap_stop_id": "BV10961087",
+        "station_name": "荆溪厚屿",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.571059,
+          25.91924
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877571",
+        "amap_stop_id": "BV10877571",
+        "station_name": "莲花",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.557451,
+          25.914093
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339271",
+        "amap_stop_id": "BV11339271",
+        "station_name": "莲花山",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.474237,
+          25.956739
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877576",
+        "amap_stop_id": "BV10877576",
+        "station_name": "营前",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.207305,
+          26.041328
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210913",
+        "amap_stop_id": "BV10210913",
+        "station_name": "董屿·福建师大",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.343548,
+          26.017116
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208456",
+        "amap_stop_id": "BV10208456",
+        "station_name": "葫芦阵",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.35138,
+          25.986273
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961096",
+        "amap_stop_id": "BV10961096",
+        "station_name": "螺洲古镇",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.349023,
+          25.990339
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972427",
+        "amap_stop_id": "BV10972427",
+        "station_name": "螺洲温泉",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.296889,
+          26.071661
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210921",
+        "amap_stop_id": "BV10210921",
+        "station_name": "西洋",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.290055,
+          26.0847
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972428",
+        "amap_stop_id": "BV10972428",
+        "station_name": "西门",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.329639,
+          26.143436
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687409",
+        "amap_stop_id": "BV10687409",
+        "station_name": "象峰",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.309855,
+          26.056982
+        ]
+      },
+      "properties": {
+        "station_id": "BV10687404",
+        "amap_stop_id": "BV10687404",
+        "station_name": "达道",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.503077,
+          25.958179
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877572",
+        "amap_stop_id": "BV10877572",
+        "station_name": "郑和",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.262331,
+          26.047449
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210917",
+        "amap_stop_id": "BV10210917",
+        "station_name": "金山",
+        "line_ids": "350100020745;350100020746;900000088653;900000088654",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里);地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.199991,
+          26.067353
+        ]
+      },
+      "properties": {
+        "station_id": "BV10604610",
+        "amap_stop_id": "BV10604610",
+        "station_name": "金屿",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.261723,
+          26.076302
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972432",
+        "amap_stop_id": "BV10972432",
+        "station_name": "金牛山",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.271125,
+          26.048518
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210918",
+        "amap_stop_id": "BV10210918",
+        "station_name": "金祥",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.319328,
+          26.075525
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339274",
+        "amap_stop_id": "BV11339274",
+        "station_name": "闽都",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.251769,
+          26.065387
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961084",
+        "amap_stop_id": "BV10961084",
+        "station_name": "阵坂",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.283452,
+          26.082467
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972429",
+        "amap_stop_id": "BV10972429",
+        "station_name": "陆庄",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.276478,
+          26.025311
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961097",
+        "amap_stop_id": "BV10961097",
+        "station_name": "霞镜",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.485139,
+          25.924026
+        ]
+      },
+      "properties": {
+        "station_id": "BV11339276",
+        "amap_stop_id": "BV11339276",
+        "station_name": "首占",
+        "line_ids": "900000139163;900000139164",
+        "line_names": "滨海快线(文岭--福州火车站);滨海快线(福州火车站--文岭)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.258374,
+          26.055436
+        ]
+      },
+      "properties": {
+        "station_id": "BV10961093",
+        "amap_stop_id": "BV10961093",
+        "station_name": "马榕",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.344516,
+          26.054747
+        ]
+      },
+      "properties": {
+        "station_id": "BV10972424",
+        "amap_stop_id": "BV10972424",
+        "station_name": "鳌峰洲",
+        "line_ids": "900000090236;900000090237",
+        "line_names": "地铁4号线(半洲--帝封江);地铁4号线(帝封江--半洲)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.538539,
+          25.940531
+        ]
+      },
+      "properties": {
+        "station_id": "BV10877580",
+        "amap_stop_id": "BV10877580",
+        "station_name": "鹤上",
+        "line_ids": "900000076581;900000076583",
+        "line_names": "地铁6号线(万寿--潘墩);地铁6号线(潘墩--万寿)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.348788,
+          26.010176
+        ]
+      },
+      "properties": {
+        "station_id": "BV10208454",
+        "amap_stop_id": "BV10208454",
+        "station_name": "黄山",
+        "line_ids": "350100020612;350100020613",
+        "line_names": "地铁1号线(三江口--象峰);地铁1号线(象峰--三江口)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.375054,
+          26.053312
+        ]
+      },
+      "properties": {
+        "station_id": "BV10210924",
+        "amap_stop_id": "BV10210924",
+        "station_name": "鼓山",
+        "line_ids": "350100020745;350100020746",
+        "line_names": "地铁2号线(洋里--苏洋);地铁2号线(苏洋--洋里)",
+        "occurrence_count": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.372382,
+          25.984442
+        ]
+      },
+      "properties": {
+        "station_id": "BV11623385",
+        "amap_stop_id": "BV11623385",
+        "station_name": "龙江",
+        "line_ids": "900000088653;900000088654",
+        "line_names": "地铁5号线(福州火车南站--荆溪厚屿);地铁5号线(荆溪厚屿--福州火车南站)",
+        "occurrence_count": 2
+      }
+    }
+  ]
+}

@@ -15,6 +15,10 @@
 		<param name="inputPlansFile" value="plans100_without-routes.xml" />
 	</module>
 
+	<module name="counts">
+		<param name="inputCountsFile" value="counts100.xml" />
+	</module>
+
 	<module name="controller">
 		<param name="outputDirectory" value="./output" />
 		<param name="lastIteration" value="10" />
@@ -38,10 +42,12 @@
 	<module name="replanning">
 		<parameterset type="strategysettings" >
 			<param name="strategyName" value="BestScore" />
+			<param name="subpopulation" value="default" />
 			<param name="weight" value="0.9" />
 		</parameterset>
 		<parameterset type="strategysettings" >
 			<param name="strategyName" value="ReRoute" />
+			<param name="subpopulation" value="default" />
 			<param name="weight" value="0.1" />
 		</parameterset>
 	</module>

@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-07-09T11:16:28",
+  "final_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_timetable_final_20260709",
+  "source_dirs": [
+    "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_all_lines_20260708",
+    "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708",
+    "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708"
+  ],
+  "validation": {
+    "headers_unique_queries": 404,
+    "success_query_count": 236,
+    "failed_or_marked_query_count": 168,
+    "ungrabbed_query_count": 7,
+    "departure_rows": 16874,
+    "rule_rows": 687,
+    "regularized_rule_rows": 1319,
+    "xml_line_dirs": 404,
+    "xml_consolidation_rows": 404,
+    "xml_files_copied": 6343,
+    "manifest_files_written": 404,
+    "expected": {
+      "headers_unique_queries": 404,
+      "success_query_count": 236,
+      "failed_or_marked_query_count": 168,
+      "ungrabbed_query_count": 7,
+      "departure_rows": 16874,
+      "rule_rows": 687,
+      "regularized_rule_rows": 1319
+    },
+    "passed": true
+  },
+  "planned_delete_patterns": [
+    "fuzhou_bus_amap_mobile_timetables*",
+    "test_316_route_priority_capture",
+    "top-level test_*.csv related to timetable collection"
+  ],
+  "final_check_at": "2026-07-09T11:20:06",
+  "final_stats": {
+    "headers_rows": 639,
+    "headers_unique_queries": 404,
+    "success_query_count": 236,
+    "failed_or_marked_query_count": 168,
+    "departures_rows": 16874,
+    "rules_rows": 687,
+    "regularized_rows": 1319,
+    "ungrabbed_rows": 7,
+    "failed_review_rows": 168,
+    "xml_line_dirs": 404,
+    "xml_files": 6343,
+    "manifest_files": 404,
+    "xml_consolidation_rows": 404,
+    "remaining_intermediate_dirs": [],
+    "removed_temp_csv_before_final_check": [
+      "test_309_full_line_input.csv",
+      "test_316_full_line_input.csv"
+    ],
+    "remaining_temp_csv_after_final_check": [],
+    "known_query_count": 404
+  }
+}

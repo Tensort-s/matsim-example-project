@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站)",
+    "target_start_stop": "空港快线光明港梅园酒店站",
+    "target_end_stop": "空港快线长乐机场站"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站);expected_line=空港快线梅园国际大酒店专线",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "空港快线梅园国际大酒店专线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0091_空港快线梅园国际大酒店专线(空港快线光明港梅园酒店站--空港快线长乐机场站)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:16:20"
+}

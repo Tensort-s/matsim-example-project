@@ -1,0 +1,10 @@
+﻿name,path,exists,file_count,csv_count,geojson_count,json_count,jsonl_count,png_count,bytes,mb
+fuzhou_bus_stop_pois_amap,matsim-example-project\data\transit\fuzhou_bus_stop_pois_amap,True,12,3,2,2,1,4,5081790,4.846
+fuzhou_bus_amap_stopid_lineid,matsim-example-project\data\transit\fuzhou_bus_amap_stopid_lineid,True,19,8,2,2,2,5,61912949,59.045
+fuzhou_bus_amap_pilot,matsim-example-project\data\transit\fuzhou_bus_amap_pilot,True,14,6,4,2,0,1,2642153,2.52
+fuzhou_bus_amap_citywide_300,matsim-example-project\data\transit\fuzhou_bus_amap_citywide_300,True,1,0,0,0,0,0,8436,0.008
+fuzhou_bus_amap_wikipedia_discovery,matsim-example-project\data\transit\fuzhou_bus_amap_wikipedia_discovery,True,4,1,0,2,0,0,9530,0.009
+fuzhou_bus_amap_wikipedia_30,matsim-example-project\data\transit\fuzhou_bus_amap_wikipedia_30,True,16,7,4,4,0,0,4831,0.005
+fuzhou_bus_amap_wikipedia_30_retry_20260707,matsim-example-project\data\transit\fuzhou_bus_amap_wikipedia_30_retry_20260707,True,15,7,4,3,0,0,32937209,31.411
+fuzhou_bus_amap_wikipedia_31_90_20260707,matsim-example-project\data\transit\fuzhou_bus_amap_wikipedia_31_90_20260707,True,15,7,4,3,0,0,23989700,22.878
+fuzhou_bus_amap_8684_discovery,matsim-example-project\data\transit\fuzhou_bus_amap_8684_discovery,True,4,1,0,2,0,0,3812,0.004

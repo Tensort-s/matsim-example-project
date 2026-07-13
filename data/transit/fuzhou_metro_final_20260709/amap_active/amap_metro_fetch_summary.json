@@ -1,0 +1,37 @@
+{
+  "city": "福州",
+  "keywords": [
+    "福州地铁1号线",
+    "福州地铁2号线",
+    "福州地铁4号线",
+    "福州地铁5号线",
+    "福州地铁6号线",
+    "福州地铁滨海快线",
+    "滨海快线",
+    "福州地铁F1线"
+  ],
+  "endpoint": "https://restapi.amap.com/v3/bus/linename",
+  "include_polyline": true,
+  "include_related_bus": false,
+  "active_only": true,
+  "exclude_name_regex": "东延|东调",
+  "raw_response_count": 8,
+  "metro_line_records": 12,
+  "station_records_unique": 107,
+  "stop_occurrences": 242,
+  "adjacent_stop_edges": 230,
+  "trajectory_records": 12,
+  "headway_note": "AMap bus line endpoint usually does not return train frequency/headway; see amap_metro_service_frequency.csv.",
+  "outputs": [
+    "amap_metro_adjacent_stop_edges.csv",
+    "amap_metro_adjacent_stop_edges.geojson",
+    "amap_metro_line_trajectories.geojson",
+    "amap_metro_lines.csv",
+    "amap_metro_service_frequency.csv",
+    "amap_metro_stations.csv",
+    "amap_metro_stations.geojson",
+    "amap_metro_stops_by_line.csv",
+    "amap_metro_stops_by_line.geojson",
+    "amap_raw_busline_responses_with_polyline.json"
+  ]
+}

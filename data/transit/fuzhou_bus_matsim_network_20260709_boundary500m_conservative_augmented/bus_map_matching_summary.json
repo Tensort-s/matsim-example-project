@@ -1,0 +1,54 @@
+{
+  "created_by": "scripts/build_fuzhou_bus_matsim_transit_mapmatched.py",
+  "coordinate_system": "EPSG:32650",
+  "inputs": {
+    "network": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\network_augmented_with_bus_trajectory_links.xml.gz",
+    "stops_by_line": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_coordinates_unified_20260709\\bus\\bus_stops_by_line_unified.csv",
+    "trajectories": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_coordinates_unified_20260709\\bus\\bus_line_trajectories_epsg32650.geojson",
+    "timetable_rules": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_timetable_final_20260709\\tables\\amap_mobile_timetable_regularized_rules.csv",
+    "boundary_geojson": "data\\osm\\fuzhou_city_23\\fuzhou_city_23_boundary.geojson"
+  },
+  "outputs": {
+    "network": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_network_with_pt.xml.gz",
+    "transitSchedule": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_transitSchedule.xml.gz",
+    "transitVehicles": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_transitVehicles.xml.gz",
+    "route_link_sequences": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_route_link_sequences.csv",
+    "stop_link_snap": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_stop_link_snap.csv",
+    "qa": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_map_matching_qa.csv",
+    "dropped_stops": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_dropped_stops_outside_boundary_buffer.csv",
+    "dropped_lines": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_dropped_lines_after_boundary_filter.csv",
+    "summary": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_map_matching_summary.json"
+  },
+  "parameters": {
+    "trajectory_sample_spacing_m": 120.0,
+    "stop_dwell_s": 20.0,
+    "bus_capacity": 80,
+    "snap_k": 20,
+    "boundary_buffer_m": 500.0,
+    "allow_dynamic_gap_connectors": false,
+    "drop_routes_with_gaps": true,
+    "max_bridge_gap_count": 0,
+    "drop_routes_with_stop_snap_p95_gt": 250.0
+  },
+  "counts": {
+    "input_bus_routes_before_boundary_filter": 801,
+    "input_bus_routes": 757,
+    "successful_routes": 709,
+    "failed_routes": 48,
+    "dropped_routes_after_boundary_filter": 44,
+    "dropped_stops_outside_boundary_buffer": 3623,
+    "success_rate": 0.9366,
+    "pt_enabled_road_links": 15497,
+    "stop_facilities": 14363,
+    "departures_and_vehicles": 44736,
+    "route_link_sequence_rows": 206040,
+    "warnings": {
+      "fallback_departures": 70
+    }
+  },
+  "qa_summary": {
+    "stop_snap_median_m_median": 2.595,
+    "stop_snap_p95_m_median": 15.427,
+    "stop_snap_p95_m_max": 143.796
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-07-09T16:54:04",
+  "final_dir": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709",
+  "required_missing": [],
+  "row_counts": {
+    "amap_active/amap_metro_lines.csv": 12,
+    "amap_active/amap_metro_stations.csv": 107,
+    "amap_active/amap_metro_stops_by_line.csv": 242,
+    "amap_active/amap_metro_service_frequency_with_manual_observations.csv": 69
+  },
+  "final_file_count": 26,
+  "old_dirs_to_delete": [
+    "fuzhou_metro",
+    "fuzhou_metro_amap",
+    "fuzhou_metro_amap_metro_only",
+    "fuzhou_metro_amap_active",
+    "fuzhou_metro_amap_mobile_observations"
+  ],
+  "cleanup_policy": "Keep final active AMap metro products, OSM/PBF extraction products, and visualization PNGs; remove intermediate/test metro folders only.",
+  "manifest_refreshed_at": "2026-07-09T16:54:55"
+}

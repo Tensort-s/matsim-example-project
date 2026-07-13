@@ -1,0 +1,101 @@
+{
+  "target": {
+    "query": "518路支线(闽侯客运中心--榕东村委)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "518路支线(闽侯客运中心--榕东村委)",
+    "target_start_stop": "闽侯客运中心",
+    "target_end_stop": "榕东村委"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=518路支线(闽侯客运中心--榕东村委);entry=visible_result",
+  "scrolls": 6,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "518路支线(闽侯客运中心--榕东村委)",
+      "observed_line": "518路支线",
+      "direction_from": "榕东村委",
+      "direction_to": "闽侯客运中心",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "榕东村委→闽侯客运中心",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "518路支线(闽侯客运中心--榕东村委)",
+      "observed_line": "518路支线",
+      "direction_from": "闽侯客运中心",
+      "direction_to": "榕东村委",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "visible_times_no_expand",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "闽侯客运中心→榕东村委"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "榕东村委→闽侯客运中心",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "榕东村委→闽侯客运中心",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "榕东村委→闽侯客运中心",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "闽侯客运中心→榕东村委",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "闽侯客运中心→榕东村委",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "闽侯客运中心→榕东村委",
+      "expand_action": "visible_times_no_expand"
+    }
+  ],
+  "final_query": "518路支线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0109_518路支线(闽侯客运中心--榕东村委)",
+  "final_copied_xml_count": 20,
+  "final_generated_at": "2026-07-09T11:15:38"
+}

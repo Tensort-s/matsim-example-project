@@ -1,0 +1,47 @@
+{
+  "created_by": "scripts/scale_transit_vehicle_capacities.py",
+  "created_at_epoch": 1783613027.090417,
+  "runtime_seconds": 0.339,
+  "input": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709\\transitVehicles.xml.gz",
+  "output": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_ptcap20\\transitVehicles.xml.gz",
+  "capacity_factor": 0.2,
+  "vehicle_type_count": 4,
+  "vehicle_types": [
+    {
+      "vehicle_type": "bus_standard_capacity_80",
+      "old_seats": "28",
+      "old_standingRoomInPersons": "52",
+      "new_seats": 6,
+      "new_standingRoomInPersons": 10,
+      "old_total_capacity": 80,
+      "new_total_capacity": 16
+    },
+    {
+      "vehicle_type": "metro_b_4car_capacity_1358",
+      "old_seats": "340",
+      "old_standingRoomInPersons": "1018",
+      "new_seats": 68,
+      "new_standingRoomInPersons": 204,
+      "old_total_capacity": 1358,
+      "new_total_capacity": 272
+    },
+    {
+      "vehicle_type": "metro_b_b2_6car_capacity_1460",
+      "old_seats": "365",
+      "old_standingRoomInPersons": "1095",
+      "new_seats": 73,
+      "new_standingRoomInPersons": 219,
+      "old_total_capacity": 1460,
+      "new_total_capacity": 292
+    },
+    {
+      "vehicle_type": "metro_f1_4car_capacity_1084",
+      "old_seats": "271",
+      "old_standingRoomInPersons": "813",
+      "new_seats": 54,
+      "new_standingRoomInPersons": 163,
+      "old_total_capacity": 1084,
+      "new_total_capacity": 217
+    }
+  ]
+}

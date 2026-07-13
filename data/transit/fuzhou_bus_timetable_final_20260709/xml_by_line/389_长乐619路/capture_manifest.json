@@ -1,0 +1,85 @@
+{
+  "target": {
+    "query": "长乐619路(闽运金峰车站--泮野公交首末站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "长乐619路(闽运金峰车站--泮野公交首末站)",
+    "target_start_stop": "闽运金峰车站",
+    "target_end_stop": "泮野公交首末站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=长乐619路(闽运金峰车站--泮野公交首末站);entry=visible_result",
+  "scrolls": 4,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "长乐619路(闽运金峰车站--泮野公交首末站)",
+      "observed_line": "长乐619路",
+      "direction_from": "泮野公交首末站",
+      "direction_to": "闽运金峰车站",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "泮野公交首末站→闽运金峰车站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "长乐619路(闽运金峰车站--泮野公交首末站)",
+      "observed_line": "长乐619路",
+      "direction_from": "闽运金峰车站",
+      "direction_to": "泮野公交首末站",
+      "service_start": "07:10",
+      "service_end": "19:00",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "闽运金峰车站→泮野公交首末站"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "泮野公交首末站→闽运金峰车站",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "泮野公交首末站→闽运金峰车站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "泮野公交首末站→闽运金峰车站",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "闽运金峰车站→泮野公交首末站",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "长乐619路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0069_长乐619路(闽运金峰车站--泮野公交首末站)",
+  "final_copied_xml_count": 18,
+  "final_generated_at": "2026-07-09T11:16:26"
+}

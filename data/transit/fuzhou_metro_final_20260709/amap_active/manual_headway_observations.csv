@@ -1,0 +1,2 @@
+observation_id,source,observed_date,observed_time,station_name,line_name,direction_to,current_train_status,next_train_minutes,estimated_headway_minutes,confidence,notes
+obs_20260706_pandun_line6_to_wanshou_amap_mobile,user_screenshot_amap_mobile,2026-07-06,18:24:00,潘墩,地铁6号线,万寿,即将进站,8,8,medium,"Mobile AMap station detail screenshot. At terminal-like station Pan墩, direction to 万寿 shows one train arriving soon and next train in 8 minutes. Use as point observation, not full-day schedule."

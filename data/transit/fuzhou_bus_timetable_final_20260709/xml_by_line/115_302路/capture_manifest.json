@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "302路(公交福湾站--鼓山公交总站)",
+    "target_line_id": "fix_302路",
+    "target_line_name": "302路(公交福湾站--鼓山公交总站)",
+    "target_start_stop": "公交福湾站",
+    "target_end_stop": "鼓山公交总站"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=302路(公交福湾站--鼓山公交总站);expected_line=302路",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "302路",
+  "final_source_label": "high_confidence_fix_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708\\0008_302路(公交福湾站--鼓山公交总站)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:15:20"
+}

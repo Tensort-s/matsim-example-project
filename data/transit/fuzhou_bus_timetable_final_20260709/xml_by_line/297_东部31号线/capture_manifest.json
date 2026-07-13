@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "东部31号线(保福专线)(保福--东部办公区)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "东部31号线(保福专线)(保福--东部办公区)",
+    "target_start_stop": "保福",
+    "target_end_stop": "东部办公区"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=东部31号线(保福专线)(保福--东部办公区)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "东部31号线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0157_东部31号线(保福专线)(保福--东部办公区)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:16:12"
+}

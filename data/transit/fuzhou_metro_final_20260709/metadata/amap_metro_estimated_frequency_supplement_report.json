@@ -1,0 +1,69 @@
+{
+  "created_at": "2026-07-09T17:45:45",
+  "operation": "supplement_line6_and_binhai_express_frequency_from_existing_active_metro_profiles",
+  "source_marker": "estimated_from_existing_active_metro_profiles_20260709",
+  "updated_files": [
+    "amap_active/amap_metro_service_frequency_with_manual_observations.csv",
+    "amap_active/amap_metro_service_frequency_completed.csv",
+    "amap_active/amap_metro_active_data_coverage_and_missing_items.csv",
+    "metadata/amap_metro_estimated_frequency_supplement_status.csv"
+  ],
+  "estimated_rows_added": 28,
+  "line6_profile_basis": "Use Line 5 low-frequency normal metro profile (7-8 min) because mobile observation on Line 6 showed about 8 min next train interval.",
+  "binhai_profile_basis": "Use conservative low-frequency envelope from existing active Lines 1/2/4/5: 7-8 min daytime, 10 min late evening.",
+  "estimated_lines": [
+    {
+      "line_id": "900000076581",
+      "line_name": "地铁6号线(潘墩--万寿)",
+      "direction": "潘墩->万寿",
+      "profile": "line6_low_frequency_profile_from_line5_and_mobile_observation",
+      "estimated_rows_added": "6",
+      "min_headway_minutes": "7.0",
+      "max_headway_minutes": "8.0",
+      "service_start": "06:00:00",
+      "service_end": "23:00:00",
+      "source": "estimated_from_existing_active_metro_profiles_20260709",
+      "notes": "Estimated from existing active Fuzhou metro lines; not operator-published timetable."
+    },
+    {
+      "line_id": "900000076583",
+      "line_name": "地铁6号线(万寿--潘墩)",
+      "direction": "万寿->潘墩",
+      "profile": "line6_low_frequency_profile_from_line5_and_mobile_observation",
+      "estimated_rows_added": "6",
+      "min_headway_minutes": "7.0",
+      "max_headway_minutes": "8.0",
+      "service_start": "06:00:00",
+      "service_end": "23:00:00",
+      "source": "estimated_from_existing_active_metro_profiles_20260709",
+      "notes": "Estimated from existing active Fuzhou metro lines; not operator-published timetable."
+    },
+    {
+      "line_id": "900000139163",
+      "line_name": "滨海快线(福州火车站--文岭)",
+      "direction": "福州火车站->文岭",
+      "profile": "binhai_express_low_frequency_envelope_from_lines_1_2_4_5",
+      "estimated_rows_added": "8",
+      "min_headway_minutes": "7.0",
+      "max_headway_minutes": "10.0",
+      "service_start": "06:00:00",
+      "service_end": "23:00:00",
+      "source": "estimated_from_existing_active_metro_profiles_20260709",
+      "notes": "Estimated from existing active Fuzhou metro lines; not operator-published timetable."
+    },
+    {
+      "line_id": "900000139164",
+      "line_name": "滨海快线(文岭--福州火车站)",
+      "direction": "文岭->福州火车站",
+      "profile": "binhai_express_low_frequency_envelope_from_lines_1_2_4_5",
+      "estimated_rows_added": "8",
+      "min_headway_minutes": "7.0",
+      "max_headway_minutes": "10.0",
+      "service_start": "06:00:00",
+      "service_end": "23:00:00",
+      "source": "estimated_from_existing_active_metro_profiles_20260709",
+      "notes": "Estimated from existing active Fuzhou metro lines; not operator-published timetable."
+    }
+  ],
+  "caveat": "These estimates are for simulation completeness and require official validation before being treated as real schedules."
+}

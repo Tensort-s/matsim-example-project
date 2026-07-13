@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "琅岐公交旅游专线(火车站南广场--红蟳公社)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "琅岐公交旅游专线(火车站南广场--红蟳公社)",
+    "target_start_stop": "火车站南广场",
+    "target_end_stop": "红蟳公社"
+  },
+  "status": "navigation_failed",
+  "message": "uri_search_failed_for_query=琅岐公交旅游专线(火车站南广场--红蟳公社): adb pull /sdcard/amap_mobile_timetable_dump.xml data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0067_琅岐公交旅游专线(火车站南广场--红蟳公社)\\visible_result_0.xml failed: adb: error: cannot create file/directory 'data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0067_琅岐公交旅游专线(火车站南广场--红蟳公社)\\visible_result_0.xml': No such file or directory",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "琅岐公交旅游专线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0067_琅岐公交旅游专线(火车站南广场--红蟳公社)",
+  "final_copied_xml_count": 0,
+  "final_generated_at": "2026-07-09T11:16:19"
+}

@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "通勤快线9路(省委党校小柳校区--省委党校新校区)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "通勤快线9路(省委党校小柳校区--省委党校新校区)",
+    "target_start_stop": "省委党校小柳校区",
+    "target_end_stop": "省委党校新校区"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=通勤快线9路(省委党校小柳校区--省委党校新校区);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "通勤快线9路(省委党校小柳校区--省委党校新校区)",
+      "observed_line": "通勤快线9路",
+      "direction_from": "省委党校新校区",
+      "direction_to": "省委党校小柳校区",
+      "service_start": "17:40",
+      "service_end": "18:10",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "省委党校新校区→省委党校小柳校区",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "通勤快线9路(省委党校小柳校区--省委党校新校区)",
+      "observed_line": "通勤快线9路",
+      "direction_from": "省委党校小柳校区",
+      "direction_to": "省委党校新校区",
+      "service_start": "07:20",
+      "service_end": "08:00",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "省委党校小柳校区→省委党校新校区"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "省委党校新校区→省委党校小柳校区",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "省委党校小柳校区→省委党校新校区",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "通勤快线9路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0179_通勤快线9路(省委党校小柳校区--省委党校新校区)",
+  "final_copied_xml_count": 6,
+  "final_generated_at": "2026-07-09T11:16:24"
+}

@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "地铁接驳24号专线(三江口植物园--下洋地铁站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "地铁接驳24号专线(三江口植物园--下洋地铁站)",
+    "target_start_stop": "三江口植物园",
+    "target_end_stop": "下洋地铁站"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=地铁接驳24号专线(三江口植物园--下洋地铁站);expected_line=地铁接驳24号专线",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "地铁接驳24号专线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0169_地铁接驳24号专线(三江口植物园--下洋地铁站)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:16:16"
+}

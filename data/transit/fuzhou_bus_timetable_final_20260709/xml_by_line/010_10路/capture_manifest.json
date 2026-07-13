@@ -1,0 +1,62 @@
+{
+  "target": {
+    "query": "10路(火车站北广场--鳌峰洲公交总站)",
+    "target_line_id": "fix_10路",
+    "target_line_name": "10路(火车站北广场--鳌峰洲公交总站)",
+    "target_start_stop": "火车站北广场",
+    "target_end_stop": "鳌峰洲公交总站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=10路(火车站北广场--鳌峰洲公交总站);entry=visible_result",
+  "scrolls": 3,
+  "directions_collected": 1,
+  "headers": [
+    {
+      "target_query": "10路(火车站北广场--鳌峰洲公交总站)",
+      "observed_line": "10路",
+      "direction_from": "澳前台湾小镇",
+      "direction_to": "金井湾首末站",
+      "service_start": "06:30",
+      "service_end": "19:00",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:06:30-19:00;expanded:06:30-18:50",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "current",
+      "directions_collected": 1
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "current",
+      "expand_action": "expanded:06:30-19:00;expanded:06:30-18:50"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "current",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "current",
+      "expand_action": "no_collapsed_period"
+    }
+  ],
+  "final_query": "10路",
+  "final_source_label": "high_confidence_fix_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_high_confidence_fixes_capture_20260708\\0001_10路(火车站北广场--鳌峰洲公交总站)",
+  "final_copied_xml_count": 15,
+  "final_generated_at": "2026-07-09T11:14:50"
+}

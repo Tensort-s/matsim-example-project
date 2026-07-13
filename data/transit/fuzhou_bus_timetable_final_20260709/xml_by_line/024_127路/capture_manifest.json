@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "127路(汤畲--教院二附中)",
+    "target_line_id": "350100000000.0",
+    "target_line_name": "127路(汤畲--教院二附中)",
+    "target_start_stop": "汤畲",
+    "target_end_stop": "教院二附中"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=127路(汤畲--教院二附中)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "127路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0036_127路(汤畲--教院二附中)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:14:56"
+}

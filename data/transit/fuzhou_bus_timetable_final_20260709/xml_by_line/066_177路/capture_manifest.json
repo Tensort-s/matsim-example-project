@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "177路(福州温泉博物馆--公交海峡国际会展中心西站)",
+    "target_line_id": "350100000000.0",
+    "target_line_name": "177路(福州温泉博物馆--公交海峡国际会展中心西站)",
+    "target_start_stop": "福州温泉博物馆",
+    "target_end_stop": "公交海峡国际会展中心西站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=177路(福州温泉博物馆--公交海峡国际会展中心西站);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "177路(福州温泉博物馆--公交海峡国际会展中心西站)",
+      "observed_line": "177路",
+      "direction_from": "公交海峡国际会展中心西站",
+      "direction_to": "福州温泉博物馆",
+      "service_start": "06:30",
+      "service_end": "21:30",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "公交海峡国际会展中心西站→福州温泉博物馆",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "177路(福州温泉博物馆--公交海峡国际会展中心西站)",
+      "observed_line": "177路",
+      "direction_from": "福州温泉博物馆",
+      "direction_to": "公交海峡国际会展中心西站",
+      "service_start": "06:30",
+      "service_end": "20:30",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "福州温泉博物馆→公交海峡国际会展中心西站"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "公交海峡国际会展中心西站→福州温泉博物馆",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "福州温泉博物馆→公交海峡国际会展中心西站",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "177路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0055_177路(福州温泉博物馆--公交海峡国际会展中心西站)",
+  "final_copied_xml_count": 5,
+  "final_generated_at": "2026-07-09T11:15:07"
+}

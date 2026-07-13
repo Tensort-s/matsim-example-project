@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "173路(王庄公交总站--高新海西中科院东门)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "173路(王庄公交总站--高新海西中科院东门)",
+    "target_start_stop": "王庄公交总站",
+    "target_end_stop": "高新海西中科院东门"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=173路(王庄公交总站--高新海西中科院东门);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "173路(王庄公交总站--高新海西中科院东门)",
+      "observed_line": "173路",
+      "direction_from": "高新大道",
+      "direction_to": "王庄公交总站",
+      "service_start": "07:00",
+      "service_end": "20:00",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "高新大道→王庄公交总站",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "173路(王庄公交总站--高新海西中科院东门)",
+      "observed_line": "173路",
+      "direction_from": "王庄公交总站",
+      "direction_to": "高新海西中科院东门",
+      "service_start": "07:00",
+      "service_end": "20:00",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "王庄公交总站→高新海西中科院东门"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "高新大道→王庄公交总站",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "王庄公交总站→高新海西中科院东门",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "173路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0058_173路(王庄公交总站--高新海西中科院东门)",
+  "final_copied_xml_count": 5,
+  "final_generated_at": "2026-07-09T11:15:07"
+}

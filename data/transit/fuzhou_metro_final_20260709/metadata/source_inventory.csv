@@ -1,0 +1,6 @@
+﻿source_label,path,exists,file_count,size_bytes,notes
+osm,F:\Matsim\matsim-example-project\data\transit\fuzhou_metro,True,7,1127987,
+amap_all_or_early,F:\Matsim\matsim-example-project\data\transit\fuzhou_metro_amap,True,11,2142037,
+amap_metro_only,F:\Matsim\matsim-example-project\data\transit\fuzhou_metro_amap_metro_only,True,13,1561604,
+amap_active,F:\Matsim\matsim-example-project\data\transit\fuzhou_metro_amap_active,True,14,1338814,
+mobile_observations,F:\Matsim\matsim-example-project\data\transit\fuzhou_metro_amap_mobile_observations,True,1,455,

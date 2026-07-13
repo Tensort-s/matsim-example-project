@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "通勤快线15路(茶会小区--芯园路西)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "通勤快线15路(茶会小区--芯园路西)",
+    "target_start_stop": "茶会小区",
+    "target_end_stop": "芯园路西"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=通勤快线15路(茶会小区--芯园路西);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "通勤快线15路(茶会小区--芯园路西)",
+      "observed_line": "通勤快线15路",
+      "direction_from": "芯园路西",
+      "direction_to": "茶会小区",
+      "service_start": "08:30",
+      "service_end": "20:40",
+      "fare": "票价: 4元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "芯园路西→茶会小区",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "通勤快线15路(茶会小区--芯园路西)",
+      "observed_line": "通勤快线15路",
+      "direction_from": "茶会小区",
+      "direction_to": "芯园路西",
+      "service_start": "06:45",
+      "service_end": "19:20",
+      "fare": "票价: 4元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "茶会小区→芯园路西"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "芯园路西→茶会小区",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "茶会小区→芯园路西",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "通勤快线15路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0195_通勤快线15路(茶会小区--芯园路西)",
+  "final_copied_xml_count": 5,
+  "final_generated_at": "2026-07-09T11:16:22"
+}

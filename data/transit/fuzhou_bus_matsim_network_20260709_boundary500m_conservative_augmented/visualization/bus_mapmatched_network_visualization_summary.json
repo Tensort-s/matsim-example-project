@@ -1,0 +1,19 @@
+{
+  "network": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_network_with_pt.xml.gz",
+  "route_link_sequences": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_route_link_sequences.csv",
+  "stop_snap": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\bus_stop_link_snap.csv",
+  "outputs": {
+    "png": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\visualization\\bus_mapmatched_pt_network_epsg32650.png",
+    "pt_links_geojson": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\visualization\\bus_mapmatched_pt_links_epsg32650.geojson",
+    "unique_stops_geojson": "data\\transit\\fuzhou_bus_matsim_network_20260709_boundary500m_conservative_augmented\\visualization\\bus_mapmatched_unique_stops_epsg32650.geojson"
+  },
+  "counts": {
+    "network_links_total": 38316,
+    "pt_used_links": 15497,
+    "route_link_sequence_rows": 206040,
+    "unique_stop_count": 1612,
+    "max_route_use_count": 173,
+    "median_route_use_count": 6
+  },
+  "coordinate_system": "EPSG:32650"
+}

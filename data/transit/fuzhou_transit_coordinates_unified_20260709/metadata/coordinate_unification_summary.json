@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-07-09T18:15:46",
+  "output_dir": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_coordinates_unified_20260709",
+  "target_crs": "EPSG:32650",
+  "wgs84": "EPSG:4326",
+  "coordinate_policy": {
+    "bus_stop_tables": "copy validated existing GCJ-02/WGS84/EPSG:32650 coordinates from final bus dataset",
+    "bus_trajectories": "source GeoJSON is already WGS84; project only to EPSG:32650, no second GCJ correction",
+    "metro_tables": "treat lon/lat as GCJ-02; convert to WGS84 and EPSG:32650",
+    "metro_trajectories": "treat GeoJSON coordinates as GCJ-02; convert to WGS84 and EPSG:32650"
+  },
+  "counts": {
+    "bus_stops": 2625,
+    "bus_stops_by_line": 19180,
+    "bus_line_trajectories": 801,
+    "metro_stations": 107,
+    "metro_stops_by_line": 242,
+    "metro_line_trajectories": 12,
+    "combined_transit_stops": 2732
+  },
+  "quality_report_rows": 2,
+  "manifest_file_count": 20,
+  "visualization": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_coordinates_unified_20260709\\visualization\\unified_bus_metro_epsg32650_preview.png",
+  "source_inputs": {
+    "bus_stops": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\bus_lines\\amap_bus_stops_complete.csv",
+    "bus_stops_by_line": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\bus_lines\\amap_bus_stops_by_line_full.csv",
+    "bus_trajectories": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\bus_lines\\amap_bus_line_trajectories_full.geojson",
+    "metro_stations": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_stations.csv",
+    "metro_stops_by_line": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_stops_by_line.csv",
+    "metro_trajectories": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_line_trajectories.geojson"
+  },
+  "manifest_refreshed_at": "2026-07-09T18:16:42"
+}

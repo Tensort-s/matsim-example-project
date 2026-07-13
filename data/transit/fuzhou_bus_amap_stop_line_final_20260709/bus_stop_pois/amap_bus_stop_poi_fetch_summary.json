@@ -1,0 +1,114 @@
+{
+  "endpoint": "https://restapi.amap.com/v3/place/polygon",
+  "boundary": "F:\\Matsim\\matsim-example-project\\data\\osm\\fuzhou_city_23\\fuzhou_city_23_boundary.geojson",
+  "output_dir": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_stop_pois_amap",
+  "tile_size_m": 3000.0,
+  "tile_overlap_m": 250.0,
+  "boundary_buffer_m": 500.0,
+  "min_tile_size_m": 375.0,
+  "saturation_count": 180,
+  "offset": 25,
+  "max_pages": 8,
+  "initial_tile_count": 78,
+  "processed_tile_count": 78,
+  "terminal_tile_count": 78,
+  "subdivided_tile_count": 0,
+  "saturation_warning_tile_count": 0,
+  "request_count": 132,
+  "stopped_by_request_cap": false,
+  "terminal_raw_bus_stop_records": 2154,
+  "unique_poi_count": 1831,
+  "duplicate_group_count": 298,
+  "dedup_removed_records": 323,
+  "inside_boundary_count": 1641,
+  "inside_boundary_500m_buffer_count": 1669,
+  "known_sample_presence": {
+    "BV10208391": true,
+    "BV10553038": true,
+    "BV10665298": true
+  },
+  "citywide_probe": {
+    "pages": [
+      {
+        "page": 1,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 2,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 3,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 4,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 5,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 6,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 7,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 8,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 9,
+        "status": "1",
+        "info": "OK",
+        "count": "600",
+        "pois_returned": 25
+      },
+      {
+        "page": 10,
+        "status": "1",
+        "info": "OK",
+        "count": "0",
+        "pois_returned": 0
+      }
+    ],
+    "total_seen": 225
+  },
+  "outputs": [
+    "amap_bus_stop_pois_raw_pages.jsonl",
+    "amap_bus_stop_pois_tiles.geojson",
+    "amap_bus_stop_pois_unique.csv",
+    "amap_bus_stop_pois_unique.geojson",
+    "amap_bus_stop_pois_duplicates.csv",
+    "amap_bus_stop_pois_saturation_tiles.csv",
+    "amap_bus_stop_poi_fetch_summary.json"
+  ]
+}

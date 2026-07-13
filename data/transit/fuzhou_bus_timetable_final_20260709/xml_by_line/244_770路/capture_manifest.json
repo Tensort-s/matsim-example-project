@@ -1,0 +1,101 @@
+{
+  "target": {
+    "query": "770路(新店镇政府--大数据科技园)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "770路(新店镇政府--大数据科技园)",
+    "target_start_stop": "新店镇政府",
+    "target_end_stop": "大数据科技园"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=770路(新店镇政府--大数据科技园);entry=visible_result",
+  "scrolls": 6,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "770路(新店镇政府--大数据科技园)",
+      "observed_line": "770路",
+      "direction_from": "大数据科技园",
+      "direction_to": "省海洋职业技校",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "大数据科技园→省海洋职业技校",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "770路(新店镇政府--大数据科技园)",
+      "observed_line": "770路",
+      "direction_from": "新店镇政府",
+      "direction_to": "大数据科技园",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 2元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "visible_times_no_expand",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "新店镇政府→大数据科技园"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "大数据科技园→省海洋职业技校",
+      "expand_action": "expanded:16:00-20:00;expanded:10:00-16:00;expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "大数据科技园→省海洋职业技校",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "大数据科技园→省海洋职业技校",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "新店镇政府→大数据科技园",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "新店镇政府→大数据科技园",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "新店镇政府→大数据科技园",
+      "expand_action": "visible_times_no_expand"
+    }
+  ],
+  "final_query": "770路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0030_770路(新店镇政府--大数据科技园)",
+  "final_copied_xml_count": 18,
+  "final_generated_at": "2026-07-09T11:15:56"
+}

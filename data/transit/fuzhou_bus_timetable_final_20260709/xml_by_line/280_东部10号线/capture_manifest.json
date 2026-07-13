@@ -1,0 +1,85 @@
+{
+  "target": {
+    "query": "东部10号线(福州金山中学--东部办公区)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "东部10号线(福州金山中学--东部办公区)",
+    "target_start_stop": "福州金山中学",
+    "target_end_stop": "东部办公区"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=东部10号线(福州金山中学--东部办公区);entry=visible_result",
+  "scrolls": 4,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "东部10号线(福州金山中学--东部办公区)",
+      "observed_line": "东部10号线",
+      "direction_from": "东部办公区",
+      "direction_to": "福州金山中学",
+      "service_start": "18:10",
+      "service_end": "18:10",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "东部办公区→福州金山中学",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "东部10号线(福州金山中学--东部办公区)",
+      "observed_line": "东部10号线",
+      "direction_from": "福州金山中学",
+      "direction_to": "东部办公区",
+      "service_start": "",
+      "service_end": "",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:06:00-10:00",
+      "snapshot_file": "dir_2_dump_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "福州金山中学→东部办公区"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "东部办公区→福州金山中学",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "福州金山中学→东部办公区",
+      "expand_action": "expanded:06:00-10:00"
+    },
+    {
+      "snapshot_file": "dir_2_pre_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "福州金山中学→东部办公区",
+      "expand_action": "visible_times_no_expand"
+    },
+    {
+      "snapshot_file": "dir_2_pre_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "福州金山中学→东部办公区",
+      "expand_action": "visible_times_no_expand"
+    }
+  ],
+  "final_query": "东部10号线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0015_东部10号线(福州金山中学--东部办公区)",
+  "final_copied_xml_count": 10,
+  "final_generated_at": "2026-07-09T11:16:10"
+}

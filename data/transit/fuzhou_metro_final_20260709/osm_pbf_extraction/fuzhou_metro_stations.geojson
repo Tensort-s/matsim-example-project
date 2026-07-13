@@ -1,0 +1,5227 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3246729,
+          26.1463082
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 2898968010,
+        "name": "象峰",
+        "name:en": "Xiangfeng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2945375,
+          26.0890799
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3077735709,
+        "name": "东街口",
+        "name:en": "Dongjiekou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2813107,
+          26.0638245
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945315725,
+        "name": "祥坂",
+        "name:en": "Xiangban",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2886178,
+          26.0655794
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945318427,
+        "name": "宁化",
+        "name:en": "Ninghua",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3092683,
+          26.0794179
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945318448,
+        "name": "水部",
+        "name:en": "Shuibu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2921034,
+          26.0748195
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945319374,
+        "name": "西洋",
+        "name:en": "Xiyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.298319,
+          26.0792172
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945319515,
+        "name": "南门兜",
+        "name:en": "Nanmendou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2378116,
+          26.0499196
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945319836,
+        "name": "桔园洲",
+        "name:en": "Juyuanzhou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2452342,
+          26.0503923
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945319837,
+        "name": "洪湾",
+        "name:en": "Hongwan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2574666,
+          26.0505208
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 3945319839,
+        "name": "金山",
+        "name:en": "Jinshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2922754,
+          26.099456
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043006149,
+        "name": "屏山",
+        "name:en": "Pingshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3007656,
+          26.1051702
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043006170,
+        "name": "树兜",
+        "name:en": "Shudou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3162883,
+          26.1369148
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043019079,
+        "name": "秀山",
+        "name:en": "Xiushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4156178,
+          25.9874602
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043021690,
+        "name": "下洋",
+        "name:en": "Xiayang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152192",
+        "wikipedia": "zh:下洋站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3138637,
+          26.1286424
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043021696,
+        "name": "罗汉山",
+        "name:en": "Luohanshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.31344,
+          26.1160811
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043021706,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3971235,
+          25.995197
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043022037,
+        "name": "安平",
+        "name:en": "Anping",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4102877,
+          25.9971883
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043022040,
+        "name": "梁厝",
+        "name:en": "Liangcuo",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.349201,
+          26.0044083
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025498,
+        "name": "排下",
+        "name:en": "Paixia",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3051177,
+          26.0599852
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025499,
+        "name": "达道",
+        "name:en": "Dadao",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3158458,
+          26.0468354
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025502,
+        "name": "上藤",
+        "name:en": "Shangteng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3206163,
+          26.0391236
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025503,
+        "name": "三叉街",
+        "name:en": "Sanchajie",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q24836888",
+        "wikipedia": "zh:三叉街站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3552824,
+          25.9991731
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025504,
+        "name": "城门",
+        "name:en": "Chengmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3437426,
+          26.0134315
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025506,
+        "name": "黄山",
+        "name:en": "Huangshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3388105,
+          26.0198922
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025507,
+        "name": "葫芦阵",
+        "name:en": "Huluzhen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3635695,
+          25.9938085
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4043025508,
+        "name": "三角埕",
+        "name:en": "Sanjiaocheng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3750092,
+          25.987298
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4209767679,
+        "name": "胪雷",
+        "name:en": "Lulei",
+        "operator": "福州地铁",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3305726,
+          26.028811
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4209767915,
+        "name": "白湖亭",
+        "name:en": "Baihuting",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3089233,
+          26.107007
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4209767944,
+        "name": "斗门",
+        "name:en": "Doumen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3528958,
+          26.0237833
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4343830360,
+        "name": "潘墩",
+        "name:en": "Pandun",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3838089,
+          26.0091416
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4343830370,
+        "name": "樟岚",
+        "name:en": "Zhanglan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3598788,
+          26.0182148
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4345238080,
+        "name": "林浦",
+        "name:en": "Linpu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2996054,
+          26.0723351
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 4398913143,
+        "name": "茶亭",
+        "name:en": "Chating",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2970479,
+          26.0802201
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5809007359,
+        "name": "南门兜",
+        "name:en": "Nanmendou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3701392,
+          26.0562733
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593174,
+        "name": "鼓山",
+        "name:en": "Gushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3455656,
+          26.0756692
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593182,
+        "name": "前屿",
+        "name:en": "Qianyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4101823,
+          25.9971563
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593402,
+        "name": "梁厝",
+        "name:en": "Liangcuo",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3356721,
+          26.0773681
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593685,
+        "name": "五里亭",
+        "name:en": "Wuliting",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3223171,
+          26.0796039
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593686,
+        "name": "紫阳",
+        "name:en": "Ziyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3092611,
+          26.0795409
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593689,
+        "name": "水部",
+        "name:en": "Shuibu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2919668,
+          26.0748216
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593702,
+        "name": "西洋",
+        "name:en": "Xiyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2886154,
+          26.065733
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593707,
+        "name": "宁化",
+        "name:en": "Ninghua",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2660732,
+          26.0515778
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593715,
+        "name": "金祥",
+        "name:en": "Jinxiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2574652,
+          26.0506731
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593717,
+        "name": "金山",
+        "name:en": "Jinshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2452238,
+          26.0505185
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593718,
+        "name": "洪湾",
+        "name:en": "Hongwan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2378019,
+          26.0500455
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593719,
+        "name": "桔园洲",
+        "name:en": "Juyuanzhou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3088895,
+          26.1071225
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593760,
+        "name": "斗门",
+        "name:en": "Doumen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3132838,
+          26.1160201
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593775,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3137457,
+          26.1285853
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923593996,
+        "name": "罗汉山",
+        "name:en": "Luohanshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3161848,
+          26.1369927
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594004,
+        "name": "秀山",
+        "name:en": "Xiushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4100162,
+          25.9970966
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594011,
+        "name": "梁厝",
+        "name:en": "Liangcuo",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3971664,
+          25.995115
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594024,
+        "name": "安平",
+        "name:en": "Anping",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3750364,
+          25.9871758
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594032,
+        "name": "胪雷",
+        "name:en": "Lulei",
+        "operator": "福州地铁",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3552191,
+          25.9991139
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594051,
+        "name": "城门",
+        "name:en": "Chengmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3491501,
+          26.0043524
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594052,
+        "name": "排下",
+        "name:en": "Paixia",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3436568,
+          26.0134102
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594057,
+        "name": "黄山",
+        "name:en": "Huangshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3387386,
+          26.0198416
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594061,
+        "name": "葫芦阵",
+        "name:en": "Huluzhen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3305057,
+          26.0287601
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594075,
+        "name": "白湖亭",
+        "name:en": "Baihuting",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3208361,
+          26.0388494
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594077,
+        "name": "三叉街",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157362,
+          26.0467366
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594083,
+        "name": "上藤",
+        "name:en": "Shangteng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3048886,
+          26.0600382
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594287,
+        "name": "达道",
+        "name:en": "Dadao",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2994615,
+          26.0722954
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594294,
+        "name": "茶亭",
+        "name:en": "Chating",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2968833,
+          26.0801776
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594302,
+        "name": "南门兜",
+        "name:en": "Nanmendou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2921431,
+          26.0994338
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594316,
+        "name": "屏山",
+        "name:en": "Pingshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3007337,
+          26.1052889
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594333,
+        "name": "树兜",
+        "name:en": "Shudou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3245573,
+          26.146373
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594338,
+        "name": "象峰",
+        "name:en": "Xiangfeng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3635659,
+          25.9937233
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 5923594342,
+        "name": "三角埕",
+        "name:en": "Sanjiaocheng",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2769193,
+          26.0089575
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648423,
+        "name": "台屿",
+        "name:en": "Taiyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2726248,
+          26.0165333
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648424,
+        "name": "东岭",
+        "name:en": "Dongling",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.271767,
+          26.0280273
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648425,
+        "name": "霞镜",
+        "name:en": "Xiajing",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2622452,
+          26.041876
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648426,
+        "name": "凤岗里",
+        "name:en": "Fenggangli",
+        "name:zh": "凤岗里",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2538412,
+          26.0585538
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648427,
+        "name": "马榕",
+        "name:en": "Marong",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2471762,
+          26.0693216
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648438,
+        "name": "阵坂",
+        "name:en": "Zhenban",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3545727,
+          26.0328831
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648583,
+        "name": "会展中心",
+        "name:en": "Exhibition Center",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3447953,
+          26.0435272
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648588,
+        "name": "花海公园",
+        "name:en": "Huahai Park",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3396912,
+          26.057617
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648596,
+        "name": "鳌峰洲",
+        "name:en": "Aofengzhou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3452016,
+          26.0749494
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648601,
+        "name": "前屿",
+        "name:en": "Qianyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3330314,
+          26.0960602
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648613,
+        "name": "竹屿",
+        "name:en": "Zhuyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3214209,
+          26.0939449
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648617,
+        "name": "三角池",
+        "name:en": "Sanjiaochi",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3093517,
+          26.0905124
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648620,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2945264,
+          26.0889473
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648622,
+        "name": "东街口",
+        "name:en": "Dongjiekou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2853703,
+          26.0877897
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648623,
+        "name": "西门",
+        "name:en": "Ximen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2788228,
+          26.0854218
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648625,
+        "name": "陆庄",
+        "name:en": "Luzhaung",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2678237,
+          26.0813524
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648626,
+        "name": "凤凰池",
+        "name:en": "Fenghuangchi",
+        "name:zh": "凤凰池",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3549415,
+          25.9988323
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648653,
+        "name": "城门",
+        "name:en": "Chengmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3546799,
+          26.0329071
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648670,
+        "name": "会展中心",
+        "name:en": "Exhibition Center",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3448634,
+          26.04364
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648675,
+        "name": "花海公园",
+        "name:en": "Huahai Park",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3398424,
+          26.0575973
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648683,
+        "name": "鳌峰洲",
+        "name:en": "Aofengzhou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3453602,
+          26.0749074
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648688,
+        "name": "前屿",
+        "name:en": "Qianyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3330393,
+          26.0961826
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648700,
+        "name": "竹屿",
+        "name:en": "Zhuyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3214035,
+          26.0940584
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648704,
+        "name": "三角池",
+        "name:en": "Sanjiaochi",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3093392,
+          26.0905945
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648707,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2945207,
+          26.0889937
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648709,
+        "name": "东街口",
+        "name:en": "Dongjiekou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2853578,
+          26.087853
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648710,
+        "name": "西门",
+        "name:en": "Ximen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2677602,
+          26.0814992
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6448648713,
+        "name": "凤凰池",
+        "name:en": "Fenghuangchi",
+        "name:zh": "凤凰池",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.324619,
+          26.1463371
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 6727006927,
+        "name": "象峰",
+        "name:en": "Xiangfeng",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27104895",
+        "wikipedia": "zh:象峰站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3221389,
+          26.0795663
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285135,
+        "name": "紫阳",
+        "name:en": "Ziyang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152194",
+        "wikipedia": "zh:紫阳站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3092623,
+          26.0794796
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285136,
+        "name": "水部",
+        "name:en": "Shuibu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152177",
+        "wikipedia": "zh:水部站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2920293,
+          26.0748184
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285138,
+        "name": "西洋",
+        "name:en": "Xiyang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186851",
+        "wikipedia": "zh:西洋站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2886166,
+          26.0656523
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285139,
+        "name": "宁化",
+        "name:en": "Ninghua",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186451",
+        "wikipedia": "zh:宁化站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2661003,
+          26.0515185
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285140,
+        "name": "金祥",
+        "name:en": "Jinxiang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186420",
+        "wikipedia": "zh:金祥站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2812631,
+          26.0638845
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285141,
+        "name": "祥坂",
+        "name:en": "Xiangban",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152178",
+        "wikipedia": "zh:祥坂站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2812174,
+          26.0639523
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285142,
+        "name": "祥坂",
+        "name:en": "Xiangban",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2574677,
+          26.0505965
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285143,
+        "name": "金山",
+        "name:en": "Jinshan",
+        "name:zh": "金山",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186821",
+        "wikipedia": "zh:金山站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2452271,
+          26.0504683
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285144,
+        "name": "洪湾",
+        "name:en": "Hongwan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186784",
+        "wikipedia": "zh:洪湾站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.237806,
+          26.0499776
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076285145,
+        "name": "桔园洲",
+        "name:en": "Juyuanzhou",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186638",
+        "wikipedia": "zh:桔园洲站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3856361,
+          25.9888037
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076314532,
+        "name": "福州火车南站",
+        "name:en": "Fuzhou South Railway Station",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q25513958",
+        "wikipedia": "zh:福州火车南站站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2983163,
+          26.0793684
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7076314534,
+        "name": "南门兜",
+        "name:en": "Nanmendou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3209581,
+          26.0389361
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7114145347,
+        "name": "三叉街",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3455197,
+          26.0755216
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7236578362,
+        "name": "前屿",
+        "name:en": "Qianyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3356663,
+          26.077244
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7236578365,
+        "name": "五里亭",
+        "name:en": "Wuliting",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3699991,
+          26.056249
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7236606853,
+        "name": "鼓山",
+        "name:en": "Gushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3674244,
+          26.0482223
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7236606978,
+        "name": "洋里站",
+        "name:en": "Yangli Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3578928,
+          26.0698252
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7247336346,
+        "name": "上洋",
+        "name:en": "Shangyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2972792,
+          26.0793696
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 7412704908,
+        "name": "南门兜",
+        "name:en": "Nanmendou",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q26261994",
+        "wikipedia": "zh:南门兜站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.344553,
+          25.9934386
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427020321,
+        "name": "螺洲温泉",
+        "name:en": "Luozhou Hot Spring",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3445646,
+          25.9932895
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427020322,
+        "name": "螺洲温泉",
+        "name:en": "Luozhou Hot Spring",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3549237,
+          25.9988924
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427020329,
+        "name": "城门",
+        "name:en": "Chengmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2422864,
+          26.0879335
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427168176,
+        "name": "农林大学",
+        "name:en": "Agriculture and Forestry University",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3417233,
+          26.0676449
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224754,
+        "name": "光明港",
+        "name:en": "Guangminggang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3418618,
+          26.067616
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224755,
+        "name": "光明港",
+        "name:en": "Guangminggang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.347608,
+          26.0842402
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224759,
+        "name": "后屿",
+        "name:en": "Houyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3475101,
+          26.0842532
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224760,
+        "name": "后屿",
+        "name:en": "Houyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3474564,
+          26.0929261
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224781,
+        "name": "横屿",
+        "name:en": "Hengyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3472997,
+          26.0929063
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224783,
+        "name": "横屿",
+        "name:en": "Hengyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3025583,
+          26.0898397
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224825,
+        "name": "省立医院",
+        "name:en": "Provincial Hospital",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3025496,
+          26.0899258
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224827,
+        "name": "省立医院",
+        "name:en": "Provincial Hospital",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2787758,
+          26.0855305
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 8427224829,
+        "name": "陆庄",
+        "name:en": "Luzhaung",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3138064,
+          26.1286151
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637250,
+        "name": "罗汉山",
+        "name:en": "Luohanshan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27104980",
+        "wikipedia": "zh:罗汉山站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3162421,
+          26.1369486
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637251,
+        "name": "秀山",
+        "name:en": "Xiushan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28085225",
+        "wikipedia": "zh:秀山站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3134033,
+          26.1158714
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637252,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q26714966",
+        "wikipedia": "zh:福州火车站站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3089068,
+          26.1070614
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637253,
+        "name": "斗门",
+        "name:en": "Doumen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186245",
+        "wikipedia": "zh:斗门站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3007527,
+          26.1052203
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637254,
+        "name": "树兜",
+        "name:en": "Shudou",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27186345",
+        "wikipedia": "zh:树兜站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2922196,
+          26.0994477
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637255,
+        "name": "屏山",
+        "name:en": "Pingshan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q26261995",
+        "wikipedia": "zh:屏山站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2943721,
+          26.0890485
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637256,
+        "name": "东街口",
+        "name:en": "Dongjiekou",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2945129,
+          26.0890606
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637257,
+        "name": "东街口",
+        "name:en": "Dongjiekou",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q26261997",
+        "wikipedia": "zh:东街口站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4101237,
+          25.9971624
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637260,
+        "name": "梁厝",
+        "name:en": "Liangcuo",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152191",
+        "wikipedia": "zh:梁厝站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3971444,
+          25.9951585
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637261,
+        "name": "安平",
+        "name:en": "Anping",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28149930",
+        "wikipedia": "zh:安平站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3750219,
+          25.9872305
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637262,
+        "name": "胪雷",
+        "name:en": "Lulei",
+        "operator": "福州地铁",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q25513936",
+        "wikipedia": "zh:胪雷站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2995424,
+          26.0723188
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637263,
+        "name": "茶亭",
+        "name:en": "Chating",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q26491007",
+        "wikipedia": "zh:茶亭站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3049552,
+          26.0600785
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637264,
+        "name": "达道",
+        "name:en": "Dadao",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28059071",
+        "wikipedia": "zh:达道站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157983,
+          26.0467931
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637265,
+        "name": "上藤",
+        "name:en": "Shangteng",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q27942912",
+        "wikipedia": "zh:上藤站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3305371,
+          26.0287844
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637266,
+        "name": "白湖亭",
+        "name:en": "Baihuting",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q24836872",
+        "wikipedia": "zh:白湖亭站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3635661,
+          25.9937681
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637267,
+        "name": "三角埕",
+        "name:en": "Sanjiaocheng",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q25513931",
+        "wikipedia": "zh:三角埕站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3552464,
+          25.9991484
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637268,
+        "name": "城门",
+        "name:en": "Chengmen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q25513921",
+        "wikipedia": "zh:城门站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3491589,
+          26.0043753
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637269,
+        "name": "排下",
+        "name:en": "Paixia",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q25513919",
+        "wikipedia": "zh:排下站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.343713,
+          26.0134248
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637270,
+        "name": "黄山",
+        "name:en": "Huangshan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q24836787",
+        "wikipedia": "zh:黄山站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3387761,
+          26.0198693
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9157637271,
+        "name": "葫芦阵",
+        "name:en": "Huluzhen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q24836795",
+        "wikipedia": "zh:葫芦阵站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3673752,
+          26.0482198
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9168430532,
+        "name": "洋里站",
+        "name:en": "Yangli Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2661277,
+          26.0514627
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9168430533,
+        "name": "金祥",
+        "name:en": "Jinxiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2244087,
+          26.1145356
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502235,
+        "name": "荆溪厚屿",
+        "name:en": "Jingxi Houyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2244547,
+          26.1145688
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502236,
+        "name": "荆溪厚屿",
+        "name:en": "Jingxi Houyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2244259,
+          26.1145537
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502237,
+        "name": "荆溪厚屿",
+        "name:en": "Jingxi Houyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2422184,
+          26.0879215
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502240,
+        "name": "农林大学",
+        "name:en": "Agriculture and Forestry University",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2422506,
+          26.0879265
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502241,
+        "name": "农林大学",
+        "name:en": "Agriculture and Forestry University",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2452791,
+          26.0766163
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502242,
+        "name": "洪塘",
+        "name:en": "Hongtang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2453379,
+          26.0766428
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502243,
+        "name": "洪塘",
+        "name:en": "Hongtang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2453003,
+          26.0766227
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502244,
+        "name": "洪塘",
+        "name:en": "Hongtang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2470399,
+          26.0693267
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502245,
+        "name": "阵坂",
+        "name:en": "Zhenban",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2470995,
+          26.0693201
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502246,
+        "name": "阵坂",
+        "name:en": "Zhenban",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2537492,
+          26.0585004
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502247,
+        "name": "马榕",
+        "name:en": "Marong",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2537906,
+          26.0585316
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502248,
+        "name": "马榕",
+        "name:en": "Marong",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2575221,
+          26.0517062
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502249,
+        "name": "金山",
+        "name:en": "Jinshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2576076,
+          26.051698
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502250,
+        "name": "金山",
+        "name:en": "Jinshan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2621954,
+          26.0418109
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502251,
+        "name": "凤岗里",
+        "name:en": "Fenggangli",
+        "name:zh": "凤岗里",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2622177,
+          26.0418345
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502252,
+        "name": "凤岗里",
+        "name:en": "Fenggangli",
+        "name:zh": "凤岗里",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2680398,
+          26.037078
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502253,
+        "name": "浦上大道",
+        "name:en": "Pushang Dadao",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2679937,
+          26.037058
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502254,
+        "name": "浦上大道",
+        "name:en": "Pushang Dadao",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2680161,
+          26.0370679
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502255,
+        "name": "浦上大道",
+        "name:en": "Pushang Dadao",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2717176,
+          26.0280325
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502256,
+        "name": "霞镜",
+        "name:en": "Xiajing",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2717434,
+          26.0280267
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502257,
+        "name": "霞镜",
+        "name:en": "Xiajing",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2724906,
+          26.0165116
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502258,
+        "name": "东岭",
+        "name:en": "Dongling",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2768342,
+          26.0088557
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502259,
+        "name": "台屿",
+        "name:en": "Taiyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2768801,
+          26.0088971
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502260,
+        "name": "台屿",
+        "name:en": "Taiyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2884862,
+          26.0023894
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502263,
+        "name": "盘屿",
+        "name:en": "Panyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2885208,
+          26.0024995
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502264,
+        "name": "盘屿",
+        "name:en": "Panyu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2885033,
+          26.0024415
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502265,
+        "name": "盘屿",
+        "name:en": "Panyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3061619,
+          26.000259
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502266,
+        "name": "吴山",
+        "name:en": "Wushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3061319,
+          26.0003705
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502267,
+        "name": "吴山",
+        "name:en": "Wushan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3061426,
+          26.0003125
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502268,
+        "name": "吴山",
+        "name:en": "Wushan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157215,
+          25.9967909
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502269,
+        "name": "盖山竹榄",
+        "name:en": "Gaishan Zhulan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3158739,
+          25.9968275
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502270,
+        "name": "盖山竹榄",
+        "name:en": "Gaishan Zhulan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3157923,
+          25.9968006
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502271,
+        "name": "盖山竹榄",
+        "name:en": "Gaishan Zhulan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3227064,
+          25.9899848
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502272,
+        "name": "义序",
+        "name:en": "Yixu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3227094,
+          25.9898573
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9402502273,
+        "name": "义序",
+        "name:en": "Yixu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4156707,
+          25.9873883
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868672,
+        "name": "下洋",
+        "name:en": "Xiayang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4157773,
+          25.9874316
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868673,
+        "name": "下洋",
+        "name:en": "Xiayang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4101263,
+          25.9971393
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868674,
+        "name": "梁厝",
+        "name:en": "Liangcuo",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.4156256,
+          25.9873772
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868675,
+        "name": "下洋",
+        "name:en": "Xiayang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.415489,
+          25.9873255
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868676,
+        "name": "下洋",
+        "name:en": "Xiayang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3838442,
+          26.0092342
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868677,
+        "name": "樟岚",
+        "name:en": "Zhanglan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3838238,
+          26.0091845
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868678,
+        "name": "樟岚",
+        "name:en": "Zhanglan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q113462024"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3598925,
+          26.0183841
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868679,
+        "name": "林浦",
+        "name:en": "Linpu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.360464,
+          26.0193196
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868680,
+        "name": "林浦",
+        "name:en": "Linpu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3605942,
+          26.0193109
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868681,
+        "name": "林浦",
+        "name:en": "Linpu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.360214,
+          26.018205
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868682,
+        "name": "林浦",
+        "name:en": "Linpu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28414884",
+        "wikipedia": "zh:林浦站 (福州)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3529603,
+          26.0238119
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868684,
+        "name": "潘墩",
+        "name:en": "Pandun",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3529273,
+          26.0237944
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409868685,
+        "name": "潘墩",
+        "name:en": "Pandun",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q105729798",
+        "wikipedia": "zh:潘墩站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3227062,
+          25.9899172
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891386,
+        "name": "义序",
+        "name:en": "Yixu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3300416,
+          25.9905526
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891387,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3300431,
+          25.9904325
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891388,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3300435,
+          25.990332
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891389,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3300439,
+          25.9901996
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891390,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3466181,
+          25.9892514
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891392,
+        "name": "螺洲古镇",
+        "name:en": "Ancient Luozhou Town",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3465858,
+          25.9891465
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891393,
+        "name": "螺洲古镇",
+        "name:en": "Ancient Luozhou Town",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3466012,
+          25.9891962
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891394,
+        "name": "螺洲古镇",
+        "name:en": "Ancient Luozhou Town",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3577534,
+          25.9874266
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891395,
+        "name": "前锦站",
+        "name:en": "Qianjin",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3577476,
+          25.9873459
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891396,
+        "name": "前锦站",
+        "name:en": "Qianjin",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3674262,
+          25.987442
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891397,
+        "name": "龙江",
+        "name:en": "Longjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3674291,
+          25.9873048
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891398,
+        "name": "龙江",
+        "name:en": "Longjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3674205,
+          25.9873751
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891399,
+        "name": "龙江",
+        "name:en": "Longjiang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q121878583"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.38708,
+          25.9892055
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891400,
+        "name": "福州火车南站",
+        "name:en": "Fuzhou South Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3871438,
+          25.9892203
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9409891401,
+        "name": "福州火车南站",
+        "name:en": "Fuzhou South Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3128293,
+          26.1124078
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521844139,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3127251,
+          26.1123299
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521844144,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3128389,
+          26.1122913
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852837,
+        "name": "福州火车站",
+        "name:en": "Fuzhou Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3118473,
+          26.0899167
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852841,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q121877986"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3145328,
+          26.0783475
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852842,
+        "name": "闽都",
+        "name:en": "Mindu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3150143,
+          26.06701
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852843,
+        "name": "南公园",
+        "name:en": "Nangongyuan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q133521548"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3177853,
+          26.0386034
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852844,
+        "name": "三叉街（滨海快线）",
+        "name:en": "Sanchajie",
+        "note": "Named \"三叉街（滨海快线）\"/\"Sanchajie\" on the ground.",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3241688,
+          26.0120031
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852845,
+        "name": "盖山",
+        "name:en": "Gaishan",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3310969,
+          25.9919121
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852846,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3309942,
+          25.9919168
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9521852847,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2725526,
+          26.0165148
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 9699560176,
+        "name": "东岭",
+        "name:en": "Dongling",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3856551,
+          25.9887459
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 10177885645,
+        "name": "福州火车南站",
+        "name:en": "Fuzhou South Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3856124,
+          25.9888923
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 10177885646,
+        "name": "福州火车南站",
+        "name:en": "Fuzhou South Railway Station",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3418369,
+          26.0676193
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11124986635,
+        "name": "光明港",
+        "name:en": "Guangminggang",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3398029,
+          26.0575778
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11125049501,
+        "name": "鳌峰洲",
+        "name:en": "Aofengzhou",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3456051,
+          26.0756299
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11125071112,
+        "name": "前屿",
+        "name:en": "Qianyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q28152183",
+        "wikipedia": "zh:前屿站"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3473878,
+          26.0929003
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11125122401,
+        "name": "横屿",
+        "name:en": "Hengyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3214128,
+          26.0939746
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137495977,
+        "name": "三角池",
+        "name:en": "Sanjiaochi",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3093444,
+          26.0905427
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137504281,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q121877986"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3330371,
+          26.0961144
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137504571,
+        "name": "竹屿",
+        "name:en": "Zhuyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3025513,
+          26.08988
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137518057,
+        "name": "省立医院",
+        "name:en": "Provincial Hospital",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.285364,
+          26.0878161
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137530963,
+        "name": "西门",
+        "name:en": "Ximen",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2677931,
+          26.0814237
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137538110,
+        "name": "凤凰池",
+        "name:en": "Fenghuangchi",
+        "name:zh": "凤凰池",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2788002,
+          26.0854634
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11137539002,
+        "name": "陆庄",
+        "name:en": "Luzhaung",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3475558,
+          26.0842357
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11139161337,
+        "name": "后屿",
+        "name:en": "Houyu",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.344854,
+          26.0435945
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11141033418,
+        "name": "花海公园",
+        "name:en": "Huahai Park",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3546265,
+          26.03289
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11141094242,
+        "name": "会展中心",
+        "name:en": "Exhibition Center",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3445573,
+          25.993371
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11141118917,
+        "name": "螺洲温泉",
+        "name:en": "Luozhou Hot Spring",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q121878182"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3577471,
+          25.987386
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11152381692,
+        "name": "前锦站",
+        "name:en": "Qianjin",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q121878575"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3578081,
+          26.0697241
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11401256684,
+        "name": "上洋",
+        "name:en": "Shangyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.322117,
+          26.0794993
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 11401256685,
+        "name": "紫阳",
+        "name:en": "Ziyang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3119299,
+          26.0899343
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986355,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3117574,
+          26.0899043
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986356,
+        "name": "东门",
+        "name:en": "Dongmen",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3144096,
+          26.0783573
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986357,
+        "name": "闽都",
+        "name:en": "Mindu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3145617,
+          26.078363
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986358,
+        "name": "闽都",
+        "name:en": "Mindu",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3149436,
+          26.0670111
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986359,
+        "name": "南公园",
+        "name:en": "Nangongyuan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3150954,
+          26.0670166
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986360,
+        "name": "南公园",
+        "name:en": "Nangongyuan",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3177207,
+          26.0386011
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986361,
+        "name": "三叉街（滨海快线）",
+        "name:en": "Sanchajie",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3178735,
+          26.0386109
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986362,
+        "name": "三叉街（滨海快线）",
+        "name:en": "Sanchajie",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.33085,
+          25.9919273
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986363,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3312428,
+          25.9919019
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13178986364,
+        "name": "帝封江",
+        "name:en": "Difengjiang",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2330531,
+          26.0599539
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366043,
+        "name": "半洲",
+        "name:en": "Banzhou",
+        "name:zh": "半洲",
+        "public_transport": "station",
+        "railway": "station",
+        "start_date": "2025-12-10",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2329845,
+          26.059952
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366046,
+        "name": "半洲",
+        "name:en": "Banzhou",
+        "name:zh": "半洲",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2331134,
+          26.0599569
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366047,
+        "name": "半洲",
+        "name:en": "Banzhou",
+        "name:zh": "半洲",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2334148,
+          26.0678091
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366048,
+        "name": "建新",
+        "name:en": "Jianxin",
+        "name:zh": "建新",
+        "public_transport": "station",
+        "railway": "station",
+        "start_date": "2025-12-10",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2334705,
+          26.0677787
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366051,
+        "name": "建新",
+        "name:en": "Jianxin",
+        "name:zh": "建新",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2333547,
+          26.0678511
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366052,
+        "name": "建新",
+        "name:en": "Jianxin",
+        "name:zh": "建新",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2444516,
+          26.0767308
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366053,
+        "name": "洪塘",
+        "name:en": "Hongtang",
+        "name:zh": "洪塘",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2445355,
+          26.0766161
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366054,
+        "name": "洪塘",
+        "name:en": "Hongtang",
+        "name:zh": "洪塘",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2573435,
+          26.0794741
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366055,
+        "name": "金牛山",
+        "name:en": "Jinniushan",
+        "name:zh": "金牛山",
+        "public_transport": "station",
+        "railway": "station",
+        "start_date": "2025-12-10",
+        "station": "subway",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2573414,
+          26.0795545
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366056,
+        "name": "金牛山",
+        "name:en": "Jinniushan",
+        "name:zh": "金牛山",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.2573469,
+          26.0794092
+        ]
+      },
+      "properties": {
+        "osm_type": "node",
+        "osm_id": 13366366057,
+        "name": "金牛山",
+        "name:en": "Jinniushan",
+        "name:zh": "金牛山",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes"
+      }
+    }
+  ]
+}

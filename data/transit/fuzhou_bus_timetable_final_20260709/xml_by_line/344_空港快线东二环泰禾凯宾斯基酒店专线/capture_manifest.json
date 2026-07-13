@@ -1,0 +1,101 @@
+{
+  "target": {
+    "query": "空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站)",
+    "target_start_stop": "空港快线长乐机场站",
+    "target_end_stop": "空港快线东二环凯宾斯基站"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站);entry=visible_result",
+  "scrolls": 6,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站)",
+      "observed_line": "空港快线东二环泰禾凯宾斯基酒店专线",
+      "direction_from": "运营时间来自官方公开渠道，实际可能动态调整，请提前候车",
+      "direction_to": "官方运营时间",
+      "service_start": "06:30",
+      "service_end": "00:50",
+      "fare": "票价: 20-45元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:08:30-20:30;expanded:06:30-08:30",
+      "snapshot_file": "dir_1_dump_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "运营时间来自官方公开渠道，实际可能动态调整，请提前候车→官方运营时间",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站)",
+      "observed_line": "空港快线东二环泰禾凯宾斯基酒店专线",
+      "direction_from": "空港快线长乐机场站",
+      "direction_to": "空港快线东二环凯宾斯基站",
+      "service_start": "06:30",
+      "service_end": "00:50",
+      "fare": "票价: 20-45元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "expanded:08:30-20:30;expanded:06:30-08:30",
+      "snapshot_file": "dir_2_dump_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "direction_2"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "运营时间来自官方公开渠道，实际可能动态调整，请提前候车→官方运营时间",
+      "expand_action": "expanded:08:30-20:30;expanded:06:30-08:30"
+    },
+    {
+      "snapshot_file": "dir_1_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "运营时间来自官方公开渠道，实际可能动态调整，请提前候车→官方运营时间",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_1_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "运营时间来自官方公开渠道，实际可能动态调整，请提前候车→官方运营时间",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_dump_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "direction_2",
+      "expand_action": "expanded:08:30-20:30;expanded:06:30-08:30"
+    },
+    {
+      "snapshot_file": "dir_2_dump_01.xml",
+      "scroll_index": 1,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "direction_2",
+      "expand_action": "no_collapsed_period"
+    },
+    {
+      "snapshot_file": "dir_2_dump_02.xml",
+      "scroll_index": 2,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "direction_2",
+      "expand_action": "no_collapsed_period"
+    }
+  ],
+  "final_query": "空港快线东二环泰禾凯宾斯基酒店专线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0078_空港快线东二环泰禾凯宾斯基酒店专线(空港快线长乐机场站--空港快线东二环凯宾斯基站)",
+  "final_copied_xml_count": 25,
+  "final_generated_at": "2026-07-09T11:16:19"
+}

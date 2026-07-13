@@ -1,0 +1,932 @@
+{
+  "created_by": "scripts/estimate_fuzhou_metro_speeds_from_amap_route.py",
+  "inputs": {
+    "lines_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_lines.csv",
+    "stops_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_stops_by_line.csv"
+  },
+  "outputs": {
+    "speed_estimates_csv": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\amap_active\\amap_metro_speed_estimates_from_route_api.csv",
+    "raw_responses_jsonl": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\metadata\\amap_metro_speed_estimation_raw_responses.jsonl",
+    "summary_json": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_metro_final_20260709\\metadata\\amap_metro_speed_estimation_summary.json"
+  },
+  "parameters": {
+    "city": "福州",
+    "strategies": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "5"
+    ],
+    "wait_time_s": 120.0,
+    "dwell_time_per_intermediate_stop_s": 30.0,
+    "direct_plan_rule": "exact target line_name and exact origin/destination stop names; one busline segment only"
+  },
+  "counts": {
+    "line_direction_records": 12,
+    "status_counts": {
+      "direct_route_api": 12
+    },
+    "warning_counts": {}
+  },
+  "speed_summary_mps": {
+    "min": 10.7454,
+    "max": 27.0969,
+    "mean": 14.0353
+  },
+  "fallback_or_failed_lines": [],
+  "diagnostics_by_line": {
+    "350100020612": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "1",
+          "transit_count": 1,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3330.0,
+              "api_total_distance_m": 29172.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3330.0,
+              "busline_distance_m": 29172.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁1号线(象峰--三江口)",
+                  "type": "地铁线路",
+                  "from": "象峰",
+                  "to": "三江口",
+                  "duration_s": 3330.0,
+                  "distance_m": 29172.0,
+                  "via_num": "23"
+                }
+              ],
+              "is_direct_target": true
+            }
+          ]
+        }
+      ]
+    },
+    "350100020613": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "2",
+          "transit_count": 2,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3330.0,
+              "api_total_distance_m": 29172.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3330.0,
+              "busline_distance_m": 29172.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁1号线(三江口--象峰)",
+                  "type": "地铁线路",
+                  "from": "三江口",
+                  "to": "象峰",
+                  "duration_s": 3330.0,
+                  "distance_m": 29172.0,
+                  "via_num": "23"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 10272.0,
+              "api_total_distance_m": 35673.0,
+              "walking_distance_m": 2805.0,
+              "walking_duration_s": 2401.0,
+              "busline_duration_s": 10449.0,
+              "busline_distance_m": 40607.0,
+              "segments_count": 5,
+              "segments": [
+                {
+                  "name": "M2路(马尾青洲公交总站--火车南站东广场)",
+                  "type": "普通公交线路",
+                  "from": "梁厝地铁站E口站",
+                  "to": "火车南站东广场",
+                  "duration_s": 1383.0,
+                  "distance_m": 6691.0,
+                  "via_num": "4"
+                },
+                {
+                  "name": "K2路(火车南站西广场--火车站北广场)",
+                  "type": "普通公交线路",
+                  "from": "火车南站东广场",
+                  "to": "龙津",
+                  "duration_s": 2439.0,
+                  "distance_m": 10032.0,
+                  "via_num": "12"
+                },
+                {
+                  "name": "1路(则徐大道盖山路口--西门)",
+                  "type": "普通公交线路",
+                  "from": "龙津",
+                  "to": "鼓楼",
+                  "duration_s": 2238.0,
+                  "distance_m": 7650.0,
+                  "via_num": "13"
+                },
+                {
+                  "name": "101路(地铁葫芦阵站--梅亭部队)",
+                  "type": "普通公交线路",
+                  "from": "龙津",
+                  "to": "鼓楼",
+                  "duration_s": 2578.0,
+                  "distance_m": 7739.0,
+                  "via_num": "9"
+                },
+                {
+                  "name": "19路(尤溪洲(东)停车场--上柳路北)",
+                  "type": "普通公交线路",
+                  "from": "鼓楼",
+                  "to": "满洋路",
+                  "duration_s": 1811.0,
+                  "distance_m": 8495.0,
+                  "via_num": "17"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "350100020745": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "2",
+          "transit_count": 2,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3450.0,
+              "api_total_distance_m": 29335.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3450.0,
+              "busline_distance_m": 29335.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁2号线(苏洋--洋里)",
+                  "type": "地铁线路",
+                  "from": "苏洋",
+                  "to": "洋里",
+                  "duration_s": 3450.0,
+                  "distance_m": 29335.0,
+                  "via_num": "20"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 7798.0,
+              "api_total_distance_m": 30697.0,
+              "walking_distance_m": 2769.0,
+              "walking_duration_s": 2372.0,
+              "busline_duration_s": 5426.0,
+              "busline_distance_m": 27928.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "39路(地铁沙堤站--台江广场)",
+                  "type": "普通公交线路",
+                  "from": "地铁沙堤站",
+                  "to": "福大东门",
+                  "duration_s": 2012.0,
+                  "distance_m": 12143.0,
+                  "via_num": "19"
+                },
+                {
+                  "name": "112路(洪山梁厝路--廨院公交总站)",
+                  "type": "普通公交线路",
+                  "from": "福大东门",
+                  "to": "廨院公交总站",
+                  "duration_s": 3414.0,
+                  "distance_m": 15785.0,
+                  "via_num": "24"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "350100020746": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "2",
+          "transit_count": 2,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3390.0,
+              "api_total_distance_m": 29335.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3390.0,
+              "busline_distance_m": 29335.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁2号线(洋里--苏洋)",
+                  "type": "地铁线路",
+                  "from": "洋里",
+                  "to": "苏洋",
+                  "duration_s": 3390.0,
+                  "distance_m": 29335.0,
+                  "via_num": "20"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 7845.0,
+              "api_total_distance_m": 28088.0,
+              "walking_distance_m": 2339.0,
+              "walking_duration_s": 2002.0,
+              "busline_duration_s": 5843.0,
+              "busline_distance_m": 25749.0,
+              "segments_count": 3,
+              "segments": [
+                {
+                  "name": "73路(马尾青洲公交总站--公交仁德站)",
+                  "type": "普通公交线路",
+                  "from": "洋里",
+                  "to": "地铁五里亭站",
+                  "duration_s": 1248.0,
+                  "distance_m": 5311.0,
+                  "via_num": "8"
+                },
+                {
+                  "name": "303路(鼓山公交总站--洪山桥小区)",
+                  "type": "普通公交线路",
+                  "from": "地铁五里亭站",
+                  "to": "洪山桥",
+                  "duration_s": 2794.0,
+                  "distance_m": 10571.0,
+                  "via_num": "16"
+                },
+                {
+                  "name": "39路(台江广场--地铁沙堤站)",
+                  "type": "普通公交线路",
+                  "from": "洪山桥",
+                  "to": "地铁沙堤站",
+                  "duration_s": 1801.0,
+                  "distance_m": 9867.0,
+                  "via_num": "14"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "900000076581": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "1",
+          "transit_count": 1,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 2760.0,
+              "api_total_distance_m": 30743.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 2760.0,
+              "busline_distance_m": 30743.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁6号线(潘墩--万寿)",
+                  "type": "地铁线路",
+                  "from": "潘墩",
+                  "to": "万寿",
+                  "duration_s": 2760.0,
+                  "distance_m": 30743.0,
+                  "via_num": "12"
+                }
+              ],
+              "is_direct_target": true
+            }
+          ]
+        }
+      ]
+    },
+    "900000076583": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "1",
+          "transit_count": 1,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 2760.0,
+              "api_total_distance_m": 30740.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 2760.0,
+              "busline_distance_m": 30740.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁6号线(万寿--潘墩)",
+                  "type": "地铁线路",
+                  "from": "万寿",
+                  "to": "潘墩",
+                  "duration_s": 2760.0,
+                  "distance_m": 30740.0,
+                  "via_num": "12"
+                }
+              ],
+              "is_direct_target": true
+            }
+          ]
+        }
+      ]
+    },
+    "900000088653": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "2",
+          "transit_count": 2,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3120.0,
+              "api_total_distance_m": 27208.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3120.0,
+              "busline_distance_m": 27208.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁5号线(荆溪厚屿--福州火车南站)",
+                  "type": "地铁线路",
+                  "from": "荆溪厚屿",
+                  "to": "福州火车南站",
+                  "duration_s": 3120.0,
+                  "distance_m": 27208.0,
+                  "via_num": "18"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 6430.0,
+              "api_total_distance_m": 24353.0,
+              "walking_distance_m": 466.0,
+              "walking_duration_s": 399.0,
+              "busline_duration_s": 6031.0,
+              "busline_distance_m": 23887.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "38路(闽侯青岐公交总站--公交仁德站)",
+                  "type": "普通公交线路",
+                  "from": "荆溪厚屿地铁站",
+                  "to": "宝龙·城市广场",
+                  "duration_s": 2676.0,
+                  "distance_m": 9289.0,
+                  "via_num": "13"
+                },
+                {
+                  "name": "124路(金牛山公园--火车南站东广场)",
+                  "type": "普通公交线路",
+                  "from": "宝龙·城市广场",
+                  "to": "火车南站东广场",
+                  "duration_s": 3355.0,
+                  "distance_m": 14598.0,
+                  "via_num": "23"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "900000088654": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "2",
+          "transit_count": 2,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3180.0,
+              "api_total_distance_m": 27208.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3180.0,
+              "busline_distance_m": 27208.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁5号线(福州火车南站--荆溪厚屿)",
+                  "type": "地铁线路",
+                  "from": "福州火车南站",
+                  "to": "荆溪厚屿",
+                  "duration_s": 3180.0,
+                  "distance_m": 27208.0,
+                  "via_num": "18"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 7743.0,
+              "api_total_distance_m": 24585.0,
+              "walking_distance_m": 2378.0,
+              "walking_duration_s": 2036.0,
+              "busline_duration_s": 5707.0,
+              "busline_distance_m": 22207.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "124路(火车南站西广场--金牛山公园)",
+                  "type": "普通公交线路",
+                  "from": "火车南站东广场",
+                  "to": "宝龙·城市广场",
+                  "duration_s": 3311.0,
+                  "distance_m": 14861.0,
+                  "via_num": "24"
+                },
+                {
+                  "name": "14路(地铁葫芦阵(东侧)--软件园鲲鹏大厦)",
+                  "type": "普通公交线路",
+                  "from": "宝龙·城市广场",
+                  "to": "文山里",
+                  "duration_s": 2396.0,
+                  "distance_m": 7346.0,
+                  "via_num": "15"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "900000090236": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "5",
+          "transit_count": 5,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 2655.0,
+              "api_total_distance_m": 18024.0,
+              "walking_distance_m": 193.0,
+              "walking_duration_s": 165.0,
+              "busline_duration_s": 2490.0,
+              "busline_distance_m": 17831.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁5号线(福州火车南站--荆溪厚屿)",
+                  "type": "地铁线路",
+                  "from": "帝封江",
+                  "to": "洪塘",
+                  "duration_s": 2040.0,
+                  "distance_m": 15400.0,
+                  "via_num": "12"
+                },
+                {
+                  "name": "地铁4号线(帝封江--半洲)",
+                  "type": "地铁线路",
+                  "from": "洪塘",
+                  "to": "半洲",
+                  "duration_s": 450.0,
+                  "distance_m": 2431.0,
+                  "via_num": "1"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 3210.0,
+              "api_total_distance_m": 27872.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3210.0,
+              "busline_distance_m": 27872.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁4号线(帝封江--半洲)",
+                  "type": "地铁线路",
+                  "from": "帝封江",
+                  "to": "半洲",
+                  "duration_s": 3210.0,
+                  "distance_m": 27872.0,
+                  "via_num": "21"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 3,
+              "api_total_duration_s": 2730.0,
+              "api_total_distance_m": 21142.0,
+              "walking_distance_m": 448.0,
+              "walking_duration_s": 480.0,
+              "busline_duration_s": 2250.0,
+              "busline_distance_m": 20694.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "滨海快线(文岭--福州火车站)",
+                  "type": "地铁线路",
+                  "from": "帝封江",
+                  "to": "东门",
+                  "duration_s": 900.0,
+                  "distance_m": 11373.0,
+                  "via_num": "3"
+                },
+                {
+                  "name": "地铁4号线(帝封江--半洲)",
+                  "type": "地铁线路",
+                  "from": "东门",
+                  "to": "半洲",
+                  "duration_s": 1350.0,
+                  "distance_m": 9321.0,
+                  "via_num": "8"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 4,
+              "api_total_duration_s": 3413.0,
+              "api_total_distance_m": 16395.0,
+              "walking_distance_m": 218.0,
+              "walking_duration_s": 186.0,
+              "busline_duration_s": 3227.0,
+              "busline_distance_m": 16177.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁5号线(福州火车南站--荆溪厚屿)",
+                  "type": "地铁线路",
+                  "from": "帝封江",
+                  "to": "霞镜",
+                  "duration_s": 1200.0,
+                  "distance_m": 8760.0,
+                  "via_num": "6"
+                },
+                {
+                  "name": "337路(利嘉自贸区--洪塘公交总站)",
+                  "type": "普通公交线路",
+                  "from": "霞镜地铁站",
+                  "to": "半洲",
+                  "duration_s": 2027.0,
+                  "distance_m": 7417.0,
+                  "via_num": "13"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 5,
+              "api_total_duration_s": 3565.0,
+              "api_total_distance_m": 15299.0,
+              "walking_distance_m": 1519.0,
+              "walking_duration_s": 1495.0,
+              "busline_duration_s": 2070.0,
+              "busline_distance_m": 13780.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁5号线(福州火车南站--荆溪厚屿)",
+                  "type": "地铁线路",
+                  "from": "帝封江",
+                  "to": "金山",
+                  "duration_s": 1620.0,
+                  "distance_m": 11820.0,
+                  "via_num": "9"
+                },
+                {
+                  "name": "地铁2号线(洋里--苏洋)",
+                  "type": "地铁线路",
+                  "from": "金山",
+                  "to": "桔园洲",
+                  "duration_s": 450.0,
+                  "distance_m": 1960.0,
+                  "via_num": "1"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "900000090237": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "5",
+          "transit_count": 5,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 2655.0,
+              "api_total_distance_m": 18024.0,
+              "walking_distance_m": 193.0,
+              "walking_duration_s": 165.0,
+              "busline_duration_s": 2490.0,
+              "busline_distance_m": 17831.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁4号线(半洲--帝封江)",
+                  "type": "地铁线路",
+                  "from": "半洲",
+                  "to": "洪塘",
+                  "duration_s": 450.0,
+                  "distance_m": 2431.0,
+                  "via_num": "1"
+                },
+                {
+                  "name": "地铁5号线(荆溪厚屿--福州火车南站)",
+                  "type": "地铁线路",
+                  "from": "洪塘",
+                  "to": "帝封江",
+                  "duration_s": 2040.0,
+                  "distance_m": 15400.0,
+                  "via_num": "12"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 2,
+              "api_total_duration_s": 3150.0,
+              "api_total_distance_m": 27872.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3150.0,
+              "busline_distance_m": 27872.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "地铁4号线(半洲--帝封江)",
+                  "type": "地铁线路",
+                  "from": "半洲",
+                  "to": "帝封江",
+                  "duration_s": 3150.0,
+                  "distance_m": 27872.0,
+                  "via_num": "21"
+                }
+              ],
+              "is_direct_target": true
+            },
+            {
+              "rank": 3,
+              "api_total_duration_s": 2695.0,
+              "api_total_distance_m": 21142.0,
+              "walking_distance_m": 448.0,
+              "walking_duration_s": 445.0,
+              "busline_duration_s": 2250.0,
+              "busline_distance_m": 20694.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁4号线(半洲--帝封江)",
+                  "type": "地铁线路",
+                  "from": "半洲",
+                  "to": "东门",
+                  "duration_s": 1290.0,
+                  "distance_m": 9321.0,
+                  "via_num": "8"
+                },
+                {
+                  "name": "滨海快线(福州火车站--文岭)",
+                  "type": "地铁线路",
+                  "from": "东门",
+                  "to": "帝封江",
+                  "duration_s": 960.0,
+                  "distance_m": 11373.0,
+                  "via_num": "3"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 4,
+              "api_total_duration_s": 3413.0,
+              "api_total_distance_m": 15562.0,
+              "walking_distance_m": 220.0,
+              "walking_duration_s": 187.0,
+              "busline_duration_s": 3226.0,
+              "busline_distance_m": 15342.0,
+              "segments_count": 3,
+              "segments": [
+                {
+                  "name": "337路(洪塘公交总站--利嘉自贸区)",
+                  "type": "普通公交线路",
+                  "from": "半洲",
+                  "to": "洪湾路口",
+                  "duration_s": 844.0,
+                  "distance_m": 1991.0,
+                  "via_num": "2"
+                },
+                {
+                  "name": "13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站)",
+                  "type": "普通公交线路",
+                  "from": "洪湾路口",
+                  "to": "金山地铁站D口",
+                  "duration_s": 762.0,
+                  "distance_m": 1531.0,
+                  "via_num": "2"
+                },
+                {
+                  "name": "地铁5号线(荆溪厚屿--福州火车南站)",
+                  "type": "地铁线路",
+                  "from": "金山",
+                  "to": "帝封江",
+                  "duration_s": 1620.0,
+                  "distance_m": 11820.0,
+                  "via_num": "9"
+                }
+              ],
+              "is_direct_target": false
+            },
+            {
+              "rank": 5,
+              "api_total_duration_s": 3609.0,
+              "api_total_distance_m": 15299.0,
+              "walking_distance_m": 1519.0,
+              "walking_duration_s": 1539.0,
+              "busline_duration_s": 2070.0,
+              "busline_distance_m": 13780.0,
+              "segments_count": 2,
+              "segments": [
+                {
+                  "name": "地铁2号线(苏洋--洋里)",
+                  "type": "地铁线路",
+                  "from": "桔园洲",
+                  "to": "金山",
+                  "duration_s": 450.0,
+                  "distance_m": 1960.0,
+                  "via_num": "1"
+                },
+                {
+                  "name": "地铁5号线(荆溪厚屿--福州火车南站)",
+                  "type": "地铁线路",
+                  "from": "金山",
+                  "to": "帝封江",
+                  "duration_s": 1620.0,
+                  "distance_m": 11820.0,
+                  "via_num": "9"
+                }
+              ],
+              "is_direct_target": false
+            }
+          ]
+        }
+      ]
+    },
+    "900000139163": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "1",
+          "transit_count": 1,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 3090.0,
+              "api_total_distance_m": 61781.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 3090.0,
+              "busline_distance_m": 61781.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "滨海快线(福州火车站--文岭)",
+                  "type": "地铁线路",
+                  "from": "福州火车站",
+                  "to": "文岭",
+                  "duration_s": 3090.0,
+                  "distance_m": 61781.0,
+                  "via_num": "10"
+                }
+              ],
+              "is_direct_target": true
+            }
+          ]
+        }
+      ]
+    },
+    "900000139164": {
+      "attempts": [
+        {
+          "strategy": "0",
+          "error": null,
+          "status": "1",
+          "info": "OK",
+          "infocode": "10000",
+          "count": "1",
+          "transit_count": 1,
+          "plans": [
+            {
+              "rank": 1,
+              "api_total_duration_s": 2790.0,
+              "api_total_distance_m": 61781.0,
+              "walking_distance_m": 0.0,
+              "walking_duration_s": 0.0,
+              "busline_duration_s": 2790.0,
+              "busline_distance_m": 61781.0,
+              "segments_count": 1,
+              "segments": [
+                {
+                  "name": "滨海快线(文岭--福州火车站)",
+                  "type": "地铁线路",
+                  "from": "文岭",
+                  "to": "福州火车站",
+                  "duration_s": 2790.0,
+                  "distance_m": 61781.0,
+                  "via_num": "10"
+                }
+              ],
+              "is_direct_target": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

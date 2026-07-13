@@ -1,0 +1,19 @@
+﻿query,target_line_name,status,correction_status,departure_count_in_headers,rule_count_in_headers,message
+10路,10路(火车站北广场--鳌峰洲公交总站) | 10路(鳌峰洲公交总站--火车站北广场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,opened_schedule;search_phrase=10路(火车站北广场--鳌峰洲公交总站);entry=visible_result
+11路,11路(公交鹤林站--海峡奥体公交枢纽站),ok,replaced_by_full_line_query_capture_parse,152,0,opened_schedule;search_phrase=11路(公交鹤林站--海峡奥体公交枢纽站);entry=visible_result
+13路,13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站) | 13路(敬老线路)(鳌峰洲公交总站--洪塘公交总站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=13路(敬老线路)(洪塘公交总站--鳌峰洲公交总站);expected_line=13路
+25路,25路(敬老线路)(公交福湾站--尤溪洲(西)公交站) | 25路(敬老线路)(尤溪洲(西)公交站--公交福湾站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=25路(敬老线路)(公交福湾站--尤溪洲(西)公交站);expected_line=25路
+27路,27路(敬老线路)(福大东门--湖塘村) | 27路(敬老线路)(福新公交枢纽站--福大东门),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=27路(敬老线路)(福大东门--湖塘村);expected_line=27路
+28路,28路(敬老线路)(地铁葫芦阵站--新厦二区社区) | 28路(敬老线路)(新厦二区社区--后坂),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=28路(敬老线路)(地铁葫芦阵站--新厦二区社区);expected_line=28路
+29路,29路(敬老线路)(金牛山公园--鼓山公交总站) | 29路(敬老线路)(鼓山公交总站--金牛山公园),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=29路(敬老线路)(金牛山公园--鼓山公交总站);expected_line=29路
+302路,302路(公交福湾站--鼓山公交总站) | 302路(鼓山公交总站--公交福湾站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=302路(公交福湾站--鼓山公交总站);expected_line=302路
+303路,303路(洪山桥小区--鼓山公交总站) | 303路(鼓山公交总站--洪山桥小区),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=303路(洪山桥小区--鼓山公交总站);expected_line=303路
+306路,306路(义序公交综合车场--公交仁德站) | 306路(公交仁德站--义序公交综合车场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=306路(义序公交综合车场--公交仁德站);expected_line=306路
+309路,309路(尤溪洲(东)停车场--雁头路东) | 309路(雁头路东--尤溪洲(东)停车场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=309路(尤溪洲(东)停车场--雁头路东);expected_line=309路
+31路,31路(台江广场--青口公交总站) | 31路(青口公交总站--台江广场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=31路(台江广场--青口公交总站);expected_line=31路
+39路,39路(台江广场--地铁沙堤站) | 39路(地铁沙堤站--台江广场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,schedule_button_not_found_from_visible_results;search_phrase=39路(台江广场--地铁沙堤站)
+51路,51路(敬老线路)(火车站北广场--曙光支路东站) | 51路(敬老线路)(鳌峰大桥--火车站北广场),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=51路(敬老线路)(火车站北广场--曙光支路东站);expected_line=51路
+53路,53路(敬老线路)(福州温泉博物馆--西山部队) | 53路(敬老线路)(西山部队--福州温泉博物馆),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=53路(敬老线路)(福州温泉博物馆--西山部队);expected_line=53路
+6路,6路(敬老线路)(公交仁德站--金山浦上公交枢纽站) | 6路(敬老线路)(金山浦上公交枢纽站--公交仁德站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=6路(敬老线路)(公交仁德站--金山浦上公交枢纽站);expected_line=6路
+72路,72路(公交鹤林站--森林公园) | 72路(森林公园--公交鹤林站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=72路(公交鹤林站--森林公园);expected_line=72路
+75路,75路(敬老线路)(淮安公交总站--火车站北广场) | 75路(敬老线路)(火车站北广场--淮安公交总站),needs_manual_review,old_wrong_match_removed_not_replaced,0,0,target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=75路(敬老线路)(淮安公交总站--火车站北广场);expected_line=75路

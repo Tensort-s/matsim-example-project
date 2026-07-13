@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆)",
+    "target_start_stop": "公交海峡国际会展中心东站",
+    "target_end_stop": "利嘉国际商业城12号馆"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆);expected_line=188路",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "188路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0082_188路(敬老线路)(公交海峡国际会展中心东站--利嘉国际商业城12号馆)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:15:10"
+}

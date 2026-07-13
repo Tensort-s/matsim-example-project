@@ -1,0 +1,69 @@
+{
+  "target": {
+    "query": "东部24号线(温泉小学--福州规划馆)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "东部24号线(温泉小学--福州规划馆)",
+    "target_start_stop": "温泉小学",
+    "target_end_stop": "福州规划馆"
+  },
+  "status": "ok",
+  "message": "opened_schedule;search_phrase=东部24号线(温泉小学--福州规划馆);entry=visible_result",
+  "scrolls": 2,
+  "directions_collected": 2,
+  "headers": [
+    {
+      "target_query": "东部24号线(温泉小学--福州规划馆)",
+      "observed_line": "东部24号线",
+      "direction_from": "福州市规划馆站",
+      "direction_to": "温泉小学",
+      "service_start": "17:52",
+      "service_end": "17:52",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_1_pre_00.xml",
+      "direction_index": 1,
+      "direction_tab_label": "福州市规划馆站→温泉小学",
+      "directions_collected": 2
+    },
+    {
+      "target_query": "东部24号线(温泉小学--福州规划馆)",
+      "observed_line": "东部24号线",
+      "direction_from": "温泉小学",
+      "direction_to": "福州规划馆",
+      "service_start": "07:40",
+      "service_end": "07:40",
+      "fare": "票价: 1元",
+      "latest_departure_text": "",
+      "note": "",
+      "expand_action": "no_period_sections_single_dump",
+      "snapshot_file": "dir_2_pre_00.xml",
+      "direction_index": 2,
+      "direction_tab_label": "温泉小学→福州规划馆"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_file": "dir_1_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 1,
+      "direction_tab_label": "福州市规划馆站→温泉小学",
+      "expand_action": "no_period_sections_single_dump"
+    },
+    {
+      "snapshot_file": "dir_2_pre_00.xml",
+      "scroll_index": 0,
+      "snapshot_index": 0,
+      "direction_index": 2,
+      "direction_tab_label": "温泉小学→福州规划馆",
+      "expand_action": "no_period_sections_single_dump"
+    }
+  ],
+  "final_query": "东部24号线",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0026_东部24号线(温泉小学--福州规划馆)",
+  "final_copied_xml_count": 6,
+  "final_generated_at": "2026-07-09T11:16:11"
+}

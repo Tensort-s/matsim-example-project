@@ -1,0 +1,8 @@
+﻿query,target_sources,matched_line_records,matched_frequency_rows,headway_rows_added,status,matched_line_names,notes
+750路,failed_or_manual_review_lines.csv,2,8,8,supplemented_from_lineid_timedesc,750路(五都村口--公交大学城总站) | 750路(公交大学城总站--五都村口),
+地铁接驳17号专线,failed_or_manual_review_lines.csv,2,4,2,supplemented_from_lineid_timedesc,地铁接驳17号专线(火车站北广场--省人才公寓) | 地铁接驳17号专线(省人才公寓--火车站北广场),
+地铁接驳18号专线,failed_or_manual_review_lines.csv,2,5,2,supplemented_from_lineid_timedesc,地铁接驳18号专线(敬老线路)(天御城--王庄公交总站) | 地铁接驳18号专线(敬老线路)(王庄公交总站--天御城),
+地铁接驳2号专线,failed_or_manual_review_lines.csv,2,4,2,supplemented_from_lineid_timedesc,地铁接驳2号专线(洪塘公交总站--省立医院南院) | 地铁接驳2号专线(省立医院南院--洪塘公交总站),
+空港快线海峡都市报专线,failed_or_manual_review_lines.csv,2,6,3,supplemented_from_lineid_timedesc,空港快线海峡都市报专线(海峡都市报社--长乐国际机场候机楼) | 空港快线海峡都市报专线(长乐国际机场候机楼--海峡都市报社),
+空港快线火车站专线,failed_or_manual_review_lines.csv,1,5,1,supplemented_from_lineid_timedesc,空港快线火车站专线(福州长乐国际机场--火车站北广场站),
+空港快线闽江饭店专线,failed_or_manual_review_lines.csv,1,4,1,supplemented_from_lineid_timedesc,空港快线闽江饭店专线(空港快线长乐机场站--空港快线闽江饭店站),

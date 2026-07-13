@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-07-09T11:53:10",
+  "operation": "supplement_failed_or_ungrabbed_bus_timetable_from_final_amap_stop_line_dataset",
+  "source_files": [
+    "data/transit/fuzhou_bus_amap_stop_line_final_20260709/bus_lines/amap_bus_lines_full.csv",
+    "data/transit/fuzhou_bus_amap_stop_line_final_20260709/bus_lines/amap_bus_service_frequency_full.csv"
+  ],
+  "summary": {
+    "applied_at": "2026-07-09T11:53:10",
+    "source_dataset": "data/transit/fuzhou_bus_amap_stop_line_final_20260709/bus_lines",
+    "source_frequency_file": "amap_bus_service_frequency_full.csv",
+    "target_queries": 175,
+    "matched_line_record_queries": 175,
+    "matched_frequency_queries": 175,
+    "supplemented_queries": 7,
+    "remaining_queries_without_headway": 168,
+    "header_rows_added": 12,
+    "rule_rows_added": 19,
+    "regularized_rule_rows_added": 19,
+    "regularized_rules_written_to": "tables/amap_mobile_timetable_regularized_rules_supplemented.csv",
+    "raw_text_rows_added": 12,
+    "merge_source": "amap_stop_line_final_timedesc_supplement_20260709",
+    "note": "Only explicit headway_minutes/interval_time from AMap lineid timedesc was added; no missing frequency was estimated. Main regularized CSV was locked, so complete supplemented version was written as sidecar."
+  }
+}

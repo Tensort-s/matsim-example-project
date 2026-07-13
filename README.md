@@ -62,6 +62,50 @@ To simply run MATSim based on a config file, pass `run --config <path>`. To get 
 java -jar matsim-example-project-0.0.1-SNAPSHOT.jar <command>
 ```
 
+### Visualizing results with SimWrapper
+
+`MatsimModelImplementation` enables `SimWrapperModule`, so future simulation runs automatically create
+SimWrapper dashboard definitions and analysis files in the MATSim output directory.
+
+The default dashboards applicable to the example scenario are:
+
+- Overview
+- Trip
+- Traffic
+- Traffic Counts
+- Stuck Agent
+
+To generate or refresh dashboards for the existing `output` directory on Windows and open SimWrapper:
+
+```powershell
+.\scripts\Open-SimWrapper.ps1
+```
+
+The script checks the executable JAR and MATSim output, runs the offline SimWrapper analysis, and opens
+[simwrapper.app](https://simwrapper.app). In SimWrapper, select the local project folder:
+
+```text
+F:\Matsim\matsim-example-project\output
+```
+
+To generate the dashboard files without opening a browser:
+
+```powershell
+.\scripts\Open-SimWrapper.ps1 -SkipOpen
+```
+
+The equivalent offline command is:
+
+```powershell
+java -cp .\matsim-example-project-0.0.1-SNAPSHOT.jar `
+  org.matsim.simwrapper.SimWrapperRunner `
+  .\output
+```
+
+Generated files include `simwrapper-config.yaml`, dashboard YAML files, and the `analysis` directory.
+For output created before SimWrapper was enabled, the script also adds the `subpopulation` column required by
+MATSim 2026's trip analysis and keeps a `persons-before-simwrapper.zst` backup of the original persons file.
+
 
 
 ### Licenses

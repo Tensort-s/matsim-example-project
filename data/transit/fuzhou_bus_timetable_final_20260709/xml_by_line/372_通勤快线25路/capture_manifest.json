@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "通勤快线25路(晋安社会福利中心--地铁象峰站)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "通勤快线25路(晋安社会福利中心--地铁象峰站)",
+    "target_start_stop": "晋安社会福利中心",
+    "target_end_stop": "地铁象峰站"
+  },
+  "status": "navigation_failed",
+  "message": "schedule_button_not_found_from_visible_results;search_phrase=通勤快线25路(晋安社会福利中心--地铁象峰站)",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "通勤快线25路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0036_通勤快线25路(晋安社会福利中心--地铁象峰站)",
+  "final_copied_xml_count": 8,
+  "final_generated_at": "2026-07-09T11:16:23"
+}

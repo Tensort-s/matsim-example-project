@@ -1,0 +1,69 @@
+{
+  "created_by": "scripts/calibrate_fuzhou_bus_priority_speed_and_transfers.py",
+  "created_at_epoch": 1783785010.1890707,
+  "runtime_seconds": 5.091,
+  "inputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5_floor_lanes_raw\\network_with_car_busprio_metro.xml.gz",
+    "schedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5_floor_lanes_raw\\transitSchedule.xml.gz",
+    "vehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_carcap5_floor_lanes_raw\\transitVehicles.xml.gz",
+    "capacity_qa": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_capacity_lanes_v2_split_modes\\capacity_reestimate_link_qa.csv"
+  },
+  "outputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_speedcal_transfer300_carcap5\\network_with_car_busprio_metro.xml.gz",
+    "schedule": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_speedcal_transfer300_carcap5\\transitSchedule.xml.gz",
+    "vehicles": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_speedcal_transfer300_carcap5\\transitVehicles.xml.gz"
+  },
+  "parameters": {
+    "speed_caps_kmh": {
+      "service": 15.0,
+      "living_street": 15.0,
+      "residential": 20.0,
+      "unclassified": 20.0,
+      "tertiary": 22.0,
+      "tertiary_link": 22.0,
+      "secondary": 25.0,
+      "secondary_link": 25.0,
+      "primary": 28.0,
+      "primary_link": 28.0,
+      "trunk": 30.0,
+      "trunk_link": 30.0,
+      "motorway": 30.0,
+      "motorway_link": 30.0,
+      "synthetic": 22.0,
+      "unknown": 22.0
+    },
+    "bus_stop_dwell_s": 20.0,
+    "transfer_radius_m": 300.0,
+    "transfer_walk_speed_mps": 1.2,
+    "transfer_fixed_time_s": 60.0,
+    "transfer_min_time_s": 90.0
+  },
+  "counts": {
+    "network_links": 54043,
+    "bus_priority_links": 15497,
+    "bus_priority_links_capped": 15497,
+    "bus_routes_retimed": 709,
+    "route_modes": {
+      "bus": 709,
+      "metro": 12
+    },
+    "departures": 46486,
+    "targeted_bus_metro_pairs": 6249,
+    "targeted_directional_relations": 12498,
+    "existing_transfer_relations": 0,
+    "covered_metro_stop_facilities": 168,
+    "uncovered_metro_stop_facilities": 62,
+    "timing_warnings": 0
+  },
+  "speed": {
+    "old_length_harmonic_kmh": 57.193,
+    "new_length_harmonic_kmh": 24.592
+  },
+  "validation": {
+    "non_bus_priority_links_unchanged": true,
+    "missing_route_links": 0,
+    "missing_stop_links": 0,
+    "all_bus_offsets_strictly_increasing": true,
+    "all_targeted_transfer_distances_within_radius": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "target": {
+    "query": "闽侯地铁专线5路(久策大厦--浦口洲)",
+    "target_line_id": "900000000000.0",
+    "target_line_name": "闽侯地铁专线5路(久策大厦--浦口洲)",
+    "target_start_stop": "久策大厦",
+    "target_end_stop": "浦口洲"
+  },
+  "status": "navigation_failed",
+  "message": "target_line_not_found_in_bus_stop_card_after_scroll;search_phrase=闽侯地铁专线5路(久策大厦--浦口洲);expected_line=闽侯地铁专线5路",
+  "scrolls": 0,
+  "directions_collected": 0,
+  "headers": [],
+  "snapshots": [],
+  "final_query": "闽侯地铁专线5路",
+  "final_source_label": "remaining_capture",
+  "final_source_dir": "matsim-example-project\\data\\transit\\fuzhou_bus_amap_mobile_timetables_remaining_capture_20260708\\0147_闽侯地铁专线5路(久策大厦--浦口洲)",
+  "final_copied_xml_count": 4,
+  "final_generated_at": "2026-07-09T11:16:26"
+}

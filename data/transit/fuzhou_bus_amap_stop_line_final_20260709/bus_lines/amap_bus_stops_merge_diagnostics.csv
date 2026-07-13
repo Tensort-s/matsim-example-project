@@ -1,0 +1,10 @@
+﻿line_id_count,merge_method,merged_stop_id,name,source_id_count,source_ids,source_types
+13,same_name_80m_cluster,amap_stop_00105,盛天·现代城(前屿村)(公交站),2,BV09118748;BV10561554,lineid_busstop;poi
+36,same_name_80m_cluster,amap_stop_00188,金垱(公交站),2,BV09219847;BV09535501,lineid_busstop;poi
+20,same_name_80m_cluster,amap_stop_01056,中天金海岸(公交站),2,BV10391605;BV11169406,lineid_busstop;poi
+59,same_name_80m_cluster,amap_stop_01058,宝龙·城市广场(公交站),2,BV10391609;BV10665298,lineid_busstop;poi
+0,same_id,amap_stop_01287,县卫计局(公交站),1,BV10923260,poi
+8,same_name_80m_cluster,amap_stop_01349,闽侯行政服务中心北门(公交站),2,BV11052689;BV11499625,lineid_busstop;poi
+0,same_id,amap_stop_01369,县博物馆(公交站),1,BV11078242,poi
+0,same_id,amap_stop_01370,闽都民俗园(公交站),1,BV11078243,poi
+0,same_id,amap_stop_01371,民俗路口(公交站),1,BV11078244,poi

@@ -1,0 +1,45 @@
+{
+  "created_by": "scripts/augment_fuzhou_road_network_from_bus_trajectories.py",
+  "inputs": {
+    "network": "F:\\Matsim\\matsim-example-project\\data\\matsim_routes\\fuzhou_city_23_greenspace_grid_multi_activity\\network.xml.gz",
+    "boundary": "F:\\Matsim\\matsim-example-project\\data\\osm\\fuzhou_city_23\\fuzhou_city_23_boundary.geojson",
+    "trajectories": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_coordinates_unified_20260709\\bus\\bus_line_trajectories_epsg32650.geojson"
+  },
+  "outputs": {
+    "augmented_network": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\network_augmented_with_bus_trajectory_links.xml.gz",
+    "synthetic_links_geojson": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\synthetic_bus_trajectory_links_epsg32650.geojson",
+    "connector_links_geojson": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\synthetic_bus_connector_links_epsg32650.geojson",
+    "qa_csv": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\synthetic_bus_road_links_qa.csv",
+    "summary_json": "data\\transit\\fuzhou_bus_osm_augmented_network_20260709_500m_conservative_carpt\\bus_osm_augmentation_summary.json"
+  },
+  "parameters": {
+    "buffer_m": 500.0,
+    "missing_threshold_m": 80.0,
+    "max_segment_len_m": 80.0,
+    "node_merge_tolerance_m": 8.0,
+    "connector_threshold_m": 120.0,
+    "min_component_connector_links": 1,
+    "synthetic_freespeed_mps": 13.89,
+    "synthetic_modes": "car,pt"
+  },
+  "counts": {
+    "original_nodes": 16539,
+    "original_links": 34056,
+    "synthetic_nodes": 2710,
+    "synthetic_bus_trajectory_links": 3108,
+    "synthetic_connector_links": 1152,
+    "augmented_nodes": 19249,
+    "augmented_links": 38316,
+    "trajectory_segments_total": 385237,
+    "segments_inside_buffer": 285080,
+    "segments_missing_road": 11787,
+    "segments_too_short": 174,
+    "duplicate_directional_segments_skipped": 7828,
+    "synthetic_components_total": 235,
+    "synthetic_components_kept": 190,
+    "synthetic_components_pruned": 45,
+    "synthetic_links_pruned_as_isolated": 677,
+    "synthetic_nodes_pruned_as_isolated": 513,
+    "connector_links_pruned_as_isolated": 0
+  }
+}

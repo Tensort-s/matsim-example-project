@@ -1,0 +1,43 @@
+{
+  "created_by": "scripts/prepare_fuzhou_ride_hailing.py",
+  "created_at_epoch": 1783851564.554362,
+  "runtime_seconds": 279.85,
+  "inputs": {
+    "population": "F:\\Matsim\\matsim-example-project\\output-fuzhou-transit-mode-choice-2pct-waitpenalty-metroprefer-cont20\\output_plans.xml.zst",
+    "network": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_transit_matsim_integrated_20260709_bus_priority_transferwait_metro40\\network_with_car_busprio_metro.xml.gz",
+    "agents_summary": "F:\\Matsim\\matsim-example-project\\data\\matsim_agents\\fuzhou_city_23_greenspace_grid_multi_activity_2pct_same_day_night\\multi_activity_agents_summary.json"
+  },
+  "outputs": {
+    "population": "F:\\Matsim\\matsim-example-project\\data\\matsim_routes\\fuzhou_city_23_greenspace_grid_multi_activity_2pct_ride_hailing\\mode_choice_plans_car_pt_walk_ride_hailing_2pct.xml.gz",
+    "fleet": "F:\\Matsim\\matsim-example-project\\data\\ride_hailing\\fuzhou_ride_hailing_2pct_20260712\\ride_hailing_fleet.xml.gz",
+    "start_link_qa": "F:\\Matsim\\matsim-example-project\\data\\ride_hailing\\fuzhou_ride_hailing_2pct_20260712\\ride_hailing_start_links.csv"
+  },
+  "population_sample_rate": 0.01999998182309652,
+  "daily_fleet_total": 34709,
+  "fleet_size": 694,
+  "vehicle_capacity": 4,
+  "service_hours": 8.0,
+  "max_vehicles_on_one_link": 2,
+  "max_vehicles_in_one_300m_cell": 4,
+  "candidate_car_links": 37417,
+  "counters": {
+    "persons": 51326,
+    "ride_hailing_candidate_added": 51326,
+    "plans": 307933
+  },
+  "car_availability": {
+    "always": 10111,
+    "never": 41215
+  },
+  "selected_modes_after_fix": {
+    "car": 9408,
+    "walk": 41918
+  },
+  "plan_modes_after_fix": {
+    "car": 17825,
+    "walk": 238782,
+    "ride_hailing": 51326
+  },
+  "sampling_warnings": 0,
+  "departure_time_samples": 523698
+}

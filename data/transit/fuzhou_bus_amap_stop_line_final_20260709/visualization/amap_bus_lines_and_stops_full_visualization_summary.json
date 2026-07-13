@@ -1,0 +1,16 @@
+{
+  "outputs": {
+    "png": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\visualization\\amap_bus_lines_and_stops_full_wgs84.png",
+    "lines_preview_geojson": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\visualization\\amap_bus_lines_full_wgs84_preview.geojson",
+    "stops_preview_geojson": "F:\\Matsim\\matsim-example-project\\data\\transit\\fuzhou_bus_amap_stop_line_final_20260709\\visualization\\amap_bus_stops_complete_wgs84_preview.geojson"
+  },
+  "counts": {
+    "line_trajectory_features": 801,
+    "unique_route_base_names": 411,
+    "complete_stop_points": 2625,
+    "stops_with_line_usage": 2625,
+    "max_stop_line_usage": 59
+  },
+  "coordinate_system": "WGS84 lon/lat",
+  "note": "This is the final AMap source stop/line dataset before MATSim boundary clipping or map matching."
+}
