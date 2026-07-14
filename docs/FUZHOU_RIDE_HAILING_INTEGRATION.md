@@ -1,11 +1,13 @@
 # Fuzhou ride_hailing integration
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 This version adds a network-based `ride_hailing` mode using MATSim 2026 taxi/DVRP.
 
 ## Generated inputs
 
 - Demand with ride-hailing candidates:
-  - `data/matsim_routes/fuzhou_city_23_greenspace_grid_multi_activity_2pct_ride_hailing/mode_choice_plans_car_pt_walk_ride_hailing_2pct.xml.gz`
+  - `data/matsim_routes/fuzhou/legacy_ride_hailing_2pct/mode_choice_plans_car_pt_walk_ride_hailing_2pct.xml.gz`
 - Taxi/DVRP fleet:
   - `data/ride_hailing/fuzhou_ride_hailing_2pct_20260712/ride_hailing_fleet.xml.gz`
 - Fleet QA:
@@ -28,7 +30,7 @@ For long Windows runs, prefer the documented `.cmd` launch pattern:
 docs/WINDOWS_MATSIM_LONG_RUN_LAUNCH.md
 ```
 
-In short: use a `.cmd` wrapper, Maven's absolute path, quote both `-Dexec.*` arguments, and write stdout/stderr/exit code to `run_logs`.
+In short: use a `.cmd` wrapper, Maven's absolute path, quote both `-Dexec.*` arguments, and write stdout/stderr/exit code to `runs/fuzhou/logs`.
 
 Smoke test:
 
@@ -53,4 +55,4 @@ mvn exec:java "-Dexec.mainClass=org.matsim.project.RunMatsimModelImplementation"
 - `carAvail=never` agents have zero car candidate plans.
 - Every agent has one `ride_hailing` candidate plan.
 
-The smoke command may continue into SimWrapper post-processing after the main simulation has completed; the decisive smoke marker is `ITERATION 0 ENDS` in `output-fuzhou-transit-mode-choice-2pct-ride-hailing-smoke/logfile.log`.
+The smoke command may continue into SimWrapper post-processing after the main simulation has completed; the decisive smoke marker is `ITERATION 0 ENDS` in `runs/fuzhou/outputs/legacy-transit-mode-choice-2pct-ride-hailing-smoke/logfile.log`.

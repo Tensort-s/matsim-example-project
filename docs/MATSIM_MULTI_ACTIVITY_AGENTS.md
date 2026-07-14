@@ -1,12 +1,14 @@
 # 基于年龄-性别人口结构的多活动 MATSim Agents
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 本文档记录当前 v2 的福州 Greenspace 新格网 multi-activity population 生成流程。
 
 ## 运行方式
 
 ```powershell
 cd F:\Matsim\matsim-example-project
-.\.venv_geo311\Scripts\python.exe .\scripts\generate_matsim_multi_activity_agents.py
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\demand_generation\generate_matsim_multi_activity_agents.py
 ```
 
 默认输入：
@@ -21,7 +23,7 @@ cd F:\Matsim\matsim-example-project
 默认输出：
 
 ```text
-data/matsim_agents/fuzhou_city_23_greenspace_grid_multi_activity/
+data/matsim_agents/fuzhou/greenspace_grid_multi_activity/
 ```
 
 ## 生成逻辑

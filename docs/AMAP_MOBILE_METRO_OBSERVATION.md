@@ -1,5 +1,7 @@
 # 高德手机版地铁到站信息半自动采样
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 脚本：
 
 ```text
@@ -55,8 +57,8 @@ adb devices
 ```powershell
 cd F:\Matsim\matsim-example-project
 
-.\.venv_geo311\Scripts\python.exe .\scripts\collect_amap_mobile_metro_arrivals.py `
-  --write-default-targets .\data\transit\fuzhou_metro_amap_mobile_observations\targets.csv
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\collect_amap_mobile_metro_arrivals.py `
+  --write-default-targets .\data\transit\fuzhou\legacy\metro_amap_mobile_observations\targets.csv
 ```
 
 可手动编辑：
@@ -72,10 +74,10 @@ data/transit/fuzhou/metro_amap_mobile_observations/targets.csv
 ```powershell
 cd F:\Matsim\matsim-example-project
 
-.\.venv_geo311\Scripts\python.exe .\scripts\collect_amap_mobile_metro_arrivals.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\collect_amap_mobile_metro_arrivals.py `
   --manual `
-  --targets .\data\transit\fuzhou_metro_amap_mobile_observations\targets.csv `
-  --output-dir .\data\transit\fuzhou_metro_amap_mobile_observations
+  --targets .\data\transit\fuzhou\legacy\metro_amap_mobile_observations\targets.csv `
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap_mobile_observations
 ```
 
 每个目标开始时，脚本会暂停。你在手机上打开对应高德地铁站详情页，确认页面能看到“下一班 N 分钟”等信息后，按回车，脚本会保存：
@@ -92,10 +94,10 @@ amap_mobile_metro_arrival_observations.csv
 可以尝试：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\collect_amap_mobile_metro_arrivals.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\collect_amap_mobile_metro_arrivals.py `
   --open-method auto `
-  --targets .\data\transit\fuzhou_metro_amap_mobile_observations\targets.csv `
-  --output-dir .\data\transit\fuzhou_metro_amap_mobile_observations
+  --targets .\data\transit\fuzhou\legacy\metro_amap_mobile_observations\targets.csv `
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap_mobile_observations
 ```
 
 如果高德 URI 跳转失败，脚本会提示手动导航后再截图。
@@ -117,12 +119,12 @@ amap_mobile_metro_arrival_observations.csv
 例如对每个目标每隔 10 分钟采样 3 次：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\collect_amap_mobile_metro_arrivals.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\collect_amap_mobile_metro_arrivals.py `
   --manual `
-  --targets .\data\transit\fuzhou_metro_amap_mobile_observations\targets.csv `
+  --targets .\data\transit\fuzhou\legacy\metro_amap_mobile_observations\targets.csv `
   --repeat 3 `
   --interval-seconds 600 `
-  --output-dir .\data\transit\fuzhou_metro_amap_mobile_observations
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap_mobile_observations
 ```
 
 ## 6. 输出字段

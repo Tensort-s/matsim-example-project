@@ -1,5 +1,7 @@
 # 高德福州公交数据抓取
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 脚本：
 
 ```text
@@ -35,10 +37,10 @@ $env:AMAP_WEB_KEY="你的高德Web服务Key"
 ```powershell
 cd F:\Matsim\matsim-example-project
 
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --keyword-profile pilot `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_pilot `
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_pilot `
   --sleep 3 `
   --pages 2 `
   --offset 20
@@ -47,19 +49,19 @@ cd F:\Matsim\matsim-example-project
 ## 4. 自定义关键词
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --keywords "K1路,51路,101路,夜班2号线,地铁接驳1号专线" `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_custom
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_custom
 ```
 
 或用文本文件：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
-  --keywords-file .\data\transit\fuzhou_bus_keywords.txt `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
+  --keywords-file .\data\transit\fuzhou\legacy\bus_keywords.txt `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_custom
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_custom
 ```
 
 ## 5. 较大范围抓取
@@ -67,11 +69,11 @@ cd F:\Matsim\matsim-example-project
 数字线路枚举：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --keyword-profile numeric `
   --max-number 400 `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_numeric_400 `
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_numeric_400 `
   --sleep 3 `
   --pages 2 `
   --offset 20
@@ -80,11 +82,11 @@ cd F:\Matsim\matsim-example-project
 更宽的 citywide profile 会额外枚举 K 线、夜班线、地铁接驳线、马尾快线、闽侯/长乐相关线路等：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --keyword-profile citywide `
   --max-number 400 `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_citywide_400 `
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_citywide_400 `
   --sleep 3 `
   --pages 2 `
   --offset 20
@@ -114,11 +116,11 @@ amap_bus_fetch_summary.json
 ### 8684 发现
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --discover-from-8684 `
   --8684-city-slug fuzhou `
   --discovery-only `
-  --output-dir .\data\transit\fuzhou_bus_amap_8684_discovery
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_8684_discovery
 ```
 
 注意：当前 `https://fuzhou.8684.cn/list1` 已不再返回旧版公交线路目录，而是普通资讯页面。因此福州 8684 发现目前不可用。脚本会写出 `keyword_discovery_diagnostics.json` 记录页面状态。
@@ -126,10 +128,10 @@ amap_bus_fetch_summary.json
 ### Wikipedia 线路表发现
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --discover-from-wikipedia `
   --discovery-only `
-  --output-dir .\data\transit\fuzhou_bus_amap_wikipedia_discovery
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_wikipedia_discovery
 ```
 
 当前测试可发现约 334 条福州公交线路名。
@@ -137,11 +139,11 @@ amap_bus_fetch_summary.json
 用发现到的线路名调用高德：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_bus_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_data_exploration\fetch_fuzhou_bus_from_amap.py `
   --discover-from-wikipedia `
   --max-keywords 30 `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_bus_amap_wikipedia_30 `
+  --output-dir .\data\transit\fuzhou\legacy\bus_amap_wikipedia_30 `
   --sleep 3 `
   --pages 1 `
   --offset 20

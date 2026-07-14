@@ -2,6 +2,21 @@
 
 A small example of how to use MATSim as a library.
 
+## Start here for future sessions
+
+For the current Fuzhou model, read these files first:
+
+- [Project onboarding](docs/PROJECT_ONBOARDING.md): current workflow, active data paths, commands, and outputs.
+- [Fuzhou city metadata](cities/fuzhou/city.yaml): active boundary, CRS, demand, transit supply, and final config.
+- [Fuzhou run manifest](runs/fuzhou/run_manifest.json): retained run chain and continuation relationships.
+- [Documentation audit](docs/DOCUMENTATION_AUDIT.md): which docs are current vs. legacy/provenance.
+
+The current final output is:
+
+```text
+runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50
+```
+
 By default, this project uses the latest (pre-)release. In order to use a different version, edit `pom.xml`.
 
 [//]: # (A recommended directory structure is as follows:)
@@ -62,6 +77,18 @@ To simply run MATSim based on a config file, pass `run --config <path>`. To get 
 java -jar matsim-example-project-0.0.1-SNAPSHOT.jar <command>
 ```
 
+### Re-running the current final Fuzhou simulation
+
+The Windows helper for the current final 50-iteration Fuzhou continuation run is stored with the Fuzhou
+single-city scripts:
+
+```powershell
+.\scripts\fuzhou_single_city\run\run_waitpenalty_from_cont20_reroute50.cmd
+```
+
+It locates the project root from its own path, writes logs to `runs/fuzhou/logs/`, and uses the final active
+Fuzhou config in `scenarios/fuzhou/`.
+
 ### Visualizing results with SimWrapper
 
 `MatsimModelImplementation` enables `SimWrapperModule`, so future simulation runs automatically create
@@ -111,6 +138,18 @@ java -cp .\matsim-example-project-0.0.1-SNAPSHOT.jar `
 Generated files include `simwrapper-config.yaml`, dashboard YAML files, and the `analysis` directory.
 For output created before SimWrapper was enabled, the script also adds the `subpopulation` column required by
 MATSim 2026's trip analysis and keeps a `persons-before-simwrapper.zst` backup of the original persons file.
+
+### GitHub SSH workflow note
+
+This repository is pushed through SSH. The remote may use the host alias `github.com-tensort`, configured in:
+
+```text
+C:\Users\Yu Boyang\.ssh\config
+```
+
+When using Codex, sandboxed commands may fail to read this SSH config and may report that `github.com-tensort`
+cannot be resolved. In that case, do not assume the SSH config is missing; ask for elevated permission and rerun
+the Git/SSH command. See [docs/GIT_SSH_WORKFLOW.md](docs/GIT_SSH_WORKFLOW.md).
 
 
 

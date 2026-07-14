@@ -8,6 +8,20 @@ The default Python interpreter for project-side data processing is:
 
 `F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe`
 
+## Which Python environment should I use?
+
+| Task | Use |
+|---|---|
+| GIS processing, GeoJSON/Shapefile, OSM, GEE, AMap, raster handling, population feature tables | `.venv_geo311` |
+| MATSim agents/routes generation, transit supply preprocessing, CSV/GeoJSON QA, SimWrapper/Kepler post-processing | `.venv_geo311` |
+| PDF text extraction and literature-support processing | `.venv_geo311` |
+| WEDAN / WorldCommuting-OD inference | `.venv_wedan` |
+| RemoteCLIP image feature extraction | `.venv_wedan` |
+| Java MATSim simulation and Maven build | Java/Maven, not Python |
+
+Default rule: use `.venv_geo311` for project data processing. Switch to `.venv_wedan` only when the script needs
+PyTorch, DGL, WEDAN, or RemoteCLIP.
+
 ## Activate in PowerShell
 
 From the project root:

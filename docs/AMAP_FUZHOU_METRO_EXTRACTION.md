@@ -1,5 +1,7 @@
 # 高德福州地铁数据抓取脚本
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 本脚本用于从高德 Web Service 公交线路查询接口抓取福州地铁相关信息，并整理成后续构建 MATSim `transitSchedule.xml.gz` 所需的中间数据。
 
 脚本：
@@ -52,7 +54,7 @@ $env:AMAP_WEB_KEY="你的高德Web服务Key"
 也可以运行时传入：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py --key "你的高德Web服务Key"
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py --key "你的高德Web服务Key"
 ```
 
 ## 3. 不抓线路轨迹，只抓站点和上下站关系
@@ -60,9 +62,9 @@ $env:AMAP_WEB_KEY="你的高德Web服务Key"
 ```powershell
 cd F:\Matsim\matsim-example-project
 
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py `
   --city 福州 `
-  --output-dir .\data\transit\fuzhou_metro_amap
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap
 ```
 
 这个模式下，脚本会删除原始响应中的 `polyline` 字段，并输出：
@@ -78,10 +80,10 @@ amap_raw_busline_responses_no_polyline.json
 ```powershell
 cd F:\Matsim\matsim-example-project
 
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py `
   --city 福州 `
   --include-polyline `
-  --output-dir .\data\transit\fuzhou_metro_amap
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap
 ```
 
 会额外生成：
@@ -100,12 +102,12 @@ cd F:\Matsim\matsim-example-project
 
 $env:AMAP_WEB_KEY="你的高德Web服务Key"
 
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py `
   --city 福州 `
   --include-polyline `
   --active-only `
   --exclude-name-regex "东延|东调" `
-  --output-dir .\data\transit\fuzhou_metro_amap_active `
+  --output-dir .\data\transit\fuzhou\legacy\metro_amap_active `
   --sleep 3 `
   --pages 1 `
   --offset 20 `
@@ -155,15 +157,15 @@ data/transit/fuzhou/metro_amap_active/
 可以用逗号分隔：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py `
   --keywords "福州地铁1号线,福州地铁2号线,滨海快线"
 ```
 
 也可以用 UTF-8 文本文件：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\fetch_fuzhou_metro_from_amap.py `
-  --keywords-file .\data\transit\fuzhou_metro_amap\keywords.txt
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\data_acquisition\fetch_fuzhou_metro_from_amap.py `
+  --keywords-file .\data\transit\fuzhou\legacy\metro_amap\keywords.txt
 ```
 
 ## 7. 后续用于 MATSim 的建议

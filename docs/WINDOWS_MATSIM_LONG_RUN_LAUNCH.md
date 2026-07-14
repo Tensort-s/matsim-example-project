@@ -1,5 +1,7 @@
 # Windows 下启动 MATSim 长时间仿真的稳定方式
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 本项目在 Windows / PowerShell 环境下运行 MATSim 长仿真时，优先使用 `.cmd` 启动脚本，而不是在 PowerShell 里直接拼接复杂的 `Start-Process`、重定向和嵌套引号。
 
 ## 已验证成功的模式
@@ -17,7 +19,7 @@ run_fuzhou_5pct_roadcap10_reroute50.cmd
 ```bat
 @echo off
 cd /d F:\Matsim\matsim-example-project
-if not exist run_logs mkdir run_logs
+if not exist runs/fuzhou/logs mkdir runs/fuzhou/logs
 set RUN_STAMP=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%_%TIME:~0,2%%TIME:~3,2%%TIME:~6%
 set RUN_STAMP=%RUN_STAMP: =0%
 set RUN_STDOUT=runs\fuzhou\logs\YOUR_RUN_NAME_%RUN_STAMP%.out.log
@@ -57,7 +59,7 @@ scenarios\fuzhou\config-transit-mode-choice-2pct-ride-hailing-cont10.xml
 输出目录：
 
 ```text
-output-fuzhou-transit-mode-choice-2pct-ride-hailing-cont10
+runs/fuzhou/outputs/legacy-transit-mode-choice-2pct-ride-hailing-cont10
 ```
 
 日志位置：
@@ -79,7 +81,7 @@ Get-ChildItem .\runs\fuzhou\logs\ride_hailing_cont10_* | Sort-Object LastWriteTi
 以及 MATSim 输出日志：
 
 ```powershell
-Select-String -Path .\output-fuzhou-transit-mode-choice-2pct-ride-hailing-cont10\logfile.log `
+Select-String -Path .\runs/fuzhou/outputs/legacy-transit-mode-choice-2pct-ride-hailing-cont10\logfile.log `
   -Pattern "ITERATION|ERROR|Exception|S H U T D O W N" `
   -CaseSensitive:$false |
   Select-Object -Last 80

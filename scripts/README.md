@@ -10,6 +10,7 @@ scripts/
     demand_generation/
     transit_supply/
     analysis_visualization/
+    run/
 
   archive/
     legacy_data_exploration/
@@ -21,5 +22,11 @@ scripts/
 
 `archive/` contains old experiments, retired routing/demand variants, one-off exploration helpers, and visualizations that are no longer part of the active workflow. They are kept for provenance rather than deleted.
 
-Because the files were moved out of the old flat `scripts/` layout, older documentation or command snippets may still reference paths such as `scripts/foo.py`. Update those commands to the new categorized path when re-running a script.
+The current final Fuzhou rerun helper is:
 
+```text
+scripts/fuzhou_single_city/run/run_waitpenalty_from_cont20_reroute50.cmd
+```
+
+Because the files were moved out of the old flat `scripts/` layout, older legacy documentation may still describe
+retired command snippets. For active commands, use `docs/PROJECT_ONBOARDING.md` and `cities/fuzhou/city.yaml`.

@@ -1,23 +1,25 @@
 # Multi-Activity Agents 路由与 MATSim 仿真
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 本文档记录从 multi-activity coordinate plans 生成 MATSim routed plans 的流程。
 
 ## 1. 生成 routed plans
 
 ```powershell
 cd F:\Matsim\matsim-example-project
-.\.venv_geo311\Scripts\python.exe .\scripts\generate_matsim_routes_from_multi_activity_plans.py
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_demand_routing\generate_matsim_routes_from_multi_activity_plans.py
 ```
 
 默认输入：
 
-- `data/matsim_agents/fuzhou_city_23_greenspace_grid_multi_activity/plans_multi_activity.xml.gz`
+- `data/matsim_agents/fuzhou/greenspace_grid_multi_activity/plans_multi_activity.xml.gz`
 - `data/osm/fuzhou/city_23/fuzhou_city_23_osm_roads.geojson`
 
 默认输出：
 
 ```text
-data/matsim_routes/fuzhou_city_23_greenspace_grid_multi_activity/
+data/matsim_routes/fuzhou/greenspace_grid_multi_activity/
 ```
 
 主要输出文件：
@@ -53,7 +55,7 @@ h, w, school, shop, leisure, restaurant, medical
 ```powershell
 mvn exec:java `
   "-Dexec.mainClass=org.matsim.project.RunMatsimModelImplementation" `
-  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-smoke.xml --iterations=0 --output=output-fuzhou-multi-activity-smoke"
+  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-smoke.xml --iterations=0 --output=runs/fuzhou/outputs/legacy-multi-activity-smoke"
 ```
 
 该 config 用于验证 MATSim 能读取 multi-activity network/plans，并生成 SimWrapper 默认 dashboard。
@@ -65,7 +67,7 @@ mvn exec:java `
 ```powershell
 mvn exec:java `
   "-Dexec.mainClass=org.matsim.project.RunMatsimModelImplementation" `
-  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-reroute.xml --iterations=10 --output=output-fuzhou-multi-activity-reroute-10"
+  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-reroute.xml --iterations=10 --output=runs/fuzhou/outputs/legacy-multi-activity-reroute-10"
 ```
 
 正式仿真可把 `--iterations` 改为 `50`、`100` 或 `200`。
@@ -87,7 +89,7 @@ MATSim 2026 中关闭创新策略的参数名使用 `disableAfterIteration`。
 ```powershell
 mvn exec:java `
   "-Dexec.mainClass=org.matsim.project.RunMatsimModelImplementation" `
-  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-reroute-50.xml --output=output-fuzhou-multi-activity-reroute-50"
+  "-Dexec.args=run --config .\scenarios\fuzhou\config-multi-activity-reroute-50.xml --output=runs/fuzhou/outputs/legacy-multi-activity-reroute-50"
 ```
 
 50 轮配置采用前 40 轮允许 `ReRoute` 和 `TimeAllocationMutator`，第 41 轮起关闭创新策略，最后 10 轮用于稳定选择已有 plans。
@@ -95,7 +97,7 @@ mvn exec:java `
 仿真结束后生成小时交通量地图：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\build_simwrapper_hourly_traffic_map.py --output-dir .\output-fuzhou-multi-activity-reroute-50
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\analysis_visualization\build_simwrapper_hourly_traffic_map.py --output-dir .\runs/fuzhou/outputs/legacy-multi-activity-reroute-50
 ```
 
 ## 5. SimWrapper
@@ -109,7 +111,7 @@ https://simwrapper.app
 选择对应 output 文件夹，例如：
 
 ```text
-F:\Matsim\matsim-example-project\output-fuzhou-multi-activity-smoke
+F:\Matsim\matsim-example-project\runs/fuzhou/outputs/legacy-multi-activity-smoke
 ```
 
 或 reroute 输出目录。
@@ -117,7 +119,7 @@ F:\Matsim\matsim-example-project\output-fuzhou-multi-activity-smoke
 如果需要按小时 link traffic map，可以复用：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\build_simwrapper_hourly_traffic_map.py --output-dir .\output-fuzhou-multi-activity-smoke
+.\.venv_geo311\Scripts\python.exe .\scripts\fuzhou_single_city\analysis_visualization\build_simwrapper_hourly_traffic_map.py --output-dir .\runs/fuzhou/outputs/legacy-multi-activity-smoke
 ```
 
 ## 6. 50 轮 reroute 实际运行记录
@@ -126,7 +128,7 @@ F:\Matsim\matsim-example-project\output-fuzhou-multi-activity-smoke
 
 ```text
 config:    scenarios/fuzhou/config-multi-activity-reroute-50.xml
-output:    output-fuzhou-multi-activity-reroute-50
+output:    runs/fuzhou/outputs/legacy-multi-activity-reroute-50
 persons:   30,000
 trips:     76,609
 stuck:     0

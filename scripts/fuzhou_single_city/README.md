@@ -29,3 +29,6 @@ Shared assets use `_shared`, for example `data/models/_shared/remoteclip/`.
 
 - `analysis_visualization/`  
   PT submode analysis, congestion maps, SimWrapper hourly traffic products, and Kepler particle-flow animation.
+
+- `run/`
+  Windows helper scripts for reproducing current Fuzhou runs, including the final wait-penalty continuation reroute-50 run.

@@ -1,5 +1,7 @@
 # 基于 WEDAN OD 生成 MATSim Agents
 
+> Legacy/provenance note: this document records an earlier experiment or data collection path. For the current active Fuzhou workflow and paths, read `docs/PROJECT_ONBOARDING.md` first.
+
 本文档记录当前 v1 的福州 Greenspace 新格网 OD → MATSim population 生成流程。
 
 ## 输入数据
@@ -21,13 +23,13 @@
 在项目根目录运行：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\generate_matsim_agents_from_wedan_od.py
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_demand_routing\generate_matsim_agents_from_wedan_od.py
 ```
 
 默认生成 30,000 个 car-only 通勤 agents。可通过参数调整：
 
 ```powershell
-.\.venv_geo311\Scripts\python.exe .\scripts\generate_matsim_agents_from_wedan_od.py `
+.\.venv_geo311\Scripts\python.exe .\scripts\archive\legacy_demand_routing\generate_matsim_agents_from_wedan_od.py `
   --target-agents 30000 `
   --seed 20260703 `
   --mode car
@@ -37,7 +39,7 @@
 
 默认输出目录：
 
-`data/matsim_agents/fuzhou_city_23_greenspace_grid/`
+`data/matsim_agents/fuzhou/legacy_greenspace_grid_commute/`
 
 包含：
 

@@ -6,6 +6,9 @@ This project has a separate Python environment for WorldCommuting-OD / WEDAN inf
 
 It is intentionally separate from `.venv_geo311`, which is used for GIS/PDF/data-processing tasks.
 
+Use `.venv_wedan` only for WEDAN / WorldCommuting-OD inference or RemoteCLIP image feature extraction. For GIS,
+GEE, AMap, MATSim agents/routes, transit preprocessing, PDF extraction, and visualization QA, use `.venv_geo311`.
+
 ## Activate
 
 From the project root:
