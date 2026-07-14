@@ -12,7 +12,7 @@ cd F:\Matsim\matsim-example-project
 默认输入：
 
 - `data/matsim_agents/fuzhou_city_23_greenspace_grid_multi_activity/plans_multi_activity.xml.gz`
-- `data/osm/fuzhou_city_23/fuzhou_city_23_osm_roads.geojson`
+- `data/osm/fuzhou/city_23/fuzhou_city_23_osm_roads.geojson`
 
 默认输出：
 

@@ -6,19 +6,19 @@
     <param name="coordinateSystem" value="EPSG:32650" />
   </module>
   <module name="network">
-    <param name="inputNetworkFile" value="../../data/transit/fuzhou_transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/network_with_car_busprio_metro.xml.gz" />
+    <param name="inputNetworkFile" value="../../data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/network_with_car_busprio_metro.xml.gz" />
   </module>
   <module name="plans">
-    <param name="inputPlansFile" value="../../output-fuzhou-transit-mode-choice-2pct-carown197-busprio-speedcal-transfer300-reroute-10/output_plans.xml.zst" />
+    <param name="inputPlansFile" value="../../data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/mode_choice_plans_car_pt_walk_2pct_carown197.xml.gz" />
   </module>
   <module name="vehicles">
-    <param name="vehiclesFile" value="../../data/matsim_routes/fuzhou_city_23_greenspace_grid_multi_activity_2pct_carown197_pt/private_car_vehicles_2pct_carown197.xml.gz" />
+    <param name="vehiclesFile" value="../../data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/private_car_vehicles_2pct_carown197.xml.gz" />
   </module>
   <module name="transit">
     <param name="useTransit" value="true" />
     <param name="transitModes" value="pt,bus,metro" />
-    <param name="transitScheduleFile" value="../../data/transit/fuzhou_transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitSchedule.xml.gz" />
-    <param name="vehiclesFile" value="../../data/transit/fuzhou_transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitVehicles.xml.gz" />
+    <param name="transitScheduleFile" value="../../data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitSchedule.xml.gz" />
+    <param name="vehiclesFile" value="../../data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitVehicles.xml.gz" />
   </module>
   <module name="transitRouter">
     <param name="maxBeelineWalkConnectionDistance" value="100.0" />
@@ -30,7 +30,7 @@
     <parameterset type="modeMapping"><param name="passengerMode" value="pt" /><param name="routeMode" value="metro" /></parameterset>
   </module>
   <module name="controller">
-    <param name="outputDirectory" value="output-fuzhou-transit-mode-choice-2pct-transferwait-metro40-cont10" />
+    <param name="outputDirectory" value="runs/fuzhou/outputs/transferwait-metro40-cont10" />
     <param name="lastIteration" value="10" />
   </module>
   <module name="qsim">

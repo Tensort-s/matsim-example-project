@@ -75,23 +75,29 @@ The default dashboards applicable to the example scenario are:
 - Traffic Counts
 - Stuck Agent
 
-To generate or refresh dashboards for the existing `output` directory on Windows and open SimWrapper:
+The current Fuzhou final output is stored under:
+
+```text
+runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50
+```
+
+To generate or refresh dashboards for this output on Windows and open SimWrapper:
 
 ```powershell
-.\scripts\Open-SimWrapper.ps1
+.\scripts\fuzhou_single_city\analysis_visualization\Open-SimWrapper.ps1
 ```
 
 The script checks the executable JAR and MATSim output, runs the offline SimWrapper analysis, and opens
 [simwrapper.app](https://simwrapper.app). In SimWrapper, select the local project folder:
 
 ```text
-F:\Matsim\matsim-example-project\output
+F:\Matsim\matsim-example-project\runs\fuzhou\outputs\waitpenalty-metroprefer-from-cont20-reroute50
 ```
 
 To generate the dashboard files without opening a browser:
 
 ```powershell
-.\scripts\Open-SimWrapper.ps1 -SkipOpen
+.\scripts\fuzhou_single_city\analysis_visualization\Open-SimWrapper.ps1 -SkipOpen
 ```
 
 The equivalent offline command is:
@@ -99,7 +105,7 @@ The equivalent offline command is:
 ```powershell
 java -cp .\matsim-example-project-0.0.1-SNAPSHOT.jar `
   org.matsim.simwrapper.SimWrapperRunner `
-  .\output
+  .\runs\fuzhou\outputs\waitpenalty-metroprefer-from-cont20-reroute50
 ```
 
 Generated files include `simwrapper-config.yaml`, dashboard YAML files, and the `analysis` directory.

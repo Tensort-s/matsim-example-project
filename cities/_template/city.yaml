@@ -1,0 +1,23 @@
+city:
+  slug: example_city
+  name: Example City
+  country: ""
+  crs: "EPSG:32650"
+
+boundaries:
+  primary_boundary: "data/osm/example_city/city_boundary.geojson"
+
+data_roots:
+  osm: "data/osm/example_city/"
+  transit: "data/transit/example_city/"
+  matsim_agents: "data/matsim_agents/example_city/"
+  matsim_routes: "data/matsim_routes/example_city/"
+  worldcommuting_od: "data/worldcommuting_od/example_city/"
+  gee: "data/gee/example_city/"
+  imagery: "data/imagery/example_city/"
+
+simulation:
+  population_sample_rate: 0.02
+  final_config: "scenarios/example_city/config-final.xml"
+  final_output: "runs/example_city/outputs/final/"
+

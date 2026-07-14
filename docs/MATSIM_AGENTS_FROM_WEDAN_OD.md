@@ -6,10 +6,10 @@
 
 默认脚本使用以下输入：
 
-- OD 矩阵：`data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/generation.npy`
-- 新格网：`data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp`
-- 居住人口权重：`data/gee/fuzhou_city_23/worldpop_age_sex/worldpop_CHN_2020_pop_age_sex_fuzhou_city_23_greenspace_boundary.tif`
-- 工作吸引点：`data/osm/fuzhou_city_23/fuzhou_city_23_osm_work_pois.geojson`
+- OD 矩阵：`data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/generation.npy`
+- 新格网：`data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp`
+- 居住人口权重：`data/gee/fuzhou/city_23/worldpop_age_sex/worldpop_CHN_2020_pop_age_sex_fuzhou_city_23_greenspace_boundary.tif`
+- 工作吸引点：`data/osm/fuzhou/city_23/fuzhou_city_23_osm_work_pois.geojson`
 
 坐标约定：
 

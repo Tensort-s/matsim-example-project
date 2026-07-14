@@ -1,0 +1,36 @@
+{
+  "city": "fuzhou",
+  "crs": "EPSG:32650",
+  "population_sample_rate": 0.02,
+  "runs": [
+    {
+      "name": "transferwait-metro40-cont10",
+      "path": "runs/fuzhou/outputs/transferwait-metro40-cont10",
+      "config": "scenarios/fuzhou/config-transit-mode-choice-2pct-transferwait-metro40-cont10.xml",
+      "input_plans": "data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/mode_choice_plans_car_pt_walk_2pct_carown197.xml.gz",
+      "notes": "Current runnable config uses the retained base 2% car/pt/walk population; the historical run was originally continued from an older intermediate output that has since been removed."
+    },
+    {
+      "name": "waitpenalty-metroprefer-cont20",
+      "path": "runs/fuzhou/outputs/waitpenalty-metroprefer-cont20",
+      "config": "scenarios/fuzhou/config-transit-mode-choice-2pct-waitpenalty-metroprefer-cont20.xml",
+      "input_plans": "runs/fuzhou/outputs/transferwait-metro40-cont10/output_plans.xml.zst",
+      "predecessor": "transferwait-metro40-cont10"
+    },
+    {
+      "name": "waitpenalty-metroprefer-from-cont20-reroute50",
+      "path": "runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50",
+      "config": "scenarios/fuzhou/config-transit-mode-choice-2pct-waitpenalty-metroprefer-from-cont20-reroute50.xml",
+      "input_plans": "runs/fuzhou/outputs/waitpenalty-metroprefer-cont20/output_plans.xml.zst",
+      "predecessor": "waitpenalty-metroprefer-cont20",
+      "role": "current_final_output"
+    }
+  ],
+  "shared_inputs": {
+    "network": "data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/network_with_car_busprio_metro.xml.gz",
+    "transit_schedule": "data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitSchedule.xml.gz",
+    "transit_vehicles": "data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/transitVehicles.xml.gz",
+    "private_vehicles": "data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/private_car_vehicles_2pct_carown197.xml.gz"
+  }
+}
+

@@ -20,11 +20,11 @@ cd /d F:\Matsim\matsim-example-project
 if not exist run_logs mkdir run_logs
 set RUN_STAMP=%DATE:~0,4%%DATE:~5,2%%DATE:~8,2%_%TIME:~0,2%%TIME:~3,2%%TIME:~6%
 set RUN_STAMP=%RUN_STAMP: =0%
-set RUN_STDOUT=run_logs\YOUR_RUN_NAME_%RUN_STAMP%.out.log
-set RUN_STDERR=run_logs\YOUR_RUN_NAME_%RUN_STAMP%.err.log
+set RUN_STDOUT=runs\fuzhou\logs\YOUR_RUN_NAME_%RUN_STAMP%.out.log
+set RUN_STDERR=runs\fuzhou\logs\YOUR_RUN_NAME_%RUN_STAMP%.err.log
 call "E:\Program Files\apache-maven-3.9.16\bin\mvn.cmd" exec:java "-Dexec.mainClass=org.matsim.project.RunMatsimModelImplementation" "-Dexec.args=run --config .\scenarios\fuzhou\YOUR_CONFIG.xml" > "%RUN_STDOUT%" 2> "%RUN_STDERR%"
 set RUN_EXIT=%ERRORLEVEL%
-echo ExitCode=%RUN_EXIT% > run_logs\YOUR_RUN_NAME_%RUN_STAMP%.exit.txt
+echo ExitCode=%RUN_EXIT% > runs\fuzhou\logs\YOUR_RUN_NAME_%RUN_STAMP%.exit.txt
 exit /b %RUN_EXIT%
 ```
 
@@ -63,9 +63,9 @@ output-fuzhou-transit-mode-choice-2pct-ride-hailing-cont10
 日志位置：
 
 ```text
-run_logs\ride_hailing_cont10_*.out.log
-run_logs\ride_hailing_cont10_*.err.log
-run_logs\ride_hailing_cont10_*.exit.txt
+runs\fuzhou\logs\ride_hailing_cont10_*.out.log
+runs\fuzhou\logs\ride_hailing_cont10_*.err.log
+runs\fuzhou\logs\ride_hailing_cont10_*.exit.txt
 ```
 
 ## 后续监控
@@ -73,7 +73,7 @@ run_logs\ride_hailing_cont10_*.exit.txt
 启动后优先查看：
 
 ```powershell
-Get-ChildItem .\run_logs\ride_hailing_cont10_* | Sort-Object LastWriteTime -Descending | Select-Object -First 10
+Get-ChildItem .\runs\fuzhou\logs\ride_hailing_cont10_* | Sort-Object LastWriteTime -Descending | Select-Object -First 10
 ```
 
 以及 MATSim 输出日志：

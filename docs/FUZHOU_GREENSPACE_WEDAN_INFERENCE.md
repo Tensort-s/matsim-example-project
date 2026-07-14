@@ -5,7 +5,7 @@
 ## 输入特征
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/
 ```
 
 已使用的文件：
@@ -27,7 +27,7 @@ adj/dis.npy         (438, 438)
 ## 模型
 
 ```text
-data/worldcommuting_od/GeneratingCodeData/exp/model/US2world/model_666_best.pkl
+data/worldcommuting_od/_shared/GeneratingCodeData/exp/model/US2world/model_666_best.pkl
 ```
 
 ## 运行命令
@@ -41,7 +41,7 @@ $env:DGLDEFAULTDIR='F:\Matsim\matsim-example-project\.dgl'
 ## 输出
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/
 ```
 
 主要文件：

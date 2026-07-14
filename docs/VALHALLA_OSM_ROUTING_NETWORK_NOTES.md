@@ -102,9 +102,9 @@ OSM PBF + valhalla.json + valhalla_build_tiles
 当前我们已经有：
 
 ```text
-data/osm/fuzhou_city_23/fujian-latest.osm.pbf
-data/osm/fuzhou_city_23/city_23.osm.pbf
-data/osm/fuzhou_city_23/fuzhou_city_23_boundary.geojson
+data/osm/fuzhou/city_23/fujian-latest.osm.pbf
+data/osm/fuzhou/city_23/city_23.osm.pbf
+data/osm/fuzhou/city_23/fuzhou_city_23_boundary.geojson
 ```
 
 建议不要直接用 road-only 的 `city_23.osm.pbf` 构 Valhalla tiles。Valhalla 更适合吃完整 OSM PBF，因为它需要道路、节点、限制、access tags、可能的边界/关系信息。推荐使用 `fujian-latest.osm.pbf`，或用 osmium 按 Greenspace 福州边界从福建 PBF 裁剪出完整 extract。

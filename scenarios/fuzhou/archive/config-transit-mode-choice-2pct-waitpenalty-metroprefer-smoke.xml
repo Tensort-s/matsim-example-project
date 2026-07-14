@@ -9,7 +9,7 @@
     <param name="inputNetworkFile" value="../../data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/network_with_car_busprio_metro.xml.gz" />
   </module>
   <module name="plans">
-    <param name="inputPlansFile" value="../../runs/fuzhou/outputs/waitpenalty-metroprefer-cont20/output_plans.xml.zst" />
+    <param name="inputPlansFile" value="../../runs/fuzhou/outputs/transferwait-metro40-cont10/output_plans.xml.zst" />
   </module>
   <module name="vehicles">
     <param name="vehiclesFile" value="../../data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/private_car_vehicles_2pct_carown197.xml.gz" />
@@ -30,8 +30,8 @@
     <parameterset type="modeMapping"><param name="passengerMode" value="pt" /><param name="routeMode" value="metro" /></parameterset>
   </module>
   <module name="controller">
-    <param name="outputDirectory" value="runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50" />
-    <param name="lastIteration" value="50" />
+    <param name="outputDirectory" value="output-fuzhou-transit-mode-choice-2pct-waitpenalty-metroprefer-smoke" />
+    <param name="lastIteration" value="0" />
   </module>
   <module name="qsim">
     <param name="mainMode" value="car" />
@@ -62,8 +62,8 @@
   <module name="replanning">
     <param name="maxAgentPlanMemorySize" value="5" />
     <parameterset type="strategysettings"><param name="strategyName" value="BestScore" /><param name="subpopulation" value="default" /><param name="weight" value="0.55" /></parameterset>
-    <parameterset type="strategysettings"><param name="strategyName" value="SubtourModeChoice" /><param name="subpopulation" value="default" /><param name="weight" value="0.05" /><param name="disableAfterIteration" value="40" /></parameterset>
-    <parameterset type="strategysettings"><param name="strategyName" value="ReRoute" /><param name="subpopulation" value="default" /><param name="weight" value="0.25" /><param name="disableAfterIteration" value="40" /></parameterset>
-    <parameterset type="strategysettings"><param name="strategyName" value="TimeAllocationMutator" /><param name="subpopulation" value="default" /><param name="weight" value="0.15" /><param name="disableAfterIteration" value="40" /></parameterset>
+    <parameterset type="strategysettings"><param name="strategyName" value="SubtourModeChoice" /><param name="subpopulation" value="default" /><param name="weight" value="0.05" /><param name="disableAfterIteration" value="15" /></parameterset>
+    <parameterset type="strategysettings"><param name="strategyName" value="ReRoute" /><param name="subpopulation" value="default" /><param name="weight" value="0.25" /><param name="disableAfterIteration" value="15" /></parameterset>
+    <parameterset type="strategysettings"><param name="strategyName" value="TimeAllocationMutator" /><param name="subpopulation" value="default" /><param name="weight" value="0.15" /><param name="disableAfterIteration" value="15" /></parameterset>
   </module>
 </config>

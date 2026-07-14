@@ -20,6 +20,8 @@ hs_err_pid*
 /output/
 /output-*/
 /outputs/
+/runs/*/outputs/
+/runs/*/logs/
 /test/output/
 /bin/
 /dependency-reduced-pom.xml

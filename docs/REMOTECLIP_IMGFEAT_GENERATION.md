@@ -7,13 +7,13 @@ WorldCommuting-OD 使用 Esri World Imagery，并通过 RemoteCLIP 的 image enc
 - 新网格：
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp
 ```
 
 - 福州 Esri World Imagery 裁剪影像：
 
 ```text
-data/imagery/esri_world_imagery/fuzhou_city_23_greenspace_boundary/fuzhou_city_23_esri_world_imagery_z14_greenspace_clip_epsg32650.tif
+data/imagery/fuzhou/esri_world_imagery/greenspace_boundary/fuzhou_city_23_esri_world_imagery_z14_greenspace_clip_epsg32650.tif
 ```
 
 ## 运行
@@ -26,13 +26,13 @@ cd F:\Matsim\matsim-example-project
 首次运行会把 `RemoteCLIP-RN50.pt` 下载到：
 
 ```text
-data/models/remoteclip/
+data/models/_shared/remoteclip/
 ```
 
 ## 输出
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/nfeat/imgfeat.npy
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/nfeat/imgfeat.npy
 ```
 
 形状：

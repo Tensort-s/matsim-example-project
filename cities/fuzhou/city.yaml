@@ -1,0 +1,29 @@
+city:
+  slug: fuzhou
+  name: Fuzhou
+  country: China
+  greenspace_city_id: 23
+  crs: "EPSG:32650"
+
+boundaries:
+  primary_boundary: "data/osm/fuzhou/city_23/fuzhou_city_23_boundary.geojson"
+
+data_roots:
+  osm: "data/osm/fuzhou/city_23/"
+  transit: "data/transit/fuzhou/"
+  matsim_agents: "data/matsim_agents/fuzhou/"
+  matsim_routes: "data/matsim_routes/fuzhou/"
+  worldcommuting_od: "data/worldcommuting_od/fuzhou/"
+  gee: "data/gee/fuzhou/city_23/"
+  imagery: "data/imagery/fuzhou/"
+  shared_models: "data/models/_shared/"
+  shared_worldcommuting_code: "data/worldcommuting_od/_shared/GeneratingCodeData/"
+
+current_model:
+  population_sample_rate: 0.02
+  transit_supply: "data/transit/fuzhou/transit_matsim_integrated_20260709_bus_priority_transferwait_metro40/"
+  demand_plans: "data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/mode_choice_plans_car_pt_walk_2pct_carown197.xml.gz"
+  private_vehicles: "data/matsim_routes/fuzhou/greenspace_grid_multi_activity_2pct_carown197_pt/private_car_vehicles_2pct_carown197.xml.gz"
+  final_config: "scenarios/fuzhou/config-transit-mode-choice-2pct-waitpenalty-metroprefer-from-cont20-reroute50.xml"
+  final_output: "runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50/"
+

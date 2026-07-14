@@ -11,7 +11,7 @@ scripts/fetch_fuzhou_metro_from_amap.py
 默认输出目录：
 
 ```text
-data/transit/fuzhou_metro_amap/
+data/transit/fuzhou/metro_amap/
 ```
 
 ## 1. 数据范围
@@ -124,7 +124,7 @@ $env:AMAP_WEB_KEY="你的高德Web服务Key"
 当前运营版本输出在：
 
 ```text
-data/transit/fuzhou_metro_amap_active/
+data/transit/fuzhou/metro_amap_active/
 ```
 
 ## 5. 输出文件

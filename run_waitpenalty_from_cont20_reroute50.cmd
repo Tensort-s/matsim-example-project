@@ -1,9 +1,9 @@
 @echo off
 cd /d F:\Matsim\matsim-example-project
-if not exist run_logs mkdir run_logs
-set RUN_STDOUT=run_logs\waitpenalty_from_cont20_reroute50_latest.out.log
-set RUN_STDERR=run_logs\waitpenalty_from_cont20_reroute50_latest.err.log
-set RUN_EXIT_FILE=run_logs\waitpenalty_from_cont20_reroute50_latest.exit.txt
+if not exist runs\fuzhou\logs mkdir runs\fuzhou\logs
+set RUN_STDOUT=runs\fuzhou\logs\waitpenalty_from_cont20_reroute50_latest.out.log
+set RUN_STDERR=runs\fuzhou\logs\waitpenalty_from_cont20_reroute50_latest.err.log
+set RUN_EXIT_FILE=runs\fuzhou\logs\waitpenalty_from_cont20_reroute50_latest.exit.txt
 echo Starting waitpenalty from cont20 reroute50 at %DATE% %TIME% > "%RUN_STDOUT%"
 echo Working directory: %CD% >> "%RUN_STDOUT%"
 echo Maven: E:\Program Files\apache-maven-3.9.16\bin\mvn.cmd >> "%RUN_STDOUT%"

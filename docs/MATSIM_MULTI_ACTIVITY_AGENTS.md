@@ -11,11 +11,11 @@ cd F:\Matsim\matsim-example-project
 
 默认输入：
 
-- WEDAN 工作通勤 OD：`data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/generation.npy`
-- 新格网：`data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp`
+- WEDAN 工作通勤 OD：`data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CommutingODFlows/fuzhou_city_23_greenspace_grid/generation.npy`
+- 新格网：`data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp`
 - WorldPop 总人口：`.../nfeat/worldpop.npy`
 - WorldPop 年龄/性别人口：`.../nfeat/demos.npy`
-- OSM POI：`data/osm/fuzhou_city_23/fuzhou_city_23_osm_pois.geojson`
+- OSM POI：`data/osm/fuzhou/city_23/fuzhou_city_23_osm_pois.geojson`
 - 距离矩阵：`.../adj/dis.npy`
 
 默认输出：

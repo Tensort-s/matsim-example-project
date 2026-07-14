@@ -62,7 +62,7 @@ cd F:\Matsim\matsim-example-project
 可手动编辑：
 
 ```text
-data/transit/fuzhou_metro_amap_mobile_observations/targets.csv
+data/transit/fuzhou/metro_amap_mobile_observations/targets.csv
 ```
 
 ## 3. 推荐模式：手动导航 + 自动截图识别

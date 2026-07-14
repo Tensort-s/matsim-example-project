@@ -24,7 +24,7 @@ If your PowerShell execution policy blocks local scripts, start PowerShell with 
 
 ```powershell
 $env:DGLBACKEND = "pytorch"
-$env:PYTHONPATH = "F:\Matsim\matsim-example-project\data\worldcommuting_od\GeneratingCodeData\code"
+$env:PYTHONPATH = "F:\Matsim\matsim-example-project\data\worldcommuting_od\_shared\GeneratingCodeData\code"
 F:\Matsim\matsim-example-project\.venv_wedan\Scripts\python.exe your_script.py
 ```
 
@@ -32,7 +32,7 @@ The activation script sets:
 
 ```powershell
 $env:DGLBACKEND = "pytorch"
-$env:PYTHONPATH = "F:\Matsim\matsim-example-project\data\worldcommuting_od\GeneratingCodeData\code"
+$env:PYTHONPATH = "F:\Matsim\matsim-example-project\data\worldcommuting_od\_shared\GeneratingCodeData\code"
 ```
 
 These are required so that DGL uses the PyTorch backend and the downloaded WEDAN source code can be imported.
@@ -56,7 +56,7 @@ This is a CPU-only environment. It is slower than GPU inference, but avoids CUDA
 Downloaded source code and model:
 
 ```text
-F:\Matsim\matsim-example-project\data\worldcommuting_od\GeneratingCodeData\
+F:\Matsim\matsim-example-project\data\worldcommuting_od\_shared\GeneratingCodeData\
 ```
 
 Important files:
@@ -73,7 +73,7 @@ exp\model\US2world\model_666_best.pkl
 Downloaded Fuzhou feature data:
 
 ```text
-F:\Matsim\matsim-example-project\data\worldcommuting_od\330_CN_Fuzhou\
+F:\Matsim\matsim-example-project\data\worldcommuting_od\fuzhou\330_CN_Fuzhou\
 ```
 
 The verified Fuzhou input shapes are:

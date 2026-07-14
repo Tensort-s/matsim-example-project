@@ -5,7 +5,7 @@
 ## 输入
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/CityAndRegionSplit/fuzhou_city_23_greenspace_grid/regions.shp
 ```
 
 ## 运行
@@ -18,7 +18,7 @@ cd F:\Matsim\matsim-example-project
 ## 输出
 
 ```text
-data/worldcommuting_od/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/adj/dis.npy
+data/worldcommuting_od/fuzhou/custom_features/fuzhou_city_23_greenspace_grid/GeneratingCodeData/data/global_cities/fuzhou_city_23_greenspace_grid/adj/dis.npy
 ```
 
 形状：
