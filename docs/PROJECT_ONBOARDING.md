@@ -55,6 +55,26 @@ Operational defaults:
 - City package: `cities/fuzhou/city.yaml`
 - Current final run: `runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50`
 
+Hong Kong preparation is in progress under `scripts/hong_kong_single_city/` and
+`data/*/hongkong/`. Current provenance docs include:
+
+```text
+docs/HONG_KONG_BOUNDARY_PREPARATION.md
+docs/HONG_KONG_WORLDPOP_PREPARATION.md
+docs/HONG_KONG_ESRI_WORLD_IMAGERY.md
+docs/HONG_KONG_FIXED_LINK_GRID.md
+docs/HONG_KONG_OSM_POIS.md
+docs/HONG_KONG_INTEGRATED_POIS.md
+docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
+```
+
+Hong Kong WEDAN Census validation currently uses the 2021 Summary Results
+tables 7.8 and 7.9 plus the official `NewTown_2021.shp` boundary to keep a
+4-area check (`Hong Kong Island / Kowloon / New towns / Other NT and Marine`).
+The Census data are used to infer a global flow unit and validate WEDAN area OD
+shares; they are not treated as a silent replacement for the original WEDAN
+spatial proportions.
+
 ## Python environment selection
 
 Use this rule before running any Python script:

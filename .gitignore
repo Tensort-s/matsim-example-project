@@ -36,8 +36,10 @@ hs_err_pid*
 /data/models/
 /data/imagery/
 /data/gee/
+/data/boundary/
 /data/matsim_agents/
 /data/matsim_routes/
+/cities/hongkong/Traffic_Flow_Census_SHP/
 tmp_*.txt
 __pycache__/
 *.py[cod]
