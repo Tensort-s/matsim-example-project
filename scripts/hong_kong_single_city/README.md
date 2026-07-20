@@ -46,6 +46,18 @@ Download and extract OSM POIs for the fixed-link model boundary:
 .\.venv_geo311\Scripts\python.exe .\scripts\hong_kong_single_city\data_acquisition\download_hong_kong_osm_pois.py
 ```
 
+Download CSDI immigration control point locations and match them to a daily
+passenger traffic CSV date. Use `--insecure` only when the local Python trust
+store rejects the Hong Kong government certificate chain:
+
+```powershell
+.\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\data_preparation\build_hong_kong_control_point_locations.py `
+  --date 16-07-2026 `
+  --traffic-csv "D:\Program Files\statistics_on_daily_passenger_traffic.csv" `
+  --insecure
+```
+
 Calibrate the clipped WorldPop raster to 2021 Census Large Subunit Group totals:
 
 ```powershell
@@ -153,4 +165,59 @@ Visualize WEDAN OD flows on the Hong Kong fixed-link boundary:
 .\.venv_geo311\Scripts\python.exe .\scripts\hong_kong_single_city\analysis_visualization\visualize_hong_kong_wedan_od_flows.py --top-k 800 --html-top-k 300
 ```
 
+Map and chart 18-district LSUGx3 share MAE and Cell WAPE for the generalized
+and Census-projected OD products:
+
+```powershell
+.\.venv_geo311\Scripts\python.exe .\scripts\hong_kong_single_city\analysis_visualization\visualize_hong_kong_district_lsug3_metrics.py
+```
+
+Create static Census-projected grid straight-line and 18-district OD flow maps:
+
+```powershell
+.\.venv_geo311\Scripts\python.exe .\scripts\hong_kong_single_city\analysis_visualization\visualize_hong_kong_census_od_flow_maps.py
+```
+
+Build the 2022 DCCA-constrained student-to-school assignment, TCS mechanized
+HBS trips, direction/time matrices, and mode equivalents:
+
+```powershell
+.\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\build_hong_kong_student_school_od.py `
+  --data-root .\data
+```
+
+See `docs/HONG_KONG_STUDENT_SCHOOL_OD.md` for the Census `same` definition,
+data units, structural-support reconciliation, outputs, and QA.
+
+Create Top-3,000 residential-grid-centroid to exact-school flow maps and
+18-district maps for both expected student assignments and weekday mechanized
+home-to-school trips:
+
+```powershell
+.\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\analysis_visualization\visualize_hong_kong_student_school_od_flows.py
+```
+
 The old `scripts/hongkong/...` path is kept only as a compatibility wrapper.
+
+Prepare, generate, and visualize the 2026 typical-weekday Hong Kong
+arrival/departure demand model. Formal data products are written to the F-drive
+data root when it is passed explicitly:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\data_preparation\prepare_hong_kong_arrival_departure_inputs.py `
+  --data-root F:\Matsim\matsim-example-project\data
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\build_hong_kong_arrival_departure_od.py `
+  --data-root F:\Matsim\matsim-example-project\data
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\analysis_visualization\visualize_hong_kong_arrival_departure_od.py `
+  --data-root F:\Matsim\matsim-example-project\data --top-k 3000
+```
+
+See `docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md` for source roles, units,
+validation, outputs, and limitations.

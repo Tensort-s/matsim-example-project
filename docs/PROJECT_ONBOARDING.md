@@ -66,6 +66,7 @@ docs/HONG_KONG_FIXED_LINK_GRID.md
 docs/HONG_KONG_OSM_POIS.md
 docs/HONG_KONG_INTEGRATED_POIS.md
 docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
+docs/HONG_KONG_STUDENT_SCHOOL_OD.md
 ```
 
 Hong Kong WEDAN validation uses the 2021 Summary Results tables 7.8 and 7.9,
@@ -74,6 +75,13 @@ OD workflow freezes the WEDAN checkpoint, uses Hong Kong `local_minmax`
 features, ensembles seeds `666/667/668`, and applies an 18-parameter LSUGx3
 calibration layer selected by 18-district spatial holdout. New outputs do not
 use the historical Fuzhou feature scaler or Fuzhou OD quantile mapping.
+
+The 2022 student-school workflow uses DCCA Census study-place categories,
+official New Town geometry, EDB school programs and enrollment margins,
+calibrated school-age population, and TCS mechanized HBS constraints. Its
+canonical assignment is in expected students; daily HBS and boarding-equivalent
+outputs use different units. Read `docs/HONG_KONG_STUDENT_SCHOOL_OD.md` before
+using these matrices for MATSim demand.
 
 Current Hong Kong OD products:
 
@@ -216,3 +224,8 @@ F:\Matsim\matsim-example-project\runs\fuzhou\outputs\waitpenalty-metroprefer-fro
 Some files in `docs/` describe older experiments such as car-only 30k agents, early AMap discovery, or ride-hailing
 tests. They are provenance documents, not the active workflow. If a command conflicts with this onboarding document,
 use this onboarding document and `cities/fuzhou/city.yaml` as the source of truth.
+# Hong Kong arrival/departure demand
+
+The 2026 typical-weekday border and visitor-demand workflow is documented in
+`docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its formal data products live under
+`data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday/`.

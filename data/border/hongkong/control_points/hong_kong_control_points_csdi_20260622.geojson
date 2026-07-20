@@ -1,0 +1,582 @@
+{
+  "type": "FeatureCollection",
+  "name": "CP",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.93824,
+          22.31648
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Airport Control Point (Terminal 2)",
+        "ADDRESS_EN": "Terminal 2, Hong Kong International Airport, Chek Lap Kok, Lantau",
+        "NAME_TC": "機場出入境管制站 (二號客運大樓)",
+        "ADDRESS_TC": "大嶼山赤鱲角香港國際機場二號客運大樓",
+        "NSEARCH01_EN": "5:15 am to 12:15 am of the next day",
+        "NSEARCH01_TC": "上午5時15分至翌日上午12時15分",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "819740.07469168",
+        "EASTING": "811681.09476757",
+        "LATITUDE": "22.31647965",
+        "LONGITUDE": "113.93824009",
+        "LASTUPDATE": "2026-06-22 11:52:39"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.128792,
+          22.537417
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Man Kam To Control Point",
+        "ADDRESS_EN": "Man Kam To Terminal",
+        "NAME_TC": "文錦渡出入境管制站",
+        "ADDRESS_TC": "新界文錦渡管制站",
+        "NSEARCH01_EN": "7:00 am to 10:00 pm",
+        "NSEARCH01_TC": "上午7時至晚上10時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "844187.11843216",
+        "EASTING": "831321.80567143",
+        "LATITUDE": "22.53741534",
+        "LONGITUDE": "114.12881311",
+        "LASTUPDATE": "2026-06-22 11:35:11"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.152303,
+          22.288839
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Macao Ferry Terminal Control Point",
+        "ADDRESS_EN": "Macao Ferry Terminal, 202 Connaught Road, Central",
+        "NAME_TC": "港澳客輪碼頭出入境管制站",
+        "ADDRESS_TC": "中環干諾道中202號港澳客輪碼頭",
+        "NSEARCH01_EN": "24 hours",
+        "NSEARCH01_TC": "全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "816660",
+        "EASTING": "833735.82985701",
+        "LATITUDE": "22.28878418",
+        "LONGITUDE": "114.15229448",
+        "LASTUPDATE": "2025-12-17 09:44:29"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.223291,
+          22.549124
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Sha Tau Kok Control Point",
+        "ADDRESS_EN": "Sha Tau Kok Terminal",
+        "NAME_TC": "沙頭角出入境管制站",
+        "ADDRESS_TC": "新界沙頭角管制站",
+        "NSEARCH01_EN": "Clearance services have been suspended until further notice.",
+        "NSEARCH01_TC": "通關服務現已暫停，直至另行公布。",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "845483.5546285399",
+        "EASTING": "841042.4170143",
+        "LATITUDE": "22.54908301",
+        "LONGITUDE": "114.22328703",
+        "LASTUPDATE": "2024-11-19 11:55:16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.153809,
+          22.552296
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Heung Yuen Wai Control Point",
+        "ADDRESS_EN": "Heung Yuen Wai Control Point, New Territories",
+        "NAME_TC": "香園圍管制站",
+        "ADDRESS_TC": "新界香園圍管制站",
+        "NSEARCH01_EN": "7:00 am to 10:00 pm",
+        "NSEARCH01_TC": "上午7時至晚上10時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "845834.2452074999",
+        "EASTING": "833895.52627137",
+        "LATITUDE": "22.55278148",
+        "LONGITUDE": "114.15385221",
+        "LASTUPDATE": "2023-02-06 14:25:40"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.074061,
+          22.509369
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Lok Ma Chau Control Point",
+        "ADDRESS_EN": "Lok Ma Chau Terminal",
+        "NAME_TC": "落馬洲出入境管制站",
+        "ADDRESS_TC": "落馬洲管制站",
+        "NSEARCH01_EN": "24 hours",
+        "NSEARCH01_TC": "全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "841084.04253575",
+        "EASTING": "825689.56880712",
+        "LATITUDE": "22.50937751",
+        "LONGITUDE": "114.07404556",
+        "LASTUPDATE": "2023-02-06 11:42:22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.113664,
+          22.529477
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Lo Wu Control Point",
+        "ADDRESS_EN": "MTR Lo Wu Station",
+        "NAME_TC": "羅湖出入境管制站",
+        "ADDRESS_TC": "港鐵羅湖站",
+        "NSEARCH01_EN": "6:30 am to midnight",
+        "NSEARCH01_TC": "上午6時30分至午夜12時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "843308.47372863",
+        "EASTING": "829765.29357864",
+        "LATITUDE": "22.52948136",
+        "LONGITUDE": "114.11341846",
+        "LASTUPDATE": "2023-02-06 11:41:33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.164743,
+          22.304676
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Express Rail Link West Kowloon Control Point",
+        "ADDRESS_EN": "Hong Kong West Kowloon Station,3 Austin Road West,Tsim Sha Tsui, Kowloon",
+        "NAME_TC": "高鐵西九龍出入境管制站",
+        "ADDRESS_TC": "九龍 尖沙咀 柯士甸道西三號 香港西九龍站",
+        "NSEARCH01_EN": "6:30 am to 11:30 pm",
+        "NSEARCH01_TC": "上午6時30分至晚上11時30分",
+        "NSEARCH02_EN": "3894 7122 / 3894 7132",
+        "NSEARCH02_TC": "3894 7122 / 3894 7132",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "818413.6",
+        "EASTING": "835018",
+        "LATITUDE": "22.30467615",
+        "LONGITUDE": "114.16474317",
+        "LASTUPDATE": "2023-01-16 10:10:12"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.167307,
+          22.300455
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "China Ferry Terminal Control Point",
+        "ADDRESS_EN": "China Ferry Terminal, 33 Canton Road, Tsim Sha Tsui",
+        "NAME_TC": "中國客運碼頭出入境管制站",
+        "ADDRESS_TC": "尖沙咀廣東道33號中國客運碼頭",
+        "NSEARCH01_EN": "7:00 am to midnight",
+        "NSEARCH01_TC": "上午7時至午夜12時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "817946.2",
+        "EASTING": "835282.1",
+        "LATITUDE": "22.30045541",
+        "LONGITUDE": "114.16730653",
+        "LASTUPDATE": "2023-01-16 10:09:52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.065607,
+          22.514934
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Lok Ma Chau Spur Line Control Point",
+        "ADDRESS_EN": "MTR Lok Ma Chau Station",
+        "NAME_TC": "落馬洲支線出入境管制站",
+        "ADDRESS_TC": "港鐵落馬洲站",
+        "NSEARCH01_EN": "6:30 am to 10:30 pm",
+        "NSEARCH01_TC": "上午6時30分至晚上10時30分",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "841700.92910709",
+        "EASTING": "824820.2468713101",
+        "LATITUDE": "22.51503396",
+        "LONGITUDE": "114.06562424",
+        "LASTUPDATE": "2023-01-09 09:37:15"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.945433,
+          22.493822
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Shenzhen Bay Control Point",
+        "ADDRESS_EN": "Shenzhen Bay Control Point, Shenzhen Bay Port Hong Kong Port Area",
+        "NAME_TC": "深圳灣出入境管制站",
+        "ADDRESS_TC": "深圳灣口岸港方口岸區深圳灣管制站",
+        "NSEARCH01_EN": "Passenger Clearance Building and private cars' passenger clearance services:<br/>6:30 am to midnight<br/>Goods vehicle clearance services:<br/>24 hours",
+        "NSEARCH01_TC": "旅檢大樓及私家車客運通關服務:<br/>上午6時30分至午夜12時<br/>貨車通關服務:<br/>全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "839377.20366397",
+        "EASTING": "812452.4022448401",
+        "LATITUDE": "22.4938221",
+        "LONGITUDE": "113.94543274",
+        "LASTUPDATE": "2023-01-09 09:35:44"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.951084,
+          22.318102
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Hong Kong-Zhuhai-Macao Bridge Control Point",
+        "ADDRESS_EN": "Hong Kong-Zhuhai-Macao Bridge Hong Kong Port, Lantau",
+        "NAME_TC": "港珠澳大橋出入境管制站",
+        "ADDRESS_TC": "大嶼山港珠澳大橋香港口岸",
+        "NSEARCH01_EN": "24 hours",
+        "NSEARCH01_TC": "全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "819917.6416179501",
+        "EASTING": "813004.6693856301",
+        "LATITUDE": "22.31806901",
+        "LONGITUDE": "113.95131991",
+        "LASTUPDATE": "2023-01-09 09:35:05"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.212892,
+          22.306415
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Kai Tak Cruise Terminal Control Point",
+        "ADDRESS_EN": "Kai Tak Cruise Terminal, 33 Shing Fung Road, Kowloon Bay, Kowloon",
+        "NAME_TC": "啟德郵輪碼頭出入境管制站",
+        "ADDRESS_TC": "九龍九龍灣承豐道33號啟德郵輪碼頭",
+        "NSEARCH01_EN": "06:00 to 23:00 (subject to the berthing schedule of cruise liner)",
+        "NSEARCH01_TC": "上午6時至晚上11時 (會視乎郵輪停泊情況而有所更改)",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "818606.51460056",
+        "EASTING": "839979.2352005",
+        "LATITUDE": "22.30669882",
+        "LONGITUDE": "114.21264732",
+        "LASTUPDATE": "2022-02-09 16:13:56"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.155625,
+          22.288564
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Harbour Control",
+        "ADDRESS_EN": "2/F, Central Government Pier, 32 Man Fai Street, Central",
+        "NAME_TC": "港口管制",
+        "ADDRESS_TC": "中環民輝街32號中區政府碼頭2字樓",
+        "NSEARCH01_EN": "Harbour Control Section and Western Immigration Anchorage: 24 hours; Eastern Immigration Anchorage: 6:00 am to 6:00 pm",
+        "NSEARCH01_TC": "港口管制組及西區入境船隻認可碇泊處：全日24小時;東區入境船隻認可碇泊處：早上6時至晚上6時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "816629.5829857",
+        "EASTING": "834078.2085071499",
+        "LATITUDE": "22.28853179",
+        "LONGITUDE": "114.15564235",
+        "LASTUPDATE": "2019-02-08 12:05:44"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.947682,
+          22.361349
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "River Trade Terminal Control Point",
+        "ADDRESS_EN": "205 Lung Mun Road, Area 38, Tuen Mun",
+        "NAME_TC": "內河碼頭出入境管制站",
+        "ADDRESS_TC": "屯門第38區龍門路205號",
+        "NSEARCH01_EN": "24 hours",
+        "NSEARCH01_TC": "全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "824707.2",
+        "EASTING": "812661.5",
+        "LATITUDE": "22.36134929",
+        "LONGITUDE": "113.94768231",
+        "LASTUPDATE": "2019-02-08 11:48:48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.934417,
+          22.315354
+        ]
+      },
+      "properties": {
+        "DATASET_EN": "Control Points",
+        "DATASET_TC": "出入境管制站",
+        "NAME_EN": "Airport Control Point (Terminal 1)",
+        "ADDRESS_EN": "Passenger Terminal Building, Hong Kong International Airport, Chek Lap Kok, Lantau",
+        "NAME_TC": "機場出入境管制站 (一號客運大樓)",
+        "ADDRESS_TC": "大嶼山赤鱲角香港國際機場客運大樓",
+        "NSEARCH01_EN": "24 hours",
+        "NSEARCH01_TC": "全日24小時",
+        "NSEARCH02_EN": "N.A.",
+        "NSEARCH02_TC": "N.A.",
+        "NSEARCH03_EN": "N.A.",
+        "NSEARCH03_TC": "N.A.",
+        "NSEARCH04_EN": "N.A.",
+        "NSEARCH04_TC": "N.A.",
+        "NSEARCH05_EN": "N.A.",
+        "NSEARCH05_TC": "N.A.",
+        "Statistics_on_Daily_Passenger_Traffic_EN": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/eng/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >Statistics on Daily Passenger Traffic</a>",
+        "Statistics_on_Daily_Passenger_Traffic_TC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hkt/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次統計數字</a>",
+        "Statistics_on_Daily_Passenger_Traffic_SC": "<a target=\"_blank\" href=\"https://www.immd.gov.hk/opendata/hks/transport/immigration_clearance/statistics_on_daily_passenger_traffic.csv\" >每日出入境人次统计数字</a>",
+        "NORTHING": "819616.05671433",
+        "EASTING": "811287.03252876",
+        "LATITUDE": "22.31548988",
+        "LONGITUDE": "113.93501858",
+        "LASTUPDATE": "2019-02-08 11:46:17"
+      }
+    }
+  ]
+}

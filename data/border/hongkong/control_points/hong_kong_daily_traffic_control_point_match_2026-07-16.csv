@@ -1,0 +1,15 @@
+﻿date,traffic_csv_category,traffic_total_both_directions,traffic_arrival_total,traffic_departure_total,matched_location_count,matched_location_names_en,matched_location_names_tc,matched_longitudes,matched_latitudes,match_notes
+16-07-2026,中国客运码头,1254,636,618,1,China Ferry Terminal Control Point,中國客運碼頭出入境管制站,114.16730700,22.30045500,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,启德邮轮码头,0,0,0,1,Kai Tak Cruise Terminal Control Point,啟德郵輪碼頭出入境管制站,114.21289200,22.30641500,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,文锦渡,5103,2462,2641,1,Man Kam To Control Point,文錦渡出入境管制站,114.12879200,22.53741700,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,机场,129366,58542,70824,2,Airport Control Point (Terminal 1) | Airport Control Point (Terminal 2),機場出入境管制站 (一號客運大樓) | 機場出入境管制站 (二號客運大樓),113.93441700 | 113.93824000,22.31535400 | 22.31648000,Daily traffic CSV reports Airport as one aggregate category; do not add Terminal 1 and Terminal 2 rows together. | Daily traffic CSV reports Airport as one aggregate category; do not add Terminal 1 and Terminal 2 rows together.
+16-07-2026,沙头角,0,0,0,1,Sha Tau Kok Control Point,沙頭角出入境管制站,114.22329100,22.54912400,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,深圳湾,109452,53691,55761,1,Shenzhen Bay Control Point,深圳灣出入境管制站,113.94543300,22.49382200,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,港口管制,123,58,65,2,Harbour Control | River Trade Terminal Control Point,港口管制 | 內河碼頭出入境管制站,114.15562500 | 113.94768200,22.28856400 | 22.36134900,"Daily traffic CSV reports Harbour Control as 港口管制; this row is the Central Government Pier control point. | CSDI has this as a separate control point, but the daily passenger CSV has no named River Trade Terminal row on 16-07-2026."
+16-07-2026,港澳客轮码头,12794,5963,6831,1,Macao Ferry Terminal Control Point,港澳客輪碼頭出入境管制站,114.15230300,22.28883900,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,港珠澳大桥,68898,30427,38471,1,Hong Kong-Zhuhai-Macao Bridge Control Point,港珠澳大橋出入境管制站,113.95108400,22.31810200,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,罗湖,169177,81423,87754,1,Lo Wu Control Point,羅湖出入境管制站,114.11366400,22.52947700,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,落马洲,33816,17200,16616,1,Lok Ma Chau Control Point,落馬洲出入境管制站,114.07406100,22.50936900,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,落马洲支线,137567,66725,70842,1,Lok Ma Chau Spur Line Control Point,落馬洲支線出入境管制站,114.06560700,22.51493400,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,香园围,68120,34523,33597,1,Heung Yuen Wai Control Point,香園圍管制站,114.15380900,22.55229600,Direct one-to-one match to the daily traffic statistical category.
+16-07-2026,高铁西九龙,85368,41215,44153,1,Express Rail Link West Kowloon Control Point,高鐵西九龍出入境管制站,114.16474300,22.30467600,Direct one-to-one match to the daily traffic statistical category.

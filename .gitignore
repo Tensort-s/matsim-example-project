@@ -28,6 +28,7 @@ hs_err_pid*
 /.venv_geo311/
 /.venv_wedan/
 /.dgl/
+/.cache/
 /.tools/
 /run_logs/
 /docs/pdf-text/
