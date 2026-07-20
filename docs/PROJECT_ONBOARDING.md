@@ -55,6 +55,50 @@ Operational defaults:
 - City package: `cities/fuzhou/city.yaml`
 - Current final run: `runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50`
 
+Hong Kong preparation is in progress under `scripts/hong_kong_single_city/` and
+`data/*/hongkong/`. Current provenance docs include:
+
+```text
+docs/HONG_KONG_BOUNDARY_PREPARATION.md
+docs/HONG_KONG_WORLDPOP_PREPARATION.md
+docs/HONG_KONG_ESRI_WORLD_IMAGERY.md
+docs/HONG_KONG_FIXED_LINK_GRID.md
+docs/HONG_KONG_OSM_POIS.md
+docs/HONG_KONG_INTEGRATED_POIS.md
+docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
+docs/HONG_KONG_STUDENT_SCHOOL_OD.md
+```
+
+Hong Kong WEDAN validation uses the 2021 Summary Results tables 7.8 and 7.9,
+official `NewTown_2021.shp`, and LSUG workplace totals. The current recommended
+OD workflow freezes the WEDAN checkpoint, uses Hong Kong `local_minmax`
+features, ensembles seeds `666/667/668`, and applies an 18-parameter LSUGx3
+calibration layer selected by 18-district spatial holdout. New outputs do not
+use the historical Fuzhou feature scaler or Fuzhou OD quantile mapping.
+
+The 2022 student-school workflow uses DCCA Census study-place categories,
+official New Town geometry, EDB school programs and enrollment margins,
+calibrated school-age population, and TCS mechanized HBS constraints. Its
+canonical assignment is in expected students; daily HBS and boarding-equivalent
+outputs use different units. Read `docs/HONG_KONG_STUDENT_SCHOOL_OD.md` before
+using these matrices for MATSim demand.
+
+Current Hong Kong OD products:
+
+```text
+Generalized spatial prediction:
+data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_generalized.npy
+
+2021 Census-constrained demand:
+data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_census_projected.npy
+```
+
+Formal experiments run only on `by@100.103.8.34:/home/by/OD/HK`, with one GPU
+visible and a 10 GiB PyTorch memory limit. SSH, CUDA, DGL, available GPU memory,
+or OOM failures must stop the experiment; CPU fallback is forbidden. Detailed
+methods, validation metrics, and commands are in
+`docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md`.
+
 ## Python environment selection
 
 Use this rule before running any Python script:
@@ -180,3 +224,8 @@ F:\Matsim\matsim-example-project\runs\fuzhou\outputs\waitpenalty-metroprefer-fro
 Some files in `docs/` describe older experiments such as car-only 30k agents, early AMap discovery, or ride-hailing
 tests. They are provenance documents, not the active workflow. If a command conflicts with this onboarding document,
 use this onboarding document and `cities/fuzhou/city.yaml` as the source of truth.
+# Hong Kong arrival/departure demand
+
+The 2026 typical-weekday border and visitor-demand workflow is documented in
+`docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its formal data products live under
+`data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday/`.
