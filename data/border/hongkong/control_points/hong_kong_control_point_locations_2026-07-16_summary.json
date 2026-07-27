@@ -1,0 +1,12 @@
+{
+  "date": "16-07-2026",
+  "csdi_feature_count": 16,
+  "traffic_category_count": 14,
+  "traffic_total_both_directions": 821038,
+  "outputs": {
+    "geojson": "C:\\Users\\Yu Boyang\\.codex\\worktrees\\8b6c\\matsim-example-project\\data\\border\\hongkong\\control_points\\hong_kong_control_points_csdi_20260622.geojson",
+    "location_csv": "C:\\Users\\Yu Boyang\\.codex\\worktrees\\8b6c\\matsim-example-project\\data\\border\\hongkong\\control_points\\hong_kong_control_point_locations_2026-07-16.csv",
+    "traffic_match_csv": "C:\\Users\\Yu Boyang\\.codex\\worktrees\\8b6c\\matsim-example-project\\data\\border\\hongkong\\control_points\\hong_kong_daily_traffic_control_point_match_2026-07-16.csv",
+    "markdown": "C:\\Users\\Yu Boyang\\.codex\\worktrees\\8b6c\\matsim-example-project\\data\\border\\hongkong\\control_points\\hong_kong_control_point_locations_2026-07-16.md"
+  }
+}
