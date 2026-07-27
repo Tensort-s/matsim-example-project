@@ -34,6 +34,8 @@ hs_err_pid*
 /.server_bundles/
 /docs/pdf-text/
 /docs/*.docx
+!/docs/已有数据.docx
+!/docs/需求清单.docx
 /data/osm/
 /data/worldcommuting_od/
 /data/models/

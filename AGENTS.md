@@ -130,7 +130,8 @@ $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
   capacities, synthetic demand, and fallback geometry explicitly.
 - Do not silently replace observed constraints with modeled values.
 - Do not overwrite user-edited Word documents such as `docs/已有数据.docx` and
-  `docs/需求清单.docx`. Read and preserve manual formatting and wording.
+  `docs/需求清单.docx`. These two manual documents are intentionally tracked
+  by Git; read and preserve their formatting and wording.
 
 ## Documentation requirements
 
