@@ -509,6 +509,10 @@ def main() -> None:
             "visitor_days": "overnight visitor arrivals multiplied by 4.1 days; same-day by one day",
             "internal_mechanized_trips": "visitor-days multiplied by TCS trip rates",
         },
+        "attraction_sources": {
+            "work": p["work_od"].as_posix(),
+            "work_usage": "destination-side attraction only; fixed-work demand itself is not regenerated here",
+        },
     }
     (out / "matrix_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -526,6 +530,7 @@ def main() -> None:
         "hktb_q1_purpose_integrated": bool(preparation_metadata.get("hktb_q1_purpose_integrated")),
         "mainland_visitor_overnight_share": float(parameters.get("mainland_visitor_overnight_share", OVERNIGHT_SHARE["mainland_visitor"])),
         "other_visitor_overnight_share": float(parameters.get("other_visitor_overnight_share", OVERNIGHT_SHARE["other_visitor"])),
+        "work_attraction_od": p["work_od"].as_posix(),
         "spatial_status": "constrained synthetic OD; no observed control-point-to-destination matrix exists",
         "all_finite": bool(np.isfinite(arrival).all() and np.isfinite(departure).all() and np.isfinite(visitor_internal).all()),
         "diagonal_zero": bool(np.max(np.abs(np.diag(visitor_internal))) == 0),

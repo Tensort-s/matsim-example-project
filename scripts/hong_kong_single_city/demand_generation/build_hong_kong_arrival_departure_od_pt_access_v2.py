@@ -960,6 +960,10 @@ def main() -> None:
             "later_destinations": "accommodation or previous activity plus timetable PT generalized time",
             "euclidean_fallback": False,
         },
+        "attraction_sources": {
+            "work": p["work_od"].as_posix(),
+            "work_usage": "destination-side attraction only; fixed-work demand itself is not regenerated here",
+        },
     }
     (out_dir / "matrix_manifest.json").write_text(json.dumps(matrix_manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -981,6 +985,7 @@ def main() -> None:
         "maximum_hotel_district_share_error": float(hotel_validation.absolute_error.max()),
         "all_matrices_finite": bool(np.isfinite(arrival).all() and np.isfinite(departure).all() and np.isfinite(visitor_internal).all()),
         "internal_diagonal_zero": bool(np.max(np.abs(np.diag(visitor_internal))) == 0),
+        "work_attraction_od": p["work_od"].as_posix(),
         "old_vs_new_near_port": comparison.to_dict(orient="records"),
         "spatial_status": "constrained synthetic OD; no observed checkpoint-to-destination matrix exists",
     }

@@ -44,8 +44,12 @@ HKTB Q1 的官方目的类别为 `Vacation / Business / Visiting Friends or Rela
 - 商务：办公、金融、政府和 work-related POI。
 - 探亲访友：校正 WorldPop 人口。
 - 上学：教育局学校位置及估计容量。
-- 上班：Census-scaled 工作 OD 的目的端吸引量与 work-related POI。
+- 上班：当前 WEDAN/LSUG `generation_hk_census_projected.npy` 的目的端吸引量与 work-related POI。
 - 住宿：五月八个酒店地区的已入住客房容量；3% 人口权重作为亲友/住宅住宿回退。
+
+工作吸引量只使用工作 OD 的目的端列和，不重新生成固定通勤需求。当前正式来源为
+`data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_census_projected.npy`。
+早期 `generation_2021_census_area_scaled.npy` 和 global-unit scaling 输出仅是 Census 约束诊断/历史比较产物，不作为 V1 或 V2 口岸 OD 的默认输入。
 
 口岸到目的格网采用目的吸引权重乘指数距离衰减。内部访客矩阵在 1,585 个格网间生成，并严格保持 TCS trip-rate 推导出的总机动化出行量。
 
