@@ -1,0 +1,14 @@
+header:
+  tab: PT
+  title: Hong Kong Public Transit
+  description: Transit routes, stops, schedules, and simulated passenger volumes.
+  triggerPattern: output_transitSchedule.xml.gz
+layout:
+  viewer:
+  - type: transit
+    title: Public transport network and passenger volume
+    description: Bus, GMB, MTR, light rail, and the transit supply included in this completed run.
+    height: 12.0
+    network: analysis/network-all/network.avro
+    transitSchedule: output_transitSchedule.xml.gz
+    demand: analysis/pt/pt_pax_volumes.csv.gz

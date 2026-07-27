@@ -197,9 +197,123 @@ def build_purpose_priors(pack: Path) -> pd.DataFrame:
         "share": [0.39, 0.20, 0.12, 0.11, 0.10, 0.02, 0.06],
     })
     out = pd.concat([out[out.person_segment != "other_visitor"], other], ignore_index=True)
+    out["stay_type"] = "all"
+    out["official_bucket"] = "historical_detail"
+    out["market_visitors_q1"] = np.nan
     out["source"] = np.where(out.person_segment == "other_visitor", "TCS_2022_2023", "CBTS_2017")
     out["use"] = "structural_prior_not_2026_absolute_count"
     return out
+
+
+def read_hktb_q1_purpose(path: Path) -> pd.DataFrame:
+    report = pd.read_excel(path, sheet_name="Report", header=None)
+    report_text = " ".join(report.fillna("").astype(str).iloc[:12].to_numpy().ravel())
+    if "Jan - Mar 2026" not in report_text and "2026 年 1 月至  3 月" not in report_text:
+        raise ValueError("HKTB purpose workbook is not the Jan-Mar 2026 issue")
+
+    labels = report.iloc[:, 2].fillna("").astype(str)
+    total_index = labels[labels.str.strip().eq("總數 Total")].index
+    mainland_index = labels[labels.str.strip().eq("中國內地 Mainland China")].index
+    if len(total_index) != 1 or len(mainland_index) != 1:
+        raise ValueError("Could not uniquely locate Total and Mainland China rows in HKTB Report")
+
+    purpose_columns = {
+        "vacation": 6,
+        "business": 8,
+        "vfr": 10,
+        "en_route_others": 12,
+    }
+
+    def extract_market(start: int, market: str) -> list[dict[str, object]]:
+        rows = []
+        for offset, stay_type in [(1, "overnight"), (2, "same_day")]:
+            row = report.iloc[start + offset]
+            label = str(row.iloc[2])
+            expected = "Overnight Visitors" if stay_type == "overnight" else "Same-day Visitors"
+            if expected not in label:
+                raise ValueError(f"Unexpected HKTB row after {market}: {label}")
+            values = {name: float(row.iloc[col]) for name, col in purpose_columns.items()}
+            if not np.isclose(sum(values.values()), 1.0, atol=1e-8):
+                raise ValueError(f"HKTB purpose shares do not sum to one for {market}/{stay_type}")
+            rows.append({
+                "market": market,
+                "stay_type": stay_type,
+                "visitor_count_q1": int(row.iloc[4]),
+                **values,
+            })
+        return rows
+
+    total_rows = pd.DataFrame(extract_market(int(total_index[0]), "all_visitors"))
+    mainland_rows = pd.DataFrame(extract_market(int(mainland_index[0]), "mainland_visitor"))
+    records = [*mainland_rows.to_dict("records")]
+    for stay_type in ["overnight", "same_day"]:
+        total = total_rows.loc[total_rows.stay_type == stay_type].iloc[0]
+        mainland = mainland_rows.loc[mainland_rows.stay_type == stay_type].iloc[0]
+        other_count = int(total.visitor_count_q1 - mainland.visitor_count_q1)
+        if other_count <= 0:
+            raise ValueError(f"Non-Mainland visitor count is not positive for {stay_type}")
+        record: dict[str, object] = {
+            "market": "other_visitor",
+            "stay_type": stay_type,
+            "visitor_count_q1": other_count,
+        }
+        for purpose in purpose_columns:
+            total_purpose = float(total.visitor_count_q1) * float(total[purpose])
+            mainland_purpose = float(mainland.visitor_count_q1) * float(mainland[purpose])
+            record[purpose] = (total_purpose - mainland_purpose) / other_count
+        records.append(record)
+    out = pd.DataFrame(records)
+    if not np.allclose(out[list(purpose_columns)].sum(axis=1), 1.0, atol=1e-8):
+        raise ValueError("Derived HKTB market/stay purpose shares do not sum to one")
+    out["source_file"] = str(path)
+    out["report_period"] = "2026Q1"
+    return out
+
+
+def apply_hktb_q1_purpose_priors(base: pd.DataFrame, hktb: pd.DataFrame) -> pd.DataFrame:
+    output = [base.loc[base.person_segment == "hk_resident_mainland"].copy()]
+    bucket_mapping = {
+        "mainland_visitor": {
+            "vacation": ["leisure"],
+            "business": ["business"],
+            "vfr": ["vfr"],
+            "en_route_others": ["transit", "other", "work"],
+        },
+        "other_visitor": {
+            "vacation": ["sightseeing", "leisure", "shopping"],
+            "business": ["business"],
+            "vfr": ["vfr"],
+            "en_route_others": ["transit", "other"],
+        },
+    }
+    for segment, mapping in bucket_mapping.items():
+        historical = base.loc[base.person_segment == segment].set_index("purpose")["share"]
+        for _, official in hktb.loc[hktb.market == segment].iterrows():
+            rows = []
+            for bucket, purposes in mapping.items():
+                detail = historical.reindex(purposes).fillna(0.0)
+                if detail.sum() <= 0:
+                    detail[:] = 1.0
+                detail /= detail.sum()
+                for purpose, fraction in detail.items():
+                    rows.append({
+                        "person_segment": segment,
+                        "stay_type": official.stay_type,
+                        "purpose": purpose,
+                        "share": float(official[bucket]) * float(fraction),
+                        "official_bucket": bucket,
+                        "market_visitors_q1": int(official.visitor_count_q1),
+                        "source": "HKTB_2026_Q1",
+                        "use": "official_market_and_stay_purpose_share_with_historical_within_bucket_split",
+                    })
+            frame = pd.DataFrame(rows)
+            frame["share"] /= frame.share.sum()
+            output.append(frame)
+    result = pd.concat(output, ignore_index=True)
+    checks = result.loc[result.stay_type != "all"].groupby(["person_segment", "stay_type"]).share.sum()
+    if not np.allclose(checks.to_numpy(), 1.0, atol=1e-10):
+        raise ValueError("Final HKTB purpose priors do not sum to one")
+    return result
 
 
 def build_stay_priors(pack: Path) -> pd.DataFrame:
@@ -276,6 +390,11 @@ def main() -> None:
     validation.to_csv(output_root / "july_weekday_holdout_validation.csv", index=False, encoding="utf-8-sig")
 
     purpose = build_purpose_priors(args.data_pack)
+    hktb_purpose = None
+    if args.hktb_purpose_xlsx:
+        hktb_purpose = read_hktb_q1_purpose(args.hktb_purpose_xlsx)
+        hktb_purpose.to_csv(output_root / "hktb_2026_q1_purpose_by_market_stay.csv", index=False, encoding="utf-8-sig")
+        purpose = apply_hktb_q1_purpose_priors(purpose, hktb_purpose)
     purpose.to_csv(output_root / "purpose_priors.csv", index=False, encoding="utf-8-sig")
     build_stay_priors(args.data_pack).to_csv(output_root / "stay_priors.csv", index=False, encoding="utf-8-sig")
     build_tcs_behavior(args.data_pack).to_csv(output_root / "tcs_visitor_behavior.csv", index=False, encoding="utf-8-sig")
@@ -288,13 +407,23 @@ def main() -> None:
     hotel["report_period"] = "2026-05"
     hotel.to_csv(output_root / "hotel_district_capacity_2026_05.csv", index=False, encoding="utf-8-sig")
 
-    pd.DataFrame([
+    parameter_rows = [
         {"parameter": "mainland_resident_hk_share_baseline", "value": 116600 / (319800 + 116600), "source": "CBTS_2017_3A.1e"},
         {"parameter": "mainland_resident_hk_share_sensitivity", "value": 0.229, "source": "CBTS_2015_diagnostic"},
         {"parameter": "mainland_visitor_overnight_share", "value": 0.37, "source": "HKTB_2026_Jan-Apr"},
         {"parameter": "other_visitor_overnight_share", "value": 0.66, "source": "HKTB_2026_Jan-Apr"},
         {"parameter": "average_overnight_stay_nights", "value": 3.1, "source": "HKTB_2026_current"},
-    ]).to_csv(output_root / "population_and_stay_parameters.csv", index=False, encoding="utf-8-sig")
+    ]
+    if hktb_purpose is not None:
+        for market in ["mainland_visitor", "other_visitor"]:
+            market_rows = hktb_purpose.loc[hktb_purpose.market == market]
+            overnight_count = float(market_rows.loc[market_rows.stay_type == "overnight", "visitor_count_q1"].iloc[0])
+            total_count = float(market_rows.visitor_count_q1.sum())
+            parameter_name = f"{market}_overnight_share"
+            for row in parameter_rows:
+                if row["parameter"] == parameter_name:
+                    row.update(value=overnight_count / total_count, source="HKTB_2026_Q1_Report")
+    pd.DataFrame(parameter_rows).to_csv(output_root / "population_and_stay_parameters.csv", index=False, encoding="utf-8-sig")
 
     july = validation
     mae = float(july.absolute_error.mean())
@@ -313,7 +442,9 @@ def main() -> None:
         "hktb_q1_xlsx_url": HKTB_Q1_XLSX,
         "hktb_q1_page_verified": True,
         "hktb_q1_file_cached": bool(args.hktb_purpose_xlsx),
-        "hktb_q1_note": "Official Jan-Mar 2026 issue verified. If no local XLSX is supplied, CBTS/TCS structural priors are retained and explicitly labelled.",
+        "hktb_q1_purpose_integrated": hktb_purpose is not None,
+        "hktb_q1_market_stay_rows": int(len(hktb_purpose)) if hktb_purpose is not None else 0,
+        "hktb_q1_note": "Official Jan-Mar 2026 market-by-stay purpose shares are integrated when a local XLSX is supplied. Historical priors are used only to split HKTB aggregate purpose buckets into model subcategories.",
         "tcs_report": TCS_REPORT,
         "general_holidays_source": HK_2026_HOLIDAYS,
         "holdout_design": "Fit typical margins on 2026-01-01 through 2026-06-30; validate eligible July weekdays; refit final margins on all data through 2026-07-16.",

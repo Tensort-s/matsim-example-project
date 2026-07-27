@@ -67,6 +67,7 @@ docs/HONG_KONG_OSM_POIS.md
 docs/HONG_KONG_INTEGRATED_POIS.md
 docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
 docs/HONG_KONG_STUDENT_SCHOOL_OD.md
+docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md
 ```
 
 Hong Kong WEDAN validation uses the 2021 Summary Results tables 7.8 and 7.9,
@@ -82,6 +83,40 @@ calibrated school-age population, and TCS mechanized HBS constraints. Its
 canonical assignment is in expected students; daily HBS and boarding-equivalent
 outputs use different units. Read `docs/HONG_KONG_STUDENT_SCHOOL_OD.md` before
 using these matrices for MATSim demand.
+
+Hong Kong public-transport route geometry is now map-matched to the official
+TNM road network and OSM rail links. The formal MATSim base network,
+route-link sequences, stop snaps, QA, preview, and hashes are under
+`data/transit/hongkong/processed/transit_route_link_mapmatching_2026_v2/`.
+Read `docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md` before creating
+`transitSchedule.xml.gz`. The 129 v2 manual-review directions were explicitly
+approved for assembly on 2026-07-22 without erasing their original QA status.
+The approved route inventory, route-compatible facilities, nearest-road access
+anchors, connector geometries, QA, and hashes are under
+`data/transit/hongkong/processed/transit_schedule_assembly_inputs_2026/`.
+The complete road and typical-weekday public-transport MATSim inputs are under
+`data/transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday/`.
+Its `network.xml.gz`, `transitSchedule.xml.gz`, and `transitVehicles.xml.gz`
+load successfully in MATSim 2026.0.
+
+The active mixed-traffic 5% supply with Ferry Core v1 is under
+`data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/`.
+It adds 21 core ferry routes as dedicated water links and keeps the 20
+island-access routes excluded. All transit passenger capacities use 10% of
+their full-scale references, while bus/GMB PCUs remain at 5%. See
+`docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md` for route selection, schedule,
+capacity proxy, and QA details.
+
+The current Hong Kong typical-weekday 5% multi-activity population is under
+`data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/`.
+It retains the 385,820-agent v1 work, school, and border population, then fills
+the TCS 2022 all-purpose mechanized-trip residual with 263,788 shopping,
+dining, leisure, social, medical, and personal-business legs. Its config
+enables household-vehicle-aware `SubtourModeChoice`, time mutation, and
+rerouting. The v1 directory remains the compulsory-demand baseline. Both v2
+unrouted and fully routed plans are available.
+Read `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md` before changing population,
+capacity-factor, transit-capacity, or route-specific stop-link assumptions.
 
 Current Hong Kong OD products:
 
@@ -229,3 +264,56 @@ use this onboarding document and `cities/fuzhou/city.yaml` as the source of trut
 The 2026 typical-weekday border and visitor-demand workflow is documented in
 `docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its formal data products live under
 `data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday/`.
+
+The recommended spatial version is now the separate PT-accessibility V2 under
+`data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday_pt_access_v2/`.
+It uses six-period SwissRailRaptor skims from the Hong Kong MATSim transit
+schedule, applies CBTS six-zone incidence only to Mainland same-day visitors,
+and conditions later visitor activities on accommodation or the previous
+activity. The original Euclidean-distance model remains unchanged as a
+historical baseline. See `docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`.
+
+# Hong Kong synthetic households and vehicles
+
+The full-scale household layer is documented in
+`docs/HONG_KONG_SYNTHETIC_HOUSEHOLDS.md` and stored under
+`data/matsim_agents/hongkong/synthetic_households_tcs2022/`. DCCA 2021
+household-size, income, housing, age, and sex margins create households and
+members on the 1,585 grids. TCS 2022 Table A.4 exactly controls private-vehicle
+availability in each of the 26 broad districts; Table 4.2 adjusts household
+ranking by housing, income, and household size. Vehicle and designated-driver
+records are joined by the current 5% population workflow. The formal plans and
+validation outputs are documented in `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md`.
+
+# Hong Kong public transport supply
+
+The official-data-first collection, route map matching, and inferred MTR/Light
+Rail timetable workflow is documented in
+`docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md`. The current approximate
+weekday rail timetable is under
+`data/transit/hongkong/processed/mtr_lrt_approximate_timetable_2026_weekday/`.
+Approximate station running/dwell offsets are under
+`data/transit/hongkong/processed/mtr_lrt_approximate_station_times_2026_weekday/`.
+The normalized capacity catalog, MATSim vehicle-type library, route mappings,
+and approximate rail departure vehicles are under
+`data/transit/hongkong/processed/public_transport_vehicle_capacities_2025/`.
+The complete no-more-data base case is under
+`data/transit/hongkong/processed/public_transport_vehicle_capacities_inferred_2026/`;
+it is the preferred input because all 3,570 route directions and all 7,461
+rail departures have a capacity assignment. Its XB/DB/PI types and full-day
+rail consist roster remain explicitly inferred rather than observed.
+The final MATSim schedule now combines stop facilities, accepted link
+sequences, departures, offsets, and vehicle references under
+`data/transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday/`.
+The road links in that formal supply are calibrated from the 2026 TNM network,
+the 2026-07-22 detector snapshot, and 2019-2024 ATC evidence. The uniform
+baseline is retained beside the formal network, while full audit tables and
+maps are under `data/transit/hongkong/processed/road_speed_capacity_2026_v1/`.
+See `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`; `.venv_geo311` includes
+`xlrd>=2.0.1` for the official ATC `.xls` workbooks.
+The v1 demand build created a route-specific stop-link schedule copy under
+`data/matsim_agents/hongkong/typical_weekday_5pct_v1/`; v2 uses the active
+Ferry Core v1 cap010 supply instead. Representative vehicle
+types, inferred rail consists, and one-vehicle-per-departure assumptions should
+still be replaced when route-specific fleet allocation and vehicle blocks are
+available.

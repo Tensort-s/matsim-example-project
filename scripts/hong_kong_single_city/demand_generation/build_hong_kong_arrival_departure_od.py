@@ -195,8 +195,14 @@ def destination_profile(base: np.ndarray, distances_m: np.ndarray, purpose: str)
     return normalize(base * np.exp(-distances_m / scale))
 
 
-def purpose_rows(priors: pd.DataFrame, segment: str) -> list[tuple[str, float]]:
+def purpose_rows(priors: pd.DataFrame, segment: str, stay_type: str = "all") -> list[tuple[str, float]]:
     subset = priors[priors.person_segment == segment]
+    if "stay_type" in subset.columns:
+        exact = subset[subset.stay_type == stay_type]
+        if not exact.empty:
+            subset = exact
+        else:
+            subset = subset[subset.stay_type == "all"]
     if subset.empty:
         return [("other", 1.0)]
     return list(subset[["purpose", "share"]].itertuples(index=False, name=None))
@@ -253,6 +259,9 @@ def main() -> None:
     n = len(grid)
     margins = pd.read_csv(prepared / "typical_weekday_bcp_category_margins.csv")
     priors = pd.read_csv(prepared / "purpose_priors.csv")
+    parameter_table = pd.read_csv(prepared / "population_and_stay_parameters.csv")
+    parameters = dict(zip(parameter_table.parameter, parameter_table.value))
+    preparation_metadata = json.loads((prepared / "preparation_summary.json").read_text(encoding="utf-8"))
     ports = load_control_points(p["control_points"], margins)
     ports.to_crs("EPSG:4326").drop(columns="geometry").to_csv(out / "model_control_points_14.csv", index=False, encoding="utf-8-sig")
     bcp_distance = port_to_grid_distances(ports, grid)
@@ -310,11 +319,11 @@ def main() -> None:
                 category_departure[category][:, b] += row_alloc
             continue
 
-        overnight_share = OVERNIGHT_SHARE[category]
+        overnight_share = float(parameters.get(f"{category}_overnight_share", OVERNIGHT_SHARE[category]))
         for stay_type, stay_share in [("same_day", 1 - overnight_share), ("overnight", overnight_share)]:
             person_segment = f"{category}_{stay_type}"
             source_segment = category
-            for purpose, purpose_share in purpose_rows(priors, source_segment):
+            for purpose, purpose_share in purpose_rows(priors, source_segment, stay_type):
                 purpose_key = "sightseeing" if purpose == "leisure" and stay_type == "overnight" else purpose
                 profile = destination_profile(attractions.get(purpose_key, attractions["other"]), bcp_distance[b], purpose_key)
                 flow = amount * stay_share * purpose_share
@@ -475,6 +484,7 @@ def main() -> None:
         })
     validation = pd.DataFrame(validation_rows)
     validation.to_csv(out / "validation/matrix_conservation.csv", index=False)
+    priors.to_csv(out / "validation/purpose_priors_used.csv", index=False, encoding="utf-8-sig")
 
     manifest = {
         "scenario": "2026_typical_weekday",
@@ -482,6 +492,7 @@ def main() -> None:
         "control_point_count": len(ports),
         "control_point_order": ports.control_point.tolist(),
         "grid_order": "regions.shp row order; grid_index is zero-based",
+        "purpose_prior_source": "HKTB_2026_Q1" if preparation_metadata.get("hktb_q1_purpose_integrated") else "CBTS_2017_and_TCS_2022_2023",
         "matrices": {
             "arrival_bcp_to_grid.npy": {"shape": [14, n], "unit": "border_passenger_movements"},
             "departure_grid_to_bcp.npy": {"shape": [n, 14], "unit": "border_passenger_movements"},
@@ -501,12 +512,16 @@ def main() -> None:
         "typical_weekday_arrival_border_movements": float(arrival.sum()),
         "typical_weekday_departure_border_movements": float(departure.sum()),
         "weighted_arrival_visitor_cohorts": float(tours.sample_weight.sum()),
-        "visitor_internal_mechanized_trips": float(visitor_internal.sum()),
-        "same_day_internal_mechanized_trips": float(internal_by_stay["same_day"].sum()),
-        "overnight_internal_mechanized_trips": float(internal_by_stay["overnight"].sum()),
+        "visitor_internal_mechanized_trips": float(np.sum(visitor_internal, dtype=np.float64)),
+        "same_day_internal_mechanized_trips": float(np.sum(internal_by_stay["same_day"], dtype=np.float64)),
+        "overnight_internal_mechanized_trips": float(np.sum(internal_by_stay["overnight"], dtype=np.float64)),
         "representative_calendar_days": 56,
         "calendar_carry_by_immigration_category": carry_summary,
         "resident_mainland_share_baseline": resident_split,
+        "purpose_prior_source": "HKTB_2026_Q1" if preparation_metadata.get("hktb_q1_purpose_integrated") else "CBTS_2017_and_TCS_2022_2023",
+        "hktb_q1_purpose_integrated": bool(preparation_metadata.get("hktb_q1_purpose_integrated")),
+        "mainland_visitor_overnight_share": float(parameters.get("mainland_visitor_overnight_share", OVERNIGHT_SHARE["mainland_visitor"])),
+        "other_visitor_overnight_share": float(parameters.get("other_visitor_overnight_share", OVERNIGHT_SHARE["other_visitor"])),
         "spatial_status": "constrained synthetic OD; no observed control-point-to-destination matrix exists",
         "all_finite": bool(np.isfinite(arrival).all() and np.isfinite(departure).all() and np.isfinite(visitor_internal).all()),
         "diagonal_zero": bool(np.max(np.abs(np.diag(visitor_internal))) == 0),
