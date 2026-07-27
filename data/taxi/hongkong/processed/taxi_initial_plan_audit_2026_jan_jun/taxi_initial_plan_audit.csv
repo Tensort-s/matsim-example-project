@@ -1,0 +1,16 @@
+﻿ride_subtype,population_group,role,is_discretionary,source_detail,mode_detail,legs_5pct,expanded_passenger_legs,persons
+private_car_passenger,resident,day_school_student,False,v1_mode_detail,private_vehicle,2490,49800.0,1245
+private_car_passenger,resident,fixed_worker,False,v1_mode_detail,private_car_passenger_van,1074,21480.0,537
+school_bus,resident,day_school_student,False,v1_mode_detail,spb,9626,192520.0,4813
+taxi,resident,day_school_student,False,v1_mode_detail,taxi,924,18480.0,462
+taxi,resident,fixed_worker,False,v1_mode_detail,taxi,3690,73800.0,1845
+unspecified_ride,resident,day_school_student,True,v2_discretionary_initial_mode,,1347,26940.0,568
+unspecified_ride,resident,fixed_worker,True,v2_discretionary_initial_mode,,6492,129840.0,2741
+unspecified_ride,resident,home_only,True,v2_discretionary_initial_mode,,14482,289640.0,6045
+unspecified_ride,resident,tertiary_student,True,v2_discretionary_initial_mode,,464,9280.0,191
+unspecified_ride,resident,work_home,True,v2_discretionary_initial_mode,,1768,35360.0,758
+unspecified_ride,resident,work_mobile,True,v2_discretionary_initial_mode,,1461,29220.0,619
+unspecified_ride,visitor,mainland_visitor_overnight,False,v1_mode_detail,visitor_tcs_proxy,7202,144040.0,3155
+unspecified_ride,visitor,mainland_visitor_same_day,False,v1_mode_detail,visitor_tcs_proxy,870,17400.0,376
+unspecified_ride,visitor,other_visitor_overnight,False,v1_mode_detail,visitor_tcs_proxy,4269,85380.0,1866
+unspecified_ride,visitor,other_visitor_same_day,False,v1_mode_detail,visitor_tcs_proxy,201,4020.0,81

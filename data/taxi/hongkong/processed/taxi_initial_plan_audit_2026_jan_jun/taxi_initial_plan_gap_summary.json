@@ -1,0 +1,68 @@
+{
+  "scenario": "hong_kong_taxi_initial_plan_audit_2026_jan_jun",
+  "sample_rate": 0.05,
+  "requested_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605",
+    "202606"
+  ],
+  "available_official_control_months": [
+    "202601",
+    "202602",
+    "202603",
+    "202604"
+  ],
+  "missing_official_control_months": [
+    "202605",
+    "202606"
+  ],
+  "official_target_definition": "AVG_DAILY_PAX * 1000 * 0.05, using TTD_PTO_CODE=TAX rows from Table 2.1S.",
+  "fleet_definition": {
+    "operating_fleet": "Table 2.2 NO_FLEET, not FIRST_REG.",
+    "licensed_fleet_by_type": "Table 4.1(a) TOTAL_LIC for Urban, NT, and Lantau taxis.",
+    "capacity_check": "PAX_CAP / NO_FLEET is only an average per-fleet-vehicle passenger-capacity check."
+  },
+  "official_5pct_daily_target": {
+    "available_month_mean": 37285.77300979261,
+    "min": 34256.78,
+    "max": 42509.99107142855,
+    "latest_month": "202604",
+    "latest_month_target": 34256.78,
+    "latest_month_no_fleet": 17831.0,
+    "latest_month_total_lic_all_types": 17831.0
+  },
+  "current_initial_plan_5pct_ride_legs": {
+    "total_ride": 56360,
+    "explicit_taxi": 4614,
+    "private_car_passenger": 3564,
+    "school_bus": 9626,
+    "unspecified_ride": 38556,
+    "plan_leg_mode_counts": {
+      "car": 67718,
+      "pt": 557104,
+      "ride": 56360,
+      "walk": 62432
+    }
+  },
+  "gap_vs_official_available_month_mean": {
+    "explicit_taxi_gap_5pct_legs_per_day": 32671.77300979261,
+    "explicit_taxi_gap_expanded_passenger_legs_per_day": 653435.4601958522,
+    "gap_if_all_unspecified_ride_reclassified_to_taxi_5pct_legs_per_day": -5884.2269902073895
+  },
+  "classification_notes": [
+    "Only mode_detail == taxi is counted as explicit taxi.",
+    "private_vehicle and private_car_passenger_van are classified as private_car_passenger.",
+    "spb is classified as school_bus.",
+    "All discretionary ride legs and visitor_tcs_proxy ride legs are classified as unspecified_ride.",
+    "No existing plans.xml.gz file is modified by this audit."
+  ],
+  "outputs": {
+    "taxi_official_daily_control.csv": "Official Table 2.1S/2.1/2.2 TAX controls with thousand-unit conversions.",
+    "taxi_fleet_by_type.csv": "Table 4.1(a) TOTAL_LIC by Urban/NT/Lantau taxi type.",
+    "taxi_initial_plan_audit.csv": "Current v2 initial-plan ride legs split by subtype and population group.",
+    "SOURCE_MANIFEST.csv": "Project-local copies and SHA256 hashes of downloaded source files."
+  }
+}

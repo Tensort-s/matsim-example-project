@@ -83,6 +83,7 @@ docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
 docs/HONG_KONG_STUDENT_SCHOOL_OD.md
 docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md
 docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
+docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -95,6 +96,7 @@ archived inside the main project data tree:
 ```text
 data/tourism/hongkong/raw/
 data/transit/hongkong/raw/source_tables/
+data/taxi/hongkong/raw/monthly_traffic_transport_digest_2026/
 data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP/source_documents/
 data/gee/hongkong/worldpop_age_sex/source_documents/
 ```
@@ -152,6 +154,9 @@ rerouting. The v1 directory remains the compulsory-demand baseline. Both v2
 unrouted and fully routed plans are available.
 Read `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md` before changing population,
 capacity-factor, transit-capacity, or route-specific stop-link assumptions.
+The current `ride` mode is audited against 2026 Transport Department taxi
+controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
+read-only and does not modify the adopted v2 plans.
 
 The final local SimWrapper project for this configuration is:
 

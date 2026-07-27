@@ -136,6 +136,29 @@ three-area work OD, work mode, school stage, border, facility-link, school
 escort, and transit stop-link audits. V2 adds its own TCS all-purpose demand
 and plan validation files.
 
+## Taxi and ride audit
+
+The July 2026 taxi audit is documented in
+`docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`. It reads Transport Department
+Tables 2.1S, 2.1, 2.2, and 4.1(a), filters `TTD_PTO_CODE=TAX`, converts
+passenger-journey fields from thousand passenger journeys to actual passenger
+journeys, and compares the official 5% daily target with the current initial
+v2 `ride` legs. It does not overwrite or modify `plans_unrouted_5pct_v2.xml.gz`
+or `plans_routed_5pct_v2.xml.gz`.
+
+The current audit outputs are under:
+
+```text
+data/taxi/hongkong/processed/taxi_initial_plan_audit_2026_jan_jun/
+```
+
+For the available 202601-202604 official records, the 5% taxi target averages
+37,285.773 passenger journeys/day. Current v2 initial plans contain 4,614
+explicit taxi legs, 3,564 private-car passenger legs, 9,626 school-bus legs,
+and 38,556 unspecified `ride` legs. This confirms that `ride` remains an
+aggregate MATSim passenger mode rather than a calibrated taxi-operator demand
+and fleet model.
+
 ## Commands
 
 Generate the demand package:

@@ -1,0 +1,17 @@
+﻿YR_MTH,taxi_type,total_lic,total_reg,first_reg_reference_only,fleet_definition_note
+202601,All licensed taxi types,17730,18163,134,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202601,Lantau,75,75,0,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202601,NT,2696,2838,43,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202601,Urban,14959,15250,91,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202602,All licensed taxi types,17743,18163,92,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202602,Lantau,75,75,1,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202602,NT,2699,2838,16,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202602,Urban,14969,15250,75,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202603,All licensed taxi types,17778,18163,148,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202603,Lantau,75,75,0,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202603,NT,2705,2838,22,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202603,Urban,14998,15250,126,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202604,All licensed taxi types,17831,18163,220,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202604,Lantau,74,75,0,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202604,NT,2707,2838,60,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
+202604,Urban,15050,15250,160,TOTAL_LIC is used for licensed taxi counts by Urban/NT/Lantau type; FIRST_REG is retained only as a reference field and is not used as fleet size.
