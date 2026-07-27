@@ -41,12 +41,13 @@ DEFAULT_GRID = (
 DEFAULT_OD = (
     ROOT
     / "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid"
-    / "CommutingODFlows/hong_kong_fixed_link_grid/generation.npy"
+    / "CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final"
+    / "generation_hk_census_projected.npy"
 )
 DEFAULT_OUT_DIR = (
     ROOT
     / "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid"
-    / "CommutingODFlows/hong_kong_fixed_link_grid/visualization"
+    / "CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/flow_maps_overview"
 )
 DEFAULT_INLINE_HTML = (
     Path.home()
@@ -59,7 +60,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--boundary", type=Path, default=DEFAULT_BOUNDARY, help="Hong Kong fixed-link boundary GeoJSON.")
     parser.add_argument("--boundary-simplified", type=Path, default=DEFAULT_BOUNDARY_SIMPLIFIED, help="Simplified boundary for inline HTML.")
     parser.add_argument("--grid", type=Path, default=DEFAULT_GRID, help="Hong Kong fixed-link grid regions.shp.")
-    parser.add_argument("--od", type=Path, default=DEFAULT_OD, help="WEDAN generation.npy.")
+    parser.add_argument("--od", type=Path, default=DEFAULT_OD, help="Hong Kong calibrated OD matrix.")
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR, help="Visualization output directory.")
     parser.add_argument("--top-k", type=int, default=800, help="Number of highest OD flows to draw in the static map.")
     parser.add_argument("--html-top-k", type=int, default=300, help="Number of highest OD flows embedded in the inline HTML.")

@@ -25,7 +25,6 @@ DEFAULT_CROSSWALK = (
     / "census_2021_commute_constraints/lsug_grid_resolution_diagnostics"
     / "lsug_by_grid_population_overlap.npz"
 )
-DEFAULT_LEGACY_OD = BASE / "CommutingODFlows/hong_kong_fixed_link_grid/generation.npy"
 SCALERS = ["local_minmax", "feature_robust", "group_robust"]
 SEEDS = [666, 667, 668]
 TARGET_COLUMNS = ["true_plw_hk", "true_plw_kln", "true_plw_nt"]
@@ -36,7 +35,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--experiment-root", type=Path, default=DEFAULT_EXPERIMENT_ROOT)
     parser.add_argument("--input-dir", type=Path, default=DEFAULT_INPUT_DIR)
     parser.add_argument("--crosswalk", type=Path, default=DEFAULT_CROSSWALK)
-    parser.add_argument("--legacy-od", type=Path, default=DEFAULT_LEGACY_OD)
+    parser.add_argument(
+        "--legacy-od",
+        type=Path,
+        help="Optional archived Fuzhou-quantile Hong Kong OD used only for historical comparison.",
+    )
     parser.add_argument("--gpu-memory-limit-gib", type=float, default=10.0)
     parser.add_argument("--buffer-grid-share", type=float, default=0.10)
     return parser.parse_args()
@@ -505,22 +508,29 @@ def main() -> None:
         oof_rows[f"true_{short}"] = target[primary, idx]
         oof_rows[f"pred_{short}"] = selected_oof[primary, idx]
 
-    legacy = np.load(args.legacy_od)
-    legacy_result = legacy_metrics(
-        legacy, destination_index, grid_to_lsug, target, primary, lsug_origin_area_weights
-    )
+    legacy_result = None
+    if args.legacy_od is not None:
+        legacy = np.load(args.legacy_od)
+        legacy_result = legacy_metrics(
+            legacy, destination_index, grid_to_lsug, target, primary, lsug_origin_area_weights
+        )
     generalized_result = metrics(target, final_prediction, primary)
     generalized_result.update(
         area_od_share_metrics(target, final_prediction, primary, lsug_origin_area_weights)
     )
     projected_result = metrics(target, projected_reaggregated, represented)
     selected_row = comparison.iloc[0]
-    accepted = bool(
+    accepted_by_cv = bool(
         selected_row["relative_share_mae_improvement"] >= 0.10
         and selected_row["improved_districts_of_18"] >= 12
-        and selected_row["calibrated_share_mae_pp"] < legacy_result["weighted_share_mae_pp"]
-        and selected_oof_result["area_od_share_mae_pp"] < legacy_result["area_od_share_mae_pp"]
     )
+    accepted = None
+    if legacy_result is not None:
+        accepted = bool(
+            accepted_by_cv
+            and selected_row["calibrated_share_mae_pp"] < legacy_result["weighted_share_mae_pp"]
+            and selected_oof_result["area_od_share_mae_pp"] < legacy_result["area_od_share_mae_pp"]
+        )
 
     final_dir = args.experiment_root / "final"
     final_dir.mkdir(parents=True, exist_ok=True)
@@ -555,6 +565,7 @@ def main() -> None:
     summary = {
         "selected_scaler": selected_scaler,
         "accepted_as_replacement": accepted,
+        "accepted_by_cv": accepted_by_cv,
         "acceptance_rules": {
             "minimum_relative_share_mae_improvement": 0.10,
             "minimum_improved_districts": 12,
@@ -564,6 +575,7 @@ def main() -> None:
         "selected_cv": selected_row.to_dict(),
         "selected_oof_primary": selected_oof_result,
         "legacy_fuzhou_quantile_primary": legacy_result,
+        "legacy_comparison_supplied": args.legacy_od is not None,
         "generalized_primary": generalized_result,
         "census_projected_represented_roundtrip": projected_result,
         "census_projected_latent_target_workers": float(target[represented].sum()),
@@ -576,6 +588,7 @@ def main() -> None:
         json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8"
     )
     print(f"Selected scaler: {selected_scaler}")
+    print(f"Accepted by CV: {accepted_by_cv}")
     print(f"Accepted as replacement: {accepted}")
     print(f"Wrote final outputs: {final_dir}")
 

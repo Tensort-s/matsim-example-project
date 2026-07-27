@@ -51,7 +51,11 @@ def paths(data_root: Path) -> dict[str, Path]:
         "grid": city / "CityAndRegionSplit/hong_kong_fixed_link_grid/regions.shp",
         "distance": city / "GeneratingCodeData/data/global_cities/hong_kong_fixed_link_grid/adj/dis.npy",
         "worldpop": nfeat / "worldpop.npy",
-        "work_od": city / "census_2021_commute_constraints/generation_2021_census_area_scaled.npy",
+        "work_od": (
+            city
+            / "CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final"
+            / "generation_hk_census_projected.npy"
+        ),
         "pois": data_root / "osm/hongkong/fixed_link_boundary/integrated_pois/hong_kong_fixed_link_integrated_pois.csv",
         "schools": data_root / "school/hongkong/processed/student_school_od_2022/schools_2022_capacity_estimates.geojson",
         "control_points": data_root / "border/hongkong/control_points/hong_kong_control_point_locations_2026-07-16.csv",

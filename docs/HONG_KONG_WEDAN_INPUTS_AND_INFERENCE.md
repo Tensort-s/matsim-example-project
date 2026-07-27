@@ -4,6 +4,28 @@ This document records the Hong Kong fixed-link WEDAN feature preparation and
 OD inference workflow. It follows the current Fuzhou custom-grid workflow while
 using Hong Kong official-data-first inputs.
 
+## Current authoritative outputs
+
+The current production OD matrices are:
+
+```text
+data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_generalized.npy
+data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_census_projected.npy
+```
+
+`generation_hk_census_projected.npy` is the default fixed-work OD for MATSim.
+The earlier Fuzhou-quantile `generation.npy` and the first Census global/area
+scaling outputs are historical comparison products, not current demand inputs.
+They were moved out of the project data tree on 2026-07-27 and retained with
+SHA256 manifests under:
+
+```text
+F:\Matsim\backups\hong-kong-wedan-historical-intermediate-20260727-162127
+```
+
+Pass the archived `generation.npy` through `--legacy-od` only when reproducing
+the historical acceptance comparison.
+
 ## Inputs
 
 Grid:

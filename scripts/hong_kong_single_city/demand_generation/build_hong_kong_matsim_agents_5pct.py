@@ -94,8 +94,6 @@ def paths(data_root: Path, work_od: Path | None) -> dict[str, Path]:
         / "CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final"
         / "generation_hk_census_projected.npy"
     )
-    if not default_work.exists():
-        default_work = city / "census_2021_commute_constraints/generation_2021_census_global_unit_scaled.npy"
     return {
         "households": household / "synthetic_households.parquet",
         "persons": household / "synthetic_persons.parquet",
