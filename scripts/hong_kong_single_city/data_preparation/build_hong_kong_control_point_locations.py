@@ -42,8 +42,9 @@ IMMD_DAILY_TRAFFIC_OPEN_DATA = (
     "immigration_clearance/statistics_on_daily_passenger_traffic.csv"
 )
 
-DEFAULT_TRAFFIC_CSV = Path(
-    r"D:\Program Files\statistics_on_daily_passenger_traffic.csv"
+DEFAULT_TRAFFIC_CSV = (
+    PROJECT_ROOT
+    / "data/tourism/hongkong/raw/statistics_on_daily_passenger_traffic.csv"
 )
 DEFAULT_OUTPUT_DIR = (
     PROJECT_ROOT / "data" / "border" / "hongkong" / "control_points"

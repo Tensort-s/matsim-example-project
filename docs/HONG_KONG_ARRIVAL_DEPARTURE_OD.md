@@ -51,7 +51,7 @@ HKTB Q1 的官方目的类别为 `Vacation / Business / Visiting Friends or Rela
 
 ## 5. 输出与单位
 
-正式目录：
+历史 V1（欧氏距离）基线目录：
 
 `data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday/`
 
@@ -85,7 +85,7 @@ HKTB Q1 的官方目的类别为 `Vacation / Business / Visiting Friends or Rela
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\data_preparation\prepare_hong_kong_arrival_departure_inputs.py `
   --data-root F:\Matsim\matsim-example-project\data `
-  --hktb-purpose-xlsx "D:\Program Files\Visitor Arrival by Purpose of Visit 2026Q1.xlsx"
+  --hktb-purpose-xlsx "F:\Matsim\matsim-example-project\data\tourism\hongkong\raw\Visitor Arrival by Purpose of Visit 2026Q1.xlsx"
 
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\demand_generation\build_hong_kong_arrival_departure_od.py `

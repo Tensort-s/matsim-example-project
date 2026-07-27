@@ -31,7 +31,8 @@ The network capacity is not multiplied by 0.05 before it is written.
 - `data/transit/hongkong/TrafficFlow/ATC/AnnualTrafficCensusTrafficData_202602/`
   - station AADT for 2019-2024.
   - 191 detailed 2024 station workbooks.
-- Existing formal road/PT supply:
+- Calibrated no-ferry base road/PT supply, retained upstream of the active
+  Ferry Core v1 scenario:
   `data/transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday/`
 
 The geospatial environment requires `xlrd>=2.0.1` to read the official legacy

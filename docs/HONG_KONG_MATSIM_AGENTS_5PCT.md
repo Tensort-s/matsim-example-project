@@ -83,13 +83,14 @@ a complete resident purpose split.
   Visitor and Mainland-resident chains come from the PT-accessibility V2 border
   model and remain separate from the resident population control.
 
-The unrouted plans contain 479,826 main legs. MATSim routing expands PT access,
-egress, and transfer stages, so the routed population contains 516,074 legs.
+The active v2 unrouted plans contain 743,614 main legs. MATSim routing expands
+PT access, egress, and transfer stages, so the routed population contains
+879,050 legs.
 
-## Transit scenario repair
+## Transit scenario repair and active supply
 
-The source public-transport supply is not overwritten. A scenario-specific
-`transitSchedule_5pct.xml.gz` is written alongside the plans:
+The v1 compulsory-demand build created a scenario-specific repaired schedule
+without overwriting its source public-transport supply:
 
 - 112 repeated-terminal circular routes receive their directly connected final
   terminal-link occurrence.
@@ -99,29 +100,41 @@ The source public-transport supply is not overwritten. A scenario-specific
   retained in `validation/transit_schedule_closed_route_repairs.csv` for supply
   accuracy review.
 
-This repair is needed for QSim operation because a shared physical stop can be
+This repair was needed for QSim operation because a shared physical stop can be
 close to several route links while MATSim requires the stop link to occur in
-the correct order in each individual network route.
+the correct order in each individual network route. The active v2 run uses the
+Ferry Core v1 cap010 supply, which retains those accepted stop/link sequences,
+adds 21 core ferry routes, scales all public-transport passenger capacities to
+10%, and keeps bus/GMB road PCUs at `0.125/0.075`.
 
 ## Outputs
 
-Core files:
+Active v2 demand files:
 
-- `plans_unrouted_5pct.xml.gz`
-- `plans_routed_5pct.xml.gz`
-- `facilities_5pct.xml.gz`
+- `plans_unrouted_5pct_v2.xml.gz`
+- `plans_routed_5pct_v2.xml.gz`
+- `facilities_5pct_v2.xml.gz`
 - `privateVehicles_5pct.xml.gz`
-- `transitSchedule_5pct.xml.gz`
-- `transitVehicles_5pct.xml.gz`
-- `config_hong_kong_5pct.xml`
-- `sampled_agents.parquet`
-- `agent_trip_manifest.parquet`
-- `household_vehicle_assignment.csv`
+- `config_hong_kong_5pct_v2_activity_modechoice_0it.xml`
+- `config_hong_kong_5pct_v2_activity_modechoice_50it.xml`
+- `agent_trip_manifest_v2.parquet`
+- `resident_discretionary_activity_assignments.parquet`
 - `generation_summary.json`
 
-The `validation/` directory contains DCCA population, TCS26 population,
+The active supply files are:
+
+```text
+data/transit/hongkong/processed/
+  matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/
+    network.xml.gz
+    transitSchedule_5pct.xml.gz
+    transitVehicles_10pct.xml.gz
+```
+
+The v1 `validation/` directory retains DCCA population, TCS26 population,
 three-area work OD, work mode, school stage, border, facility-link, school
-escort, and transit stop-link audits plus `agents_validation_summary.png`.
+escort, and transit stop-link audits. V2 adds its own TCS all-purpose demand
+and plan validation files.
 
 ## Commands
 
@@ -132,13 +145,21 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\demand_generation\build_hong_kong_matsim_agents_5pct.py
 ```
 
-Route the complete population without running QSim:
+Enrich the compulsory v1 population into the active v2 plans:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\enrich_hong_kong_matsim_agents_5pct.py `
+  --data-root F:\Matsim\matsim-example-project\data
+```
+
+Route the complete v2 population without running QSim:
 
 ```powershell
 $env:MAVEN_OPTS="-Xmx12g"
 mvn -q "-Dmaven.test.skip=true" exec:java `
   "-Dexec.mainClass=org.matsim.project.RunHongKong5Pct" `
-  "-Dexec.args=<config_hong_kong_5pct.xml> <plans_routed_5pct.xml.gz>"
+  "-Dexec.args=<config_hong_kong_5pct_v2_activity_modechoice_0it.xml> <plans_routed_5pct_v2.xml.gz>"
 ```
 
 Append `--simulate` to the Java arguments to run QSim instead of the route-only
@@ -146,11 +167,12 @@ Mobsim. The active configs use `flowCapacityFactor=0.1` and
 `storageCapacityFactor=0.1`. The resident/visitor population remains a 5%
 sample, so this intentionally provides twice the road capacity implied by a
 strict demand-proportional 5% scale. PT departures remain complete while
-vehicle capacities are scaled to 5% with a minimum total capacity of one.
+vehicle passenger capacities are scaled to 10% with a minimum total capacity
+of one.
 
-## Mixed road-PT with scaled PCU
+## Mixed road-PT, Ferry Core v1, and scaled PCU
 
-The active supply is generated with:
+The bus/GMB PCU scaling intermediate is generated with:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
@@ -167,34 +189,34 @@ types change from `2.5` to `0.125`, and the GMB type changes from `1.5` to
 `0.075`. Passenger capacities, vehicle dimensions, routes, stops, departures,
 and all rail vehicle types remain unchanged.
 
-Formal outputs:
+This intermediate is then extended by Ferry Core v1 and regenerated with 10%
+passenger capacities. The active formal outputs are:
 
 ```text
 data/transit/hongkong/processed/
-  matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_v1/
+  matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/
     network.xml.gz
     transitSchedule_5pct.xml.gz
-    transitVehicles_5pct.xml.gz
-    road_pt_vehicle_pcu_scaling_audit.csv
-    mixed_road_pt_pcu_scaled_supply_summary.json
+    transitVehicles_10pct.xml.gz
+    ferry_core_supply_summary.json
+    transit_vehicle_capacity_10pct_audit.csv
 ```
 
-The active zero-iteration load configuration is
-`config_hong_kong_5pct.xml`; `config_hong_kong_5pct_50it.xml` is the formal
-50-iteration configuration. The dedicated-road-PT alternative is preserved as
-`config_hong_kong_5pct_010_dedicated_bus_baseline.xml`, and the original
-mixed-link 0.05-capacity configuration as
-`config_hong_kong_5pct_005_mixed_baseline.xml`.
+The active zero-iteration and formal configurations are
+`config_hong_kong_5pct_v2_activity_modechoice_0it.xml` and
+`config_hong_kong_5pct_v2_activity_modechoice_50it.xml`. V1, dedicated-road-PT,
+and pre-Ferry configurations are retained only as baselines or build
+dependencies.
 
 ## Validation status
 
 - 385,820 people load successfully in MATSim 2026.0.
-- The active mixed network loads with 116,874 links, 3,574 transit routes, and
-  158,131 departures.
+- The active Ferry Core network loads with 117,989 links, 3,613 transit routes,
+  and 159,967 departures.
 - Twelve road-PT vehicle types and 150,670 bus/GMB departure vehicles use the
   0.05 PCU multiplier; no rail or other vehicle type changed.
-- Unrouted plans: 0 bad activity/leg sequences and 0 missing facilities.
-- Routed plans: 385,820 people, 516,074 legs, and 0 missing route elements.
+- Active v2 plans: 385,820 people, 743,614 unrouted legs, 879,050 routed legs,
+  0 bad activity/leg sequences, and 0 missing facilities.
 - DCCA population WAPE: 3.09%.
 - Three-area work OD WAPE: 0.196%.
 - Work-mode WAPE: 1.97%.

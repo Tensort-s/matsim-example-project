@@ -38,7 +38,11 @@ def default_paths(data_root: Path) -> tuple[Path, Path, Path, Path]:
     grid = city / "CityAndRegionSplit/hong_kong_fixed_link_grid/regions.shp"
     old_model = data_root / "tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday"
     control_points = old_model / "model_control_points_14.csv"
-    supply = data_root / "transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday"
+    supply = (
+        data_root
+        / "transit/hongkong/processed"
+        / "matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010"
+    )
     output = data_root / "tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday_pt_access_v2"
     return grid, control_points, supply, output
 

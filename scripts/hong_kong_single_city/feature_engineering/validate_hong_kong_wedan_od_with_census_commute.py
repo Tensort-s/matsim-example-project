@@ -29,7 +29,11 @@ DEFAULT_BASE = ROOT / "data/worldcommuting_od/hongkong/custom_features/hong_kong
 DEFAULT_GRID = DEFAULT_BASE / "CityAndRegionSplit/hong_kong_fixed_link_grid/regions.shp"
 DEFAULT_DC = ROOT / "data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP/DC_21C_converted.shp"
 DEFAULT_NEWTOWN = ROOT / "data/boundary/hongkong/Boundaries_of_New_Towns_for_2021_Population_C_SHP/NewTown_2021.shp"
-DEFAULT_OD = DEFAULT_BASE / "CommutingODFlows/hong_kong_fixed_link_grid/generation.npy"
+DEFAULT_OD = (
+    DEFAULT_BASE
+    / "CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1"
+    / "final/generation_hk_generalized.npy"
+)
 DEFAULT_CONSTRAINT_DIR = DEFAULT_BASE / "census_2021_commute_constraints"
 DEFAULT_TARGET = DEFAULT_CONSTRAINT_DIR / "census_2021_area_od_target_4area.csv"
 DEFAULT_TABLE_79 = DEFAULT_CONSTRAINT_DIR / "table_7_9_commute_mode_by_residence.csv"
@@ -56,7 +60,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--grid", type=Path, default=DEFAULT_GRID, help="Hong Kong fixed-link grid regions.shp.")
     parser.add_argument("--district-boundary", type=Path, default=DEFAULT_DC, help="District Council boundary shapefile.")
     parser.add_argument("--newtown-boundary", type=Path, default=DEFAULT_NEWTOWN, help="2021 New Town boundary shapefile.")
-    parser.add_argument("--od", type=Path, default=DEFAULT_OD, help="Original WEDAN generation.npy.")
+    parser.add_argument(
+        "--od",
+        type=Path,
+        default=DEFAULT_OD,
+        help="Final Hong Kong generalized WEDAN OD matrix.",
+    )
     parser.add_argument("--target-od", type=Path, default=DEFAULT_TARGET, help="Census 4-area target OD CSV from table 7.8.")
     parser.add_argument("--table-7-9", type=Path, default=DEFAULT_TABLE_79, help="Table 7.9 tidy CSV.")
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_CONSTRAINT_DIR, help="Output directory.")

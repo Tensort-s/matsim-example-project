@@ -15,8 +15,10 @@ import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_SOURCE = Path(
-    r"D:\Program Files\hong_kong_public_transport_vehicle_capacity.csv"
+DEFAULT_SOURCE = (
+    PROJECT_ROOT
+    / "data/transit/hongkong/raw/source_tables"
+    / "hong_kong_public_transport_vehicle_capacity.csv"
 )
 DEFAULT_SNAPSHOT_NAMES = [
     "20260720T102416Z",

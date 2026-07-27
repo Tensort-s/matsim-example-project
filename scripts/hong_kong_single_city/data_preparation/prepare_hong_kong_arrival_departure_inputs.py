@@ -17,10 +17,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[3]
 WINDOWS_DATA_ROOT = Path(r"F:\Matsim\matsim-example-project\data")
 DEFAULT_DATA_ROOT = WINDOWS_DATA_ROOT if WINDOWS_DATA_ROOT.exists() else ROOT / "data"
-DEFAULT_TRAFFIC = Path(r"D:\Program Files\statistics_on_daily_passenger_traffic.csv")
-DEFAULT_CBTS = Path(r"D:\Program Files\table_cbts2017_ch3A.xlsx")
-DEFAULT_HOTEL = Path(r"D:\Program Files\Occ 05 2026.xls")
-DEFAULT_PACK = Path(r"D:\Program Files\hong_kong_arrival_departure_tourist_od_data_pack.xlsx")
+DEFAULT_RAW = DEFAULT_DATA_ROOT / "tourism/hongkong/raw"
+DEFAULT_TRAFFIC = DEFAULT_RAW / "statistics_on_daily_passenger_traffic.csv"
+DEFAULT_CBTS = DEFAULT_RAW / "table_cbts2017_ch3A.xlsx"
+DEFAULT_HOTEL = DEFAULT_RAW / "Occ 05 2026.xls"
+DEFAULT_PACK = DEFAULT_RAW / "hong_kong_arrival_departure_tourist_od_data_pack.xlsx"
+DEFAULT_HKTB_PURPOSE = DEFAULT_RAW / "Visitor Arrival by Purpose of Visit 2026Q1.xlsx"
 HKTB_Q1_PAGE = "https://partnernet.hktb.com/en/research_statistics/research_publications/index.html?id=6171"
 HKTB_Q1_XLSX = "https://partnernet.hktb.com/filemanager/researchpub/6171/604257/Visitor%20Arrival%20by%20Purpose%20of%20Visit%202026Q1.xlsx"
 TCS_REPORT = "https://www.td.gov.hk/filemanager/en/content_5349/tcs2022_eng.pdf"
@@ -67,7 +69,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cbts-xlsx", type=Path, default=DEFAULT_CBTS)
     parser.add_argument("--hotel-xls", type=Path, default=DEFAULT_HOTEL)
     parser.add_argument("--data-pack", type=Path, default=DEFAULT_PACK)
-    parser.add_argument("--hktb-purpose-xlsx", type=Path)
+    parser.add_argument("--hktb-purpose-xlsx", type=Path, default=DEFAULT_HKTB_PURPOSE)
     parser.add_argument("--out-dir", type=Path)
     return parser.parse_args()
 

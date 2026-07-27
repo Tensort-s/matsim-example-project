@@ -28,7 +28,11 @@ import requests
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_CATALOG = Path(r"D:\Program Files\hk_public_transport_api_catalog.csv")
+DEFAULT_CATALOG = (
+    ROOT
+    / "data/transit/hongkong/raw/source_tables"
+    / "hk_public_transport_api_catalog.csv"
+)
 DEFAULT_DATA_ROOT = ROOT / "data"
 DEFAULT_OUTPUT = Path("transit/hongkong/API_Supplements")
 

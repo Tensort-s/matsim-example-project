@@ -21,7 +21,9 @@ import matplotlib.pyplot as plt
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 TRANSIT_ROOT = PROJECT_ROOT / "data/transit/hongkong"
-DEFAULT_FREQUENCY = Path(r"D:\Program Files\mtr_average_train_frequency_long.csv")
+DEFAULT_FREQUENCY = (
+    TRANSIT_ROOT / "raw/source_tables/mtr_average_train_frequency_long.csv"
+)
 DEFAULT_MTR_STOPS = TRANSIT_ROOT / "MTR/mtr_lines_and_stations.csv"
 DEFAULT_LRT_STOPS = TRANSIT_ROOT / "MTR/light_rail_routes_and_stops.csv"
 DEFAULT_AMAP_LINES = TRANSIT_ROOT / "AMap_Supplements/normalized/amap_lines.csv"

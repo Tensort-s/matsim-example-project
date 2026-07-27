@@ -55,7 +55,7 @@ GMB headways, and timestamped MTR/Light Rail next-train snapshots:
 ```powershell
 .\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\data_acquisition\download_hong_kong_public_transport_api_data.py `
-  --catalog "D:\Program Files\hk_public_transport_api_catalog.csv" `
+  --catalog F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hk_public_transport_api_catalog.csv `
   --data-root F:\Matsim\matsim-example-project\data `
   --skip-gtfs
 ```
@@ -147,9 +147,11 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   --data-root F:\Matsim\matsim-example-project\data
 ```
 
-Formal output is under
-`processed/matsim_road_pt_supply_2026_typical_weekday/`. Validate the three
-core XML files with MATSim 2026.0 without loading population plans:
+The no-ferry base output is under
+`processed/matsim_road_pt_supply_2026_typical_weekday/`. It remains an upstream
+build dependency; the active simulation supply is the Ferry Core v1 cap010
+directory documented below. Validate the base three core XML files with
+MATSim 2026.0 without loading population plans:
 
 ```powershell
 .\mvnw.cmd -q -DskipTests compile
@@ -282,7 +284,7 @@ published average-frequency table and two independent next-train snapshots:
 ```powershell
 .\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_mtr_lrt_approximate_timetable.py `
-  --frequency-table "D:\Program Files\mtr_average_train_frequency_long.csv" `
+  --frequency-table F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\mtr_average_train_frequency_long.csv `
   --snapshot-dir F:\Matsim\matsim-example-project\data\transit\hongkong\API_Supplements\realtime_snapshots\20260720T102416Z `
   --snapshot-dir F:\Matsim\matsim-example-project\data\transit\hongkong\API_Supplements\realtime_snapshots\20260722T034716Z `
   --output-dir F:\Matsim\matsim-example-project\data\transit\hongkong\processed\mtr_lrt_approximate_timetable_2026_weekday
@@ -316,7 +318,7 @@ and approximate MTR/Light Rail departures:
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_transit_vehicle_types.py `
-  --capacity-csv "D:\Program Files\hong_kong_public_transport_vehicle_capacity.csv" `
+  --capacity-csv F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hong_kong_public_transport_vehicle_capacity.csv `
   --data-root F:\Matsim\matsim-example-project\data
 ```
 
@@ -336,7 +338,7 @@ consists by line and service period:
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_transit_vehicle_types.py `
-  --capacity-csv "D:\Program Files\hong_kong_public_transport_vehicle_capacity.csv" `
+  --capacity-csv F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hong_kong_public_transport_vehicle_capacity.csv `
   --data-root F:\Matsim\matsim-example-project\data `
   --complete-inference
 ```
@@ -354,7 +356,7 @@ store rejects the Hong Kong government certificate chain:
 .\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\data_preparation\build_hong_kong_control_point_locations.py `
   --date 16-07-2026 `
-  --traffic-csv "D:\Program Files\statistics_on_daily_passenger_traffic.csv" `
+  --traffic-csv F:\Matsim\matsim-example-project\data\tourism\hongkong\raw\statistics_on_daily_passenger_traffic.csv `
   --insecure
 ```
 
@@ -509,7 +511,7 @@ data root when it is passed explicitly:
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\data_preparation\prepare_hong_kong_arrival_departure_inputs.py `
   --data-root F:\Matsim\matsim-example-project\data `
-  --hktb-purpose-xlsx "D:\Program Files\Visitor Arrival by Purpose of Visit 2026Q1.xlsx"
+  --hktb-purpose-xlsx "F:\Matsim\matsim-example-project\data\tourism\hongkong\raw\Visitor Arrival by Purpose of Visit 2026Q1.xlsx"
 
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\demand_generation\build_hong_kong_arrival_departure_od.py `
@@ -623,8 +625,8 @@ rebuilds. See `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`.
 
 ## SimWrapper visualization
 
-Open the compact SimWrapper project for the completed pre-Ferry
-50-iteration run:
+Open the compact SimWrapper project for the final Ferry Core v1,
+10%-capacity, multi-activity-plan 50-iteration run:
 
 ```powershell
 .\scripts\hong_kong_single_city\analysis_visualization\Open-HongKong-SimWrapper.ps1
@@ -633,7 +635,7 @@ Open the compact SimWrapper project for the completed pre-Ferry
 The default project directory is:
 
 ```text
-F:\Matsim\matsim-example-project\runs\hongkong\outputs\formal_50it_v2_simwrapper
+F:\Matsim\matsim-example-project\runs\hongkong\outputs\formal_50it_ptfixed_ferry_activity_simwrapper
 ```
 
 It contains overview, trips, daily car traffic, public transit, stuck-agent,

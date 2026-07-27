@@ -3,7 +3,8 @@
 ## Purpose
 
 This workflow uses the interfaces listed in
-`D:\Program Files\hk_public_transport_api_catalog.csv` to supplement the
+`data/transit/hongkong/raw/source_tables/hk_public_transport_api_catalog.csv`
+to supplement the
 existing Transport Department GTFS, route/fare MDB files, and MTR route lists.
 Formal downloaded products are stored in:
 
@@ -87,7 +88,7 @@ Full static download plus one railway real-time snapshot:
 ```powershell
 .\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\data_acquisition\download_hong_kong_public_transport_api_data.py `
-  --catalog "D:\Program Files\hk_public_transport_api_catalog.csv" `
+  --catalog F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hk_public_transport_api_catalog.csv `
   --data-root F:\Matsim\matsim-example-project\data `
   --skip-gtfs
 ```
@@ -182,7 +183,7 @@ the final trajectory-supported segment to Wong Chuk Hang using ordered stops
 and legal TNM links; it remains in manual review because the extended path does
 not yet pass all bidirectional geometry-distance thresholds.
 
-Formal outputs are under:
+The no-ferry base outputs are under:
 
 ```text
 data/transit/hongkong/processed/transit_route_link_mapmatching_2026_v2/
@@ -336,7 +337,7 @@ plus inferred station offsets. Reverse, branch, short, and loop variants are
 rebuilt against the rail network; three reverse relation-gap connector links
 are added only where needed by those services.
 
-The final supply contains 80,051 nodes, 116,874 links, 12,868 facilities,
+The no-ferry base supply contains 80,051 nodes, 116,874 links, 12,868 facilities,
 2,413 transit lines, 3,574 transit routes, 158,131 departures, 25 vehicle
 types, and 158,131 vehicle instances. MATSim 2026.0 successfully loads all
 three core XML files. Python QA reports zero missing references, route-link
@@ -347,12 +348,13 @@ errors, or duplicate departure IDs.
 `REPLACE_WITH_HONG_KONG_PLANS.xml.gz`. It is an integration template rather
 than a runnable demand scenario until the population-plan stage is complete.
 
-## Remaining gaps
+## Base-supply gaps
 
 The XML supply is loadable, but these operating details remain inferred or
 unavailable:
 
-1. Tram, ferry, and high-speed-rail routes are not included in this release.
+1. Tram and high-speed-rail routes are not included. Ferry is added only in
+   the active Ferry Core v1 supply below.
 2. Transfer pathways and minimum transfer times inside stations/interchanges.
 3. Route/departure-specific bus models, MTR fleet variants, and Light Rail
    one-car/two-car consist assignments.
@@ -614,7 +616,7 @@ Run:
 ```powershell
 .\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_mtr_lrt_approximate_timetable.py `
-  --frequency-table "D:\Program Files\mtr_average_train_frequency_long.csv" `
+  --frequency-table F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\mtr_average_train_frequency_long.csv `
   --snapshot-dir F:\Matsim\matsim-example-project\data\transit\hongkong\API_Supplements\realtime_snapshots\20260720T102416Z `
   --snapshot-dir F:\Matsim\matsim-example-project\data\transit\hongkong\API_Supplements\realtime_snapshots\20260722T034716Z `
   --output-dir F:\Matsim\matsim-example-project\data\transit\hongkong\processed\mtr_lrt_approximate_timetable_2026_weekday
@@ -719,7 +721,7 @@ records into model capacities:
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_transit_vehicle_types.py `
-  --capacity-csv "D:\Program Files\hong_kong_public_transport_vehicle_capacity.csv" `
+  --capacity-csv F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hong_kong_public_transport_vehicle_capacity.csv `
   --data-root F:\Matsim\matsim-example-project\data
 ```
 
@@ -804,7 +806,7 @@ Run:
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_transit_vehicle_types.py `
-  --capacity-csv "D:\Program Files\hong_kong_public_transport_vehicle_capacity.csv" `
+  --capacity-csv F:\Matsim\matsim-example-project\data\transit\hongkong\raw\source_tables\hong_kong_public_transport_vehicle_capacity.csv `
   --data-root F:\Matsim\matsim-example-project\data `
   --complete-inference
 ```

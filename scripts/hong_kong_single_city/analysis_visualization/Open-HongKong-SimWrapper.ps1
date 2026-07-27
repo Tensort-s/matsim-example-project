@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$ProjectDirectory = "F:\Matsim\matsim-example-project\runs\hongkong\outputs\formal_50it_v2_simwrapper",
+    [string]$ProjectDirectory = "F:\Matsim\matsim-example-project\runs\hongkong\outputs\formal_50it_ptfixed_ferry_activity_simwrapper",
     [switch]$SkipOpen
 )
 

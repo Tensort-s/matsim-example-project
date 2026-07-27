@@ -70,6 +70,20 @@ docs/HONG_KONG_STUDENT_SCHOOL_OD.md
 docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md
 ```
 
+External Hong Kong source files formerly read from `D:\Program Files` are now
+archived inside the main project data tree:
+
+```text
+data/tourism/hongkong/raw/
+data/transit/hongkong/raw/source_tables/
+data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP/source_documents/
+data/gee/hongkong/worldpop_age_sex/source_documents/
+```
+
+Each listed directory includes `SOURCE_MANIFEST.csv` with original paths,
+sizes, and SHA256 values. New scripts must use these project-local copies by
+default; the retained D-drive copies are not workflow dependencies.
+
 Hong Kong WEDAN validation uses the 2021 Summary Results tables 7.8 and 7.9,
 official `NewTown_2021.shp`, and LSUG workplace totals. The current recommended
 OD workflow freezes the WEDAN checkpoint, uses Hong Kong `local_minmax`
@@ -94,10 +108,12 @@ approved for assembly on 2026-07-22 without erasing their original QA status.
 The approved route inventory, route-compatible facilities, nearest-road access
 anchors, connector geometries, QA, and hashes are under
 `data/transit/hongkong/processed/transit_schedule_assembly_inputs_2026/`.
-The complete road and typical-weekday public-transport MATSim inputs are under
+The no-ferry base road and typical-weekday public-transport MATSim inputs are
+retained under
 `data/transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday/`.
 Its `network.xml.gz`, `transitSchedule.xml.gz`, and `transitVehicles.xml.gz`
-load successfully in MATSim 2026.0.
+load successfully in MATSim 2026.0, but this directory is a build dependency
+and baseline rather than the active simulation supply.
 
 The active mixed-traffic 5% supply with Ferry Core v1 is under
 `data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/`.
@@ -117,6 +133,14 @@ rerouting. The v1 directory remains the compulsory-demand baseline. Both v2
 unrouted and fully routed plans are available.
 Read `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md` before changing population,
 capacity-factor, transit-capacity, or route-specific stop-link assumptions.
+
+The final local SimWrapper project for this configuration is:
+
+```text
+runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/
+```
+
+The pre-Ferry and compulsory-plan projects remain comparison baselines.
 
 Current Hong Kong OD products:
 
@@ -262,10 +286,11 @@ use this onboarding document and `cities/fuzhou/city.yaml` as the source of trut
 # Hong Kong arrival/departure demand
 
 The 2026 typical-weekday border and visitor-demand workflow is documented in
-`docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its formal data products live under
+`docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its original Euclidean-distance
+baseline products live under
 `data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday/`.
 
-The recommended spatial version is now the separate PT-accessibility V2 under
+The active spatial version is the separate PT-accessibility V2 under
 `data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday_pt_access_v2/`.
 It uses six-period SwissRailRaptor skims from the Hong Kong MATSim transit
 schedule, applies CBTS six-zone incidence only to Mainland same-day visitors,
@@ -302,7 +327,7 @@ The complete no-more-data base case is under
 it is the preferred input because all 3,570 route directions and all 7,461
 rail departures have a capacity assignment. Its XB/DB/PI types and full-day
 rail consist roster remain explicitly inferred rather than observed.
-The final MATSim schedule now combines stop facilities, accepted link
+The no-ferry MATSim base schedule combines stop facilities, accepted link
 sequences, departures, offsets, and vehicle references under
 `data/transit/hongkong/processed/matsim_road_pt_supply_2026_typical_weekday/`.
 The road links in that formal supply are calibrated from the 2026 TNM network,

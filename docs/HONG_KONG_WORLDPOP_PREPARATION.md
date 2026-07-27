@@ -123,7 +123,7 @@ data/gee/hongkong/worldpop_age_sex/2021_Population_Census_Statistics_ LargeSubun
 The data specification used to confirm field meanings is:
 
 ```text
-D:\Program Files\Simplified Data Specifications (English) Population Distribution_v1.1 (1).pdf
+data/gee/hongkong/worldpop_age_sex/source_documents/Simplified Data Specifications (English) Population Distribution_v1.1 (1).pdf
 ```
 
 The relevant LSUG fields are:

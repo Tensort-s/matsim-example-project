@@ -13,7 +13,11 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_PDF = Path(r"D:\Program Files\21c-summary-results.pdf")
+DEFAULT_PDF = (
+    ROOT
+    / "data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP"
+    / "source_documents/21c-summary-results.pdf"
+)
 DEFAULT_OUT_DIR = (
     ROOT
     / "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid"
