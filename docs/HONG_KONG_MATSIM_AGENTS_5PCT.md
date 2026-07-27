@@ -159,6 +159,16 @@ and 38,556 unspecified `ride` legs. This confirms that `ride` remains an
 aggregate MATSim passenger mode rather than a calibrated taxi-operator demand
 and fleet model.
 
+The first auxiliary taxi allocation layer is
+`data/taxi/hongkong/processed/taxi_initial_plan_allocation_v1/`. It keeps the
+4,614 explicit taxi legs, 3,564 private-car passenger legs, and 9,626
+school-bus legs fixed. In the base scenario, it assigns complete tours from the
+38,556 unspecified `ride` legs so that 32,672 additional legs become taxi and
+5,884 remain `other_ride`, giving exactly 37,286 total 5% taxi passenger legs.
+Low and high scenarios use the available Jan-Apr minimum and maximum official
+controls and also hit their integer targets exactly. This layer is not written
+back to the plans XML.
+
 ## Commands
 
 Generate the demand package:

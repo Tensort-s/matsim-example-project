@@ -153,3 +153,102 @@ visitor proxy, and discretionary residual demand. A future taxi extension
 should introduce an explicit taxi-demand calibration and an operator/fleet
 representation, using Table 2.2 `NO_FLEET` as the operating fleet control and
 Table 4.1(a) `TOTAL_LIC` only as licensed-fleet evidence by taxi type.
+
+## Passenger-leg allocation v1
+
+The first taxi passenger-leg classification layer is an auxiliary allocation
+under:
+
+```text
+data/taxi/hongkong/processed/taxi_initial_plan_allocation_v1/
+```
+
+It is generated with:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\allocate_hong_kong_taxi_ride_candidates.py
+```
+
+This allocation still does not modify any existing MATSim plans XML. It writes
+classification products only under `data/taxi/hongkong/processed/`.
+
+The allocation keeps the audited existing classes fixed:
+
+| Existing subtype | 5% legs | Treatment |
+|---|---:|---|
+| Explicit taxi | 4,614 | Retained as taxi |
+| Private-car passenger | 3,564 | Retained, never reclassified |
+| School bus | 9,626 | Retained, never reclassified |
+| Unspecified ride | 38,556 | Candidate pool for taxi vs other_ride |
+
+The candidate pool contains 16,400 complete tours and 38,556 legs:
+
+- resident discretionary ride: 10,922 tours, 26,014 legs;
+- visitor TCS proxy ride: 5,478 tours, 12,542 legs.
+
+Selection is done only at complete-tour level. A two-leg or three-leg tour is
+assigned wholly to taxi or wholly to `other_ride`; its outbound and return legs
+are never split across classes.
+
+### Scenario targets
+
+The low/base/high scenario totals use the available January-April 2026
+Transport Department `AVG_DAILY_PAX` controls:
+
+| Scenario | Official statistic | Total taxi legs target | Added taxi legs from unspecified_ride | Selected taxi legs | Integer error |
+|---|---|---:|---:|---:|---:|
+| low | available month minimum | 34,257 | 29,643 | 29,643 | 0 |
+| base | available month mean | 37,286 | 32,672 | 32,672 | 0 |
+| high | available month maximum | 42,510 | 37,896 | 37,896 | 0 |
+
+The base scenario therefore selects 32,672 of the 38,556 unspecified ride legs
+as taxi and leaves 5,884 as `other_ride`, while preserving the pre-existing
+4,614 explicit taxi legs.
+
+### Stratification
+
+Version 1 uses fixed random seeds and stratified quota sampling. The stratum is:
+
+```text
+population_group
+activity_purpose
+departure_period
+origin_tcs_zone
+distance_band
+tour_leg_count
+```
+
+The initial quota is proportional to candidate legs in each stratum. Integer
+repair is then performed with whole tours only, using available one-, two-, and
+three-leg tours to hit the scenario leg target exactly where possible. All
+three scenarios reach their target with zero integerization error.
+
+Distance bands are based on straight-line facility-to-facility tour distance
+from the v2 facilities coordinates. For visitor proxy tours, facility
+coordinates are also used to infer TCS26 zones through the fixed-link grid and
+the dominant grid-to-TCS mapping from the household sample; unresolved or
+external locations remain `-1`.
+
+### Allocation outputs
+
+Files written by allocation v1:
+
+- `taxi_candidate_tour_classification.csv`: one row per candidate tour, with
+  low/base/high taxi selections and `classification_source`.
+- `taxi_candidate_leg_classification.csv`: one row per candidate leg, carrying
+  the scenario classification inherited from its complete tour.
+- `taxi_allocation_stratum_quota.csv`: candidate legs, ideal quota, integer
+  quota, selected tours, and selected legs by stratum and scenario.
+- `taxi_allocation_distribution_by_purpose.csv`
+- `taxi_allocation_distribution_by_departure_period.csv`
+- `taxi_allocation_distribution_by_tcs26_od.csv`
+- `taxi_allocation_distribution_by_distance_band.csv`
+- `taxi_allocation_distribution_by_population_group.csv`
+- `taxi_allocation_summary.json`
+
+The summary records SHA256 hashes before and after allocation for
+`plans_unrouted_5pct_v2.xml.gz`, `plans_routed_5pct_v2.xml.gz`, and
+`facilities_5pct_v2.xml.gz`. The hashes are unchanged, and
+`git status --short -- data/matsim_agents/hongkong` is empty before and after
+the allocation run.

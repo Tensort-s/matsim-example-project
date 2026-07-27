@@ -1,0 +1,16 @@
+﻿scenario,distance_band,selected_taxi_tours,selected_taxi_legs
+low,00_0_2km,385,801
+low,01_2_5km,1276,2966
+low,02_5_10km,2369,5892
+low,03_10_20km,3712,9289
+low,04_20km_plus,4152,10695
+base,00_0_2km,435,903
+base,01_2_5km,1412,3269
+base,02_5_10km,2630,6511
+base,03_10_20km,4117,10245
+base,04_20km_plus,4584,11744
+high,00_0_2km,553,1105
+high,01_2_5km,1718,3865
+high,02_5_10km,3054,7420
+high,03_10_20km,4789,11644
+high,04_20km_plus,5920,13862

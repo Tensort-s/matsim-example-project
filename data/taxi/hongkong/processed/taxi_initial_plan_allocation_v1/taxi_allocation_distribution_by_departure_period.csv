@@ -1,0 +1,13 @@
+﻿scenario,departure_period,selected_taxi_tours,selected_taxi_legs
+low,01_morning_0600_0959,4288,11231
+low,02_midday_1000_1559,4197,10185
+low,03_evening_peak_1600_1959,2901,7010
+low,04_night_2000_2359,508,1217
+base,01_morning_0600_0959,4774,12438
+base,02_midday_1000_1559,4663,11264
+base,03_evening_peak_1600_1959,3210,7706
+base,04_night_2000_2359,531,1264
+high,01_morning_0600_0959,5471,14213
+high,02_midday_1000_1559,5238,12535
+high,03_evening_peak_1600_1959,4732,9760
+high,04_night_2000_2359,593,1388
