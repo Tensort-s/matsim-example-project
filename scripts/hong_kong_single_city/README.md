@@ -4,6 +4,10 @@ These scripts are the Hong Kong-specific workflow scripts. Hong Kong should be
 handled as an official-data-first city workflow rather than a direct copy of
 the Fuzhou AMap/OSM-heavy workflow.
 
+For the adopted end-to-end sequence and the distinction between production,
+upstream baseline, and historical outputs, read
+`docs/HONG_KONG_FINAL_WORKFLOW.md` before running individual scripts.
+
 ## Directory guide
 
 - `data_preparation/`

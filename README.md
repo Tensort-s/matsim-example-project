@@ -4,14 +4,30 @@ A small example of how to use MATSim as a library.
 
 ## Start here for future sessions
 
-For the current Fuzhou model, read these files first:
+Read these repository-wide instructions first:
 
-- [Project onboarding](docs/PROJECT_ONBOARDING.md): current workflow, active data paths, commands, and outputs.
+- [AGENTS.md](AGENTS.md): project objective, working environment, operating rules, and documentation requirements.
+- [Project onboarding](docs/PROJECT_ONBOARDING.md): current city workflows, active data paths, commands, and outputs.
+
+For Hong Kong, the current production workflow is indexed by:
+
+- [Hong Kong final workflow](docs/HONG_KONG_FINAL_WORKFLOW.md): authoritative stage-by-stage inputs, scripts, outputs, and historical exclusions.
+- [Hong Kong city metadata](cities/hongkong/city.yaml): boundary, CRS, final OD, supply, plans, config, and visualization paths.
+- [Hong Kong run manifest](runs/hongkong/run_manifest.json): final and comparison runs plus local/server output locations.
+
+The current Hong Kong final local visualization is:
+
+```text
+runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper
+```
+
+For Fuzhou, read:
+
 - [Fuzhou city metadata](cities/fuzhou/city.yaml): active boundary, CRS, demand, transit supply, and final config.
 - [Fuzhou run manifest](runs/fuzhou/run_manifest.json): retained run chain and continuation relationships.
 - [Documentation audit](docs/DOCUMENTATION_AUDIT.md): which docs are current vs. legacy/provenance.
 
-The current final output is:
+The current Fuzhou final output is:
 
 ```text
 runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50

@@ -1,7 +1,8 @@
 # Project onboarding for future Codex sessions
 
-This document is the first file to read when reopening the project in a new session. It records the current Fuzhou
-MATSim workflow after the multi-city data layout migration.
+This document is the first project overview to read after the repository-level
+`AGENTS.md`. It records the current Fuzhou and Hong Kong workflows after the
+multi-city data layout migration.
 
 Project rule for future work: whenever new code, scripts, configs, data products, or modeling features are added,
 update the most relevant Markdown document in the same change; if no suitable document exists, create a new one and
@@ -52,11 +53,24 @@ Operational defaults:
 - Java/MATSim build: Maven project, Java 25, core build file `pom.xml`
 - Geospatial Python environment: `.venv_geo311`
 - WEDAN/ML environment: `.venv_wedan`
-- City package: `cities/fuzhou/city.yaml`
-- Current final run: `runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50`
+- City packages: `cities/fuzhou/city.yaml` and `cities/hongkong/city.yaml`
+- Fuzhou final run: `runs/fuzhou/outputs/waitpenalty-metroprefer-from-cont20-reroute50`
+- Hong Kong final local visualization:
+  `runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper`
 
-Hong Kong preparation is in progress under `scripts/hong_kong_single_city/` and
-`data/*/hongkong/`. Current provenance docs include:
+The Hong Kong workflow is operational through OD generation, road and public
+transport supply, 5% multi-activity agents, a completed 50-iteration
+simulation, and SimWrapper/particle visualization. Treat these files as its
+entry-point source of truth:
+
+```text
+docs/HONG_KONG_FINAL_WORKFLOW.md
+cities/hongkong/city.yaml
+runs/hongkong/run_manifest.json
+scripts/hong_kong_single_city/README.md
+```
+
+Detailed provenance documents include:
 
 ```text
 docs/HONG_KONG_BOUNDARY_PREPARATION.md
@@ -68,7 +82,12 @@ docs/HONG_KONG_INTEGRATED_POIS.md
 docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md
 docs/HONG_KONG_STUDENT_SCHOOL_OD.md
 docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md
+docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
 ```
+
+When a historical command or path conflicts with the Hong Kong final workflow,
+city metadata, or run manifest, use the final workflow and metadata. Historical
+files remain for provenance and sensitivity comparison.
 
 External Hong Kong source files formerly read from `D:\Program Files` are now
 archived inside the main project data tree:
@@ -282,8 +301,10 @@ F:\Matsim\matsim-example-project\runs\fuzhou\outputs\waitpenalty-metroprefer-fro
 
 Some files in `docs/` describe older experiments such as car-only 30k agents, early AMap discovery, or ride-hailing
 tests. They are provenance documents, not the active workflow. If a command conflicts with this onboarding document,
-use this onboarding document and `cities/fuzhou/city.yaml` as the source of truth.
-# Hong Kong arrival/departure demand
+use the applicable city metadata, run manifest, and final-workflow document as
+the source of truth.
+
+## Hong Kong arrival/departure demand
 
 The 2026 typical-weekday border and visitor-demand workflow is documented in
 `docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`. Its original Euclidean-distance
@@ -298,7 +319,7 @@ and conditions later visitor activities on accommodation or the previous
 activity. The original Euclidean-distance model remains unchanged as a
 historical baseline. See `docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md`.
 
-# Hong Kong synthetic households and vehicles
+## Hong Kong synthetic households and vehicles
 
 The full-scale household layer is documented in
 `docs/HONG_KONG_SYNTHETIC_HOUSEHOLDS.md` and stored under
@@ -310,7 +331,7 @@ ranking by housing, income, and household size. Vehicle and designated-driver
 records are joined by the current 5% population workflow. The formal plans and
 validation outputs are documented in `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md`.
 
-# Hong Kong public transport supply
+## Hong Kong public transport supply
 
 The official-data-first collection, route map matching, and inferred MTR/Light
 Rail timetable workflow is documented in

@@ -1,0 +1,68 @@
+city:
+  slug: hongkong
+  name: Hong Kong
+  country: China
+  crs: "EPSG:32650"
+
+boundaries:
+  primary_boundary_wgs84: "data/boundary/hongkong/processed/hong_kong_fixed_link_boundary_wgs84.geojson"
+  primary_boundary_projected: "data/boundary/hongkong/processed/hong_kong_fixed_link_boundary.geojson"
+  district_council_2021: "data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP/DC_21C_converted.shp"
+  dcca_2021: "data/boundary/hongkong/2021_Population_Census_Statistics_and_Boundar_SHP/DCCA_21C_converted.shp"
+  new_towns_2021: "data/boundary/hongkong/Boundaries_of_New_Towns_for_2021_Population_C_SHP/NewTown_2021.shp"
+
+data_roots:
+  boundary: "data/boundary/hongkong/"
+  population: "data/gee/hongkong/"
+  imagery: "data/imagery/hongkong/"
+  osm_and_pois: "data/osm/hongkong/"
+  school: "data/school/hongkong/"
+  tourism_and_border: "data/tourism/hongkong/"
+  transit: "data/transit/hongkong/"
+  matsim_agents: "data/matsim_agents/hongkong/"
+  worldcommuting_od: "data/worldcommuting_od/hongkong/"
+  shared_models: "data/models/_shared/"
+  shared_worldcommuting_code: "data/worldcommuting_od/_shared/GeneratingCodeData/"
+
+current_model:
+  model_day: "2026 typical weekday"
+  population_sample_rate: 0.05
+  fixed_link_population: 7352309
+  simulated_agents: 385820
+  grid_count: 1585
+  nominal_grid_cell_size_m: 920.658900389797
+  work_od: "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_census_projected.npy"
+  generalized_work_od: "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_generalized.npy"
+  student_school_od: "data/school/hongkong/processed/student_school_od_2022/student_school_assignment_od.parquet"
+  border_visitor_demand: "data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday_pt_access_v2/"
+  synthetic_households: "data/matsim_agents/hongkong/synthetic_households_tcs2022/"
+  transit_supply: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/"
+  network: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz"
+  transit_schedule: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz"
+  transit_vehicles: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz"
+  demand_directory: "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/"
+  demand_plans: "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz"
+  facilities: "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz"
+  private_vehicles: "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz"
+  final_config: "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
+  final_visualization: "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/"
+  run_manifest: "runs/hongkong/run_manifest.json"
+
+simulation_parameters:
+  iterations: 50
+  flow_capacity_factor: 0.1
+  storage_capacity_factor: 0.1
+  transit_passenger_capacity_factor: 0.1
+  bus_gmb_pcu_factor: 0.05
+  qsim_end_time: "30:00:00"
+  matsim_threads: 8
+
+documentation:
+  final_workflow: "docs/HONG_KONG_FINAL_WORKFLOW.md"
+  od: "docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md"
+  student_school: "docs/HONG_KONG_STUDENT_SCHOOL_OD.md"
+  border_visitor: "docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md"
+  households: "docs/HONG_KONG_SYNTHETIC_HOUSEHOLDS.md"
+  public_transport: "docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md"
+  road_capacity: "docs/HONG_KONG_ROAD_SPEED_CAPACITY.md"
+  agents: "docs/HONG_KONG_MATSIM_AGENTS_5PCT.md"

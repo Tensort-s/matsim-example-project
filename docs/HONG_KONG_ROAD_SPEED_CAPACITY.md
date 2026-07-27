@@ -11,11 +11,14 @@ The resulting MATSim network stores full-scale supply. The 5% scenario must
 continue to use:
 
 ```text
-flowCapacityFactor = 0.05
-storageCapacityFactor = 0.05
+flowCapacityFactor = 0.1
+storageCapacityFactor = 0.1
 ```
 
-The network capacity is not multiplied by 0.05 before it is written.
+These are the currently adopted scenario factors, intentionally providing
+twice the strict demand-proportional capacity of a 5% population sample. The
+network capacity itself is not pre-scaled before it is written. Historical
+5% capacity-factor configurations are retained only as baselines.
 
 ## Inputs
 

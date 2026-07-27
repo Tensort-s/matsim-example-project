@@ -1,0 +1,62 @@
+{
+  "city": "hongkong",
+  "crs": "EPSG:32650",
+  "scenario": "hong_kong_typical_weekday_5pct_v2_activity_modechoice_ferry_core_v1_cap010",
+  "status": "completed",
+  "population_sample_rate": 0.05,
+  "simulated_agents": 385820,
+  "iterations": 50,
+  "current_final_run": "formal_50it_ptfixed_ferry_activity",
+  "runs": [
+    {
+      "name": "formal_50it_v2",
+      "local_simwrapper": "runs/hongkong/outputs/formal_50it_v2_simwrapper",
+      "role": "historical_pre_ferry_comparison",
+      "notes": "Earlier v2 visualization retained for provenance; it is not the current supply-and-demand combination."
+    },
+    {
+      "name": "formal_50it_ptfixed_baseline",
+      "local_simwrapper": "runs/hongkong/outputs/formal_50it_ptfixed_baseline_simwrapper",
+      "role": "pt_rerouted_compulsory_plan_baseline",
+      "notes": "Comparison project without the adopted Ferry Core plus multi-activity combination."
+    },
+    {
+      "name": "formal_50it_ptfixed_ferry_activity",
+      "role": "current_final_output",
+      "config": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+      "input_plans": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+      "local_simwrapper": "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper",
+      "local_particle_visualization": "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/particle-flow-detailed-road-corrected",
+      "server_output": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/runs/formal_50it_v1/output",
+      "notes": "Current adopted Ferry Core v1, 10% transit passenger capacity, 0.1 road capacity factors, and v2 multi-activity mode-choice plans. The complete raw events and full simulation output remain on the laboratory server; the local directory is the compact SimWrapper package."
+    }
+  ],
+  "shared_inputs": {
+    "network": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+    "transit_schedule": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+    "transit_vehicles": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+    "facilities": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+    "private_vehicles": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+    "work_od": "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CommutingODFlows/hong_kong_fixed_link_grid/hk_scaler_calibration_v1/final/generation_hk_census_projected.npy",
+    "student_school_od": "data/school/hongkong/processed/student_school_od_2022/student_school_assignment_od.parquet",
+    "border_visitor_demand": "data/tourism/hongkong/processed/arrival_departure_od_2026_typical_weekday_pt_access_v2/"
+  },
+  "simulation_parameters": {
+    "flow_capacity_factor": 0.1,
+    "storage_capacity_factor": 0.1,
+    "transit_passenger_capacity_factor": 0.1,
+    "bus_gmb_pcu_factor": 0.05,
+    "qsim_end_time": "30:00:00",
+    "threads": 8
+  },
+  "supply_qa": {
+    "nodes": 81205,
+    "links": 117989,
+    "transit_routes": 3613,
+    "departures": 159967,
+    "vehicle_types": 28,
+    "route_link_continuity_errors": 0,
+    "missing_reference_errors": 0
+  },
+  "documentation": "docs/HONG_KONG_FINAL_WORKFLOW.md"
+}
