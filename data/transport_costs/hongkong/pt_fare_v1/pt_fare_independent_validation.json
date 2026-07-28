@@ -1,0 +1,103 @@
+{
+  "validator": "independent Hong Kong PT fare model v1 validator",
+  "schedule_inventory": {
+    "lines": 2434,
+    "routes": 3613,
+    "departures": 159967
+  },
+  "route_crosswalk": {
+    "rows": 3613,
+    "mapping_status": {
+      "partial": 3533,
+      "exact": 71,
+      "unresolved": 5,
+      "one_to_many_explicit": 4
+    },
+    "mapping_quality": {
+      "B": 3530,
+      "A": 71,
+      "C": 7,
+      "U": 5
+    },
+    "forward_pair_coverage_by_mode": {
+      "bus": {
+        "required_forward_pairs": 771666,
+        "matched_forward_pairs": 771666,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "ferry": {
+        "required_forward_pairs": 60,
+        "matched_forward_pairs": 60,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "gmb": {
+        "required_forward_pairs": 97521,
+        "matched_forward_pairs": 97521,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "light_rail": {
+        "required_forward_pairs": 3603,
+        "matched_forward_pairs": 3603,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "train": {
+        "required_forward_pairs": 2290,
+        "matched_forward_pairs": 2284,
+        "weighted_forward_pair_coverage": 0.9973799126637555
+      }
+    },
+    "known_unmatched_routes": [
+      "bus_1000004_1",
+      "bus_1000004_2",
+      "bus_1000611_1",
+      "bus_8780_1",
+      "bus_8780_2"
+    ]
+  },
+  "trip_audit": {
+    "total_rows": 557104,
+    "priced_rows": 0,
+    "unresolved_rows": 557104,
+    "unresolved_reason_counts": {
+      "generic_pt_leg_missing_actual_mode_line_route_boarding_alighting_transfer_chain": 557104
+    },
+    "cross_mode_fare_aggregation_present": false,
+    "distance_endpoint_clipping_present": false
+  },
+  "fare_sources": {
+    "source_rows": 13,
+    "source_hashes_verified": 13
+  },
+  "protected_inputs": {
+    "files_checked": 8,
+    "all_unchanged": true
+  },
+  "portability": {
+    "text_files_checked": [
+      "fare_source_manifest.csv",
+      "official_direction_stop_patterns.csv",
+      "official_route_full_fares.csv",
+      "production_pt_leg_field_audit.json",
+      "protected_input_hash_comparison.csv",
+      "protected_input_hashes_baseline.csv",
+      "pt_fare_independent_validation.json",
+      "pt_fare_model_summary.json",
+      "pt_passenger_trip_fare_audit_sample.csv",
+      "pt_trip_fare_build_audit.json",
+      "README.md",
+      "route_to_official_fare_match.csv",
+      "SHA256SUMS.txt",
+      "transit_schedule_inventory.csv",
+      "transit_schedule_inventory_summary.csv"
+    ],
+    "absolute_local_paths_found": 0
+  },
+  "json_files_parsed": [
+    "production_pt_leg_field_audit.json",
+    "pt_fare_independent_validation.json",
+    "pt_fare_model_summary.json",
+    "pt_trip_fare_build_audit.json"
+  ],
+  "withdrawn_active_outputs_present": [],
+  "validation_passed": true
+}

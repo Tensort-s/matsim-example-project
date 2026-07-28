@@ -1,10 +1,8 @@
 {
   "model": "Hong Kong offline public transport fare model v1",
+  "model_role": "route_matching_and_trip_chargeability_audit",
   "created_date": "2026-07-28",
-  "model_effective_date": "2026-07-14",
   "source_download_date": "2026-07-20",
-  "source_project_root": "F:\\Matsim\\matsim-example-project",
-  "output_directory": "F:\\Matsim\\worktrees\\hk-pt-fare\\data\\transport_costs\\hongkong\\pt_fare_v1",
   "schedule": {
     "transit_lines": 2434,
     "transit_routes": 3613,
@@ -20,14 +18,59 @@
   "fares": {
     "normalized_records": 886532,
     "route_full_fare_records": 3621,
-    "distance_curve_records": 131
+    "official_direction_patterns": 148
   },
   "route_matches": {
-    "high_route_match": 3558,
-    "high_station_match": 50,
-    "unmatched_fare": 5
+    "mapping_status": {
+      "partial": 3533,
+      "exact": 71,
+      "unresolved": 5,
+      "one_to_many_explicit": 4
+    },
+    "mapping_quality": {
+      "B": 3530,
+      "A": 71,
+      "C": 7,
+      "U": 5
+    },
+    "forward_pair_coverage_by_mode": {
+      "bus": {
+        "required_forward_pairs": 771666,
+        "matched_forward_pairs": 771666,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "ferry": {
+        "required_forward_pairs": 60,
+        "matched_forward_pairs": 60,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "gmb": {
+        "required_forward_pairs": 97521,
+        "matched_forward_pairs": 97521,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "light_rail": {
+        "required_forward_pairs": 3603,
+        "matched_forward_pairs": 3603,
+        "weighted_forward_pair_coverage": 1.0
+      },
+      "train": {
+        "required_forward_pairs": 2290,
+        "matched_forward_pairs": 2284,
+        "weighted_forward_pair_coverage": 0.9973799126637555
+      }
+    }
   },
   "passenger_fare_basis": "adult Octopus",
   "transfer_concessions": "not modelled; retained as separate null/status fields",
-  "prohibited_matsim_inputs_modified": false
+  "trip_fare_policy": "cost_hkd remains null unless a production passenger trip contains a uniquely chargeable itinerary",
+  "trip_audit": {
+    "total_pt_trips": 557104,
+    "priced_trips": 0,
+    "unresolved_trips": 557104,
+    "cost_policy": "null_when_unique_chargeable_itinerary_is_absent",
+    "withdrawn_method": "cross_mode_distance_bin_median_from_commit_c7be4a_withdrawn",
+    "cross_mode_fare_aggregation_present": false,
+    "distance_endpoint_clipping_present": false
+  }
 }

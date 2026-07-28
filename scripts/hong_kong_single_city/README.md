@@ -707,12 +707,21 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   --source-project-root F:\Matsim\matsim-example-project
 ```
 
-Generate one low-quality distance-only estimate for every generic PT passenger
-main leg:
+Generate one chargeability audit row for every generic PT passenger main leg.
+Trips without an actual mode, line, route, stops, and transfer chain retain
+`cost_hkd=null`:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\estimate_hong_kong_pt_trip_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+```
+
+Run the independent validator:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_pt_fare_model_v1.py `
   --source-project-root F:\Matsim\matsim-example-project
 ```
 

@@ -376,7 +376,10 @@ The separate offline public-transport fare audit is documented in
 `docs/HONG_KONG_PT_FARE_MODEL.md` and stored under
 `data/transport_costs/hongkong/pt_fare_v1/`. It inventories all 3,613 active
 transit routes, standardizes official TD and MTR adult Octopus fares, matches
-official route/station identifiers to MATSim, and supplies a low-quality
-distance-only estimate for every generic PT passenger main leg. It does not
-modify the adopted MATSim plans, config, scoring, network, schedule, vehicles,
-or runner. Transfer concessions remain explicit null fields.
+official route/station identifiers to MATSim, and audits whether every generic
+PT passenger main leg is chargeable. The former cross-mode distance-median
+trip estimate from commit `c7be4a` is withdrawn. Current generic PT legs lack
+line, route, direction, stop, and transfer evidence, so `cost_hkd` remains
+null with quality `U`; unresolved is not a zero fare. The audit does not modify
+the adopted MATSim plans, config, scoring, network, schedule, vehicles, or
+runner. Transfer concessions remain explicit null fields.

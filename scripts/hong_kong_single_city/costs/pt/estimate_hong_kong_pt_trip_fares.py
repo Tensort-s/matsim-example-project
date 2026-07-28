@@ -1,9 +1,10 @@
-"""Estimate one offline fare for every Hong Kong MATSim PT passenger trip.
+"""Build a chargeability audit for every Hong Kong production PT main leg.
 
-The production plans serialize each main PT leg as a generic route without the
-transit line, route, boarding stop, alighting stop, or transfers. Consequently,
-v1 uses an auditable distance-only proxy derived from official adult Octopus
-fare observations. It never invents or applies a transfer concession.
+The production routed plans serialize all current PT main legs as generic
+routes. They do not contain the actual transit mode, line, route, direction,
+boarding stop, alighting stop, or transfer chain needed to select an official
+fare rule. This script therefore retains one audit row per PT trip with
+``cost_hkd`` null. It does not estimate, average, clip, or impute fares.
 """
 
 from __future__ import annotations
@@ -12,16 +13,24 @@ import argparse
 import gzip
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree as ET
 
-import numpy as np
 import pandas as pd
 
 
 CANONICAL_SOURCE_ROOT = Path(r"F:\Matsim\matsim-example-project")
-MODES = ("bus", "gmb", "train", "light_rail", "ferry")
+MISSING_ITINERARY_FIELDS = (
+    "actual_transport_mode",
+    "actual_line_id",
+    "actual_route_id",
+    "actual_direction",
+    "boarding_stop_id",
+    "alighting_stop_id",
+    "transfer_chain",
+)
 
 
 def repository_root() -> Path:
@@ -30,7 +39,10 @@ def repository_root() -> Path:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Estimate official-fare-based costs for every generic PT main leg."
+        description=(
+            "Audit every production PT main leg and leave cost_hkd null when "
+            "the serialized itinerary is not uniquely chargeable."
+        )
     )
     parser.add_argument("--source-project-root", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
@@ -57,42 +69,78 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def read_facilities(path: Path) -> pd.DataFrame:
+def tag_name(element: ET.Element) -> str:
+    return element.tag.rsplit("}", 1)[-1]
+
+
+def selected_plan(person: ET.Element) -> ET.Element:
+    plans = [element for element in person if tag_name(element) == "plan"]
+    selected = [
+        plan
+        for plan in plans
+        if plan.attrib.get("selected", "yes").lower() in {"yes", "true", "1"}
+    ]
+    if selected:
+        return selected[0]
+    if plans:
+        return plans[0]
+    raise ValueError(f"Person {person.attrib.get('id')} has no plan")
+
+
+def read_serialized_pt_legs(plans_path: Path) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
-    with gzip.open(path, "rb") as handle:
-        for _, element in ET.iterparse(handle, events=("end",)):
-            if element.tag.rsplit("}", 1)[-1] == "facility":
+    with gzip.open(plans_path, "rb") as handle:
+        for _, person in ET.iterparse(handle, events=("end",)):
+            if tag_name(person) != "person":
+                continue
+            person_id = person.attrib["id"]
+            pt_ordinal = 0
+            plan = selected_plan(person)
+            for element in plan:
+                if tag_name(element) != "leg" or element.attrib.get("mode") != "pt":
+                    continue
+                route = next(
+                    (child for child in element if tag_name(child) == "route"),
+                    None,
+                )
+                route_attributes = dict(route.attrib) if route is not None else {}
+                route_text = (
+                    (route.text or "").strip() if route is not None else ""
+                )
                 rows.append(
                     {
-                        "facility_id": element.attrib["id"],
-                        "x": float(element.attrib["x"]),
-                        "y": float(element.attrib["y"]),
+                        "person_id": person_id,
+                        "pt_ordinal": pt_ordinal,
+                        "serialized_leg_mode": "pt",
+                        "serialized_route_type": route_attributes.get("type", ""),
+                        "serialized_route_attribute_names": ";".join(
+                            sorted(route_attributes)
+                        ),
+                        "serialized_route_has_text": bool(route_text),
+                        "serialized_start_link_id": route_attributes.get(
+                            "start_link", ""
+                        ),
+                        "serialized_end_link_id": route_attributes.get(
+                            "end_link", ""
+                        ),
+                        "serialized_route_distance_m": pd.to_numeric(
+                            route_attributes.get("distance", ""), errors="coerce"
+                        ),
+                        "serialized_route_travel_time": route_attributes.get(
+                            "trav_time", ""
+                        ),
+                        "actual_transport_mode": pd.NA,
+                        "actual_line_id": pd.NA,
+                        "actual_route_id": pd.NA,
+                        "actual_direction": pd.NA,
+                        "boarding_stop_id": pd.NA,
+                        "alighting_stop_id": pd.NA,
+                        "transfer_chain": pd.NA,
                     }
                 )
-                element.clear()
-    return pd.DataFrame(rows).drop_duplicates("facility_id")
-
-
-def closest_curve_values(
-    distance_m: np.ndarray, curve: pd.DataFrame, mode: str
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    subset = curve[curve["mode"].eq(mode)].sort_values("distance_bin_lower_m")
-    centers = (
-        subset["distance_bin_lower_m"].to_numpy(float)
-        + subset["distance_bin_upper_m"].to_numpy(float)
-    ) / 2
-    indices = np.searchsorted(centers, distance_m, side="left")
-    indices = np.clip(indices, 0, len(centers) - 1)
-    previous = np.clip(indices - 1, 0, len(centers) - 1)
-    use_previous = np.abs(distance_m - centers[previous]) < np.abs(
-        distance_m - centers[indices]
-    )
-    indices = np.where(use_previous, previous, indices)
-    median = subset["fare_median_hkd"].to_numpy(float)[indices]
-    low = subset["fare_p10_hkd"].to_numpy(float)[indices]
-    high = subset["fare_p90_hkd"].to_numpy(float)[indices]
-    gap = np.abs(distance_m - centers[indices])
-    return median, low, high, gap
+                pt_ordinal += 1
+            person.clear()
+    return pd.DataFrame(rows)
 
 
 def write_sha256s(output_dir: Path) -> None:
@@ -122,88 +170,69 @@ def main() -> None:
         / "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice"
     )
     manifest_path = demand_dir / "agent_trip_manifest_v2.parquet"
-    facilities_path = demand_dir / "facilities_5pct_v2.xml.gz"
-    curve_path = output_dir / "official_fare_distance_curve.csv"
-    for path in (manifest_path, facilities_path, curve_path):
+    plans_path = demand_dir / "plans_routed_5pct_v2.xml.gz"
+    for path in (manifest_path, plans_path):
         if not path.exists():
             raise FileNotFoundError(path)
 
-    print("Reading PT trip manifest and activity facilities...", flush=True)
-    trips = pd.read_parquet(manifest_path)
-    trips = trips[trips["mode"].eq("pt")].copy()
-    facilities = read_facilities(facilities_path)
-    origin = facilities.add_prefix("origin_")
-    destination = facilities.add_prefix("destination_")
-    trips = trips.merge(
-        origin,
-        left_on="origin_facility_id",
-        right_on="origin_facility_id",
-        how="left",
-        validate="many_to_one",
-    ).merge(
-        destination,
-        left_on="destination_facility_id",
-        right_on="destination_facility_id",
-        how="left",
-        validate="many_to_one",
+    print("Reading PT manifest and serialized production PT legs...", flush=True)
+    manifest = pd.read_parquet(manifest_path)
+    trips = manifest[manifest["mode"].eq("pt")].copy()
+    trips["pt_ordinal"] = trips.groupby("person_id", sort=False).cumcount()
+    serialized = read_serialized_pt_legs(plans_path)
+    output = trips.merge(
+        serialized,
+        on=["person_id", "pt_ordinal"],
+        how="outer",
+        validate="one_to_one",
+        indicator=True,
     )
-    trips["euclidean_distance_m"] = np.hypot(
-        trips["destination_x"] - trips["origin_x"],
-        trips["destination_y"] - trips["origin_y"],
-    )
-    if trips["euclidean_distance_m"].isna().any():
-        missing = int(trips["euclidean_distance_m"].isna().sum())
-        raise ValueError(f"{missing} PT trips lack a facility-based OD distance")
+    if not output["_merge"].eq("both").all():
+        counts = output["_merge"].value_counts().to_dict()
+        raise ValueError(f"Manifest/plan PT-leg mismatch: {counts}")
+    output = output.drop(columns=["_merge", "pt_ordinal"])
 
-    curve = pd.read_csv(curve_path)
-    distance = trips["euclidean_distance_m"].to_numpy(float)
-    mode_medians: list[np.ndarray] = []
-    mode_lows: list[np.ndarray] = []
-    mode_highs: list[np.ndarray] = []
-    mode_gaps: list[np.ndarray] = []
-    for mode in MODES:
-        median, low, high, gap = closest_curve_values(distance, curve, mode)
-        trips[f"{mode}_fare_estimate_hkd"] = np.round(median, 1)
-        trips[f"{mode}_distance_bin_gap_m"] = np.round(gap, 1)
-        mode_medians.append(median)
-        mode_lows.append(low)
-        mode_highs.append(high)
-        mode_gaps.append(gap)
-
-    # Each mode contributes one vote, so the much larger number of bus fare
-    # records does not dominate the generic-PT estimate.
-    median_matrix = np.vstack(mode_medians)
-    low_matrix = np.vstack(mode_lows)
-    high_matrix = np.vstack(mode_highs)
-    trips["cost_hkd"] = np.round(np.nanmedian(median_matrix, axis=0), 1)
-    trips["fare_uncertainty_low_hkd"] = np.round(
-        np.nanmin(low_matrix, axis=0), 1
+    generic = output["serialized_route_type"].eq("generic")
+    output["cost_component"] = "pt_fare_chargeability_audit"
+    output["cost_hkd"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="Float64"), index=output.index
     )
-    trips["fare_uncertainty_high_hkd"] = np.round(
-        np.nanmax(high_matrix, axis=0), 1
+    output["cost_source"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="string"), index=output.index
     )
-    trips["nearest_reference_distance_gap_m"] = np.round(
-        np.nanmax(np.vstack(mode_gaps), axis=0), 1
+    output["cost_effective_date"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="string"), index=output.index
     )
-
-    trips["cost_component"] = "pt_base_fare_adult_octopus_distance_proxy"
-    trips["cost_source"] = (
-        "TD_GTFS_20260720+MTR_OPEN_DATA_20260720_mode_balanced_distance_bin_median"
+    output["cost_quality"] = "U"
+    output["mapping_status"] = "unresolved"
+    output["unresolved_reason"] = generic.map(
+        {
+            True: (
+                "generic_pt_leg_missing_actual_mode_line_route_boarding_"
+                "alighting_transfer_chain"
+            ),
+            False: "serialized_pt_route_not_sufficient_for_unique_fare_rule",
+        }
     )
-    trips["cost_effective_date"] = "2026-07-14"
-    trips["cost_quality"] = "low_official_fare_distance_proxy_no_itinerary"
-    trips["transfer_concession_hkd"] = pd.Series(
-        pd.array([pd.NA] * len(trips), dtype="Float64"), index=trips.index
+    output["required_missing_fields"] = ";".join(MISSING_ITINERARY_FIELDS)
+    output["source_record_id"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="string"), index=output.index
     )
-    trips["transfer_concession_status"] = (
-        "not_applied_no_serialized_itinerary_or_eligibility"
+    output["fare_scope"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="string"), index=output.index
     )
-    trips["transfer_concession_source"] = ""
-    trips["fare_passenger_type"] = "adult"
-    trips["fare_payment_medium"] = "Octopus"
-    trips["estimation_method"] = (
-        "median_of_mode_specific_official_fare_distance_bin_medians"
+    output["transfer_concession_hkd"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="Float64"), index=output.index
     )
+    output["transfer_concession_status"] = (
+        "not_modelled_no_serialized_transfer_chain_or_eligibility"
+    )
+    output["transfer_concession_source"] = pd.Series(
+        pd.array([pd.NA] * len(output), dtype="string"), index=output.index
+    )
+    output["fare_passenger_type"] = "adult_reference_not_applied"
+    output["fare_payment_medium"] = "Octopus_reference_not_applied"
+    output["estimation_method"] = "audit_only_no_fare_estimation"
 
     required_columns = [
         "person_id",
@@ -214,25 +243,36 @@ def main() -> None:
         "cost_source",
         "cost_effective_date",
         "cost_quality",
+        "mapping_status",
+        "unresolved_reason",
+        "required_missing_fields",
     ]
     additional_columns = [
-        "origin_facility_id",
-        "destination_facility_id",
-        "origin_type",
-        "destination_type",
-        "departure_time_s",
         "population_group",
         "role",
+        "origin_type",
+        "destination_type",
+        "origin_facility_id",
+        "destination_facility_id",
+        "departure_time_s",
         "is_discretionary",
-        "euclidean_distance_m",
-        "fare_uncertainty_low_hkd",
-        "fare_uncertainty_high_hkd",
-        "bus_fare_estimate_hkd",
-        "gmb_fare_estimate_hkd",
-        "train_fare_estimate_hkd",
-        "light_rail_fare_estimate_hkd",
-        "ferry_fare_estimate_hkd",
-        "nearest_reference_distance_gap_m",
+        "serialized_leg_mode",
+        "serialized_route_type",
+        "serialized_route_attribute_names",
+        "serialized_route_has_text",
+        "serialized_start_link_id",
+        "serialized_end_link_id",
+        "serialized_route_distance_m",
+        "serialized_route_travel_time",
+        "actual_transport_mode",
+        "actual_line_id",
+        "actual_route_id",
+        "actual_direction",
+        "boarding_stop_id",
+        "alighting_stop_id",
+        "transfer_chain",
+        "source_record_id",
+        "fare_scope",
         "transfer_concession_hkd",
         "transfer_concession_status",
         "transfer_concession_source",
@@ -240,74 +280,121 @@ def main() -> None:
         "fare_payment_medium",
         "estimation_method",
     ]
-    output = trips[required_columns + additional_columns].sort_values(
+    output = output[required_columns + additional_columns].sort_values(
         ["person_id", "leg_sequence"]
     )
-    output_path = output_dir / "pt_passenger_trip_fare_estimates.parquet"
-    output.to_parquet(output_path, index=False, compression="zstd")
+    audit_path = output_dir / "pt_passenger_trip_fare_audit.parquet"
+    output.to_parquet(audit_path, index=False, compression="zstd")
     output.head(1000).to_csv(
-        output_dir / "pt_passenger_trip_fare_estimates_sample.csv",
+        output_dir / "pt_passenger_trip_fare_audit_sample.csv",
         index=False,
         encoding="utf-8",
     )
 
-    validation = {
-        "model": "Hong Kong offline public transport fare model v1",
+    route_type_counts = Counter(output["serialized_route_type"].fillna(""))
+    route_attribute_counts = Counter(
+        output["serialized_route_attribute_names"].fillna("")
+    )
+    field_audit = {
         "input_pt_passenger_trips": int(len(trips)),
-        "output_cost_rows": int(len(output)),
+        "serialized_pt_legs": int(len(serialized)),
+        "serialized_leg_modes": {
+            str(key): int(value)
+            for key, value in output["serialized_leg_mode"].value_counts().items()
+        },
+        "serialized_route_types": {
+            str(key): int(value) for key, value in route_type_counts.items()
+        },
+        "serialized_route_attribute_sets": {
+            str(key): int(value) for key, value in route_attribute_counts.items()
+        },
+        "serialized_routes_with_text": int(
+            output["serialized_route_has_text"].sum()
+        ),
+        "actual_transport_mode_non_null": int(
+            output["actual_transport_mode"].notna().sum()
+        ),
+        "actual_line_id_non_null": int(output["actual_line_id"].notna().sum()),
+        "actual_route_id_non_null": int(output["actual_route_id"].notna().sum()),
+        "boarding_stop_id_non_null": int(
+            output["boarding_stop_id"].notna().sum()
+        ),
+        "alighting_stop_id_non_null": int(
+            output["alighting_stop_id"].notna().sum()
+        ),
+        "transfer_chain_non_null": int(output["transfer_chain"].notna().sum()),
+    }
+    (output_dir / "production_pt_leg_field_audit.json").write_text(
+        json.dumps(field_audit, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    build_audit = {
+        "model": "Hong Kong offline public transport fare model v1",
+        "model_role": "trip_chargeability_audit",
+        "input_pt_passenger_trips": int(len(trips)),
+        "output_audit_rows": int(len(output)),
         "unique_persons": int(output["person_id"].nunique()),
         "duplicate_person_leg_keys": int(
             output.duplicated(["person_id", "leg_sequence"]).sum()
         ),
-        "missing_cost_rows": int(output["cost_hkd"].isna().sum()),
-        "negative_cost_rows": int(output["cost_hkd"].lt(0).sum()),
-        "all_modes_are_pt": bool(output["mode"].eq("pt").all()),
-        "required_columns": required_columns,
-        "required_columns_present": all(
-            column in output.columns for column in required_columns
-        ),
+        "non_null_cost_hkd_rows": int(output["cost_hkd"].notna().sum()),
+        "unresolved_rows": int(output["mapping_status"].eq("unresolved").sum()),
+        "unresolved_reason_counts": {
+            str(key): int(value)
+            for key, value in output["unresolved_reason"].value_counts().items()
+        },
+        "cross_mode_fare_aggregation_present": False,
+        "distance_endpoint_clipping_present": False,
         "transfer_concession_non_null_rows": int(
             output["transfer_concession_hkd"].notna().sum()
         ),
-        "transfer_concession_policy": (
-            "not applied; no line/route/boarding/alighting/eligibility itinerary "
-            "is serialized in the production generic PT legs"
-        ),
-        "cost_hkd_summary": {
-            key: float(value)
-            for key, value in output["cost_hkd"]
-            .describe(percentiles=[0.1, 0.5, 0.9])
-            .to_dict()
-            .items()
-        },
-        "euclidean_distance_m_summary": {
-            key: float(value)
-            for key, value in output["euclidean_distance_m"]
-            .describe(percentiles=[0.1, 0.5, 0.9])
-            .to_dict()
-            .items()
-        },
         "input_sha256": {
+            "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/"
             "agent_trip_manifest_v2.parquet": sha256(manifest_path),
-            "facilities_5pct_v2.xml.gz": sha256(facilities_path),
-            "official_fare_distance_curve.csv": sha256(curve_path),
+            "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/"
+            "plans_routed_5pct_v2.xml.gz": sha256(plans_path),
         },
-        "prohibited_matsim_inputs_modified": False,
     }
     if (
-        validation["output_cost_rows"] != validation["input_pt_passenger_trips"]
-        or validation["duplicate_person_leg_keys"] != 0
-        or validation["missing_cost_rows"] != 0
-        or validation["negative_cost_rows"] != 0
-        or not validation["required_columns_present"]
+        build_audit["output_audit_rows"] != build_audit["input_pt_passenger_trips"]
+        or build_audit["duplicate_person_leg_keys"] != 0
+        or build_audit["non_null_cost_hkd_rows"] != 0
     ):
-        raise AssertionError(json.dumps(validation, indent=2))
-    (output_dir / "pt_trip_fare_validation.json").write_text(
-        json.dumps(validation, ensure_ascii=False, indent=2) + "\n",
+        raise AssertionError(json.dumps(build_audit, indent=2))
+    (output_dir / "pt_trip_fare_build_audit.json").write_text(
+        json.dumps(build_audit, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+    summary_path = output_dir / "pt_fare_model_summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["trip_audit"] = {
+        "total_pt_trips": int(len(output)),
+        "priced_trips": 0,
+        "unresolved_trips": int(len(output)),
+        "cost_policy": "null_when_unique_chargeable_itinerary_is_absent",
+        "withdrawn_method": (
+            "cross_mode_distance_bin_median_from_commit_c7be4a_withdrawn"
+        ),
+        "cross_mode_fare_aggregation_present": False,
+        "distance_endpoint_clipping_present": False,
+    }
+    summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    legacy_outputs = [
+        output_dir / "pt_passenger_trip_fare_estimates.parquet",
+        output_dir / "pt_passenger_trip_fare_estimates_sample.csv",
+        output_dir / "pt_trip_fare_validation.json",
+    ]
+    for legacy_path in legacy_outputs:
+        if legacy_path.exists():
+            legacy_path.unlink()
     write_sha256s(output_dir)
-    print(json.dumps(validation, ensure_ascii=False, indent=2), flush=True)
+    print(json.dumps(build_audit, ensure_ascii=False, indent=2), flush=True)
 
 
 if __name__ == "__main__":

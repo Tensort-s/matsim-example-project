@@ -1,97 +1,72 @@
 # Hong Kong offline public-transport fare model v1
 
-## Purpose and boundary
+## Current status
 
-This workflow is an offline fare collection, normalization, matching, and
-audit layer for the adopted Hong Kong public-transport supply and passenger
-trips. It covers MTR (including Airport Express), franchised bus, green minibus
-(GMB), Ferry Core v1, and Light Rail. Other bus operators found in the
-production schedule are retained as separately labelled inventory rows.
+This workflow is an offline fare-source, route-matching, and passenger-trip
+chargeability audit. It covers MTR, franchised bus, GMB, Ferry Core v1, and
+Light Rail. It does not write fares into MATSim and does not modify plans,
+config, scoring, Java runners, network, `transitSchedule`, vehicles,
+facilities, mode constants, ASC values, or marginal utility of money.
 
-It does **not** write fares into MATSim. No plans, config, Java runner, scoring,
-network, `transitSchedule`, or transit-vehicle file is modified. The model
-outputs can support later analysis, but they are not an adopted simulation
-input.
+Commit `c7be4a` originally generated a numeric fare for every generic PT leg by
+looking up distance bands for five different modes and taking their cross-mode
+median. That passenger-leg result has been withdrawn. A generic PT leg does
+not identify the boarded mode, line, route, direction, boarding stop,
+alighting stop, or transfer chain; mixing unrelated modal fares cannot recover
+that missing itinerary. The distance curve and unconditional numeric trip
+files are no longer active outputs.
 
-Output directory:
+The following products from `c7be4a` remain valid and are retained:
+
+- official source URLs, download dates, and SHA256;
+- 886,532 normalized official adult Octopus fare records;
+- the production `transitSchedule` inventory;
+- 3,621 official direction-level full-fare records;
+- the five known unmatched bus routes;
+- official source descriptions and limitations.
+
+Active outputs are under:
 
 ```text
 data/transport_costs/hongkong/pt_fare_v1/
 ```
 
-Scripts:
+## Official sources, dates, and portability
 
-```text
-scripts/hong_kong_single_city/costs/pt/
-  build_hong_kong_pt_fare_catalog.py
-  estimate_hong_kong_pt_trip_fares.py
-```
+`fare_source_manifest.csv` separately records source URL, official dataset
+URL, effective date, effective-date evidence status, download date,
+repository-relative local path, byte size, and SHA256. It contains no absolute
+local path.
 
-## Read-only MATSim and demand inputs
+| Fare source | Effective date retained | Evidence status | Download date |
+|---|---:|---|---:|
+| TD GTFS bus/GMB/ferry stop-OD fares | 2026-07-14 | `local_source_proven` | 2026-07-20 |
+| TD bus/GMB/ferry route full fares | 2026-07-14 | `local_source_proven` | 2026-07-20 |
+| MTR domestic station OD | 2024-06-30 | `external_official_reference_not_locally_archived` | 2026-07-20 |
+| Airport Express station OD | 2025-06-22 | `external_official_reference_not_locally_archived` | 2026-07-20 |
+| Light Rail station OD | 2024-06-30 | `external_official_reference_not_locally_archived` | 2026-07-20 |
 
-The catalog inventories the active Ferry Core v1 supply:
+The retained TD revision cut-off file locally proves the TD date. The MTR
+effective dates are retained from the official references below, but those
+press-release files are not locally archived; the manifest states that
+limitation instead of presenting the dates as locally proven.
 
-```text
-data/transit/hongkong/processed/
-  matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/
-    transitSchedule_5pct.xml.gz
-    ferry_stop_facilities.csv
-
-data/transit/hongkong/processed/transit_schedule_assembly_inputs_2026/
-  approved_route_directions.csv
-```
-
-The passenger-trip estimator reads:
-
-```text
-data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/
-  agent_trip_manifest_v2.parquet
-  facilities_5pct_v2.xml.gz
-```
-
-These ignored production inputs are present in the canonical F-drive project.
-The scripts first look in the current worktree and otherwise use
-`F:\Matsim\matsim-example-project`; `--source-project-root` can override this
-choice.
-
-## Official fare sources and dates
-
-`fare_source_manifest.csv` is the machine-readable authority for local path,
-source URL, dataset URL, effective-date basis, download-date basis, byte size,
-and SHA256. The official inputs are:
-
-| Scope | Official file | Effective date used | Download date |
-|---|---|---:|---:|
-| Bus, GMB, ferry stop-OD fares | TD headway GTFS `gtfs.zip` | 2026-07-14 | 2026-07-20 |
-| Bus route full fare | TD `JSON_BUS.json` | 2026-07-14 | 2026-07-20 |
-| GMB route full fare | TD `JSON_GMB.json` | 2026-07-14 | 2026-07-20 |
-| Ferry route full fare | TD `JSON_FERRY.json` | 2026-07-14 | 2026-07-20 |
-| MTR domestic station OD | MTR `mtr_lines_fares.csv` | 2024-06-30 | 2026-07-20 |
-| Airport Express station OD | MTR `airport_express_fares.csv` | 2025-06-22 | 2026-07-20 |
-| Light Rail station OD | MTR `light_rail_fares.csv` | 2024-06-30 | 2026-07-20 |
-
-The TD effective date is the official route-and-fare revision cut-off date in
-the retained snapshot. The domestic MTR and Light Rail adult controlled fares
-became effective on 2024-06-30 and remained unchanged in both 2025/26 and
-2026/27. Airport Express fares changed on 2025-06-22.
-
-Official pages:
+Official references:
 
 - [TD headway information GTFS](https://data.gov.hk/en-data/dataset/hk-td-tis_11-pt-headway-en)
-- [TD routes and fares of public transport](https://data.gov.hk/en-data/dataset/hk-td-tis_23-routes-fares-geojson)
-- [MTR routes, fares and barrier-free facilities](https://data.gov.hk/en-data/dataset/mtr-data-routes-fares-barrier-free-facilities)
+- [TD routes and fares](https://data.gov.hk/en-data/dataset/hk-td-tis_23-routes-fares-geojson)
+- [MTR routes, fares, and station data](https://data.gov.hk/en-data/dataset/mtr-data-routes-fares-barrier-free-facilities)
 - [MTR 2025/26 fare freeze](https://www.mtr.com.hk/archive/corporate/en/press_release/PR-25-018-E.pdf)
 - [MTR 2026/27 fare freeze](https://www.mtr.com.hk/archive/corporate/en/press_release/PR-26-023-E.pdf)
 - [Airport Express fares effective 2025-06-22](https://www.mtr.com.hk/archive/corporate/en/press_release/PR-25-032-E.pdf)
 
-The normalized fare basis is adult Octopus. Child, student, elderly, JoyYou,
-disability, single-ticket, first-class, pass, group-ticket, promotional, and
-eligibility-dependent prices remain in the original official files but are not
-selected as the v1 trip estimate.
+The normalized modelling reference is adult Octopus. It is not assigned to a
+passenger trip unless the trip contains sufficient itinerary and eligibility
+evidence.
 
 ## Production schedule inventory
 
-The inventory reproduces the production supply totals:
+The audited production schedule contains:
 
 | `transportMode` | Lines | Routes | Departures |
 |---|---:|---:|---:|
@@ -102,90 +77,123 @@ The inventory reproduces the production supply totals:
 | `ferry` | 21 | 39 | 1,836 |
 | **Total** | **2,434** | **3,613** | **159,967** |
 
-Bus operators retained in the detailed inventory are `CTB`, `KMB`, `LWB`,
-joint KMB/Citybus or LWB/Citybus services, `NLB`, `LRTFeeder`, `DB`, `PI`, and
-`XB`, plus five directions whose production source has no operator code. The
-complete operator-by-mode table is
-`transit_schedule_inventory_summary.csv`; every MATSim line and route is in
-`transit_schedule_inventory.csv`.
+`transit_schedule_inventory.csv` retains every MATSim line and route, operator,
+mode, stop count, departure count, official identifier, and mapped stop
+sequence. `transit_schedule_inventory_summary.csv` aggregates by mode and
+operator.
 
-## Official-to-MATSim matching
+## Corrected route, direction, and stop-order crosswalk
 
-The matching keys are evidence already retained in the production schedule:
+`route_to_official_fare_match.csv` has exactly one row for each of the 3,613
+MATSim routes. It distinguishes route-identifier evidence, direction evidence,
+station/stop coverage, official fare scope, candidate cardinality, forward
+OD-pair coverage, matching method, and unresolved reason.
 
-- bus and GMB: MATSim route ID to TD official `route_id + route_seq`, followed
-  by official stop IDs embedded in route-profile facility IDs;
-- ferry: MATSim line ID to TD route ID and
-  `ferry_stop_facilities.csv` to official stop IDs;
-- MTR: MATSim line code and station codes to the MTR station-ID OD matrix;
-- Light Rail: MATSim route number and station codes to the Light Rail
-  station-ID OD matrix.
+The matching rules are:
 
-The completed match has:
+- **Bus and GMB:** an equal route ID proves only the route identifier. TD GTFS
+  `fare_rules` has no explicit `route_seq` or direction field, so
+  `direction_status=direction_not_encoded`. Schedule stop order is checked
+  against every required forward official OD pair. Even with 100% pair
+  coverage, these routes are `partial/B`, never `exact/A`.
+- **MTR and Light Rail:** the schedule station IDs and order are compared with
+  the official line-and-direction patterns. Exact full sequences,
+  schedule-only short turns, branches assembled from more than one explicit
+  direction segment, and loops are distinguished. Airport Express uses only
+  the Airport Express fare matrix; it is not mixed with the domestic matrix.
+- **Ferry:** a direction is exact only when route ID, Ferry Core facility to
+  official stop mapping, and the complete official direction stop pattern all
+  agree. A route ID or hash suffix is not direction evidence.
+- **Full-route fares:** retained for audit only. They are never substituted for
+  a missing sectional stop-OD fare.
 
-- 3,558 bus/GMB/ferry route directions with an exact official route match and
-  stop-OD fare records;
-- 50 MTR/Light Rail route directions with matched official station-OD fares;
-- 5 bus directions with a production route identifier but no official fare
-  record.
+Current mapping counts:
 
-The unmatched directions are `bus_1000004_1`, `bus_1000004_2`,
-`bus_1000611_1`, `bus_8780_1`, and `bus_8780_2`. Their operator and route names
-are also absent in the adopted route inventory. They remain explicitly
-`unmatched_fare`; no fare is fabricated. The row-level audit is
-`route_to_official_fare_match.csv`.
+| `mapping_status` | Routes |
+|---|---:|
+| `exact` | 71 |
+| `one_to_many_explicit` | 4 |
+| `partial` | 3,533 |
+| `ambiguous` | 0 |
+| `unresolved` | 5 |
 
-## Fare normalization
+| `mapping_quality` | Routes |
+|---|---:|
+| `A` | 71 |
+| `B` | 3,530 |
+| `C` | 7 |
+| `D` | 0 |
+| `U` | 5 |
 
-`official_fares_normalized.parquet` contains 886,532 official adult Octopus
-fare observations. Each row retains:
+The 71 `exact/A` routes comprise 34 ferry, 22 MTR, and 15 Light Rail
+directions. The four `one_to_many_explicit/B` routes are the two Light Rail
+loops and two TKL branch compositions. Seven `partial/C` routes are two
+Airport Express directions with 70% station-OD coverage and five ferry
+patterns without an exact official direction stop pattern.
 
-- mode and operator;
-- official route/direction where the source defines one;
-- origin and destination stop/station identifiers and names;
-- fare in HKD and fare basis;
-- source identifier, effective date, and download date;
-- production-schedule scope flag;
-- straight-line OD distance used only by the v1 proxy curve.
-
-`official_route_full_fares.csv` separately retains 3,621 direction-level TD
-full fares. It is a fallback and audit field, not a substitute for a missing
-stop-OD fare.
-
-## Passenger-trip estimate
-
-The routed v2 plans serialize each main `pt` leg as one MATSim `generic` route.
-They retain total route time and distance but not the chosen transit line,
-route, boarding station, alighting station, or transfer sequence. Therefore a
-route-exact passenger payment cannot be recovered from the local plans.
-
-V1 uses this explicit fallback:
-
-1. Join each PT main leg to its origin and destination activity facilities.
-2. Calculate projected straight-line OD distance in `EPSG:32650`.
-3. For each mode independently, select the nearest populated 1 km distance bin
-   in `official_fare_distance_curve.csv`.
-4. Take the median official adult Octopus fare within that mode and bin.
-5. Use the unweighted median across the five mode estimates as `cost_hkd`.
-   Equal mode weighting prevents the much larger bus fare table from dominating
-   the generic-PT value.
-6. Retain all five mode candidates and a broad official-data uncertainty
-   interval in the output.
-
-This is a low-quality distance proxy, not a claim about the service actually
-boarded. The quality field is:
+The known unresolved bus routes remain:
 
 ```text
-low_official_fare_distance_proxy_no_itinerary
+bus_1000004_1
+bus_1000004_2
+bus_1000611_1
+bus_8780_1
+bus_8780_2
 ```
 
-The six zero-distance PT records are retained and flagged by their distance;
-they are not silently removed or reclassified.
+They have not gained new machine-verifiable fare or stop evidence.
 
-### Required unified fields
+### Forward-pair coverage
 
-`pt_passenger_trip_fare_estimates.parquet` has one row per PT passenger main
-leg and begins with the required schema:
+Coverage is calculated from distinct ordered schedule stop pairs with
+`i < j`. It is not inferred from names or straight-line distance.
+
+| Mode | Matched / required forward pairs | Weighted coverage |
+|---|---:|---:|
+| Bus | 771,666 / 771,666 | 1.000000 |
+| GMB | 97,521 / 97,521 | 1.000000 |
+| Ferry | 60 / 60 | 1.000000 |
+| Light Rail | 3,603 / 3,603 | 1.000000 |
+| MTR | 2,284 / 2,290 | 0.997380 |
+
+The six missing MTR forward pairs are in the Airport Express matrix. The two
+Airport Express directions consequently remain `partial/C` even though their
+direction sequences are exact.
+
+## Passenger-trip chargeability audit
+
+The selected production routed plans contain 557,104 PT legs. Independent XML
+inspection found:
+
+```text
+leg mode:                     pt for all 557,104
+route type:                   generic for all 557,104
+route attributes:             type, start_link, end_link, trav_time, distance
+route text:                   absent for all 557,104
+actual transit mode:          absent
+line and route ID:            absent
+direction:                    absent
+boarding and alighting stop:  absent
+transfer chain:               absent
+```
+
+`pt_passenger_trip_fare_audit.parquet` retains one audit row for every PT
+passenger main leg. For all current rows:
+
+```text
+cost_hkd = null
+cost_quality = U
+mapping_status = unresolved
+unresolved_reason =
+  generic_pt_leg_missing_actual_mode_line_route_boarding_alighting_transfer_chain
+```
+
+Unresolved is not a zero fare. No record is deleted, assigned zero, assigned a
+full-route fare, assigned the nearest distance bin, or aggregated across
+modes. `cost_source`, `cost_effective_date`, and `source_record_id` remain null
+because no official fare record was actually selected.
+
+The unified fields are:
 
 ```text
 person_id
@@ -196,30 +204,37 @@ cost_hkd
 cost_source
 cost_effective_date
 cost_quality
+mapping_status
+unresolved_reason
+required_missing_fields
 ```
 
-Here `mode=pt` because the serialized trip does not reveal the boarded submode.
-Additional fields retain facilities, purpose, population group, distance,
-mode-specific estimates, uncertainty, passenger/payment assumptions, and the
-transfer-concession status.
+The output also retains the serialized generic-route fields and explicit null
+columns for actual mode, line, route, direction, boarding stop, alighting
+stop, transfer chain, and source record.
 
 ## Transfer concessions
 
-Complex transfer discounts are not applied. The output fields are:
+Transfer concessions remain unmodelled:
 
 ```text
 transfer_concession_hkd = null
 transfer_concession_status =
-  not_applied_no_serialized_itinerary_or_eligibility
-transfer_concession_source = ""
+  not_modelled_no_serialized_transfer_chain_or_eligibility
 ```
 
-This covers MTR-GMB discounts, operator-specific bus interchange schemes,
-Airport Express connections, passes, and other eligibility- or sequence-based
-benefits. A later itinerary-aware version may populate these fields from
-official rules, but v1 must not infer them from distance.
+No MTR-GMB discount, bus interchange, Airport Express connection, pass,
+promotion, or eligibility-based concession is inferred.
 
-## Outputs
+## Protected-input audit
+
+`protected_input_hashes_baseline.csv` records the pre-change SHA256 of the
+active network, schedule, transit vehicles, routed and unrouted plans, config,
+facilities, and private vehicles. The independent validator recalculates all
+eight hashes and writes `protected_input_hash_comparison.csv`. All eight
+before/after hashes are identical.
+
+## Active outputs
 
 ```text
 data/transport_costs/hongkong/pt_fare_v1/
@@ -227,34 +242,26 @@ data/transport_costs/hongkong/pt_fare_v1/
   fare_source_manifest.csv
   official_fares_normalized.parquet
   official_route_full_fares.csv
+  official_direction_stop_patterns.csv
   transit_schedule_inventory.csv
   transit_schedule_inventory_summary.csv
   route_to_official_fare_match.csv
-  official_fare_distance_curve.csv
-  pt_passenger_trip_fare_estimates.parquet
-  pt_passenger_trip_fare_estimates_sample.csv
+  pt_passenger_trip_fare_audit.parquet
+  pt_passenger_trip_fare_audit_sample.csv
+  production_pt_leg_field_audit.json
+  pt_trip_fare_build_audit.json
   pt_fare_model_summary.json
-  pt_trip_fare_validation.json
+  protected_input_hashes_baseline.csv
+  protected_input_hash_comparison.csv
+  pt_fare_independent_validation.json
   SHA256SUMS.txt
 ```
 
-## Validation result
+The withdrawn distance curve and unconditional trip-estimate files are absent
+from the active directory. Their history remains available in commit
+`c7be4a`.
 
-The completed run has:
-
-- 557,104 input PT passenger trips and 557,104 output cost rows;
-- 238,008 unique persons;
-- zero duplicate `person_id + leg_sequence` keys;
-- zero missing or negative `cost_hkd` values;
-- zero non-null transfer concessions;
-- median estimated fare HKD 11.7;
-- 10th and 90th percentile estimated fares HKD 7.0 and HKD 23.8;
-- input hashes recorded in `pt_trip_fare_validation.json`;
-- all output hashes recorded in `SHA256SUMS.txt`.
-
-## Commands
-
-From the feature worktree:
+## Reproduction and validation
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
@@ -264,22 +271,28 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\estimate_hong_kong_pt_trip_fares.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_pt_fare_model_v1.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
-Both scripts overwrite only named files in the v1 output directory. They do
-not alter any MATSim source input.
+The independent validator does not import builder-calculated validation
+booleans. It rereads the detailed outputs, recomputes schedule totals,
+candidate/status consistency, exact/A requirements, forward-pair coverage,
+trip chargeability, source hashes, protected-input hashes, summary counts,
+JSON parsing, CSV schemas, output portability, and output SHA256.
 
-## Limitations
+## Limitations and next boundary
 
-- The trip estimate is distance-only because the local generic PT routes do
-  not serialize actual transit itineraries.
-- Adult Octopus is a modelling reference, not the known passenger category or
-  payment medium.
-- The base estimate is mode-balanced and does not infer the boarded mode.
-- A straight-line OD bin is not equivalent to network or in-vehicle distance.
-- The uncertainty range is descriptive of official fare observations, not a
-  statistical confidence interval.
-- Five production bus directions lack an official fare record and stay
-  unmatched in the route catalog.
-- Fare changes after the retained source snapshots require a new versioned
-  download and rebuild.
+- The current production generic PT legs cannot be priced at passenger-trip
+  level without an itinerary-bearing output or event reconstruction.
+- Bus/GMB route IDs and 100% forward OD coverage do not make their direction
+  field explicit in the fare schema.
+- Five Ferry Core patterns lack an exact official direction stop pattern in
+  the retained TD source.
+- Airport Express lacks six required forward station-OD fare pairs.
+- Transfer concessions and passenger eligibility are unmodelled.
+- This audit must not be connected to MATSim scoring until a separate,
+  explicitly approved integration stage supplies verifiable itineraries and
+  fare rules.

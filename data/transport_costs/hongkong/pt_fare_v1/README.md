@@ -12,11 +12,14 @@ The principal outputs are:
 - `route_to_official_fare_match.csv`: official-to-MATSim route/station match;
 - `transit_schedule_inventory.csv`: operator, line, route, mode, stop, and
   departure inventory;
-- `pt_passenger_trip_fare_estimates.parquet`: one low-quality offline estimate
-  for every production PT passenger main leg;
+- `pt_passenger_trip_fare_audit.parquet`: one chargeability audit row for
+  every production PT passenger main leg; current generic PT legs have
+  `cost_hkd=null` and `cost_quality=U`;
 - `fare_source_manifest.csv` and `SHA256SUMS.txt`: provenance and integrity;
-- `pt_trip_fare_validation.json`: row-count and schema validation.
+- `pt_fare_independent_validation.json`: independent row, schema, mapping,
+  provenance, portability, and protected-input validation.
 
-Transfer concessions are deliberately null and are not included in
-`cost_hkd`. See `docs/HONG_KONG_PT_FARE_MODEL.md` for the method, source dates,
-quality interpretation, commands, and limitations.
+The cross-mode distance median introduced in commit `c7be4a` is withdrawn and
+its active estimate files are removed. Transfer concessions remain null. See
+`docs/HONG_KONG_PT_FARE_MODEL.md` for the corrected matching rules, unresolved
+trip policy, source dates, commands, and limitations.

@@ -487,6 +487,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": TD_DATASET_URL,
             "effective_date": MODEL_EFFECTIVE_DATE,
             "effective_date_basis": "TD data revision cut-off date",
+            "effective_date_status": "local_source_proven",
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "local snapshot creation date",
             "official": True,
@@ -499,6 +500,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": TD_ROUTE_FARE_DATASET_URL,
             "effective_date": MODEL_EFFECTIVE_DATE,
             "effective_date_basis": "TD data revision cut-off date",
+            "effective_date_status": "local_source_proven",
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "API download manifest",
             "official": True,
@@ -511,6 +513,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": TD_ROUTE_FARE_DATASET_URL,
             "effective_date": MODEL_EFFECTIVE_DATE,
             "effective_date_basis": "TD data revision cut-off date",
+            "effective_date_status": "local_source_proven",
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "API download manifest",
             "official": True,
@@ -523,6 +526,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": TD_ROUTE_FARE_DATASET_URL,
             "effective_date": MODEL_EFFECTIVE_DATE,
             "effective_date_basis": "TD data revision cut-off date",
+            "effective_date_status": "local_source_proven",
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "API download manifest",
             "official": True,
@@ -536,6 +540,9 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
                 "adult controlled fares effective 2024-06-30 and frozen in "
                 "2025/26 and 2026/27"
             ),
+            "effective_date_status": (
+                "external_official_reference_not_locally_archived"
+            ),
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "local snapshot creation date",
             "official": True,
@@ -546,6 +553,9 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": MTR_DATASET_URL,
             "effective_date": "2025-06-22",
             "effective_date_basis": "MTR announced Airport Express fare effective date",
+            "effective_date_status": (
+                "external_official_reference_not_locally_archived"
+            ),
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "local snapshot creation date",
             "official": True,
@@ -559,6 +569,9 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
                 "adult controlled fares effective 2024-06-30 and frozen in "
                 "2025/26 and 2026/27"
             ),
+            "effective_date_status": (
+                "external_official_reference_not_locally_archived"
+            ),
             "download_date": SOURCE_DOWNLOAD_DATE,
             "download_date_basis": "local snapshot creation date",
             "official": True,
@@ -569,6 +582,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": "project_input",
             "effective_date": "2026-07-22",
             "effective_date_basis": "representative MATSim service date",
+            "effective_date_status": "project_input_proven",
             "download_date": "",
             "download_date_basis": "not applicable",
             "official": False,
@@ -579,6 +593,7 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": "project_input",
             "effective_date": "2026-07-22",
             "effective_date_basis": "route assembly approval date",
+            "effective_date_status": "project_input_proven",
             "download_date": "",
             "download_date_basis": "not applicable",
             "official": False,
@@ -589,9 +604,51 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             "source_dataset_url": "project_input",
             "effective_date": "2026-07-22",
             "effective_date_basis": "production supply build",
+            "effective_date_status": "project_input_proven",
             "download_date": "",
             "download_date_basis": "not applicable",
             "official": False,
+        },
+        "mtr_line_station_patterns": {
+            "mode_scope": "mtr_route_direction_mapping",
+            "source_url": (
+                "https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv"
+            ),
+            "source_dataset_url": MTR_DATASET_URL,
+            "effective_date": "",
+            "effective_date_basis": "not a fare-effective-date source",
+            "effective_date_status": "not_applicable",
+            "download_date": SOURCE_DOWNLOAD_DATE,
+            "download_date_basis": "local snapshot creation date",
+            "official": True,
+        },
+        "mtr_light_rail_stop_patterns": {
+            "mode_scope": "light_rail_route_direction_mapping",
+            "source_url": (
+                "https://opendata.mtr.com.hk/data/"
+                "light_rail_routes_and_stops.csv"
+            ),
+            "source_dataset_url": MTR_DATASET_URL,
+            "effective_date": "",
+            "effective_date_basis": "not a fare-effective-date source",
+            "effective_date_status": "not_applicable",
+            "download_date": SOURCE_DOWNLOAD_DATE,
+            "download_date_basis": "local snapshot creation date",
+            "official": True,
+        },
+        "td_route_fare_revision_date": {
+            "mode_scope": "td_fare_effective_date_evidence",
+            "source_url": (
+                "https://static.data.gov.hk/td/routes-fares-geojson/"
+                "DATA_LAST_UPDATED_DATE.csv"
+            ),
+            "source_dataset_url": TD_ROUTE_FARE_DATASET_URL,
+            "effective_date": MODEL_EFFECTIVE_DATE,
+            "effective_date_basis": "locally archived TD revision cut-off file",
+            "effective_date_status": "local_source_proven",
+            "download_date": SOURCE_DOWNLOAD_DATE,
+            "download_date_basis": "API download manifest",
+            "official": True,
         },
     }
     rows: list[dict[str, Any]] = []
@@ -601,8 +658,9 @@ def make_source_manifest(source_root: Path, paths: dict[str, Path]) -> pd.DataFr
             {
                 "source_id": source_id,
                 **details,
-                "local_path": str(path.resolve()),
-                "project_relative_path": path.resolve().relative_to(source_root.resolve()).as_posix(),
+                "repository_relative_path": path.resolve()
+                .relative_to(source_root.resolve())
+                .as_posix(),
                 "size_bytes": path.stat().st_size,
                 "sha256": sha256(path),
             }
@@ -705,165 +763,456 @@ def attach_inventory_metadata(
     return inventory
 
 
+def build_official_direction_patterns(api_dir: Path, mtr_dir: Path) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+
+    ferry_path = api_dir / "ferry_route_stop_points.json"
+    with ferry_path.open("r", encoding="utf-8-sig") as handle:
+        ferry_features = json.load(handle).get("features", [])
+    ferry_rows = []
+    for feature in ferry_features:
+        properties = feature.get("properties") or {}
+        if properties.get("routeId") in (None, ""):
+            continue
+        ferry_rows.append(
+            {
+                "official_line_id": str(properties["routeId"]),
+                "official_direction": str(properties.get("routeSeq", "")),
+                "sequence": int(properties.get("stopSeq", 0)),
+                "official_stop_id": str(properties.get("stopId", "")),
+            }
+        )
+    ferry = pd.DataFrame(ferry_rows)
+    for (line_id, direction), group in ferry.groupby(
+        ["official_line_id", "official_direction"]
+    ):
+        stops = group.sort_values("sequence")["official_stop_id"].tolist()
+        rows.append(
+            {
+                "transport_mode": "ferry",
+                "official_line_id": line_id,
+                "official_direction": direction,
+                "official_stop_count": len(stops),
+                "official_stop_ids_json": json.dumps(stops),
+                "pattern_source_id": "td_ferry_route_fares",
+            }
+        )
+
+    specifications = [
+        (
+            "train",
+            mtr_dir / "mtr_lines_and_stations.csv",
+            "Line Code",
+            "Direction",
+            "Station ID",
+            "Sequence",
+            "mtr_line_station_patterns",
+        ),
+        (
+            "light_rail",
+            mtr_dir / "light_rail_routes_and_stops.csv",
+            "Line Code",
+            "Direction",
+            "Stop ID",
+            "Sequence",
+            "mtr_light_rail_stop_patterns",
+        ),
+    ]
+    for (
+        mode,
+        path,
+        line_column,
+        direction_column,
+        stop_column,
+        sequence_column,
+        source_id,
+    ) in specifications:
+        frame = pd.read_csv(path, dtype=str)
+        frame[sequence_column] = pd.to_numeric(frame[sequence_column], errors="raise")
+        for (line_id, direction), group in frame.groupby(
+            [line_column, direction_column]
+        ):
+            stops = (
+                group.sort_values(sequence_column)[stop_column].astype(str).tolist()
+            )
+            rows.append(
+                {
+                    "transport_mode": mode,
+                    "official_line_id": str(line_id),
+                    "official_direction": str(direction),
+                    "official_stop_count": len(stops),
+                    "official_stop_ids_json": json.dumps(stops),
+                    "pattern_source_id": source_id,
+                }
+            )
+    return pd.DataFrame(rows).sort_values(
+        ["transport_mode", "official_line_id", "official_direction"]
+    )
+
+
+def contiguous_subsequence(candidate: list[str], sequence: list[str]) -> bool:
+    if not candidate or len(candidate) > len(sequence):
+        return False
+    return any(
+        sequence[index : index + len(candidate)] == candidate
+        for index in range(len(sequence) - len(candidate) + 1)
+    )
+
+
+def required_forward_pairs(stops: list[str]) -> set[tuple[str, str]]:
+    return {
+        (stops[i], stops[j])
+        for i in range(len(stops))
+        for j in range(i + 1, len(stops))
+        if stops[i] and stops[j] and stops[i] != stops[j]
+    }
+
+
 def build_route_matches(
     inventory: pd.DataFrame,
     normalized: pd.DataFrame,
     full_fares: pd.DataFrame,
+    direction_patterns: pd.DataFrame,
 ) -> pd.DataFrame:
-    road = normalized[
-        normalized["official_route_id"].ne("")
-        & normalized["adult_octopus_fare_hkd"].notna()
-    ]
-    road_stats = (
-        road.groupby(["mode", "official_route_id"], as_index=False)
-        .agg(
-            official_od_fare_records=("adult_octopus_fare_hkd", "size"),
-            fare_min_hkd=("adult_octopus_fare_hkd", "min"),
-            fare_max_hkd=("adult_octopus_fare_hkd", "max"),
+    fares = normalized.copy()
+    for column in ("mode", "official_route_id", "origin_stop_id", "destination_stop_id"):
+        fares[column] = fares[column].fillna("").astype(str)
+
+    road_pair_lookup: dict[tuple[str, str], set[tuple[str, str]]] = {}
+    road_source_lookup: dict[tuple[str, str], list[str]] = {}
+    for (mode, route_id), group in fares[
+        fares["mode"].isin(["bus", "gmb", "ferry"])
+        & fares["official_route_id"].ne("")
+    ].groupby(["mode", "official_route_id"]):
+        road_pair_lookup[(mode, route_id)] = set(
+            zip(group["origin_stop_id"], group["destination_stop_id"])
         )
-        .set_index(["mode", "official_route_id"])
-        .to_dict("index")
-    )
-    full_stats = (
-        full_fares.groupby(
-            ["mode", "official_route_id", "official_route_sequence"], as_index=False
+        road_source_lookup[(mode, route_id)] = sorted(
+            set(group["source_id"].astype(str))
         )
-        .agg(
-            official_full_fare_hkd=("adult_octopus_fare_hkd", "median"),
-            route_full_fare_source_records=("adult_octopus_fare_hkd", "size"),
-        )
-        .set_index(["mode", "official_route_id", "official_route_sequence"])
-        .to_dict("index")
-    )
-    station_fares = {
-        mode: set(
+
+    rail_pair_lookup: dict[str, set[tuple[str, str]]] = {
+        "train_domestic": set(
             zip(
-                normalized.loc[normalized["mode"].eq(mode), "origin_stop_id"].astype(str),
-                normalized.loc[
-                    normalized["mode"].eq(mode), "destination_stop_id"
-                ].astype(str),
+                fares.loc[
+                    fares["source_id"].eq("mtr_domestic_fares_20260720"),
+                    "origin_stop_id",
+                ],
+                fares.loc[
+                    fares["source_id"].eq("mtr_domestic_fares_20260720"),
+                    "destination_stop_id",
+                ],
             )
+        ),
+        "train_airport_express": set(
+            zip(
+                fares.loc[
+                    fares["source_id"].eq(
+                        "mtr_airport_express_fares_20260720"
+                    ),
+                    "origin_stop_id",
+                ],
+                fares.loc[
+                    fares["source_id"].eq(
+                        "mtr_airport_express_fares_20260720"
+                    ),
+                    "destination_stop_id",
+                ],
+            )
+        ),
+        "light_rail": set(
+            zip(
+                fares.loc[fares["mode"].eq("light_rail"), "origin_stop_id"],
+                fares.loc[fares["mode"].eq("light_rail"), "destination_stop_id"],
+            )
+        ),
+    }
+    full_count_lookup = (
+        full_fares.groupby(
+            ["mode", "official_route_id", "official_route_sequence"]
         )
-        for mode in ("train", "light_rail")
-    }
-    station_price = {
-        mode: normalized[normalized["mode"].eq(mode)]
-        .groupby(["origin_stop_id", "destination_stop_id"])[
-            "adult_octopus_fare_hkd"
-        ]
-        .median()
+        .size()
         .to_dict()
-        for mode in ("train", "light_rail")
-    }
+    )
+    pattern_lookup: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for pattern in direction_patterns.to_dict("records"):
+        pattern_lookup.setdefault(
+            (pattern["transport_mode"], str(pattern["official_line_id"])), []
+        ).append(pattern)
 
     rows: list[dict[str, Any]] = []
     for record in inventory.to_dict("records"):
-        mode = record["transport_mode"]
+        mode = str(record["transport_mode"])
         route_id = str(record["official_route_id"])
-        route_seq = str(record["official_route_sequence"])
-        values: dict[str, Any] = {
-            "official_od_fare_records": 0,
-            "fare_min_hkd": np.nan,
-            "fare_max_hkd": np.nan,
-            "official_full_fare_hkd": np.nan,
-            "route_full_fare_source_records": 0,
-        }
+        route_sequence = str(record["official_route_sequence"])
+        stops = [
+            str(item)
+            for item in json.loads(record["official_stop_ids_json"])
+            if str(item)
+        ]
+        scheduled_stop_count = int(record["stop_count"])
+        mapped_stop_count = len(stops)
+        stop_coverage = (
+            mapped_stop_count / scheduled_stop_count if scheduled_stop_count else 0.0
+        )
+        required_pairs = required_forward_pairs(stops)
+        full_fare_record_count = int(
+            full_count_lookup.get((mode, route_id, route_sequence), 0)
+        )
+        official_line_id = route_id
+        official_direction = ""
+        candidate_count = 0
+        route_identifier_status = "unresolved"
+        direction_status = "unresolved"
+        fare_scope = ""
+        mapping_status = "unresolved"
+        mapping_quality = "U"
+        matching_method = ""
+        unresolved_reason = ""
+        candidate_method = "none"
+        direction_edge_coverage = 0.0
+
         if mode in {"bus", "gmb", "ferry"}:
-            values.update(road_stats.get((mode, route_id), {}))
-            values.update(full_stats.get((mode, route_id, route_seq), {}))
-            if values["official_od_fare_records"] > 0:
-                method = "exact_official_route_id_with_stop_od_fares"
-                quality = "high_route_match"
-            elif values["route_full_fare_source_records"] > 0:
-                method = "exact_official_route_id_and_direction_full_fare"
-                quality = "medium_route_full_fare_only"
-            else:
-                method = "exact_route_identifier_but_no_fare_record"
-                quality = "unmatched_fare"
-        elif mode in {"train", "light_rail"}:
-            stops = [item for item in json.loads(record["official_stop_ids_json"]) if item]
-            pairs = [(a, b) for a in stops for b in stops if a != b]
-            prices = [
-                station_price[mode][pair]
-                for pair in pairs
-                if pair in station_fares[mode]
-                and pd.notna(station_price[mode].get(pair))
+            official_pairs = road_pair_lookup.get((mode, route_id), set())
+        elif mode == "train":
+            fare_scope = (
+                "airport_express_station_od"
+                if route_id == "AEL"
+                else "domestic_mtr_station_od"
+            )
+            official_pairs = rail_pair_lookup[
+                "train_airport_express"
+                if route_id == "AEL"
+                else "train_domestic"
             ]
-            values["official_od_fare_records"] = len(prices)
-            values["fare_min_hkd"] = min(prices) if prices else np.nan
-            values["fare_max_hkd"] = max(prices) if prices else np.nan
-            if prices:
-                method = "matsim_station_code_to_official_station_od_matrix"
-                quality = "high_station_match"
-            else:
-                method = "rail_line_identifier_but_no_station_od_fare"
-                quality = "unmatched_fare"
+        elif mode == "light_rail":
+            fare_scope = "light_rail_station_od"
+            official_pairs = rail_pair_lookup["light_rail"]
         else:
-            method = "mode_out_of_scope"
-            quality = "out_of_scope"
+            official_pairs = set()
+
+        matched_pairs = required_pairs & official_pairs
+        forward_coverage = (
+            len(matched_pairs) / len(required_pairs) if required_pairs else 0.0
+        )
+        official_od_pair_count = len(official_pairs)
+
+        if mode in {"bus", "gmb"}:
+            fare_scope = "route_stop_od"
+            candidate_count = int(bool(official_pairs))
+            route_identifier_status = (
+                "matched_official_route_id"
+                if candidate_count == 1
+                else "official_route_id_without_fare_candidate"
+            )
+            direction_status = "direction_not_encoded"
+            matching_method = "route_id_plus_schedule_forward_stop_pair_coverage"
+            if (
+                candidate_count == 1
+                and stop_coverage == 1.0
+                and forward_coverage == 1.0
+            ):
+                mapping_status = "partial"
+                mapping_quality = "B"
+                unresolved_reason = "direction_not_encoded_in_official_fare_rules"
+            elif candidate_count == 1:
+                mapping_status = "partial"
+                mapping_quality = "C"
+                unresolved_reason = "incomplete_stop_or_forward_od_pair_coverage"
+            else:
+                mapping_status = "unresolved"
+                mapping_quality = "U"
+                unresolved_reason = (
+                    "official_route_fare_and_stop_evidence_missing"
+                )
+        elif mode in {"ferry", "train", "light_rail"}:
+            if mode == "ferry":
+                fare_scope = "route_stop_od_with_official_direction_pattern"
+            line_patterns = pattern_lookup.get((mode, official_line_id), [])
+            exact_candidates = [
+                pattern
+                for pattern in line_patterns
+                if json.loads(pattern["official_stop_ids_json"]) == stops
+            ]
+            subsequence_candidates = [
+                pattern
+                for pattern in line_patterns
+                if contiguous_subsequence(
+                    stops, json.loads(pattern["official_stop_ids_json"])
+                )
+            ]
+            if exact_candidates:
+                candidates = exact_candidates
+                candidate_method = "exact_official_stop_sequence"
+            elif mode != "ferry" and subsequence_candidates:
+                candidates = subsequence_candidates
+                candidate_method = "schedule_contiguous_subsequence"
+            elif mode != "ferry":
+                scheduled_edges = set(zip(stops, stops[1:]))
+                candidates = []
+                for pattern in line_patterns:
+                    pattern_stops = json.loads(pattern["official_stop_ids_json"])
+                    pattern_edges = set(zip(pattern_stops, pattern_stops[1:]))
+                    if scheduled_edges & pattern_edges:
+                        candidates.append(pattern)
+                candidate_method = (
+                    "multiple_explicit_direction_edge_composition"
+                    if len(candidates) > 1
+                    else "partial_direction_edge_evidence"
+                )
+            else:
+                candidates = []
+                candidate_method = "no_exact_official_ferry_stop_pattern"
+
+            candidate_count = len(candidates)
+            route_identifier_status = (
+                "matched_official_line_id"
+                if line_patterns
+                else "official_line_id_without_direction_pattern"
+            )
+            official_direction = ";".join(
+                sorted(
+                    {
+                        str(pattern["official_direction"])
+                        for pattern in candidates
+                    }
+                )
+            )
+            scheduled_edges = set(zip(stops, stops[1:]))
+            candidate_edges: set[tuple[str, str]] = set()
+            for pattern in candidates:
+                pattern_stops = json.loads(pattern["official_stop_ids_json"])
+                candidate_edges.update(zip(pattern_stops, pattern_stops[1:]))
+            direction_edge_coverage = (
+                len(scheduled_edges & candidate_edges) / len(scheduled_edges)
+                if scheduled_edges
+                else 0.0
+            )
+
+            if candidate_method == "exact_official_stop_sequence":
+                direction_status = "explicit_direction_exact"
+                matching_method = "line_direction_and_exact_schedule_stop_sequence"
+                if (
+                    candidate_count == 1
+                    and stop_coverage == 1.0
+                    and forward_coverage == 1.0
+                ):
+                    mapping_status = "exact"
+                    mapping_quality = "A"
+                else:
+                    mapping_status = "partial"
+                    mapping_quality = "C"
+                    unresolved_reason = (
+                        "explicit_direction_but_incomplete_forward_od_pair_coverage"
+                    )
+            elif candidate_method == "schedule_contiguous_subsequence":
+                direction_status = "explicit_direction_short_turn"
+                matching_method = "line_direction_and_schedule_stop_subsequence"
+                mapping_status = "partial"
+                mapping_quality = (
+                    "B"
+                    if candidate_count == 1
+                    and stop_coverage == 1.0
+                    and forward_coverage == 1.0
+                    else "C"
+                )
+                unresolved_reason = (
+                    "schedule_short_turn_not_separate_official_direction"
+                )
+            elif (
+                candidate_count > 1
+                and direction_edge_coverage == 1.0
+                and stop_coverage == 1.0
+                and forward_coverage == 1.0
+            ):
+                direction_status = "explicit_multi_direction_composite"
+                matching_method = "line_plus_multiple_official_direction_segments"
+                mapping_status = "one_to_many_explicit"
+                mapping_quality = "B"
+            elif candidate_count > 1:
+                direction_status = "multiple_direction_candidates_not_disambiguated"
+                matching_method = "line_plus_partial_direction_edge_overlap"
+                mapping_status = "ambiguous"
+                mapping_quality = "D"
+                unresolved_reason = "multiple_direction_candidates_not_disambiguated"
+            elif official_pairs and forward_coverage == 1.0:
+                direction_status = "direction_pattern_not_available"
+                matching_method = "line_or_route_id_plus_forward_stop_pair_coverage"
+                mapping_status = "partial"
+                mapping_quality = "C"
+                unresolved_reason = "official_direction_stop_pattern_not_available"
+            else:
+                direction_status = "unresolved"
+                matching_method = "no_verifiable_line_direction_stop_sequence_match"
+                mapping_status = "unresolved"
+                mapping_quality = "U"
+                unresolved_reason = "insufficient_line_direction_or_fare_evidence"
+        else:
+            route_identifier_status = "not_applicable"
+            direction_status = "not_applicable"
+            fare_scope = "not_applicable"
+            mapping_status = "not_applicable"
+            mapping_quality = "U"
+            matching_method = "mode_not_in_v1_scope"
+
+        evidence = json.dumps(
+            {
+                "candidate_method": candidate_method,
+                "direction_edge_coverage": round(direction_edge_coverage, 6),
+                "fare_source_ids": (
+                    road_source_lookup.get((mode, route_id), [])
+                    if mode in {"bus", "gmb", "ferry"}
+                    else ["mtr_airport_express_fares_20260720"]
+                    if mode == "train" and route_id == "AEL"
+                    else ["mtr_domestic_fares_20260720"]
+                    if mode == "train"
+                    else ["mtr_light_rail_fares_20260720"]
+                    if mode == "light_rail"
+                    else []
+                ),
+                "official_stop_ids": stops,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
         rows.append(
             {
                 "matsim_line_id": record["matsim_line_id"],
                 "matsim_route_id": record["matsim_route_id"],
                 "transport_mode": mode,
-                "operator": record["operator"],
+                "operator": str(record.get("operator", "")),
                 "official_route_id": route_id,
-                "official_route_sequence": route_seq,
-                "official_route_name": (
-                    record.get("route_name")
-                    or record.get("route_short_name")
-                    or record.get("matsim_line_name")
+                "official_route_sequence": route_sequence,
+                "official_line_id": official_line_id,
+                "official_direction": official_direction,
+                "scheduled_stop_count": scheduled_stop_count,
+                "mapped_stop_count": mapped_stop_count,
+                "stop_id_coverage": round(stop_coverage, 6),
+                "candidate_count": candidate_count,
+                "candidate_cardinality": (
+                    "none"
+                    if candidate_count == 0
+                    else "one"
+                    if candidate_count == 1
+                    else "multiple"
                 ),
-                "stop_count": record["stop_count"],
-                "official_stop_id_coverage": record["official_stop_id_coverage"],
-                "fare_match_method": method,
-                "fare_match_quality": quality,
-                **values,
-                "transfer_concession_status": "not_modelled_separate_field",
+                "route_identifier_status": route_identifier_status,
+                "direction_status": direction_status,
+                "fare_scope": fare_scope,
+                "official_od_pair_count": official_od_pair_count,
+                "required_forward_pair_count": len(required_pairs),
+                "matched_forward_pair_count": len(matched_pairs),
+                "forward_pair_coverage": round(forward_coverage, 6),
+                "full_fare_record_count": full_fare_record_count,
+                "mapping_status": mapping_status,
+                "mapping_quality": mapping_quality,
+                "matching_method": matching_method,
+                "evidence": evidence,
+                "unresolved_reason": unresolved_reason,
             }
         )
     return pd.DataFrame(rows)
-
-
-def build_distance_curve(normalized: pd.DataFrame) -> pd.DataFrame:
-    reference = normalized[
-        normalized["mode"].isin(["bus", "gmb", "ferry", "train", "light_rail"])
-        & normalized["adult_octopus_fare_hkd"].gt(0)
-        & normalized["euclidean_distance_m"].notna()
-    ].copy()
-    reference["distance_bin_lower_m"] = (
-        np.floor(reference["euclidean_distance_m"] / 1000) * 1000
-    ).astype(int)
-    result = (
-        reference.groupby(["mode", "distance_bin_lower_m"], as_index=False)
-        .agg(
-            sample_count=("adult_octopus_fare_hkd", "size"),
-            fare_median_hkd=("adult_octopus_fare_hkd", "median"),
-            fare_p10_hkd=("adult_octopus_fare_hkd", lambda x: x.quantile(0.10)),
-            fare_p90_hkd=("adult_octopus_fare_hkd", lambda x: x.quantile(0.90)),
-            fare_min_hkd=("adult_octopus_fare_hkd", "min"),
-            fare_max_hkd=("adult_octopus_fare_hkd", "max"),
-        )
-        .sort_values(["mode", "distance_bin_lower_m"])
-    )
-    result["distance_bin_upper_m"] = result["distance_bin_lower_m"] + 1000
-    result["distance_measure"] = "straight_line_od_distance"
-    result["fare_measure"] = "adult_octopus"
-    return result[
-        [
-            "mode",
-            "distance_bin_lower_m",
-            "distance_bin_upper_m",
-            "sample_count",
-            "fare_median_hkd",
-            "fare_p10_hkd",
-            "fare_p90_hkd",
-            "fare_min_hkd",
-            "fare_max_hkd",
-            "distance_measure",
-            "fare_measure",
-        ]
-    ]
 
 
 def write_sha256s(output_dir: Path) -> None:
@@ -915,6 +1264,9 @@ def main() -> None:
         mtr_dir / "mtr_lines_fares.csv",
         mtr_dir / "airport_express_fares.csv",
         mtr_dir / "light_rail_fares.csv",
+        mtr_dir / "mtr_lines_and_stations.csv",
+        mtr_dir / "light_rail_routes_and_stops.csv",
+        api_dir / "routes_fares_last_updated.csv",
     ]
     missing = [str(path) for path in required if not path.exists()]
     if missing:
@@ -943,8 +1295,10 @@ def main() -> None:
         normalized["adult_octopus_fare_hkd"], errors="coerce"
     )
     full_fares = read_route_full_fares(api_dir)
-    route_matches = build_route_matches(inventory, normalized, full_fares)
-    distance_curve = build_distance_curve(normalized)
+    direction_patterns = build_official_direction_patterns(api_dir, mtr_dir)
+    route_matches = build_route_matches(
+        inventory, normalized, full_fares, direction_patterns
+    )
 
     source_paths = {
         "td_gtfs": gtfs_path,
@@ -954,6 +1308,11 @@ def main() -> None:
         "mtr_domestic_fares": mtr_dir / "mtr_lines_fares.csv",
         "mtr_airport_express_fares": mtr_dir / "airport_express_fares.csv",
         "mtr_light_rail_fares": mtr_dir / "light_rail_fares.csv",
+        "mtr_line_station_patterns": mtr_dir / "mtr_lines_and_stations.csv",
+        "mtr_light_rail_stop_patterns": (
+            mtr_dir / "light_rail_routes_and_stops.csv"
+        ),
+        "td_route_fare_revision_date": api_dir / "routes_fares_last_updated.csv",
         "production_transit_schedule": schedule_path,
         "approved_route_inventory": approved_path,
         "ferry_stop_facilities": ferry_stops_path,
@@ -991,8 +1350,8 @@ def main() -> None:
         index=False,
         encoding="utf-8",
     )
-    distance_curve.to_csv(
-        output_dir / "official_fare_distance_curve.csv",
+    direction_patterns.to_csv(
+        output_dir / "official_direction_stop_patterns.csv",
         index=False,
         encoding="utf-8",
     )
@@ -1003,14 +1362,24 @@ def main() -> None:
     mode_counts = (
         inventory.groupby("transport_mode")["matsim_route_id"].nunique().to_dict()
     )
-    match_counts = route_matches["fare_match_quality"].value_counts().to_dict()
+    mapping_status_counts = route_matches["mapping_status"].value_counts().to_dict()
+    mapping_quality_counts = route_matches["mapping_quality"].value_counts().to_dict()
+    forward_by_mode = {}
+    for mode, group in route_matches.groupby("transport_mode"):
+        required_total = int(group["required_forward_pair_count"].sum())
+        matched_total = int(group["matched_forward_pair_count"].sum())
+        forward_by_mode[mode] = {
+            "required_forward_pairs": required_total,
+            "matched_forward_pairs": matched_total,
+            "weighted_forward_pair_coverage": (
+                matched_total / required_total if required_total else 0.0
+            ),
+        }
     summary = {
         "model": "Hong Kong offline public transport fare model v1",
+        "model_role": "route_matching_and_trip_chargeability_audit",
         "created_date": "2026-07-28",
-        "model_effective_date": MODEL_EFFECTIVE_DATE,
         "source_download_date": SOURCE_DOWNLOAD_DATE,
-        "source_project_root": str(source_root),
-        "output_directory": str(output_dir),
         "schedule": {
             "transit_lines": int(inventory["matsim_line_id"].nunique()),
             "transit_routes": int(len(inventory)),
@@ -1020,16 +1389,30 @@ def main() -> None:
         "fares": {
             "normalized_records": int(len(normalized)),
             "route_full_fare_records": int(len(full_fares)),
-            "distance_curve_records": int(len(distance_curve)),
+            "official_direction_patterns": int(len(direction_patterns)),
         },
-        "route_matches": {key: int(value) for key, value in match_counts.items()},
+        "route_matches": {
+            "mapping_status": {
+                key: int(value) for key, value in mapping_status_counts.items()
+            },
+            "mapping_quality": {
+                key: int(value) for key, value in mapping_quality_counts.items()
+            },
+            "forward_pair_coverage_by_mode": forward_by_mode,
+        },
         "passenger_fare_basis": "adult Octopus",
         "transfer_concessions": "not modelled; retained as separate null/status fields",
-        "prohibited_matsim_inputs_modified": False,
+        "trip_fare_policy": (
+            "cost_hkd remains null unless a production passenger trip contains "
+            "a uniquely chargeable itinerary"
+        ),
     }
     (output_dir / "pt_fare_model_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    legacy_curve = output_dir / "official_fare_distance_curve.csv"
+    if legacy_curve.exists():
+        legacy_curve.unlink()
     write_sha256s(output_dir)
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
 
