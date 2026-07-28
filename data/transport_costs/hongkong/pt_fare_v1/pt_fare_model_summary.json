@@ -1,0 +1,33 @@
+{
+  "model": "Hong Kong offline public transport fare model v1",
+  "created_date": "2026-07-28",
+  "model_effective_date": "2026-07-14",
+  "source_download_date": "2026-07-20",
+  "source_project_root": "F:\\Matsim\\matsim-example-project",
+  "output_directory": "F:\\Matsim\\worktrees\\hk-pt-fare\\data\\transport_costs\\hongkong\\pt_fare_v1",
+  "schedule": {
+    "transit_lines": 2434,
+    "transit_routes": 3613,
+    "departures": 159967,
+    "routes_by_mode": {
+      "bus": 2363,
+      "ferry": 39,
+      "gmb": 1161,
+      "light_rail": 20,
+      "train": 30
+    }
+  },
+  "fares": {
+    "normalized_records": 886532,
+    "route_full_fare_records": 3621,
+    "distance_curve_records": 131
+  },
+  "route_matches": {
+    "high_route_match": 3558,
+    "high_station_match": 50,
+    "unmatched_fare": 5
+  },
+  "passenger_fare_basis": "adult Octopus",
+  "transfer_concessions": "not modelled; retained as separate null/status fields",
+  "prohibited_matsim_inputs_modified": false
+}

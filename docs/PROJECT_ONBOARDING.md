@@ -86,6 +86,7 @@ docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
 docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
+docs/HONG_KONG_PT_FARE_MODEL.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -370,3 +371,12 @@ Ferry Core v1 cap010 supply instead. Representative vehicle
 types, inferred rail consists, and one-vehicle-per-departure assumptions should
 still be replaced when route-specific fleet allocation and vehicle blocks are
 available.
+
+The separate offline public-transport fare audit is documented in
+`docs/HONG_KONG_PT_FARE_MODEL.md` and stored under
+`data/transport_costs/hongkong/pt_fare_v1/`. It inventories all 3,613 active
+transit routes, standardizes official TD and MTR adult Octopus fares, matches
+official route/station identifiers to MATSim, and supplies a low-quality
+distance-only estimate for every generic PT passenger main leg. It does not
+modify the adopted MATSim plans, config, scoring, network, schedule, vehicles,
+or runner. Transfer concessions remain explicit null fields.

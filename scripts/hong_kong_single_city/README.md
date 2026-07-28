@@ -695,3 +695,28 @@ transferring; while onboard, the matching vehicle particle represents them.
 Access, egress, walking, and ride stages are shown only when a street-graph
 route can be reconstructed. Unroutable segments are audited and never drawn as
 straight-line fallbacks.
+
+## Offline public-transport fare audit
+
+Build the official adult Octopus fare catalog, production-schedule inventory,
+and official-to-MATSim match:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_pt_fare_catalog.py `
+  --source-project-root F:\Matsim\matsim-example-project
+```
+
+Generate one low-quality distance-only estimate for every generic PT passenger
+main leg:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\estimate_hong_kong_pt_trip_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+```
+
+Outputs are under `data/transport_costs/hongkong/pt_fare_v1/`. These scripts
+are offline read-only consumers of the adopted MATSim inputs. They do not
+modify plans, config, scoring, network, transit schedule, vehicles, or Java
+runners. See `docs/HONG_KONG_PT_FARE_MODEL.md`.
