@@ -124,5 +124,50 @@ audit.
 The validation JSON is accepted only when every required check is `true`,
 `failed_checks` is empty, all input hashes are stable, the process exits zero,
 and no `output_events`, `output_plans`, `output_config`, iteration, QSim, or
-simulation-output artifact exists. Until a successful server result is
-recorded in this document, this gate remains defined but not validated.
+simulation-output artifact exists.
+
+## Validated server result
+
+Taxi scenario load test v1 was validated on `FUSELAB01` at checkpoint
+`fdc36b262d074be128afe35a857ddb0d113ff328`. The isolated server directory was:
+
+```text
+/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2
+```
+
+The server used Eclipse Adoptium Java `25.0.3`, Apache Maven `3.9.16`, and
+MATSim `2026.0`. Remote compile and package both exited zero. The four exact
+Taxi test classes ran 35 tests with zero failures, errors, or skips.
+
+The pure scenario load used `-Xms8g -Xmx32g`. The audit process exited zero,
+the `ScenarioUtils.loadScenario` portion took `27.386192079` seconds, and the
+complete audit took `30.566009109` seconds. The external wall-clock
+measurement was `31.54` seconds with peak resident memory `5,703,712` KiB.
+
+All required structure and mode totals matched. The loaded population contained
+385,820 persons, 385,820 plans, 1,264,870 activities, 879,050 legs, and
+879,050 routes. It contained 37,286 Taxi legs across 15,439 persons. All six
+Taxi attribute runtime types and all Taxi type, classification-source, route,
+and `routingMode=ride` counts matched the adopted expectations. Every missing,
+invalid, duplicate, misplaced, or malformed counter was zero.
+
+The observed fare sum was `4,096,449.10000013` HKD and the fare-only score sum
+was `-204,822.455000014`, matching `-0.05 * fare sum` within floating-point
+tolerance. The scoring factory was constructed successfully and created
+scoring functions for one real Taxi person and one real non-Taxi person
+without running a scoring lifecycle.
+
+All seven input size/SHA256 snapshots were unchanged before and after the
+audit. The repository and result-directory scans found no events, output
+plans, output config, iteration, QSim, or simulation-output artifact. No
+Controler, QSim, routing, smoke simulation, ASC experiment, or fleet
+simulation was run.
+
+The adopted validation record is:
+
+```text
+data/taxi/hongkong/processed/taxi_scenario_load_test_v1/taxi_scenario_load_validation.json
+```
+
+It records `status=validated`, `all_checks_passed=true`, an empty
+`failed_checks` list, and all six required no-run flags as `false`.

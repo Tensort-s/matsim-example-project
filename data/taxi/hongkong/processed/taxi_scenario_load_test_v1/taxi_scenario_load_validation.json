@@ -1,0 +1,377 @@
+{
+  "audit": "hong_kong_taxi_scenario_load_audit_v1",
+  "status": "validated",
+  "started_utc": "2026-07-28T16:12:01.110709228Z",
+  "hostname": "FUSELAB01",
+  "checkpoint_sha": "fdc36b262d074be128afe35a857ddb0d113ff328",
+  "java": {
+    "version": "25.0.3",
+    "vendor": "Eclipse Adoptium",
+    "vm_name": "OpenJDK 64-Bit Server VM",
+    "max_heap_bytes": 34359738368,
+    "input_arguments": [
+      "-Xms8g",
+      "-Xmx32g",
+      "-Djava.io.tmpdir=/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/tmp",
+      "-Duser.home=/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/home",
+      "-DhkTaxiAudit.mavenVersion=3.9.16"
+    ]
+  },
+  "matsim_version": "2026.0",
+  "maven_version": "3.9.16",
+  "paths": {
+    "base_config": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+    "taxi_plans": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+    "validation_json": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/results/taxi_scenario_load_validation.json"
+  },
+  "input_files_before_load": {
+    "base_config": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+      "size_bytes": 11682,
+      "sha256": "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4"
+    },
+    "taxi_plans": {
+      "path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+      "size_bytes": 82100567,
+      "sha256": "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27"
+    },
+    "network": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+      "size_bytes": 2861518,
+      "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    "transit_schedule": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+      "size_bytes": 7182822,
+      "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    "transit_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+      "size_bytes": 455967,
+      "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "facilities": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+      "size_bytes": 3232921,
+      "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    "private_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+      "size_bytes": 78999,
+      "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    }
+  },
+  "scoring_config": {
+    "taxi_mode_present_before": false,
+    "existing_modes_before": {
+      "bike": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "car": {
+        "constant": -0.5,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": -7.0E-4,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "other": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "pt": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "ride": {
+        "constant": -1.5,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": -0.0015,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "walk": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      }
+    },
+    "modes_after_in_memory_override": {
+      "bike": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "car": {
+        "constant": -0.5,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": -7.0E-4,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "other": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "pt": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "ride": {
+        "constant": -1.5,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": -0.0015,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "taxi": {
+        "constant": -9.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      },
+      "walk": {
+        "constant": 0.0,
+        "marginalUtilityOfTraveling": -6.0,
+        "marginalUtilityOfDistance": 0.0,
+        "monetaryDistanceRate": 0.0,
+        "dailyMonetaryConstant": 0.0,
+        "dailyUtilityConstant": 0.0
+      }
+    },
+    "existing_non_taxi_modes_unchanged": true,
+    "taxi_mode_expected": {
+      "constant": -9.0,
+      "marginalUtilityOfTraveling": -6.0,
+      "marginalUtilityOfDistance": 0.0,
+      "monetaryDistanceRate": 0.0,
+      "dailyMonetaryConstant": 0.0,
+      "dailyUtilityConstant": 0.0
+    }
+  },
+  "scenario_load_completed": true,
+  "scenario_load_duration_seconds": 27.386192079,
+  "scenario_supply_counts": {
+    "network_nodes": 81205,
+    "network_links": 117989,
+    "transit_stop_facilities": 82822,
+    "transit_lines": 2434,
+    "transit_vehicle_types": 28,
+    "transit_vehicles": 159967,
+    "activity_facilities": 228220,
+    "private_vehicle_types": 2,
+    "private_vehicles": 25427
+  },
+  "population_audit": {
+    "persons": 385820,
+    "plans": 385820,
+    "activities": 1264870,
+    "legs": 879050,
+    "routes": 879050,
+    "mode_counts": {
+      "car": 67718,
+      "pt": 557104,
+      "ride": 19074,
+      "taxi": 37286,
+      "walk": 197868
+    },
+    "taxi_legs": 37286,
+    "taxi_persons": 15439,
+    "taxi_actual_mode_counts": {
+      "taxi": 37286
+    },
+    "taxi_type_counts": {
+      "lantau_taxi": 62,
+      "new_territories_taxi": 3654,
+      "unresolved": 2533,
+      "urban_taxi": 31037
+    },
+    "classification_source_counts": {
+      "resident_discretionary_ride_assignment": 23100,
+      "v1_mode_detail_explicit_taxi": 4614,
+      "visitor_tcs_proxy_unspecified_ride": 9572
+    },
+    "attribute_runtime_types": {
+      "hkTaxiClassificationSource": {
+        "java.lang.String": 37286
+      },
+      "hkTaxiFareBaselineHkd": {
+        "java.lang.Double": 37286
+      },
+      "hkTaxiFareModelVersion": {
+        "java.lang.String": 37286
+      },
+      "hkTaxiFareScope": {
+        "java.lang.String": 37286
+      },
+      "hkTaxiMainTripIndex": {
+        "java.lang.Integer": 37286
+      },
+      "hkTaxiType": {
+        "java.lang.String": 37286
+      }
+    },
+    "duplicate_taxi_attribute_names": 0,
+    "missing_taxi_attribute_values": 0,
+    "invalid_taxi_attribute_runtime_types": 0,
+    "invalid_taxi_attribute_values": 0,
+    "invalid_scope": 0,
+    "invalid_model_version": 0,
+    "negative_or_non_finite_fare": 0,
+    "invalid_main_trip_index": 0,
+    "blank_classification_source": 0,
+    "attribute_validation_failures": 0,
+    "attribute_validation_failure_examples": [],
+    "non_taxi_legs_with_taxi_attributes": 0,
+    "taxi_legs_missing_route": 0,
+    "taxi_route_invalid_distance": 0,
+    "taxi_route_undefined_travel_time": 0,
+    "taxi_route_invalid_travel_time": 0,
+    "taxi_routing_mode_counts": {
+      "ride": 37286
+    },
+    "fare_statistics_hkd": {
+      "mean": 109.86560907579239,
+      "median": 98.3,
+      "p10": 29.0,
+      "p25": 47.9,
+      "p75": 143.1,
+      "p90": 222.5,
+      "p95": 262.1,
+      "min": 24.0,
+      "max": 491.7
+    },
+    "fare_sum_hkd": 4096449.1000001333,
+    "fare_only_score_sum": -204822.4550000141,
+    "fare_only_scorer_taxi_legs": 37286,
+    "expected_fare_only_score_sum": -204822.45500000668,
+    "representative_taxi_person_id": "hk_collective_000024",
+    "representative_non_taxi_person_id": "hk_collective_000000"
+  },
+  "scoring_factory_audit": {
+    "passed": true,
+    "factory_class": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory",
+    "taxi_person_id": "hk_collective_000024",
+    "taxi_scoring_function_class": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunction",
+    "non_taxi_person_id": "hk_collective_000000",
+    "non_taxi_scoring_function_class": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunction",
+    "scoring_lifecycle_run": false
+  },
+  "input_files_after_audit": {
+    "base_config": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+      "size_bytes": 11682,
+      "sha256": "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4"
+    },
+    "taxi_plans": {
+      "path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+      "size_bytes": 82100567,
+      "sha256": "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27"
+    },
+    "network": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+      "size_bytes": 2861518,
+      "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    "transit_schedule": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+      "size_bytes": 7182822,
+      "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    "transit_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+      "size_bytes": 455967,
+      "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "facilities": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+      "size_bytes": 3232921,
+      "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    "private_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+      "size_bytes": 78999,
+      "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    }
+  },
+  "forbidden_simulation_outputs": [],
+  "run_flags": {
+    "matsim_run": false,
+    "controler_run": false,
+    "qsim_run": false,
+    "routing_run": false,
+    "asc_experiment": false,
+    "fleet_simulation": false,
+    "controler_created": false,
+    "qsim_started": false,
+    "iterations_run": false,
+    "asc_calibration_run": false,
+    "fleet_model_run": false
+  },
+  "required_checks": {
+    "checkpoint_sha_is_full_hex": true,
+    "matsim_version_is_2026_0": true,
+    "java_major_version_is_25": true,
+    "maven_version_recorded": true,
+    "taxi_mode_absent_in_base_config": true,
+    "existing_non_taxi_scoring_modes_unchanged": true,
+    "taxi_scoring_mode_exact": true,
+    "input_hashes_stable": true,
+    "taxi_plans_sha256_exact": true,
+    "scenario_structure_exact": true,
+    "leg_modes_exact": true,
+    "taxi_leg_and_person_counts_exact": true,
+    "taxi_types_exact": true,
+    "classification_sources_exact": true,
+    "taxi_attribute_runtime_types_exact": true,
+    "taxi_attributes_complete_and_valid": true,
+    "non_taxi_legs_have_no_taxi_attributes": true,
+    "all_taxi_routes_complete": true,
+    "taxi_routing_mode_is_ride_only": true,
+    "fare_statistics_exact": true,
+    "fare_only_scorer_visited_every_taxi_leg": true,
+    "fare_score_sum_matches_formula": true,
+    "scoring_factory_created_for_taxi_and_non_taxi": true,
+    "complete_scenario_supply_loaded": true,
+    "no_forbidden_simulation_outputs": true,
+    "no_controler_qsim_routing_iterations_or_fleet_run": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true,
+  "finished_utc": "2026-07-28T16:12:31.676644519Z",
+  "total_audit_duration_seconds": 30.566009109,
+  "load_exit_code": 0,
+  "process_exit_code": 0
+}
