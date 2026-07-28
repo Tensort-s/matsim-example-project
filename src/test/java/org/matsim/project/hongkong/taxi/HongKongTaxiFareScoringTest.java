@@ -6,6 +6,7 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.population.PopulationUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -124,20 +125,36 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void stringFareFailsInsteadOfBeingParsedOrDefaulted() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
-				"98.3",
-				"urban_taxi",
-				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
-				HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
-				"test_classification",
-				0
+	void everyNonDoubleFareRuntimeTypeIsRejected() {
+		record InvalidFare(Object value, String runtimeType) {
+		}
+		List<InvalidFare> invalidFares = List.of(
+				new InvalidFare(98, "java.lang.Integer"),
+				new InvalidFare(98L, "java.lang.Long"),
+				new InvalidFare(98.3F, "java.lang.Float"),
+				new InvalidFare(new BigDecimal("98.3"), "java.math.BigDecimal"),
+				new InvalidFare("98.3", "java.lang.String")
 		);
-		IllegalArgumentException error = assertThrows(
-				IllegalArgumentException.class,
-				() -> newScoring().handleLeg(leg)
-		);
-		assertErrorContext(error, HongKongTaxiLegAttributes.FARE_BASELINE_HKD, "java.lang.String");
+		for (InvalidFare invalidFare : invalidFares) {
+			Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+					invalidFare.value(),
+					"urban_taxi",
+					HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
+					HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
+					"test_classification",
+					0
+			);
+			IllegalArgumentException error = assertThrows(
+					IllegalArgumentException.class,
+					() -> newScoring().handleLeg(leg)
+			);
+			assertTypedErrorContext(
+					error,
+					HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
+					invalidFare.runtimeType(),
+					"java.lang.Double"
+			);
+		}
 	}
 
 	@Test
@@ -153,7 +170,12 @@ class HongKongTaxiFareScoringTest {
 					IllegalArgumentException.class,
 					() -> newScoring().handleLeg(leg)
 			);
-			assertErrorContext(error, HongKongTaxiLegAttributes.FARE_BASELINE_HKD, "java.lang.Double");
+			assertTypedErrorContext(
+					error,
+					HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
+					"java.lang.Double",
+					"java.lang.Double"
+			);
 		}
 	}
 
@@ -196,20 +218,33 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void nonIntegerMainTripIndexFails() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
-				24.0,
-				"urban_taxi",
-				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
-				HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
-				"test_classification",
-				2.0
+	void doubleAndLongMainTripIndicesFail() {
+		record InvalidIndex(Object value, String runtimeType) {
+		}
+		List<InvalidIndex> invalidIndices = List.of(
+				new InvalidIndex(2.0, "java.lang.Double"),
+				new InvalidIndex(2L, "java.lang.Long")
 		);
-		IllegalArgumentException error = assertThrows(
-				IllegalArgumentException.class,
-				() -> newScoring().handleLeg(leg)
-		);
-		assertErrorContext(error, HongKongTaxiLegAttributes.MAIN_TRIP_INDEX, "java.lang.Double");
+		for (InvalidIndex invalidIndex : invalidIndices) {
+			Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+					24.0,
+					"urban_taxi",
+					HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
+					HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
+					"test_classification",
+					invalidIndex.value()
+			);
+			IllegalArgumentException error = assertThrows(
+					IllegalArgumentException.class,
+					() -> newScoring().handleLeg(leg)
+			);
+			assertTypedErrorContext(
+					error,
+					HongKongTaxiLegAttributes.MAIN_TRIP_INDEX,
+					invalidIndex.runtimeType(),
+					"java.lang.Integer"
+			);
+		}
 	}
 
 	@Test
@@ -253,6 +288,32 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
+	void nonStringTextAttributesAreRejectedWithExactTypeContext() {
+		record InvalidTextAttribute(String name, Object value) {
+		}
+		List<InvalidTextAttribute> invalidAttributes = List.of(
+				new InvalidTextAttribute(HongKongTaxiLegAttributes.TAXI_TYPE, 1),
+				new InvalidTextAttribute(HongKongTaxiLegAttributes.FARE_SCOPE, 2L),
+				new InvalidTextAttribute(HongKongTaxiLegAttributes.FARE_MODEL_VERSION, 3.0F),
+				new InvalidTextAttribute(HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE, 4.0)
+		);
+		for (InvalidTextAttribute invalid : invalidAttributes) {
+			Leg leg = HongKongTaxiTestFixtures.taxiLeg(24.0);
+			leg.getAttributes().putAttribute(invalid.name(), invalid.value());
+			IllegalArgumentException error = assertThrows(
+					IllegalArgumentException.class,
+					() -> newScoring().handleLeg(leg)
+			);
+			assertTypedErrorContext(
+					error,
+					invalid.name(),
+					invalid.value().getClass().getName(),
+					"java.lang.String"
+			);
+		}
+	}
+
+	@Test
 	void scoreExplanationIdentifiesFareContribution() {
 		HongKongTaxiFareScoring scoring = scored(100.0);
 		StringBuilder explanation = new StringBuilder();
@@ -285,5 +346,19 @@ class HongKongTaxiFareScoringTest {
 		assertTrue(error.getMessage().contains("attribute=" + attributeName));
 		assertTrue(error.getMessage().contains(actualFragment));
 		assertTrue(error.getMessage().contains("expected="));
+	}
+
+	private static void assertTypedErrorContext(
+			IllegalArgumentException error,
+			String attributeName,
+			String actualType,
+			String expectedType) {
+		assertTrue(error.getMessage().contains("person_id=" + PERSON_ID));
+		assertTrue(error.getMessage().contains("leg_mode=taxi"));
+		assertTrue(error.getMessage().contains("attribute=" + attributeName));
+		assertTrue(error.getMessage().contains("actual_value="));
+		assertTrue(error.getMessage().contains("actual_type=" + actualType));
+		assertTrue(error.getMessage().contains("expected="));
+		assertTrue(error.getMessage().contains(expectedType));
 	}
 }

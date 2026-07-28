@@ -29,18 +29,17 @@ public final class HongKongTaxiLegAttributes {
 		Objects.requireNonNull(parameters, "parameters");
 
 		Attributes attributes = leg.getAttributes();
-		Object fareValue = required(attributes, leg, personId, FARE_BASELINE_HKD, "java.lang.Double or Number");
-		if (!(fareValue instanceof Number fareNumber)) {
-			throw invalid(leg, personId, FARE_BASELINE_HKD, fareValue, "java.lang.Double or Number");
+		Object fareValue = required(attributes, leg, personId, FARE_BASELINE_HKD, "java.lang.Double");
+		if (!(fareValue instanceof Double fareHkd)) {
+			throw invalid(leg, personId, FARE_BASELINE_HKD, fareValue, "java.lang.Double");
 		}
-		double fareHkd = fareNumber.doubleValue();
 		if (!Double.isFinite(fareHkd) || fareHkd < 0.0) {
 			throw invalid(
 					leg,
 					personId,
 					FARE_BASELINE_HKD,
 					fareValue,
-					"finite non-negative java.lang.Double or Number"
+					"finite non-negative java.lang.Double"
 			);
 		}
 

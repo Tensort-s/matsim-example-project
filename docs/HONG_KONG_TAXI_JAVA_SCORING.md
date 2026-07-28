@@ -26,16 +26,20 @@ The scorer reads only the typed attributes already embedded in each
 
 | Attribute | Runtime type | Validation |
 |---|---|---|
-| `hkTaxiFareBaselineHkd` | `Double`/`Number` | finite and non-negative |
-| `hkTaxiType` | `String` | non-blank; `unresolved` is accepted |
-| `hkTaxiFareScope` | `String` | exactly `distance_only_v1` |
-| `hkTaxiFareModelVersion` | `String` | exactly `hong_kong_taxi_fare_model_v1` |
-| `hkTaxiClassificationSource` | `String` | non-blank |
-| `hkTaxiMainTripIndex` | `Integer` | non-negative |
+| `hkTaxiFareBaselineHkd` | `java.lang.Double` | finite and non-negative |
+| `hkTaxiType` | `java.lang.String` | non-blank; `unresolved` is accepted |
+| `hkTaxiFareScope` | `java.lang.String` | exactly `distance_only_v1` |
+| `hkTaxiFareModelVersion` | `java.lang.String` | exactly `hong_kong_taxi_fare_model_v1` |
+| `hkTaxiClassificationSource` | `java.lang.String` | non-blank |
+| `hkTaxiMainTripIndex` | `java.lang.Integer` | non-negative |
 
 All names are defined once in `HongKongTaxiLegAttributes`. MATSim exposes leg
 attributes as a map, so one runtime name has at most one value. Every required
 name must be present; an explicit null is also rejected.
+
+The fare type contract is exact: `Integer`, `Long`, `Float`, `BigDecimal`,
+`String`, and every other non-`Double` runtime type are interface errors.
+Values are not parsed or converted through `Number.doubleValue()`.
 
 No CSV or Parquet fare lookup is performed at runtime. A missing fare is not
 treated as zero, and route distance is never used to reconstruct a fare.
@@ -180,8 +184,10 @@ Coverage includes:
 - idempotent `getScore()` and no extra charge from `finish()`;
 - `mode=taxi` plus `routingMode=ride`;
 - non-taxi mode exclusion and accepted `unresolved` taxi type;
-- each missing attribute, wrong fare type, negative/non-finite fare, wrong
-  scope/version, invalid main-trip index, and blank classification metadata;
+- each missing attribute; `Integer`, `Long`, `Float`, `BigDecimal`, and
+  `String` fare types; negative/non-finite `Double` fares; non-String text
+  attributes; wrong scope/version; `Double`/`Long` or negative main-trip
+  indices; and blank classification metadata;
 - standard activity, leg, trip, money, score, stuck, event, finish, and
   explanation forwarding;
 - exact delegate-plus-fare total and person-local state;
@@ -202,7 +208,7 @@ mvn `
 The completed exact test run reports:
 
 ```text
-Tests run: 31
+Tests run: 32
 Failures:  0
 Errors:    0
 Skipped:   0
