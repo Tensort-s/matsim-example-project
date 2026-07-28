@@ -1,0 +1,98 @@
+{
+  "model": "Hong Kong private car offline cost model v1",
+  "input_all_main_legs": 743614,
+  "input_car_mode_legs": 67718,
+  "parsed_routed_car_mode_legs": 67718,
+  "car_leg_count_matches_input": true,
+  "private_car_vehicle_legs": 64789,
+  "motorcycle_vehicle_legs_out_of_scope": 2929,
+  "other_vehicle_class_car_legs": 0,
+  "all_private_car_routes_have_link_sequences": true,
+  "negative_cost_rows_by_scenario": {
+    "low": 0,
+    "base": 0,
+    "high": 0
+  },
+  "all_costs_nonnegative": true,
+  "energy_cost_monotone_non_decreasing_with_distance": {
+    "low": true,
+    "base": true,
+    "high": true
+  },
+  "low_base_high_ordering": {
+    "energy_cost_hkd": true,
+    "toll_cost_hkd": true,
+    "parking_cost_hkd": true,
+    "marginal_cost_hkd": true,
+    "fixed_vehicle_ownership_cost": true
+  },
+  "parking_session_rows_private_car": 64789,
+  "parking_session_ids_unique": true,
+  "parking_duplicate_charge_count": 0,
+  "home_parking_rows": 28858,
+  "home_parking_all_zero": true,
+  "fixed_vehicle_ownership_rows_base": 21020,
+  "unique_used_private_car_vehicles": 21020,
+  "fixed_cost_one_row_per_used_vehicle": true,
+  "fixed_cost_not_attached_to_leg": true,
+  "toll_status_counts_all_car_mode_legs": {
+    "confirmed_no_charge": 63781,
+    "unresolved_out_of_scope_vehicle_class": 2929,
+    "confirmed_charge": 1008
+  },
+  "toll_status_counts_private_car_standardized": {
+    "confirmed_charge": 1008,
+    "confirmed_no_charge": 63781,
+    "ambiguous": 0,
+    "unresolved": 0
+  },
+  "toll_confirmed_share_private_car": 1.0,
+  "toll_confirmed_charge_share_private_car": 0.015558196607448796,
+  "parking_status_counts_base_private_car": {
+    "resolved_proxy": 35664,
+    "resolved_zero_marginal": 28858,
+    "unresolved_duration": 164,
+    "unresolved_destination_tcs_zone": 103
+  },
+  "parking_resolved_share_base_private_car": 0.9958789300652888,
+  "source_snapshot_hashes_match_manifest": true,
+  "protected_input_hashes_unchanged": true,
+  "protected_input_hashes_before": {
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "agent_trip_manifest_v2.parquet": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+    "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+    "transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+  },
+  "protected_input_hashes_after": {
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "agent_trip_manifest_v2.parquet": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+    "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+    "transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+  },
+  "canonical_data_matsim_agents_git_status_before": "",
+  "canonical_data_matsim_agents_git_status_after": "",
+  "canonical_data_matsim_agents_git_status_unchanged": true,
+  "car_scoring_snapshot_read_only": {
+    "mode": "car",
+    "constant": "-0.5",
+    "marginalUtilityOfTraveling_util_hr": "-6",
+    "monetaryDistanceRate": "-0.0007"
+  },
+  "marginal_cost_components_recommended_for_first_behavioural_pilot": [
+    "fuel_or_electricity",
+    "confirmed_toll",
+    "resolved_destination_parking"
+  ],
+  "fixed_cost_treatment": "One daily fixed-cost row per used private-car vehicle. It is excluded from leg marginal cost and is never repeated per leg.",
+  "unresolved_policy": "No unsupported amount is imputed. Motorcycle car-mode legs and parking without a supported TCS-zone/activity/duration rule use unresolved_cost."
+}

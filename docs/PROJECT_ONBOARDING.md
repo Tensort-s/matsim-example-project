@@ -86,6 +86,7 @@ docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
 docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
+docs/HONG_KONG_CAR_COST_MODEL.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -159,6 +160,13 @@ capacity-factor, transit-capacity, or route-specific stop-link assumptions.
 The current `ride` mode is audited against 2026 Transport Department taxi
 controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
 read-only and does not modify the adopted v2 plans.
+
+The first private-car offline cost and data-quality audit is under
+`data/transport_costs/hongkong/car_cost_v1/` and documented in
+`docs/HONG_KONG_CAR_COST_MODEL.md`. It separates representative fleet energy,
+confirmed link-level private-car tolls, destination-parking proxies, and one
+fixed vehicle-day ownership record. It does not modify the active car scoring,
+plans, config, network, facilities, vehicles, or simulation outputs.
 
 The final local SimWrapper project for this configuration is:
 

@@ -252,7 +252,27 @@ egress expansion.
 
 Details: `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md`.
 
-### 9. Final simulation and visualization
+### 9. Offline private-car cost audit
+
+The read-only private-car cost model v1 estimates low/base/high:
+
+- representative fleet-average fuel or electricity cost;
+- private-car tolls confirmed from complete route link sequences and official
+  GDB toll feature IDs;
+- TCS-zone, activity, arrival-time, and duration-based destination parking;
+- one partial fixed vehicle-day ownership record per used private car.
+
+Production audit directory:
+
+```text
+data/transport_costs/hongkong/car_cost_v1/
+```
+
+This is an auxiliary offline audit. It does not change
+`car monetaryDistanceRate`, global money utility, mode choice, or any
+production MATSim input. Details: `docs/HONG_KONG_CAR_COST_MODEL.md`.
+
+### 10. Final simulation and visualization
 
 Adopted simulation parameters:
 
@@ -341,6 +361,9 @@ change actually invalidates an upstream stage.
 - Detector and ATC road-flow observations do not cover every road link.
 - `ride` demand does not create a complete taxi, ride-hailing, or school-bus
   operator fleet.
+- Private-car powertrains and destination car parks are not observed at
+  vehicle/facility level; the offline car-cost layer therefore uses an
+  explicit representative fleet and official-rate-bounded parking proxies.
 
 These limitations must remain visible in publications, validation summaries,
 and future model extensions.

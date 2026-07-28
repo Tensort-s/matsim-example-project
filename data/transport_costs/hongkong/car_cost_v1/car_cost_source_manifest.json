@@ -1,0 +1,198 @@
+{
+  "model": "Hong Kong private car offline cost model v1",
+  "generated_date": "2026-07-28",
+  "source_snapshot_date": "2026-07-28",
+  "currency": "HKD",
+  "sources": [
+    {
+      "source_id": "consumer_oil_price",
+      "source_url": "https://oil-price.consumer.org.hk/en",
+      "source_file": "source_snapshots/consumer_oil_price.html",
+      "file_sha256": "7307f020289596dc415c646b9ce1ce039fc8fd71f7f62f755533e6246c397421",
+      "file_size_bytes": 71012,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-07-28",
+      "role": "Consumer Council standard-petrol pump and walk-in-discount prices.",
+      "publisher": "Hong Kong Consumer Council"
+    },
+    {
+      "source_id": "government_private_car_energy_consumption",
+      "source_url": "https://www.info.gov.hk/gia/general/202005/06/P2020050600552.htm",
+      "source_file": "source_snapshots/government_private_car_energy_consumption.html",
+      "file_sha256": "aaa7397a6e41935d1abf388308c8c036daaeef02af1e654085160ab9486b2da4",
+      "file_size_bytes": 23991,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2020-05-06",
+      "role": "Government reply citing EMSD 1501-2500cc petrol-car consumption and the most common electric-private-car consumption.",
+      "publisher": "Hong Kong SAR Government"
+    },
+    {
+      "source_id": "government_electricity_tariff_2026",
+      "source_url": "https://www.info.gov.hk/gia/general/202511/18/P2025111800787p.htm",
+      "source_file": "source_snapshots/government_electricity_tariff_2026.html",
+      "file_sha256": "1046f20140072e6c69cad64fa086ca9cc169717ea3e15c181441095871bad0db",
+      "file_size_bytes": 6387,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-01-01",
+      "role": "Government announcement of CLP and HK Electric 2026 average net tariffs.",
+      "publisher": "Hong Kong SAR Government"
+    },
+    {
+      "source_id": "td_toll_rates",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/toll_matters/toll_rates_of_road_tunnels_and_lantau_link/index.html",
+      "source_file": "source_snapshots/td_toll_rates.html",
+      "file_sha256": "9f1917206808e9cad68c368e5830c49511d9ebdeafb9c0bab461bfc3ab3a57cc",
+      "file_size_bytes": 13445,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-07-17",
+      "role": "Transport Department flat and time-varying road-toll overview.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_harbour_tvt",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/tvt/index.html",
+      "source_file": "source_snapshots/td_harbour_tvt.html",
+      "file_sha256": "847c1ee17e41751c63099e349c9839aa2fbaf34d3242d99afeb21ae4328670fe",
+      "file_size_bytes": 41111,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2023-12-17",
+      "role": "Transport Department road-harbour-crossing time-varying toll rules.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_tai_lam_tvt",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/tlt/index.html",
+      "source_file": "source_snapshots/td_tai_lam_tvt.html",
+      "file_sha256": "b206ee39c782824e25364d8ca6207f415cde57198fb9b462ee9dd5d0fda714b6",
+      "file_size_bytes": 27347,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2025-05-31",
+      "role": "Transport Department Tai Lam Tunnel time-varying toll rules.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_government_car_parks",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/parking/carparks/gov_car_parks_managed_by_td/index.html",
+      "source_file": "source_snapshots/td_government_car_parks.html",
+      "file_sha256": "239807d090670890ab7b29cc19955d0156da8272e55d7445929a64f81c5f31df",
+      "file_size_bytes": 21682,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-03-01",
+      "role": "Transport Department 2026 government-car-park hourly, pass and subscription fees.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_parking_meters",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/parking/parking_meters/index.html",
+      "source_file": "source_snapshots/td_parking_meters.html",
+      "file_sha256": "0d5c4ca4e0078b22a599c3b27dd8210b34a9356db63e4e33901f39bb312f730f",
+      "file_size_bytes": 5903,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2025-09-28",
+      "role": "Transport Department maximum private-car meter fee.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_parking_fees_2026",
+      "source_url": "https://www.td.gov.hk/filemanager/en/content_4841/ParkingFeeRev2026en.pdf",
+      "source_file": "source_snapshots/td_parking_fees_2026.pdf",
+      "file_sha256": "313351664ee878c8a634f82d644cfa58d14246565049386cfb3ba129f806d660",
+      "file_size_bytes": 401578,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-03-01",
+      "role": "Transport Department 11 government public car parks fee schedule.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "housing_authority_carpark_fees_2026",
+      "source_url": "https://www.housingauthority.gov.hk/en/common/pdf/about-us/housing-authority/ha-paper-library/CPC09-2025EN.pdf",
+      "source_file": "source_snapshots/housing_authority_carpark_fees_2026.pdf",
+      "file_sha256": "ed158acfeadbf37b4fe175266d1c88c7af3c368baf57152ec0f9b09fba0c588b",
+      "file_size_bytes": 212843,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-01-01",
+      "role": "Hong Kong Housing Authority 2026 hourly and monthly parking fees.",
+      "publisher": "Hong Kong Housing Authority"
+    },
+    {
+      "source_id": "td_vehicle_licence_fees_2026",
+      "source_url": "https://www.td.gov.hk/filemanager/common/td341_2_2026_eng.pdf",
+      "source_file": "source_snapshots/td_vehicle_licence_fees_2026.pdf",
+      "file_sha256": "5964b65bacd37dc59965934de46688665e3f3de5ef3dd2b02fe02b94d60f8303",
+      "file_size_bytes": 629290,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2026-03-01",
+      "role": "Transport Department petrol and electric private-car annual licence fees.",
+      "publisher": "Transport Department"
+    },
+    {
+      "source_id": "td_vehicle_fuel_type_2025_12",
+      "source_url": "https://www.td.gov.hk/filemanager/en/content_5378/table44.xls",
+      "source_file": "source_snapshots/td_vehicle_fuel_type_2025_12.xls",
+      "file_sha256": "ec26fa8aef93ae02e10121dbbc6d1e1a5c5fff61ed49e67f65cfb338d2a53f08",
+      "file_size_bytes": 51712,
+      "retrieval_date": "2026-07-28",
+      "effective_date": "2025-12-31",
+      "role": "Transport Department December 2025 registered/licensed vehicles by fuel type.",
+      "publisher": "Transport Department"
+    }
+  ],
+  "machine_readable_toll_source": {
+    "source_path": "F:/Matsim/matsim-example-project/data/transit/hongkong/RdNet_IRNP.gdb",
+    "directory_sha256_method": "SHA256 over sorted relative file names and bytes, with each UTF-8 relative name prefixed by its 8-byte big-endian length.",
+    "directory_sha256": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+    "flat_private_car_rows": 5,
+    "time_varying_private_car_rows_before_backup_deduplication": 278,
+    "canonical_facilities": 9
+  },
+  "licensed_private_car_fleet": {
+    "combustion_proxy_share": 0.7576207784392236,
+    "electric_share": 0.24237922156077646,
+    "licensed_petrol": 432752.0,
+    "licensed_diesel": 10338.0,
+    "licensed_electric": 141771.0,
+    "licensed_lpg": 0.0,
+    "licensed_hydrogen": 0.0,
+    "licensed_others": 53.0,
+    "licensed_total": 584914.0
+  },
+  "fixed_vehicle_ownership_cost_parameters": [
+    {
+      "scenario": "low",
+      "combustion_annual_licence_hkd": 5074.0,
+      "electric_annual_licence_hkd": 1614.0,
+      "residential_monthly_parking_hkd": 0.0,
+      "source_url": "https://www.td.gov.hk/filemanager/common/td341_2_2026_eng.pdf|https://www.housingauthority.gov.hk/en/common/pdf/about-us/housing-authority/ha-paper-library/CPC09-2025EN.pdf|https://www.td.gov.hk/en/transport_in_hong_kong/parking/carparks/gov_car_parks_managed_by_td/index.html",
+      "source_file": "source_snapshots/td_vehicle_licence_fees_2026.pdf|source_snapshots/housing_authority_carpark_fees_2026.pdf|source_snapshots/td_government_car_parks.html",
+      "file_sha256": "5964b65bacd37dc59965934de46688665e3f3de5ef3dd2b02fe02b94d60f8303|ed158acfeadbf37b4fe175266d1c88c7af3c368baf57152ec0f9b09fba0c588b|239807d090670890ab7b29cc19955d0156da8272e55d7445929a64f81c5f31df",
+      "effective_date": "2026-03-01",
+      "exclusions": "depreciation|finance|insurance|maintenance",
+      "cost_quality": "partial_fixed_cost_official_licence_and_parking_proxy"
+    },
+    {
+      "scenario": "base",
+      "combustion_annual_licence_hkd": 7498.0,
+      "electric_annual_licence_hkd": 2614.0,
+      "residential_monthly_parking_hkd": 3310.0,
+      "source_url": "https://www.td.gov.hk/filemanager/common/td341_2_2026_eng.pdf|https://www.housingauthority.gov.hk/en/common/pdf/about-us/housing-authority/ha-paper-library/CPC09-2025EN.pdf|https://www.td.gov.hk/en/transport_in_hong_kong/parking/carparks/gov_car_parks_managed_by_td/index.html",
+      "source_file": "source_snapshots/td_vehicle_licence_fees_2026.pdf|source_snapshots/housing_authority_carpark_fees_2026.pdf|source_snapshots/td_government_car_parks.html",
+      "file_sha256": "5964b65bacd37dc59965934de46688665e3f3de5ef3dd2b02fe02b94d60f8303|ed158acfeadbf37b4fe175266d1c88c7af3c368baf57152ec0f9b09fba0c588b|239807d090670890ab7b29cc19955d0156da8272e55d7445929a64f81c5f31df",
+      "effective_date": "2026-03-01",
+      "exclusions": "depreciation|finance|insurance|maintenance",
+      "cost_quality": "partial_fixed_cost_official_licence_and_parking_proxy"
+    },
+    {
+      "scenario": "high",
+      "combustion_annual_licence_hkd": 9929.0,
+      "electric_annual_licence_hkd": 5114.0,
+      "residential_monthly_parking_hkd": 4850.0,
+      "source_url": "https://www.td.gov.hk/filemanager/common/td341_2_2026_eng.pdf|https://www.housingauthority.gov.hk/en/common/pdf/about-us/housing-authority/ha-paper-library/CPC09-2025EN.pdf|https://www.td.gov.hk/en/transport_in_hong_kong/parking/carparks/gov_car_parks_managed_by_td/index.html",
+      "source_file": "source_snapshots/td_vehicle_licence_fees_2026.pdf|source_snapshots/housing_authority_carpark_fees_2026.pdf|source_snapshots/td_government_car_parks.html",
+      "file_sha256": "5964b65bacd37dc59965934de46688665e3f3de5ef3dd2b02fe02b94d60f8303|ed158acfeadbf37b4fe175266d1c88c7af3c368baf57152ec0f9b09fba0c588b|239807d090670890ab7b29cc19955d0156da8272e55d7445929a64f81c5f31df",
+      "effective_date": "2026-03-01",
+      "exclusions": "depreciation|finance|insurance|maintenance",
+      "cost_quality": "partial_fixed_cost_official_licence_and_parking_proxy"
+    }
+  ],
+  "source_policy": "Official Hong Kong government or Consumer Council sources are pinned. Proxy assumptions are explicit and do not create per-vehicle powertrains."
+}

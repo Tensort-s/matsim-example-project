@@ -1,0 +1,16 @@
+scenario,cost_component,records,positive_records,total_cost_hkd,record_scope,mean_hkd,median_hkd,p90_hkd
+low,destination_parking,64522,26959,838964.0,leg_marginal_cost,13.002758748953845,0.0,38.0
+low,fixed_vehicle_ownership_cost,21020,21020,243910.77566921085,vehicle_day_fixed_cost_not_leg,11.603747653149897,11.6037476531499,11.6037476531499
+low,fuel_or_electricity,64789,64756,1659564.3603039086,leg_marginal_cost,25.614909325717463,20.453589564667148,54.16921416489382
+low,toll,64789,1008,19196.0,leg_marginal_cost,0.2962848631712173,0.0,0.0
+low,unresolved_cost,3196,0,0.0,leg_marginal_cost,0.0,0.0,0.0
+base,destination_parking,64522,35664,2640277.0,leg_marginal_cost,40.92056972815474,32.0,110.0
+base,fixed_vehicle_ownership_cost,21020,21020,2651066.580595832,vehicle_day_fixed_cost_not_leg,126.12115036136213,126.1211503613621,126.1211503613621
+base,fuel_or_electricity,64789,64756,2341793.9504491794,leg_marginal_cost,36.14493124526045,28.86184679136917,76.43761282551544
+base,toll,64789,1008,19605.0,leg_marginal_cost,0.3025976631835651,0.0,0.0
+base,unresolved_cost,3196,0,0.0,leg_marginal_cost,0.0,0.0,0.0
+high,destination_parking,64522,35664,3387337.0,leg_marginal_cost,52.498946095905275,42.0,192.0
+high,fixed_vehicle_ownership_cost,21020,21020,3856274.147651632,vehicle_day_fixed_cost_not_leg,183.4573809539311,183.4573809539311,183.4573809539311
+high,fuel_or_electricity,64789,64756,3564398.11267624,leg_marginal_cost,55.01548276213925,43.930044405390404,116.34417402115373
+high,toll,64789,1008,19885.0,leg_marginal_cost,0.306919384463412,0.0,0.0
+high,unresolved_cost,3196,0,0.0,leg_marginal_cost,0.0,0.0,0.0
