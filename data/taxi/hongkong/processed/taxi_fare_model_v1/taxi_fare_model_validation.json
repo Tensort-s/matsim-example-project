@@ -1,0 +1,92 @@
+{
+  "base_total_taxi_passenger_legs": 37286,
+  "base_total_taxi_passenger_legs_ok": true,
+  "explicit_taxi_retained_legs": 4614,
+  "explicit_taxi_retained_ok": true,
+  "base_added_taxi_legs": 32672,
+  "base_added_taxi_legs_ok": true,
+  "private_car_passenger_preserved_legs": 3564,
+  "school_bus_preserved_legs": 9626,
+  "non_taxi_candidate_legs_not_charged_base": 5884,
+  "non_taxi_candidate_legs_not_charged_ok": true,
+  "same_tour_classification_consistent_base": true,
+  "fare_not_below_flagfall_for_assigned_types": true,
+  "negative_fares": 0,
+  "currency": "HKD",
+  "official_parameters_have_source_and_effective_date": true,
+  "plans_facilities_network_hashes_unchanged": true,
+  "hash_before": {
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+  },
+  "hash_after": {
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+  },
+  "git_status_before_data_matsim_agents_hongkong": "",
+  "git_status_after_data_matsim_agents_hongkong": "",
+  "git_status_data_matsim_agents_hongkong_unchanged_and_empty": true,
+  "unrouted_plan_leg_mode_counts": {
+    "car": 67718,
+    "pt": 557104,
+    "ride": 56360,
+    "walk": 62432
+  },
+  "route_distance_unavailable_share_base": 0.0,
+  "congestion_proxy_unavailable_share_base": 1.0,
+  "taxi_type_unresolved_share_base": 0.06793434533068712,
+  "tolled_tunnel_share_base": 0.0,
+  "fare_boundary_tests": [
+    {
+      "taxi_type": "urban_taxi",
+      "distances_m": [
+        2000.0,
+        2000.01,
+        9000.0,
+        9000.01
+      ],
+      "fares_hkd": [
+        29.0,
+        31.1,
+        102.5,
+        103.9
+      ]
+    },
+    {
+      "taxi_type": "new_territories_taxi",
+      "distances_m": [
+        2000.0,
+        2000.01,
+        8000.0,
+        8000.01
+      ],
+      "fares_hkd": [
+        25.5,
+        27.4,
+        82.5,
+        83.9
+      ]
+    },
+    {
+      "taxi_type": "lantau_taxi",
+      "distances_m": [
+        2000.0,
+        2000.01,
+        20000.0,
+        20000.01
+      ],
+      "fares_hkd": [
+        24.0,
+        25.9,
+        195.0,
+        196.6
+      ]
+    }
+  ],
+  "monotonicity_note": "Discrete fare function is monotone by construction; boundary tests verify ceiling jumps.",
+  "non_modification_statement": "No MATSim plans, config, facilities, vehicles, network, Java runner, modes, activities, OD, departure times, road capacities, or scoring parameters are modified."
+}

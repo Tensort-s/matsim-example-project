@@ -252,3 +252,24 @@ The summary records SHA256 hashes before and after allocation for
 `facilities_5pct_v2.xml.gz`. The hashes are unchanged, and
 `git status --short -- data/matsim_agents/hongkong` is empty before and after
 the allocation run.
+
+## Offline fare audit v1
+
+The first fare layer is documented in `docs/HONG_KONG_TAXI_FARE_MODEL.md` and
+written under:
+
+```text
+data/taxi/hongkong/processed/taxi_fare_model_v1/
+```
+
+It reads the low/base/high taxi classifications, official Transport Department
+taxi fare and tunnel-surcharge source pages, the routed v2 plans, facilities,
+and the current formal network. It computes distance-only meter fares using
+the official discrete 200 m jump rules. It does not modify plans XML, configs,
+facilities, vehicles, network files, Java runners, modes, scoring, activities,
+OD, departure times, or leg counts.
+
+The base fare audit covers exactly 37,286 taxi passenger legs: 4,614 retained
+explicit taxi legs and 32,672 allocated taxi legs from the unspecified-ride
+candidate pool. The 5,884 base `other_ride` candidate legs, plus the preserved
+private-car passenger and school-bus ride legs, are not charged as taxi.

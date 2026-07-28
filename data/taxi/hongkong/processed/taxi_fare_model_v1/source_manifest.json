@@ -1,0 +1,51 @@
+{
+  "created_date": "2026-07-27",
+  "currency": "HKD",
+  "source_files": [
+    {
+      "file_name": "td_taxi_fare_of_hong_kong.html",
+      "project_path": "F:/Matsim/matsim-example-project/data/taxi/hongkong/raw/official_fare_sources_2026/td_taxi_fare_of_hong_kong.html",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/taxi/taxi_fare_of_hong_kong/index.html",
+      "source_download_date": "2026-07-27",
+      "size_bytes": 13906,
+      "sha256": "01e7b50f5976b059c1a8afe4507785583e5336db5bce6acaf136e111736b424c"
+    },
+    {
+      "file_name": "td_taxi_operating_areas.html",
+      "project_path": "F:/Matsim/matsim-example-project/data/taxi/hongkong/raw/official_fare_sources_2026/td_taxi_operating_areas.html",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/public_transport/taxi/details_of_taxi_operating_areas_/",
+      "source_download_date": "2026-07-27",
+      "size_bytes": 8433,
+      "sha256": "8261a5f8ecc2deba843cb38daae5810e3e38cb086a40d97e3fabf4d67631193c"
+    },
+    {
+      "file_name": "td_road_tunnel_toll_rates.html",
+      "project_path": "F:/Matsim/matsim-example-project/data/taxi/hongkong/raw/official_fare_sources_2026/td_road_tunnel_toll_rates.html",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/toll_matters/toll_rates_of_road_tunnels_and_lantau_link/index.html",
+      "source_download_date": "2026-07-27",
+      "size_bytes": 13445,
+      "sha256": "9f1917206808e9cad68c368e5830c49511d9ebdeafb9c0bab461bfc3ab3a57cc"
+    },
+    {
+      "file_name": "td_road_harbour_crossing_tvt.html",
+      "project_path": "F:/Matsim/matsim-example-project/data/taxi/hongkong/raw/official_fare_sources_2026/td_road_harbour_crossing_tvt.html",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/tvt/index.html",
+      "source_download_date": "2026-07-27",
+      "size_bytes": 41111,
+      "sha256": "847c1ee17e41751c63099e349c9839aa2fbaf34d3242d99afeb21ae4328670fe"
+    },
+    {
+      "file_name": "td_tai_lam_tunnel_tvt.html",
+      "project_path": "F:/Matsim/matsim-example-project/data/taxi/hongkong/raw/official_fare_sources_2026/td_tai_lam_tunnel_tvt.html",
+      "source_url": "https://www.td.gov.hk/en/transport_in_hong_kong/tunnels_and_bridges_n/tlt/index.html",
+      "source_download_date": "2026-07-27",
+      "size_bytes": 27347,
+      "sha256": "b206ee39c782824e25364d8ca6207f415cde57198fb9b462ee9dd5d0fda714b6"
+    }
+  ],
+  "outputs": {
+    "taxi_fare_rules.csv": "Machine-readable taxi meter fare rules.",
+    "taxi_tunnel_surcharge_rules.csv": "Taxi passenger tunnel surcharge rules, separate from private-vehicle tolls.",
+    "taxi_type_assignment_rules.md": "Conservative offline taxi-type assignment rules."
+  }
+}
