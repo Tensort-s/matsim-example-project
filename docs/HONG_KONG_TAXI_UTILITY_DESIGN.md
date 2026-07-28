@@ -155,7 +155,8 @@ taxi fare specification:
 old_ride_score =
   -1.5
   + (-6.0 * travel_time_hours)
-  + (-0.0015 * route_distance_m)
+  + (-0.0015 * effective_global_marginal_utility_of_money
+     * route_distance_m)
 
 new_taxi_score_before_asc =
   (-6.0 * travel_time_hours)
@@ -163,7 +164,21 @@ new_taxi_score_before_asc =
 
 asc_equivalent =
   old_ride_score - new_taxi_score_before_asc
+
+asc_equivalent_simplified =
+  -1.5
+  - 0.0015 * effective_global_marginal_utility_of_money
+    * route_distance_m
+  + 0.05 * fare_baseline_hkd
 ```
+
+The legacy `ride` `monetaryDistanceRate` is a MATSim monetary-distance term,
+so it is multiplied by the effective global `marginalUtilityOfMoney`. The
+config contains no explicit override; the adopted utility-design validation
+retains the effective value `1.0`, which is recorded with its source in the
+bridge validation JSON. The resulting leg scores are numerically unchanged
+from the initial bridge. The custom taxi coefficient is already expressed in
+`util/HKD` and is **not** multiplied by global `marginalUtilityOfMoney`.
 
 The `0.05 util/HKD` taxi fare coefficient enters as a negative fare
 disutility. Both scores use the same `-6 util/h` direct travel-time term, so
@@ -181,10 +196,21 @@ The observed `asc_equivalent` distribution is:
 | P75 | -4.8131 |
 | P90 | -2.9552 |
 | P95 | -2.1065 |
+| Minimum | -73.6294 |
+| Maximum | -0.0500 |
 
-The actual median is bracketed by the proposed coarse values and lies within
-0.5 util of `-9`; `-12` is also close to the observed mean. The first-round
-coarse test candidates are therefore retained as:
+The correlation between `asc_equivalent` and route distance is `-0.99945`;
+its correlation with the baseline fare is `-0.99149`. This confirms a very
+wide, strongly distance-dependent distribution. A single ASC cannot preserve
+the old `ride` utility for every leg.
+
+Only `11.5352%` of legs have `asc_equivalent` inside the historical `[-3, 8]`
+grid, while `88.4648%` fall below `-3` and none exceed `8`. The historical
+grid therefore remains a diagnostic artifact rather than a first-test center.
+
+The actual median lies within 0.5 util of `-9`, while `-12` is close to the
+observed mean. The following values are retained only as provisional
+technical candidates for a future smoke or coarse test:
 
 ```text
 ASC = -12
@@ -193,9 +219,18 @@ ASC =  -6
 ```
 
 Their empirical percentile ranks in the leg-level bridge distribution are
-approximately 39.3%, 52.6%, and 69.3%, respectively. These are initial
-behavioral-pilot values, not calibrated final parameters and not a prediction
-of taxi mode share. No `taxi` mode is created by this bridge step.
+approximately 39.3%, 52.6%, and 69.3%, respectively. Their leg-level residual
+diagnostics, where `residual = candidate_asc - asc_equivalent`, are:
+
+| Provisional ASC | Mean absolute residual | Median absolute residual | RMSE |
+|---:|---:|---:|---:|
+| -12 | 7.8893 | 6.4527 | 10.7195 |
+| -9 | 7.6293 | 5.0624 | 11.3317 |
+| -6 | 8.2817 | 4.2011 | 12.6455 |
+
+These large residuals reinforce that none is a calibrated ASC and that
+distance-grouped diagnostics are necessary. No taxi mode or ASC mode-share
+calibration is created or run by this bridge validation closure.
 
 Bridge output directory:
 
@@ -209,19 +244,29 @@ Files:
   leg, with time, distance, fare, both score decompositions, and
   `asc_equivalent`.
 - `old_ride_vs_new_taxi_summary.csv`: mean, median, P10, P25, P75, P90, and
-  P95 for input quantities and utility components.
-- `taxi_asc_initial_candidates.csv`: the three first-round coarse ASC values,
-  percentile ranks, offsets from the observed mean and median, and selection
-  rationale.
+  P95 for input quantities and utility components, plus range, correlation,
+  and historical/current candidate-range coverage diagnostics.
+- `taxi_asc_initial_candidates.csv`: the three provisional technical ASC
+  values, unambiguous more-negative/center/less-negative labels, percentile
+  ranks, offsets, and selection rationale.
+- `old_ride_vs_new_taxi_grouped_summary.csv`: overall, taxi-type, fixed
+  distance-bin, and fixed departure-period bridge summaries. Each independent
+  grouping dimension sums to exactly 37,286 legs.
+- `taxi_asc_candidate_residual_diagnostics.csv`: deduplicated residual
+  diagnostics for the historical `-3` to `+8` grid, provisional
+  `-12/-9/-6`, and the `floor(P10)`, `round(P50)`, and `ceil(P90)` anchors.
 - `taxi_utility_bridge_validation.json`: formulas, parameters, hashes,
-  row/key/finite-value checks, central utility-design cross-check, and
-  protected MATSim input non-modification checks.
+  actual error values, central utility-design cross-check, both Git-root
+  protection checks, allowed-path audit, and required validation stop gates.
 
-Reproduction command from this worktree:
+The script defaults to the current worktree root. It never silently falls back
+to another checkout. Because the large protected MATSim inputs are absent from
+this worktree, the read-only root must be supplied explicitly:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
-  .\scripts\hong_kong_single_city\costs\build_hong_kong_taxi_utility_bridge.py
+  .\scripts\hong_kong_single_city\costs\build_hong_kong_taxi_utility_bridge.py `
+  --matsim-root F:\Matsim\matsim-example-project
 ```
 
 ## Outputs
@@ -269,10 +314,18 @@ The bridge correction additionally produced:
 - no missing, non-finite, or negative distance/time/fare values;
 - exact one-to-one agreement with the existing central
   `farecoef_0p05_share_1p0` utility-design rows;
-- zero central-score and fare-utility difference at stored precision;
+- maximum equivalence, simplified-formula, and time-cancellation errors of
+  `1.4211e-14`, `1.4211e-14`, and `0`, all below `1e-12`;
+- overall, taxi-type, distance-bin, and departure-period grouped counts each
+  sum to 37,286;
 - unchanged SHA256 values for the source audits and protected plans, config,
   facilities, vehicles, and network;
-- no protected worktree changes and no MATSim run.
+- empty protected-path status before and after in both the current worktree
+  and the explicitly supplied MATSim-root worktree;
+- all required validation checks passed, with no changes outside the allowed
+  bridge files;
+- no changes to plans, config, network, facilities, vehicles, or Java, and no
+  MATSim, QSim, Controler, smoke test, or mode-share calibration run.
 
 This is a taxi behavioural pilot design, not an explicit taxi operating-fleet
 model. Tunnel and waiting costs remain excluded until the next fare-model
