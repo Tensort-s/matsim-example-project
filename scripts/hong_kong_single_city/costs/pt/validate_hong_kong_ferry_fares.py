@@ -10,6 +10,9 @@ import hashlib
 import io
 import json
 import re
+import subprocess
+import sys
+import tempfile
 import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -132,9 +135,9 @@ def reproduce_fixture_status(
     ):
         if request[field] != "unspecified":
             return "unresolved", None
-    try:
-        travel_date = pd.Timestamp(request["travel_date"]).date()
-    except Exception:
+    if request["temporal_basis"] != "source_snapshot_only":
+        return "unresolved", None
+    if request["travel_date"]:
         return "unresolved", None
     candidates = rules[
         (rules["record_status"] == "available")
@@ -161,9 +164,69 @@ def reproduce_fixture_status(
     if len(candidates) != 1:
         return ("ambiguous", None) if len(candidates) > 1 else ("unresolved", None)
     rule = candidates.iloc[0]
-    if travel_date < pd.Timestamp(rule["cost_effective_date"]).date():
-        return "unresolved", None
-    return str(rule["mapping_status"]), float(rule["adult_base_fare_hkd"])
+    return str(rule["mapping_status"]), float(rule["published_fare_hkd"])
+
+
+def validate_two_builds(
+    repo_root: Path, source_root: Path
+) -> tuple[bool, str, str]:
+    builder = (
+        repo_root
+        / "scripts/hong_kong_single_city/costs/pt/build_hong_kong_ferry_fares.py"
+    )
+    quote = (
+        repo_root
+        / "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_ferry_fares.py"
+    )
+    manifests: list[dict[str, str]] = []
+    with tempfile.TemporaryDirectory(prefix="hk_ferry_determinism_") as temp:
+        temp_root = Path(temp)
+        for run_number in (1, 2):
+            run_dir = temp_root / f"run_{run_number}"
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(builder),
+                    "--source-project-root",
+                    str(source_root),
+                    "--output-dir",
+                    str(run_dir),
+                ],
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(quote),
+                    "--input",
+                    str(run_dir / "ferry_fare_query_fixture_input.csv"),
+                    "--output",
+                    str(run_dir / "ferry_fare_query_fixture_output.csv"),
+                    "--rules",
+                    str(run_dir / "ferry_fare_rules.parquet"),
+                    "--full-fare-reference",
+                    str(run_dir / "ferry_route_full_fare_reference.csv"),
+                ],
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            manifests.append(
+                {
+                    path.name: sha256(path)
+                    for path in sorted(run_dir.iterdir(), key=lambda item: item.name)
+                    if path.is_file()
+                }
+            )
+    digests = [
+        hashlib.sha256(compact_json(manifest).encode("utf-8")).hexdigest()
+        for manifest in manifests
+    ]
+    return manifests[0] == manifests[1], digests[0], digests[1]
 
 
 def main() -> None:
@@ -275,7 +338,7 @@ def main() -> None:
     rules = pd.read_parquet(output_dir / "ferry_fare_rules.parquet")
     rules = rules.where(pd.notna(rules), "")
     for column in rules.columns:
-        if column != "adult_base_fare_hkd":
+        if column != "published_fare_hkd":
             rules[column] = rules[column].astype(str)
     unresolved = pd.read_csv(
         output_dir / "ferry_unresolved_fare_rules.csv",
@@ -377,7 +440,7 @@ def main() -> None:
             match.group(1) == raw_rule["_line_number"]
             and match.group(2) == raw_attr["_line_number"]
             and match.group(3) == raw_rule["fare_id"]
-            and float(row["adult_base_fare_hkd"]) == float(raw_attr["price"])
+            and float(row["published_fare_hkd"]) == float(raw_attr["price"])
             and row["source_sha256"] == sha256(gtfs_path)
             and row["source_file"] == GTFS_REL.as_posix()
         )
@@ -402,7 +465,15 @@ def main() -> None:
         )
         == orphan_ids
     )
-    check_6 = trace_ok and full_trace_ok and unresolved_trace_ok
+    check_6 = (
+        trace_ok
+        and full_trace_ok
+        and unresolved_trace_ok
+        and "adult_base_fare_hkd" not in rules.columns
+        and "published_fare_hkd" in rules.columns
+        and "adult_base_fare_hkd" not in unresolved.columns
+        and "published_fare_hkd" in unresolved.columns
+    )
     check_7 = orientation_ok
     methods = ";".join(rules["matching_method"].astype(str)).lower()
     check_8 = all(
@@ -413,7 +484,7 @@ def main() -> None:
         float(attr_by_id[row["fare_id"]]["price"]) == 0 for row in ferry_rules
     )
     check_9 = raw_zero_count == 0 and not (
-        (pd.to_numeric(rules["adult_base_fare_hkd"], errors="coerce") == 0)
+        (pd.to_numeric(rules["published_fare_hkd"], errors="coerce") == 0)
     ).any()
     raw_conflicts = sum(
         len({attr_by_id[row["fare_id"]]["price"] for row in candidates}) > 1
@@ -460,7 +531,7 @@ def main() -> None:
         keep_default_na=False,
     )
     fixture_out_lookup = fixture_out.set_index("quote_id").to_dict("index")
-    fixture_ok = len(fixture_in) == len(fixture_out) == 19
+    fixture_ok = len(fixture_in) == len(fixture_out) == 22
     fixture_available = 0
     for request in fixture_in.to_dict("records"):
         status, amount = reproduce_fixture_status(
@@ -473,24 +544,56 @@ def main() -> None:
         fixture_ok &= (status in {"exact", "partial"}) == actual_available
         if actual_available:
             fixture_available += 1
-            fixture_ok &= float(out["cost_hkd"]) == amount
+            fixture_ok &= (
+                float(out["cost_hkd"]) == amount
+                and float(out["published_fare_hkd"]) == amount
+                and out["cost_effective_date"] == ""
+                and out["source_revision_cutoff_date"] == "2026-07-14"
+                and out["source_download_date"] == "2026-07-20"
+                and out["cost_quality"] != "A"
+                and out["cost_applicability_status"]
+                == "published_amount_only_passenger_payment_class_vessel_day_and_effective_period_unspecified"
+            )
         else:
-            fixture_ok &= out.get("cost_hkd", "") == "" and bool(
-                out.get("unresolved_reason", "")
+            fixture_ok &= (
+                out.get("cost_hkd", "") == ""
+                and out.get("published_fare_hkd", "") == ""
+                and out.get("cost_quality") == "U"
+                and out.get("mapping_status") in {"unresolved", "ambiguous"}
+                and bool(out.get("unresolved_reason", ""))
             )
     check_13 = fixture_ok
 
-    # 14-16: effective date, provenance, and transfers.
+    # 14-16: source revision cut-off, provenance, and transfers.
     revision_rows = list(
         csv.reader(
             (source_root / REVISION_REL).open(encoding="utf-8-sig", newline="")
         )
     )
-    raw_effective = revision_rows[1][0].strip()
+    raw_revision_cutoff = revision_rows[1][0].strip()
+    query_source = (
+        repo_root
+        / "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_ferry_fares.py"
+    ).read_text(encoding="utf-8")
     check_14 = (
-        raw_effective == "2026-07-14"
-        and summary["effective_date"] == raw_effective
-        and (rules["cost_effective_date"] == raw_effective).all()
+        raw_revision_cutoff == "2026-07-14"
+        and summary["source_revision_cutoff_date"] == raw_revision_cutoff
+        and summary["source_download_date"] == "2026-07-20"
+        and summary["cost_effective_date"] == ""
+        and summary["cost_effective_date_status"]
+        == "not_encoded_in_source_revision_cutoff_only"
+        and (rules["cost_effective_date"] == "").all()
+        and (
+            rules["cost_effective_date_status"]
+            == "not_encoded_in_source_revision_cutoff_only"
+        ).all()
+        and (rules["source_revision_cutoff_date"] == raw_revision_cutoff).all()
+        and (rules["source_download_date"] == "2026-07-20").all()
+        and "travel_date_before_cost_effective_date" not in query_source
+        and fixture_out_lookup["nonempty_travel_date"]["unresolved_reason"]
+        == "fare_effective_period_not_encoded_for_travel_date"
+        and fixture_out_lookup["temporal_basis_missing"]["cost_hkd"] == ""
+        and fixture_out_lookup["temporal_basis_wrong"]["cost_hkd"] == ""
     )
     check_15 = (
         (rules["source_sha256"].str.fullmatch(r"[0-9a-f]{64}")).all()
@@ -502,6 +605,11 @@ def main() -> None:
         (fixture_out["transfer_concession_hkd"] == "").all()
         and (fixture_out["transfer_concession_status"] == "not_modelled").all()
         and summary["transfer_concession_status"] == "not_modelled"
+        and fixture_out_lookup["transfer_concession_requested"]["cost_hkd"] != ""
+        and fixture_out_lookup["transfer_concession_requested"][
+            "cost_applicability_status"
+        ]
+        == "published_amount_only_passenger_payment_class_vessel_day_and_effective_period_unspecified"
     )
 
     # 17-18 and 20: hash protected prior-mode directories and eight MATSim inputs.
@@ -568,9 +676,21 @@ def main() -> None:
     check_22 = (
         not missing_files
         and expected_schema_fields.issubset(schema.columns)
+        and "published_fare_hkd" in set(schema["field_name"])
+        and "adult_base_fare_hkd" not in set(schema["field_name"])
         and len(rules) == 60
         and len(readiness) == 39
         and len(full_refs) == 102
+        and Counter(rules["mapping_quality"]) == {"A": 48, "C": 12}
+        and Counter(rules["cost_quality"]) == {"B": 48, "C": 12}
+        and not (rules["cost_quality"] == "A").any()
+        and (
+            rules["cost_applicability_status"]
+            == "published_amount_only_passenger_payment_class_vessel_day_and_effective_period_unspecified"
+        ).all()
+        and len(unresolved) == 27
+        and (unresolved["cost_quality"] == "U").all()
+        and (unresolved["mapping_quality"] == "U").all()
         and all(
             re.fullmatch(r"[0-9a-f]{64}", value)
             for value in list(rules["source_sha256"]) + list(full_refs["source_sha256"])
@@ -582,8 +702,12 @@ def main() -> None:
         ].itertuples(index=False, name=None)
     )
     sorted_route_ids = list(readiness["matsim_route_id"])
+    deterministic_builds, build_digest_1, build_digest_2 = validate_two_builds(
+        repo_root, source_root
+    )
     check_23 = (
-        sorted_rule_keys == sorted(sorted_rule_keys)
+        deterministic_builds
+        and sorted_rule_keys == sorted(sorted_rule_keys)
         and sorted_route_ids == sorted(sorted_route_ids)
         and compact_json(summary) == compact_json(json.loads(compact_json(summary)))
         and compact_json(semantics) == compact_json(json.loads(compact_json(semantics)))
@@ -595,7 +719,7 @@ def main() -> None:
         ("03_route_routeSeq_stopSeq_direction_patterns", check_3),
         ("04_exact_34_partial_5_evidence", check_4),
         ("05_raw_forward_pairs_60", check_5),
-        ("06_non_null_amounts_trace_to_raw_records", check_6),
+        ("06_neutral_published_amounts_trace_to_raw_records", check_6),
         ("07_no_reverse_od_substitution", check_7),
         ("08_no_interpolation_path_sum_or_fullfare_fallback", check_8),
         ("09_no_missing_fare_zero_fill", check_9),
@@ -603,7 +727,7 @@ def main() -> None:
         ("11_source_unspecified_conditions_not_invented", check_11),
         ("12_fullfare_reference_not_default_rule", check_12),
         ("13_fixture_independently_reproduced", check_13),
-        ("14_td_effective_date_locally_parsed", check_14),
+        ("14_revision_cutoff_not_used_as_fare_effective_date", check_14),
         ("15_source_file_sha_and_record_trace_valid", check_15),
         ("16_transfer_concessions_not_modelled", check_16),
         ("17_mtr_station_od_directory_unchanged", bool(check_17)),
@@ -611,8 +735,8 @@ def main() -> None:
         ("19_production_557104_all_unresolved", check_19),
         ("20_eight_protected_matsim_inputs_unchanged", bool(check_20)),
         ("21_no_absolute_local_paths_in_outputs", check_21),
-        ("22_json_csv_parquet_sha_schemas_valid", check_22),
-        ("23_deterministic_order_and_serialization_contract", check_23),
+        ("22_neutral_schema_cost_quality_and_formats_valid", check_22),
+        ("23_two_complete_builds_byte_identical", check_23),
     ]
     status = "passed" if all(value for _, value in checks) else "failed"
     validation = {
@@ -639,6 +763,23 @@ def main() -> None:
             "fixture_available_rows": fixture_available,
         },
         "protected_hash_results": protected_results,
+        "cost_quality_counts": dict(Counter(rules["cost_quality"])),
+        "mapping_quality_counts": dict(Counter(rules["mapping_quality"])),
+        "time_semantics": {
+            "source_revision_cutoff_date": raw_revision_cutoff,
+            "source_download_date": "2026-07-20",
+            "cost_effective_date_non_null_count": int(
+                rules["cost_effective_date"].ne("").sum()
+            ),
+            "cost_effective_date_status_counts": dict(
+                Counter(rules["cost_effective_date_status"])
+            ),
+        },
+        "two_build_determinism": {
+            "passed": deterministic_builds,
+            "run_1_overall_sha256": build_digest_1,
+            "run_2_overall_sha256": build_digest_2,
+        },
         "missing_required_files": missing_files,
     }
     validation_path = output_dir / "ferry_fare_validation.json"

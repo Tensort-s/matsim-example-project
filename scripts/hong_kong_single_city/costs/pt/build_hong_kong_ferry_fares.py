@@ -20,9 +20,13 @@ from xml.etree import ElementTree as ET
 import pandas as pd
 
 
-EFFECTIVE_DATE_STATUS = "local_source_proven"
+EFFECTIVE_DATE_STATUS = "not_encoded_in_source_revision_cutoff_only"
 DOWNLOAD_DATE = "2026-07-20"
 UNSPECIFIED = "unspecified_in_source"
+COST_APPLICABILITY = (
+    "published_amount_only_passenger_payment_class_vessel_day_and_"
+    "effective_period_unspecified"
+)
 SUPPLY_REL = Path(
     "data/transit/hongkong/processed/"
     "matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_"
@@ -53,13 +57,15 @@ RULE_COLUMNS = [
     "vessel_service_type",
     "day_type",
     "time_period",
-    "adult_base_fare_hkd",
+    "published_fare_hkd",
     "currency",
     "fare_amount_role",
     "cost_component",
     "cost_source",
     "cost_effective_date",
     "cost_effective_date_status",
+    "source_revision_cutoff_date",
+    "source_download_date",
     "source_record_id",
     "source_file",
     "source_sha256",
@@ -67,6 +73,8 @@ RULE_COLUMNS = [
     "candidate_records_json",
     "mapping_status",
     "mapping_quality",
+    "cost_quality",
+    "cost_applicability_status",
     "matching_method",
     "unresolved_reason",
 ]
@@ -85,6 +93,7 @@ FIXTURE_INPUT_COLUMNS = [
     "vessel_service_type",
     "travel_date",
     "day_type",
+    "temporal_basis",
     "transfer_concession_requested",
     "expected_result",
 ]
@@ -103,14 +112,20 @@ FIXTURE_OUTPUT_COLUMNS = [
     "vessel_service_type",
     "travel_date",
     "day_type",
+    "temporal_basis",
     "cost_component",
     "fare_amount_role",
+    "published_fare_hkd",
     "cost_hkd",
     "cost_source",
     "cost_effective_date",
     "cost_effective_date_status",
+    "source_revision_cutoff_date",
+    "source_download_date",
     "cost_quality",
     "mapping_status",
+    "mapping_quality",
+    "cost_applicability_status",
     "source_record_id",
     "unresolved_reason",
     "transfer_concession_hkd",
@@ -200,7 +215,7 @@ def forward_pairs(stops: list[str]) -> list[tuple[str, str]]:
     ]
 
 
-def parse_effective_date(path: Path) -> str:
+def parse_revision_cutoff_date(path: Path) -> str:
     rows = list(csv.reader(path.open(encoding="utf-8-sig", newline="")))
     value = rows[1][0].strip()
     date.fromisoformat(value)
@@ -456,6 +471,104 @@ def build_schema_audit(
     return pd.DataFrame(records)
 
 
+def append_active_rule_schema_audit(
+    audit: pd.DataFrame, rules: pd.DataFrame
+) -> pd.DataFrame:
+    semantics = {
+        "published_fare_hkd": (
+            "Neutral published amount copied exactly from GTFS price.",
+            "direct fare_id join to fare_attributes.txt price",
+            "true",
+            "true",
+            "resolved",
+            "",
+        ),
+        "mapping_quality": (
+            "Quality of route, direction, and ordered-OD mapping evidence.",
+            "A for exact JSON direction pattern; C where official direction is not encoded",
+            "true",
+            "true",
+            "resolved",
+            "",
+        ),
+        "cost_quality": (
+            "Quality of the published amount as a usable cost component, separate from mapping quality.",
+            "B for exact mapping with incomplete applicability; C for direction-not-encoded mapping",
+            "true",
+            "true",
+            "resolved",
+            "",
+        ),
+        "cost_applicability_status": (
+            "Explicit limitation that passenger/payment/class/vessel/day/effective period are unspecified.",
+            "derived conservatively from absent source condition fields",
+            "true",
+            "true",
+            "resolved_limitation",
+            "",
+        ),
+        "cost_effective_date": (
+            "Route-specific fare effective date; empty because the source does not encode one.",
+            "TD revision cut-off is not treated as a fare effective date",
+            "true",
+            "true",
+            "not_encoded_in_source",
+            "route-specific fare effective period is unavailable",
+        ),
+        "source_revision_cutoff_date": (
+            "TD local dataset revision cut-off date, not fare effective date.",
+            "parsed from routes_fares_last_updated.csv",
+            "true",
+            "false",
+            "resolved_as_source_provenance",
+            "",
+        ),
+        "source_download_date": (
+            "Local official-source snapshot download date.",
+            "retained source acquisition provenance",
+            "true",
+            "false",
+            "resolved_as_source_provenance",
+            "",
+        ),
+    }
+    rows = []
+    for field, values in semantics.items():
+        non_null = [
+            value
+            for value in rules[field].tolist()
+            if value not in (None, "")
+        ]
+        rows.append(
+            {
+                "source_id": "derived_ferry_fare_v1",
+                "source_file": "ferry_fare_rules.parquet",
+                "table_or_object": "active_ferry_rule_schema",
+                "field_name": field,
+                "field_type": infer_type(non_null),
+                "non_null_count": len(non_null),
+                "unique_count": len({compact_json(value) for value in non_null}),
+                "sample_values_json": compact_json(
+                    sorted({str(value) for value in non_null})[:8]
+                ),
+                **dict(
+                    zip(
+                        (
+                            "semantic_interpretation",
+                            "semantic_evidence",
+                            "machine_usable",
+                            "required_for_pricing",
+                            "ambiguity_status",
+                            "unresolved_reason",
+                        ),
+                        values,
+                    )
+                ),
+            }
+        )
+    return pd.concat([audit, pd.DataFrame(rows)], ignore_index=True)
+
+
 def empty_frame(columns: list[str]) -> pd.DataFrame:
     return pd.DataFrame(columns=columns)
 
@@ -494,8 +607,9 @@ def build_fixture(rules: pd.DataFrame) -> pd.DataFrame:
             "payment_medium": "unspecified",
             "service_class": "unspecified",
             "vessel_service_type": "unspecified",
-            "travel_date": str(rule["cost_effective_date"]),
+            "travel_date": "",
             "day_type": "unspecified",
+            "temporal_basis": "source_snapshot_only",
             "transfer_concession_requested": "false",
             "expected_result": "available",
         }
@@ -513,14 +627,18 @@ def build_fixture(rules: pd.DataFrame) -> pd.DataFrame:
     partial_row = base("partial_direction_unspecified_available", partial)
     partial_row["official_direction"] = "unspecified"
     rows.append(partial_row)
-    missing_direction = base("missing_direction")
-    missing_direction["official_direction"] = ""
-    missing_direction["expected_result"] = "unresolved"
-    rows.append(missing_direction)
+    partial_specific = base("partial_specific_direction_unresolved", partial)
+    partial_specific["official_direction"] = "1"
+    partial_specific["expected_result"] = "unresolved"
+    rows.append(partial_specific)
     unknown_route = base("unknown_route")
     unknown_route["official_route_id"] = "999999999"
     unknown_route["expected_result"] = "unresolved"
     rows.append(unknown_route)
+    route_id_mismatch = base("matsim_official_route_mismatch")
+    route_id_mismatch["matsim_route_id"] = str(partial["matsim_route_id"])
+    route_id_mismatch["expected_result"] = "unresolved"
+    rows.append(route_id_mismatch)
     unknown_boarding = base("unknown_boarding")
     unknown_boarding["boarding_stop_id"] = "UNKNOWN"
     unknown_boarding["expected_result"] = "unresolved"
@@ -536,8 +654,9 @@ def build_fixture(rules: pd.DataFrame) -> pd.DataFrame:
     route_od_mismatch["expected_result"] = "unresolved"
     rows.append(route_od_mismatch)
     for field, value, identifier in (
-        ("payment_medium", "Octopus", "payment_medium_not_supported"),
         ("passenger_type", "adult", "passenger_type_not_supported"),
+        ("payment_medium", "Octopus", "octopus_not_supported"),
+        ("payment_medium", "cash", "cash_not_supported"),
         ("service_class", "standard", "service_class_not_supported"),
         ("vessel_service_type", "ordinary", "vessel_type_not_supported"),
         ("day_type", "weekday", "day_type_not_supported"),
@@ -550,17 +669,21 @@ def build_fixture(rules: pd.DataFrame) -> pd.DataFrame:
     full_only["alighting_stop_id"] = full_only["boarding_stop_id"]
     full_only["expected_result"] = "unresolved"
     rows.append(full_only)
+    temporal_missing = base("temporal_basis_missing")
+    temporal_missing["temporal_basis"] = ""
+    temporal_missing["expected_result"] = "unresolved"
+    rows.append(temporal_missing)
+    temporal_wrong = base("temporal_basis_wrong")
+    temporal_wrong["temporal_basis"] = "travel_date_applicability"
+    temporal_wrong["expected_result"] = "unresolved"
+    rows.append(temporal_wrong)
+    dated = base("nonempty_travel_date")
+    dated["travel_date"] = "2026-07-14"
+    dated["expected_result"] = "unresolved"
+    rows.append(dated)
     transfer = base("transfer_concession_requested")
     transfer["transfer_concession_requested"] = "true"
     rows.append(transfer)
-    before = base("travel_before_effective_date")
-    before["travel_date"] = "2026-07-13"
-    before["expected_result"] = "unresolved"
-    rows.append(before)
-    invalid_date = base("invalid_date")
-    invalid_date["travel_date"] = "not-a-date"
-    invalid_date["expected_result"] = "unresolved"
-    rows.append(invalid_date)
     generic = base("generic_pt_mode")
     generic["actual_transport_mode"] = "pt"
     generic["expected_result"] = "unresolved"
@@ -628,13 +751,24 @@ Key source semantics:
 
 - `price` is a published GTFS amount in HKD, but the source does not identify
   adult/child, cash/Octopus, class, vessel type, weekday, weekend, or holiday.
+- the active neutral amount field is `published_fare_hkd`; there is no
+  `adult_base_fare_hkd` compatibility alias;
 - queries therefore accept only `unspecified` for those source-unspecified
   dimensions;
+- `mapping_quality` describes route/direction/OD evidence, while
+  `cost_quality` is B for exact-direction published amounts and C where the
+  official direction is not encoded. B does not prove an adult payable fare;
+- `source_revision_cutoff_date=2026-07-14` describes the local TD snapshot,
+  not a route fare effective date. `cost_effective_date` is empty and queries
+  require `temporal_basis=source_snapshot_only` with an empty `travel_date`;
 - GTFS route + ordered origin/destination is used without reverse substitution,
   interpolation, path summing, aggregation, or missing-value zero fill;
 - JSON `fullFare` is retained only in
   `ferry_route_full_fare_reference.csv`; it is never a default quote;
 - transfer concessions are `not_modelled`.
+
+`cost_hkd` is only the published base amount component. It is not an actual
+passenger fare or final discounted fare.
 
 Current build: {summary["schedule_route_count"]} Ferry routes,
 {summary["required_forward_pair_count"]} required ordered forward pairs,
@@ -668,7 +802,7 @@ def main() -> None:
     revision_path = source_root / REVISION_REL
     facilities_path = source_root / SUPPLY_REL / "ferry_stop_facilities.csv"
     schedule_path = source_root / SUPPLY_REL / "transitSchedule_5pct.xml.gz"
-    effective_date = parse_effective_date(revision_path)
+    revision_cutoff_date = parse_revision_cutoff_date(revision_path)
     gtfs_sha = sha256(gtfs_path)
     json_sha = sha256(json_path)
 
@@ -700,7 +834,6 @@ def main() -> None:
         ]
 
     schema_audit = build_schema_audit(gtfs, json_props)
-    write_csv(schema_audit, output_dir / "ferry_source_schema_audit.csv")
 
     facilities = list(
         csv.DictReader(facilities_path.open(encoding="utf-8-sig", newline=""))
@@ -829,7 +962,7 @@ def main() -> None:
                     "vessel_service_type": UNSPECIFIED,
                     "day_type": UNSPECIFIED,
                     "time_period": UNSPECIFIED,
-                    "adult_base_fare_hkd": amount_value,
+                    "published_fare_hkd": amount_value,
                     "currency": "HKD" if status == "available" else "",
                     "fare_amount_role": (
                         "published_fare_passenger_and_payment_basis_unspecified"
@@ -838,10 +971,10 @@ def main() -> None:
                     ),
                     "cost_component": "pt_fare",
                     "cost_source": "td_gtfs_20260720" if status == "available" else "",
-                    "cost_effective_date": effective_date if status == "available" else "",
-                    "cost_effective_date_status": (
-                        EFFECTIVE_DATE_STATUS if status == "available" else ""
-                    ),
+                    "cost_effective_date": "",
+                    "cost_effective_date_status": EFFECTIVE_DATE_STATUS,
+                    "source_revision_cutoff_date": revision_cutoff_date,
+                    "source_download_date": DOWNLOAD_DATE,
                     "source_record_id": source_record_id,
                     "source_file": GTFS_REL.as_posix() if status == "available" else "",
                     "source_sha256": gtfs_sha if status == "available" else "",
@@ -849,6 +982,16 @@ def main() -> None:
                     "candidate_records_json": compact_json(candidate_details),
                     "mapping_status": mapping_status,
                     "mapping_quality": quality,
+                    "cost_quality": (
+                        "B"
+                        if status == "available" and exact
+                        else "C"
+                        if status == "available"
+                        else "U"
+                    ),
+                    "cost_applicability_status": (
+                        COST_APPLICABILITY if status == "available" else "unresolved"
+                    ),
                     "matching_method": (
                         "route_direction_exact_json_pattern_plus_ordered_gtfs_stop_od"
                         if exact
@@ -912,6 +1055,8 @@ def main() -> None:
     rules = pd.DataFrame(rule_rows, columns=RULE_COLUMNS).sort_values(
         ["matsim_route_id", "boarding_stop_id", "alighting_stop_id"]
     )
+    schema_audit = append_active_rule_schema_audit(schema_audit, rules)
+    write_csv(schema_audit, output_dir / "ferry_source_schema_audit.csv")
     write_csv(readiness, output_dir / "ferry_route_direction_fare_readiness.csv")
     rules.to_parquet(output_dir / "ferry_fare_rules.parquet", index=False)
     write_csv(rules.head(100), output_dir / "ferry_fare_rules_sample.csv")
@@ -970,17 +1115,23 @@ def main() -> None:
                 "vessel_service_type": UNSPECIFIED,
                 "day_type": UNSPECIFIED,
                 "time_period": UNSPECIFIED,
-                "adult_base_fare_hkd": float(attr["price"]),
+                "published_fare_hkd": float(attr["price"]),
                 "currency": attr["currency_type"],
                 "fare_amount_role": "unresolved_fare_attribute_without_stop_od_rule",
                 "cost_component": "pt_fare",
                 "cost_source": "td_gtfs_20260720",
-                "cost_effective_date": effective_date,
+                "cost_effective_date": "",
                 "cost_effective_date_status": EFFECTIVE_DATE_STATUS,
+                "source_revision_cutoff_date": revision_cutoff_date,
+                "source_download_date": DOWNLOAD_DATE,
+                "cost_quality": "U",
+                "cost_applicability_status": "unresolved",
                 "source_record_id": f"gtfs:fare_attributes.txt:{attr['_line_number']}|fare_id:{attr['fare_id']}",
                 "source_file": GTFS_REL.as_posix(),
                 "source_sha256": gtfs_sha,
                 "record_status": "unresolved",
+                "mapping_status": "unresolved",
+                "mapping_quality": "U",
                 "candidate_records_json": compact_json(
                     [{"fare_id": attr["fare_id"], "price": float(attr["price"])}]
                 ),
@@ -1045,8 +1196,10 @@ def main() -> None:
                 ),
                 "source_file": JSON_REL.as_posix(),
                 "source_sha256": json_sha,
-                "cost_effective_date": effective_date,
+                "cost_effective_date": "",
                 "cost_effective_date_status": EFFECTIVE_DATE_STATUS,
+                "source_revision_cutoff_date": revision_cutoff_date,
+                "source_download_date": DOWNLOAD_DATE,
                 "unresolved_reason": "not_stop_od_and_source_conditions_unspecified",
             }
         )
@@ -1152,8 +1305,10 @@ def main() -> None:
             "gtfs": "https://static.data.gov.hk/td/pt-headway-en/gtfs.zip",
             "ferry_json": "https://static.data.gov.hk/td/routes-fares-geojson/JSON_FERRY.json",
         },
-        "effective_date": effective_date,
-        "download_date": DOWNLOAD_DATE,
+        "source_revision_cutoff_date": revision_cutoff_date,
+        "source_download_date": DOWNLOAD_DATE,
+        "cost_effective_date": "",
+        "cost_effective_date_status": EFFECTIVE_DATE_STATUS,
         "source_sha256": {"gtfs": gtfs_sha, "ferry_json": json_sha},
     }
     (output_dir / "ferry_fare_semantics_summary.json").write_text(
@@ -1163,8 +1318,13 @@ def main() -> None:
 
     summary = {
         "schema_version": "hong_kong_ferry_fare_v1",
-        "effective_date": effective_date,
-        "effective_date_status": EFFECTIVE_DATE_STATUS,
+        "source_revision_cutoff_date": revision_cutoff_date,
+        "source_download_date": DOWNLOAD_DATE,
+        "cost_effective_date": "",
+        "cost_effective_date_status": EFFECTIVE_DATE_STATUS,
+        "cost_effective_date_status_counts": dict(
+            Counter(rules["cost_effective_date_status"])
+        ),
         "gtfs_ferry_fare_attribute_count": len(attrs),
         "gtfs_ferry_fare_rule_count": len(raw_rules),
         "gtfs_orphan_fare_attribute_count": len(unresolved),
@@ -1179,6 +1339,11 @@ def main() -> None:
         "schedule_route_count": len(readiness),
         "route_mapping_status_counts": dict(Counter(readiness["mapping_status"])),
         "route_mapping_quality_counts": dict(Counter(readiness["mapping_quality"])),
+        "active_rule_mapping_quality_counts": dict(Counter(rules["mapping_quality"])),
+        "active_rule_cost_quality_counts": dict(Counter(rules["cost_quality"])),
+        "active_rule_cost_applicability_status_counts": dict(
+            Counter(rules["cost_applicability_status"])
+        ),
         "route_fare_readiness_counts": dict(Counter(readiness["fare_readiness"])),
         "required_forward_pair_count": int(readiness["required_forward_pair_count"].sum()),
         "matched_forward_pair_count": int(readiness["matched_fare_pair_count"].sum()),
@@ -1218,7 +1383,7 @@ def main() -> None:
             "time_period_explicit": 0.0,
         },
         "existing_audit_inputs": existing_inputs,
-        "normalized_raw_gtfs_amount_crosscheck": {
+        "legacy_normalized_raw_gtfs_amount_crosscheck": {
             "normalized_ferry_count": len(normalized_ferry),
             "matching_raw_amount_count": comparison_count,
         },

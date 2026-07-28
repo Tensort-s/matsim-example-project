@@ -1,8 +1,22 @@
 {
+  "active_rule_cost_applicability_status_counts": {
+    "published_amount_only_passenger_payment_class_vessel_day_and_effective_period_unspecified": 60
+  },
+  "active_rule_cost_quality_counts": {
+    "B": 48,
+    "C": 12
+  },
+  "active_rule_mapping_quality_counts": {
+    "A": 48,
+    "C": 12
+  },
   "ambiguous_rule_count": 0,
   "available_rule_count": 60,
-  "effective_date": "2026-07-14",
-  "effective_date_status": "local_source_proven",
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "cost_effective_date_status_counts": {
+    "not_encoded_in_source_revision_cutoff_only": 60
+  },
   "exact_direction_available_rule_count": 48,
   "existing_audit_inputs": {
     "fare_source_manifest.csv": {
@@ -51,13 +65,13 @@
   "gtfs_ferry_fare_rule_count": 258,
   "gtfs_ferry_stop_count": 74,
   "gtfs_orphan_fare_attribute_count": 27,
-  "matched_forward_pair_count": 60,
-  "matsim_scoring_integration": "not_performed",
-  "non_null_amount_traceability_rate": 1.0,
-  "normalized_raw_gtfs_amount_crosscheck": {
+  "legacy_normalized_raw_gtfs_amount_crosscheck": {
     "matching_raw_amount_count": 258,
     "normalized_ferry_count": 258
   },
+  "matched_forward_pair_count": 60,
+  "matsim_scoring_integration": "not_performed",
+  "non_null_amount_traceability_rate": 1.0,
   "not_applicable_source_cases": {
     "conflicting_fare": "no conflicting amount exists for a raw Ferry route-stop-OD key",
     "official_zero_fare": "no raw Ferry GTFS fare rule has price zero",
@@ -88,6 +102,8 @@
   },
   "schedule_route_count": 39,
   "schema_version": "hong_kong_ferry_fare_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
   "stop_crosswalk_status_counts": {
     "exact": 74,
     "partial_source_coverage": 13

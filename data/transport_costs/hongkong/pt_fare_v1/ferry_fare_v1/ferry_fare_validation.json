@@ -27,7 +27,7 @@
     },
     {
       "check_number": 6,
-      "name": "06_non_null_amounts_trace_to_raw_records",
+      "name": "06_neutral_published_amounts_trace_to_raw_records",
       "passed": true
     },
     {
@@ -67,7 +67,7 @@
     },
     {
       "check_number": 14,
-      "name": "14_td_effective_date_locally_parsed",
+      "name": "14_revision_cutoff_not_used_as_fare_effective_date",
       "passed": true
     },
     {
@@ -107,19 +107,23 @@
     },
     {
       "check_number": 22,
-      "name": "22_json_csv_parquet_sha_schemas_valid",
+      "name": "22_neutral_schema_cost_quality_and_formats_valid",
       "passed": true
     },
     {
       "check_number": 23,
-      "name": "23_deterministic_order_and_serialization_contract",
+      "name": "23_two_complete_builds_byte_identical",
       "passed": true
     }
   ],
+  "cost_quality_counts": {
+    "B": 48,
+    "C": 12
+  },
   "independent_raw_counts": {
     "exact_routes": 34,
     "fixture_available_rows": 4,
-    "fixture_rows": 19,
+    "fixture_rows": 22,
     "gtfs_ferry_fare_attributes": 285,
     "gtfs_ferry_fare_rules": 258,
     "gtfs_orphan_fare_attributes": 27,
@@ -131,6 +135,10 @@
     "raw_zero_fares": 0,
     "required_forward_pairs": 60,
     "schedule_ferry_routes": 39
+  },
+  "mapping_quality_counts": {
+    "A": 48,
+    "C": 12
   },
   "missing_required_files": [],
   "protected_hash_results": [
@@ -360,5 +368,18 @@
     }
   ],
   "schema_version": "hong_kong_ferry_fare_validation_v1",
-  "status": "passed"
+  "status": "passed",
+  "time_semantics": {
+    "cost_effective_date_non_null_count": 0,
+    "cost_effective_date_status_counts": {
+      "not_encoded_in_source_revision_cutoff_only": 60
+    },
+    "source_download_date": "2026-07-20",
+    "source_revision_cutoff_date": "2026-07-14"
+  },
+  "two_build_determinism": {
+    "passed": true,
+    "run_1_overall_sha256": "ac4b83ddcab81421896d78a2756ceb4baf77cfa09ec444d617fcfefe2f098010",
+    "run_2_overall_sha256": "ac4b83ddcab81421896d78a2756ceb4baf77cfa09ec444d617fcfefe2f098010"
+  }
 }

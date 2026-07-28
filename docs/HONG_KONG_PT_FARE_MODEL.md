@@ -38,16 +38,17 @@ URL, effective date, effective-date evidence status, download date,
 repository-relative local path, byte size, and SHA256. It contains no absolute
 local path.
 
-| Fare source | Effective date retained | Evidence status | Download date |
+| Fare source | Date semantic retained | Evidence status | Download date |
 |---|---:|---|---:|
-| TD GTFS bus/GMB/ferry stop-OD fares | 2026-07-14 | `local_source_proven` | 2026-07-20 |
-| TD bus/GMB/ferry route full fares | 2026-07-14 | `local_source_proven` | 2026-07-20 |
+| TD GTFS bus/GMB/ferry stop-OD fares | revision cut-off 2026-07-14; route-fare effective date not encoded | `local_source_proven` | 2026-07-20 |
+| TD bus/GMB/ferry route full fares | revision cut-off 2026-07-14; route-fare effective date not encoded | `local_source_proven` | 2026-07-20 |
 | MTR domestic station OD | 2024-06-30 | `external_official_reference_not_locally_archived` | 2026-07-20 |
 | Airport Express station OD | 2025-06-22 | `external_official_reference_not_locally_archived` | 2026-07-20 |
 | Light Rail station OD | 2024-06-30 | `external_official_reference_not_locally_archived` | 2026-07-20 |
 
-The retained TD revision cut-off file locally proves the TD date. The MTR
-effective dates are retained from the official references below, but those
+The retained TD revision cut-off file locally proves the source snapshot
+cut-off, not a route-specific fare effective date. The MTR effective dates
+are retained from the official references below, but those
 press-release files are not locally archived; the manifest states that
 limitation instead of presenting the dates as locally proven.
 
@@ -516,11 +517,36 @@ The offline query accepts only input value `unspecified` for each of those
 source-unspecified dimensions. Returned amounts are labelled:
 
 ```text
+published_fare_hkd
 published_fare_passenger_and_payment_basis_unspecified
 ```
 
-They must not be presented as a specifically adult, Octopus, cash, class, or
-vessel-type fare.
+`published_fare_hkd` is copied exactly from raw GTFS `price`. The active Ferry
+rule schema contains no `adult_base_fare_hkd` alias. A published amount is not
+the same as an actual passenger fare: it must not be presented as adult,
+child, Octopus, cash, class-specific, vessel-specific, or date-applicable.
+
+### Mapping quality versus cost applicability
+
+`mapping_quality` describes only route, official direction, and ordered-OD
+evidence. `cost_quality` separately describes whether that published amount
+is suitable as a cost component under the incomplete source conditions:
+
+| Rule evidence | Mapping quality | Cost quality | Rule count |
+|---|---:|---:|---:|
+| Exact JSON direction and unique ordered GTFS OD | A | B | 48 |
+| Direction not encoded; unique route and ordered GTFS OD | C | C | 12 |
+
+No available Ferry query has `cost_quality=A`. Cost quality B does not mean
+that an adult actually owes the amount; it means only that an official
+published amount is traceable under an exact route-direction-OD mapping while
+passenger, payment, class, vessel, day, and effective-period applicability
+remain incomplete. Every available rule therefore carries:
+
+```text
+cost_applicability_status =
+  published_amount_only_passenger_payment_class_vessel_day_and_effective_period_unspecified
+```
 
 ### Stop, route, direction, and ordered-OD evidence
 
@@ -554,7 +580,24 @@ That gives 48 available `exact_route_direction_stop_od` rules and 12
 available `route_stop_od_direction_not_encoded` rules. Pair coverage does not
 make passenger, payment, class, vessel, or day conditions complete.
 
-### `fullFare` boundary and query behavior
+### Time, `fullFare`, and query boundaries
+
+The TD date `2026-07-14` is retained only as:
+
+```text
+source_revision_cutoff_date = 2026-07-14
+source_download_date = 2026-07-20
+cost_effective_date = null
+cost_effective_date_status =
+  not_encoded_in_source_revision_cutoff_only
+```
+
+It is not used as a lower or upper bound for travel-date eligibility. Ferry v1
+is a source-snapshot query, not a historical or future fare calculator. The
+only supported temporal request is
+`temporal_basis=source_snapshot_only` with an empty `travel_date`. Any nonempty
+travel date remains unresolved because the route-specific effective period is
+not encoded.
 
 The JSON contains 102 unique route-direction `fullFare` references. Across
 the 240 GTFS rules whose route-direction pattern can be compared to JSON, 121
@@ -567,23 +610,26 @@ The query never substitutes a reverse OD, interpolates by distance, sums a
 path, chooses among candidates, aggregates prices, falls back to `fullFare`,
 or fills a missing amount with zero.
 
-The 19-case fixture includes exact and reverse-direction available records, a
-partial/C direction-unspecified record, a reversed OD within the wrong
-direction, missing direction, unknown route/stops, route-OD mismatch,
-unsupported specified passenger/payment/class/vessel/day conditions,
-`fullFare` non-fallback, transfer request, pre-effective and invalid dates,
-and generic `pt` mode. Four requests return a published base amount; all
-others remain unresolved. The source has no real conflicting fare, missing
-current forward pair, or zero-fare case, so those states are recorded as not
-applicable rather than fabricated.
+The 22-case fixture includes exact and opposite-direction independently
+published ODs, reverse OD within the wrong direction, partial/C with
+unspecified and prohibited concrete direction, unknown route/stops,
+MATSim/official route mismatch, route/OD mismatch, adult, Octopus, cash,
+class, vessel and day requests, missing/wrong temporal basis, nonempty travel
+date, `fullFare` non-fallback, transfer request, and generic `pt` mode. Four
+requests return a published amount component; all others remain unresolved.
 
-Effective date `2026-07-14` is parsed from the locally retained TD revision
-cut-off file. Transfer-concession amounts remain null with status
-`not_modelled`. The interface does not read production plans. The 557,104
-generic production PT legs still lack mode/route/direction/stop evidence,
-remain unresolved, and cannot call these rules. Nothing in this Ferry layer
-has entered MATSim scoring or changed plans, config, Java, network, schedule,
-vehicles, facilities, MTR, or Light Rail outputs.
+A transfer-concession request may still return that published component, but
+`transfer_concession_hkd` stays null and
+`transfer_concession_status=not_modelled`. `cost_hkd` is therefore neither a
+final discounted fare nor proof of the actual passenger payment. The source
+has no real conflicting fare, missing current forward pair, or zero-fare
+case, so those states remain not applicable rather than being fabricated.
+
+The interface does not read production plans. The 557,104 generic production
+PT legs still lack mode/route/direction/stop evidence, remain unresolved, and
+cannot call these rules. Nothing in this Ferry layer has entered MATSim
+scoring or changed plans, config, Java, network, schedule, vehicles,
+facilities, MTR, or Light Rail outputs.
 
 ## Transfer concessions
 
@@ -749,6 +795,8 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
   day type. Ferry v1 can quote only the published amount with those
   dimensions explicitly requested as `unspecified`; JSON `fullFare` remains
   reference-only.
+- Ferry v1 has no route-specific fare effective date. Its query is limited to
+  the retained source snapshot and rejects nonempty travel dates.
 - Airport Express lacks six required forward station-OD fare pairs; MTR
   station-OD v1 preserves them as explicit unresolved rules.
 - Transfer concessions and passenger eligibility are unmodelled.

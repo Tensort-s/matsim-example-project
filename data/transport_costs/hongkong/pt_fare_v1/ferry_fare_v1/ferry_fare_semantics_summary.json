@@ -41,9 +41,11 @@
       "answer": "unspecified_in_source"
     }
   },
-  "download_date": "2026-07-20",
-  "effective_date": "2026-07-14",
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
   "schema_version": "hong_kong_ferry_fare_semantics_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
   "source_sha256": {
     "ferry_json": "dbfa4d9525aa72d5eeb8da58b1ac2fd77fea8ca1ba65df0ca9555cff9912944c",
     "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06"

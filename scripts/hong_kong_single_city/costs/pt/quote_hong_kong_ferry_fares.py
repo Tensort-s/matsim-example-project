@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -24,6 +23,7 @@ INPUT_COLUMNS = [
     "vessel_service_type",
     "travel_date",
     "day_type",
+    "temporal_basis",
     "transfer_concession_requested",
 ]
 OUTPUT_COLUMNS = [
@@ -40,14 +40,20 @@ OUTPUT_COLUMNS = [
     "vessel_service_type",
     "travel_date",
     "day_type",
+    "temporal_basis",
     "cost_component",
     "fare_amount_role",
+    "published_fare_hkd",
     "cost_hkd",
     "cost_source",
     "cost_effective_date",
     "cost_effective_date_status",
+    "source_revision_cutoff_date",
+    "source_download_date",
     "cost_quality",
     "mapping_status",
+    "mapping_quality",
+    "cost_applicability_status",
     "source_record_id",
     "unresolved_reason",
     "transfer_concession_hkd",
@@ -67,12 +73,17 @@ def blank_result(request: dict[str, str]) -> dict[str, object]:
         **{column: request.get(column, "") for column in INPUT_COLUMNS if column in OUTPUT_COLUMNS},
         "cost_component": "pt_fare",
         "fare_amount_role": "",
+        "published_fare_hkd": None,
         "cost_hkd": None,
         "cost_source": "",
         "cost_effective_date": "",
         "cost_effective_date_status": "",
+        "source_revision_cutoff_date": "",
+        "source_download_date": "",
         "cost_quality": "U",
         "mapping_status": "unresolved",
+        "mapping_quality": "U",
+        "cost_applicability_status": "unresolved",
         "source_record_id": "",
         "unresolved_reason": "",
         "transfer_concession_hkd": None,
@@ -91,10 +102,11 @@ def quote_one(
         if request[field].strip() != "unspecified":
             result["unresolved_reason"] = f"{field}_not_explicitly_supported_by_source"
             return result
-    try:
-        travel_date = date.fromisoformat(request["travel_date"].strip())
-    except ValueError:
-        result["unresolved_reason"] = "invalid_travel_date"
+    if request["temporal_basis"].strip() != "source_snapshot_only":
+        result["unresolved_reason"] = "temporal_basis_must_be_source_snapshot_only"
+        return result
+    if request["travel_date"].strip():
+        result["unresolved_reason"] = "fare_effective_period_not_encoded_for_travel_date"
         return result
 
     available = rules[rules["record_status"] == "available"]
@@ -177,19 +189,20 @@ def quote_one(
         return result
 
     rule = od_candidates.iloc[0]
-    effective = date.fromisoformat(str(rule["cost_effective_date"]))
-    if travel_date < effective:
-        result["unresolved_reason"] = "travel_date_before_cost_effective_date"
-        return result
     result.update(
         {
             "fare_amount_role": rule["fare_amount_role"],
-            "cost_hkd": float(rule["adult_base_fare_hkd"]),
+            "published_fare_hkd": float(rule["published_fare_hkd"]),
+            "cost_hkd": float(rule["published_fare_hkd"]),
             "cost_source": rule["cost_source"],
             "cost_effective_date": rule["cost_effective_date"],
             "cost_effective_date_status": rule["cost_effective_date_status"],
-            "cost_quality": rule["mapping_quality"],
+            "source_revision_cutoff_date": rule["source_revision_cutoff_date"],
+            "source_download_date": rule["source_download_date"],
+            "cost_quality": rule["cost_quality"],
             "mapping_status": rule["mapping_status"],
+            "mapping_quality": rule["mapping_quality"],
+            "cost_applicability_status": rule["cost_applicability_status"],
             "source_record_id": rule["source_record_id"],
             "unresolved_reason": "",
         }
@@ -204,7 +217,7 @@ def run(input_path: Path, output_path: Path, rules_path: Path, full_path: Path) 
         raise ValueError(f"Input is missing required columns: {missing}")
     rules = pd.read_parquet(rules_path).fillna("")
     for column in rules.columns:
-        if column != "adult_base_fare_hkd":
+        if column != "published_fare_hkd":
             rules[column] = rules[column].astype(str)
     full_refs = pd.read_csv(full_path, dtype=str, keep_default_na=False)
     full_route_ids = set(full_refs["official_route_id"])
