@@ -1,0 +1,131 @@
+{
+  "scenario_family": "hong_kong_taxi_utility_design_v1",
+  "base_fare_legs": 37286,
+  "low_fare_legs": 34257,
+  "high_fare_legs": 42510,
+  "base_fare_legs_match_fare_validation": true,
+  "parameter_scenario_count": 12,
+  "leg_audit_rows": 447432,
+  "asc_grid_rows": 144,
+  "global_marginal_utility_of_money_retained": 1.0,
+  "existing_mode_scoring_unchanged_by_design": true,
+  "taxi_travel_utility_per_hr": -6.0,
+  "effective_time_diagnostic_utility_per_hr": -12.0,
+  "fare_utility_coefficients_tested": [
+    0.03,
+    0.05,
+    0.075,
+    0.1
+  ],
+  "fare_share_factors_tested": [
+    1.0,
+    0.75,
+    0.5
+  ],
+  "asc_values_tested": [
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "recommended_center_scenario": {
+    "taxi_fare_utility_per_hkd": 0.05,
+    "fare_share_factor": 1.0,
+    "taxi_asc": "to_be_calibrated_in_MATSim_iterations",
+    "implied_vot_hkd_hr": 240.0,
+    "median_total_leg_utility_before_asc": -5.806666666666667,
+    "p90_total_leg_utility_before_asc": -1.6816666666666669
+  },
+  "current_config_scoring_snapshot": {
+    "config_path": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+    "global_scoring_params": {},
+    "global_marginal_utility_of_money_assumed": 1.0,
+    "global_marginal_utility_of_money_note": "No taxi fare conversion uses global marginalUtilityOfMoney; taxi_fare_utility_per_hkd is scenario-specific.",
+    "mode_params": {
+      "car": {
+        "mode": "car",
+        "constant": "-0.5",
+        "marginalUtilityOfTraveling_util_hr": "-6",
+        "monetaryDistanceRate": "-0.0007"
+      },
+      "pt": {
+        "mode": "pt",
+        "constant": "0",
+        "marginalUtilityOfTraveling_util_hr": "-6"
+      },
+      "walk": {
+        "mode": "walk",
+        "constant": "0",
+        "marginalUtilityOfTraveling_util_hr": "-6"
+      },
+      "ride": {
+        "mode": "ride",
+        "constant": "-1.5",
+        "marginalUtilityOfTraveling_util_hr": "-6",
+        "monetaryDistanceRate": "-0.0015"
+      }
+    }
+  },
+  "identification_warning": "Fare coefficient and ASC cannot be identified from the same taxi total target alone; fix the fare coefficient first, then calibrate ASC against final MATSim taxi legs.",
+  "no_mode_share_claim": "ASC grid is an offline utility-offset table and is not a mode-share prediction.",
+  "excluded_components_v1": [
+    "pickup_waiting",
+    "meter_waiting_fare",
+    "tunnel_surcharge",
+    "booking_fee",
+    "dynamic_pricing",
+    "fleet_supply_constraint"
+  ],
+  "input_hashes_before": {
+    "fare_inputs": {
+      "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+      "taxi_leg_fare_estimates_low.parquet": "460520ca8cb1301f50a15105b879dc1a38b99fd66a8bee02ef6d20db2a344796",
+      "taxi_leg_fare_estimates_high.parquet": "337d43ea05d6f725e7b0566e63042d74cbf0a48d7b23f2fcb8c7e224e96f77f0",
+      "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14"
+    },
+    "protected_matsim_inputs": {
+      "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    }
+  },
+  "input_hashes_after": {
+    "fare_inputs": {
+      "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+      "taxi_leg_fare_estimates_low.parquet": "460520ca8cb1301f50a15105b879dc1a38b99fd66a8bee02ef6d20db2a344796",
+      "taxi_leg_fare_estimates_high.parquet": "337d43ea05d6f725e7b0566e63042d74cbf0a48d7b23f2fcb8c7e224e96f77f0",
+      "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14"
+    },
+    "protected_matsim_inputs": {
+      "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    }
+  },
+  "input_hashes_unchanged": true,
+  "git_status_before_data_matsim_agents_hongkong": "",
+  "git_status_after_data_matsim_agents_hongkong": "",
+  "git_status_data_matsim_agents_hongkong_unchanged_and_empty": true,
+  "non_modification_statement": "No existing Hong Kong MATSim plans, configs, networks, facilities, vehicles, or outputs are modified.",
+  "outputs": [
+    "taxi_utility_parameter_scenarios.csv",
+    "taxi_leg_utility_audit_base.parquet",
+    "taxi_utility_summary.csv",
+    "taxi_asc_search_grid.csv",
+    "taxi_utility_design_validation.json"
+  ]
+}

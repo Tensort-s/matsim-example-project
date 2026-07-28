@@ -193,3 +193,8 @@ not written into MATSim scoring, and `ride` legs are not converted to `taxi`.
 Tunnel charges are not applied without confirmed route link sequences. The
 congestion proxy is unavailable until a reliable congested travel time and
 freeflow link-time comparison exists for taxi passenger legs.
+
+The first follow-on taxi utility-conversion design is documented in
+`docs/HONG_KONG_TAXI_UTILITY_DESIGN.md`. It tests taxi-specific fare utility
+coefficients and ASC search values offline without modifying the active MATSim
+config.
