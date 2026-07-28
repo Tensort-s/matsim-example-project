@@ -1,0 +1,55 @@
+{
+  "answers": {
+    "deck_seat_or_cabin_class": {
+      "answer": "unspecified_in_source"
+    },
+    "direction": {
+      "answer": "encoded_in_json_routeSeq_stopSeq_not_in_gtfs_fare_rules_fields",
+      "json_route_direction_count": 102
+    },
+    "fullFare": {
+      "answer": "route_direction_full_fare_reference_only",
+      "reason": "not stop-OD and passenger/payment/class/day/vessel conditions unstated"
+    },
+    "gtfs_price_vs_json_fullFare": {
+      "answer": "not_rowwise_equivalent",
+      "comparable_gtfs_rule_count": 240,
+      "different_count": 119,
+      "equal_count": 121
+    },
+    "ordinary_or_high_speed_vessel": {
+      "answer": "unspecified_in_source",
+      "reason": "serviceMode/specialType codes lack a local official code dictionary"
+    },
+    "payment_medium": {
+      "answer": "unspecified_in_source",
+      "reason": "payment_method=0 does not distinguish cash from Octopus"
+    },
+    "price_is_explicit_adult_fare": {
+      "answer": "unspecified_in_source",
+      "reason": "no passenger_type field or local metadata defines price as adult"
+    },
+    "stop_od": {
+      "answer": "encoded_as_ordered_gtfs_origin_id_destination_id",
+      "gtfs_ferry_rule_count": 258
+    },
+    "transfers": {
+      "answer": "gtfs_transfers_zero_no_transfer_on_fare_record",
+      "transfer_concessions": "not_modelled"
+    },
+    "weekday_weekend_public_holiday": {
+      "answer": "unspecified_in_source"
+    }
+  },
+  "download_date": "2026-07-20",
+  "effective_date": "2026-07-14",
+  "schema_version": "hong_kong_ferry_fare_semantics_v1",
+  "source_sha256": {
+    "ferry_json": "dbfa4d9525aa72d5eeb8da58b1ac2fd77fea8ca1ba65df0ca9555cff9912944c",
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06"
+  },
+  "source_urls": {
+    "ferry_json": "https://static.data.gov.hk/td/routes-fares-geojson/JSON_FERRY.json",
+    "gtfs": "https://static.data.gov.hk/td/pt-headway-en/gtfs.zip"
+  }
+}

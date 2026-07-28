@@ -1,0 +1,98 @@
+{
+  "ambiguous_rule_count": 0,
+  "available_rule_count": 60,
+  "effective_date": "2026-07-14",
+  "effective_date_status": "local_source_proven",
+  "exact_direction_available_rule_count": 48,
+  "existing_audit_inputs": {
+    "fare_source_manifest.csv": {
+      "exists": true,
+      "sha256": "0d0e286e13c78793bc1af14dfe19b276955094d0a60e55ade004928ce12591b9"
+    },
+    "official_direction_stop_patterns.csv": {
+      "exists": true,
+      "sha256": "c060009fd5717d4d41331225c5101465fe795801f08ac0ad6ddc32a40f0e10dd"
+    },
+    "official_fares_normalized.parquet": {
+      "exists": true,
+      "sha256": "99795bb66325fe8d74b7aeba323375533d62340009d461bc0d792dd267c892a3"
+    },
+    "official_route_full_fares.csv": {
+      "exists": true,
+      "sha256": "74b01d47fda49d40546880509a17231d0df719a5b409d172207c8cb53692ca83"
+    },
+    "route_to_official_fare_match.csv": {
+      "exists": true,
+      "sha256": "2b10740b08bf6ef23737fbf99108d90f358fdd1c24bcda84bafde1ea1ba2d2c9"
+    },
+    "transit_schedule_inventory.csv": {
+      "exists": true,
+      "sha256": "bed61cd5c19842c4cfd1bd96492df0b7e37afffcd3b90971e9f618eba77a6fcc"
+    }
+  },
+  "fare_condition_coverage": {
+    "day_type_explicit": 0.0,
+    "direction_exact": 0.8,
+    "ordered_stop_od": 1.0,
+    "passenger_type_explicit": 0.0,
+    "payment_medium_explicit": 0.0,
+    "route_id": 1.0,
+    "service_class_explicit": 0.0,
+    "time_period_explicit": 0.0,
+    "vessel_service_type_explicit": 0.0
+  },
+  "ferry_facility_count": 87,
+  "ferry_facility_unique_official_stop_count": 31,
+  "ferry_json_stop_count": 68,
+  "forward_pair_coverage": 1.0,
+  "full_fare_reference_count": 102,
+  "full_fare_reference_in_available_rules": false,
+  "gtfs_ferry_fare_attribute_count": 285,
+  "gtfs_ferry_fare_rule_count": 258,
+  "gtfs_ferry_stop_count": 74,
+  "gtfs_orphan_fare_attribute_count": 27,
+  "matched_forward_pair_count": 60,
+  "matsim_scoring_integration": "not_performed",
+  "non_null_amount_traceability_rate": 1.0,
+  "normalized_raw_gtfs_amount_crosscheck": {
+    "matching_raw_amount_count": 258,
+    "normalized_ferry_count": 258
+  },
+  "not_applicable_source_cases": {
+    "conflicting_fare": "no conflicting amount exists for a raw Ferry route-stop-OD key",
+    "official_zero_fare": "no raw Ferry GTFS fare rule has price zero",
+    "unresolved_required_forward_pair": "all 60 current schedule forward pairs have one raw GTFS fare"
+  },
+  "partial_direction_available_rule_count": 12,
+  "production_passenger_trip_pricing": "not_performed",
+  "prohibited_fallbacks": {
+    "aggregation": false,
+    "distance_interpolation": false,
+    "full_fare_fallback": false,
+    "missing_zero_fill": false,
+    "path_sum": false,
+    "reverse_substitution": false
+  },
+  "required_forward_pair_count": 60,
+  "route_fare_readiness_counts": {
+    "partial_direction_not_encoded_with_unique_ordered_od_fares": 5,
+    "ready_exact_direction_with_unspecified_source_conditions": 34
+  },
+  "route_mapping_quality_counts": {
+    "A": 34,
+    "C": 5
+  },
+  "route_mapping_status_counts": {
+    "exact": 34,
+    "partial": 5
+  },
+  "schedule_route_count": 39,
+  "schema_version": "hong_kong_ferry_fare_v1",
+  "stop_crosswalk_status_counts": {
+    "exact": 74,
+    "partial_source_coverage": 13
+  },
+  "transfer_concession_status": "not_modelled",
+  "unresolved_orphan_source_record_count": 27,
+  "unresolved_required_pair_count": 0
+}

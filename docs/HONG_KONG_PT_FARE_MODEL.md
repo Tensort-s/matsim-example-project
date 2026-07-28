@@ -478,6 +478,113 @@ null `cost_hkd`, and cannot call this query interface. No Light Rail fare has
 entered MATSim plans, config, scoring, network, schedule, vehicles, Java
 runners, ASC, or marginal utility of money.
 
+## Ferry Core v1 published-fare rules
+
+`ferry_fare_v1/` is a direct raw-source audit and offline quote layer for the
+39 Ferry Core v1 MATSim routes. It rereads TD GTFS
+`fare_attributes.txt`/`fare_rules.txt`, the TD Ferry route-stop JSON,
+`ferry_stop_facilities.csv`, and the production schedule. Existing normalized
+fare and crosswalk outputs are cross-checked but are not used in place of the
+raw sources.
+
+### What the official fields do and do not prove
+
+The GTFS snapshot contains 285 Ferry fare-attribute rows and 258 Ferry
+route-stop-OD fare-rule rows. All 258 OD keys and amounts are unique; there
+are no conflicting amounts and no explicit zero fares. The remaining 27 fare
+attributes have no `fare_rules` row, hence no machine-verifiable boarding or
+alighting stop, and remain separately unresolved.
+
+The official source proves:
+
+- `route_id` and ordered `origin_id -> destination_id`;
+- numeric published `price`, currency `HKD`, and source-record identity;
+- GTFS `transfers=0`, meaning no transfer is permitted on that fare record;
+- JSON `routeId + routeSeq + stopSeq` direction patterns where present;
+- a JSON route-direction `fullFare` reference.
+
+It does **not** state that GTFS `price` is an adult fare, does not distinguish
+cash from Octopus, and does not encode passenger type, deck/seat/cabin class,
+ordinary versus high-speed vessel, weekday/weekend/public holiday, or time
+period. `payment_method=0` is not treated as a payment-medium identifier.
+`serviceMode` and `specialType` codes are retained for audit but are not
+translated into vessel or fare conditions because the local source provides
+no code dictionary. These dimensions are therefore
+`unspecified_in_source`, never “adult Octopus” by assumption.
+
+The offline query accepts only input value `unspecified` for each of those
+source-unspecified dimensions. Returned amounts are labelled:
+
+```text
+published_fare_passenger_and_payment_basis_unspecified
+```
+
+They must not be presented as a specifically adult, Octopus, cash, class, or
+vessel-type fare.
+
+### Stop, route, direction, and ordered-OD evidence
+
+The explicit Ferry Core facility table contains 87 MATSim stop facilities
+mapping to 31 distinct official stop IDs. Every mapping has cardinality one
+and every mapped stop is present in GTFS. Of the 87 facility records, 74 also
+appear in Ferry JSON and are `exact/A`; 13 use four official GTFS stop IDs
+absent from Ferry JSON and are retained as `partial_source_coverage/B`. No
+fuzzy name or coordinate-nearest mapping is used.
+
+The 39 route audit rows remain:
+
+| Route audit field | Status | Count |
+|---|---|---:|
+| Mapping | `exact` | 34 |
+| Mapping | `partial` | 5 |
+| Quality | `A` | 34 |
+| Quality | `C` | 5 |
+| Fare readiness | exact direction, source conditions unspecified | 34 |
+| Fare readiness | direction not encoded, unique ordered OD | 5 |
+
+The 34 exact routes reproduce the complete official JSON direction stop
+pattern and retain explicit `routeSeq`. The five partial routes are not
+upgraded: their route IDs and GTFS ordered OD fares exist, but the official
+JSON direction pattern does not. Their query direction must be
+`unspecified`; route-ID or route hash text is not direction evidence.
+
+All 60 distinct schedule forward pairs are independently regenerated from
+schedule stop order and match a unique raw GTFS rule, for coverage 60/60.
+That gives 48 available `exact_route_direction_stop_od` rules and 12
+available `route_stop_od_direction_not_encoded` rules. Pair coverage does not
+make passenger, payment, class, vessel, or day conditions complete.
+
+### `fullFare` boundary and query behavior
+
+The JSON contains 102 unique route-direction `fullFare` references. Across
+the 240 GTFS rules whose route-direction pattern can be compared to JSON, 121
+prices equal `fullFare` and 119 differ. Thus the two fields are not rowwise
+equivalent and `fullFare` is not evidence of a flat fare.
+
+All 102 values remain in `ferry_route_full_fare_reference.csv` with
+`eligible_for_default_quote=false`. None enters the 60 available OD rules.
+The query never substitutes a reverse OD, interpolates by distance, sums a
+path, chooses among candidates, aggregates prices, falls back to `fullFare`,
+or fills a missing amount with zero.
+
+The 19-case fixture includes exact and reverse-direction available records, a
+partial/C direction-unspecified record, a reversed OD within the wrong
+direction, missing direction, unknown route/stops, route-OD mismatch,
+unsupported specified passenger/payment/class/vessel/day conditions,
+`fullFare` non-fallback, transfer request, pre-effective and invalid dates,
+and generic `pt` mode. Four requests return a published base amount; all
+others remain unresolved. The source has no real conflicting fare, missing
+current forward pair, or zero-fare case, so those states are recorded as not
+applicable rather than fabricated.
+
+Effective date `2026-07-14` is parsed from the locally retained TD revision
+cut-off file. Transfer-concession amounts remain null with status
+`not_modelled`. The interface does not read production plans. The 557,104
+generic production PT legs still lack mode/route/direction/stop evidence,
+remain unresolved, and cannot call these rules. Nothing in this Ferry layer
+has entered MATSim scoring or changed plans, config, Java, network, schedule,
+vehicles, facilities, MTR, or Light Rail outputs.
+
 ## Transfer concessions
 
 Transfer concessions remain unmodelled:
@@ -546,6 +653,23 @@ data/transport_costs/hongkong/pt_fare_v1/
     light_rail_station_od_validation.json
     mtr_station_od_v1_protected_hashes.csv
     SHA256SUMS.txt
+  ferry_fare_v1/
+    README.md
+    ferry_source_schema_audit.csv
+    ferry_fare_semantics_summary.json
+    ferry_stop_crosswalk.csv
+    ferry_route_direction_fare_readiness.csv
+    ferry_fare_rules.parquet
+    ferry_fare_rules_sample.csv
+    ferry_fare_conflicts.csv
+    ferry_unresolved_fare_rules.csv
+    ferry_route_full_fare_reference.csv
+    ferry_fare_query_fixture_input.csv
+    ferry_fare_query_fixture_output.csv
+    ferry_fare_summary.json
+    ferry_fare_validation.json
+    prior_mode_protected_hashes.csv
+    SHA256SUMS.txt
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -592,6 +716,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_light_rail_station_od_fares.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_ferry_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_ferry_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\ferry_fare_v1\ferry_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\ferry_fare_v1\ferry_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_ferry_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -608,6 +745,10 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
   field explicit in the fare schema.
 - Five Ferry Core patterns lack an exact official direction stop pattern in
   the retained TD source.
+- Ferry GTFS `price` does not identify adult, cash/Octopus, class, vessel, or
+  day type. Ferry v1 can quote only the published amount with those
+  dimensions explicitly requested as `unspecified`; JSON `fullFare` remains
+  reference-only.
 - Airport Express lacks six required forward station-OD fare pairs; MTR
   station-OD v1 preserves them as explicit unresolved rules.
 - Transfer concessions and passenger eligibility are unmodelled.
