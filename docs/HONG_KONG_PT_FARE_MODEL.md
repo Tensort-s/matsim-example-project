@@ -631,6 +631,130 @@ cannot call these rules. Nothing in this Ferry layer has entered MATSim
 scoring or changed plans, config, Java, network, schedule, vehicles,
 facilities, MTR, or Light Rail outputs.
 
+## GMB Core v1 published-fare rules
+
+`gmb_fare_v1/` is the raw-source audit and source-snapshot query layer for all
+778 GMB lines and 1,161 GMB routes in the production schedule. It directly
+rereads TD GTFS, the TD GMB route-stop JSON, the TD revision cut-off file, and
+the production schedule. The schedule contains 81,081 GMB departures, 13,100
+stop occurrences/facilities, 4,760 distinct official stop IDs, and 97,521
+distinct different-stop forward pairs.
+
+### Source semantics and direction evidence
+
+The retained GTFS has 98,269 GMB fare attributes and 98,269 fare rules, with
+no orphan rule. It proves a `route_id`, ordered
+`origin_id -> destination_id`, published numeric `price`, currency, and source
+record identity. It does not identify the passenger as adult or child, cash
+or Octopus payment, a service-day or time-period condition, a transfer
+concession, a route sequence, or a direction. Consequently active amounts use
+only:
+
+```text
+published_fare_hkd
+fare_amount_role =
+  published_fare_passenger_and_payment_basis_unspecified
+passenger_type = unspecified_in_source
+payment_medium = unspecified_in_source
+service_class = unspecified_in_source
+day_type = unspecified_in_source
+time_period = unspecified_in_source
+```
+
+The GMB JSON separately proves `routeId`, `routeSeq`, `stopSeq`, `stopId`, and
+`fullFare`. It does not provide a per-stop or per-section fare, passenger or
+payment conditions, a transfer rule, or a fare-effective date. The audit does
+not interpret `routeSeq` merely because its name resembles a direction
+field. Instead, all 1,161 complete MATSim stop sequences independently match
+exactly one complete official `routeId + routeSeq` stop pattern
+(`candidate_count=1`). That complete-structure result permits exact direction
+mapping for this snapshot. MATSim route suffixes, hashes, line names, and
+terminal-name guesses are never evidence.
+
+All 97,521 required forward pairs happen to have one or more GTFS candidates,
+but 100% pair coverage alone does not prove a direction. Direction is exact
+only because the separate full-sequence JSON test is unique. The stop
+crosswalk is also evidence-only: all 13,100 facilities map by an explicitly
+encoded official stop ID, and that ID exists in both GTFS and GMB JSON. No
+fuzzy-name or coordinate-nearest match is used.
+
+### Active rule and quality boundaries
+
+The route readiness table has exactly one row per MATSim GMB route. All 1,161
+are `exact/A` on route/direction mapping. Of these, 1,092 have unique source
+records for every required pair; 69 contain at least one conflicting or
+duplicate source record and are only partly fare-ready.
+
+At rule level, 96,866 forward pairs have exactly one raw GTFS candidate and
+are `available`. Another 361 have multiple candidates with different amounts
+and are `ambiguous`; 294 have multiple identical source records and remain
+`unresolved_duplicate_identical`. Duplicate records are not silently
+collapsed or resolved by taking the first row. All 97,521 rules retain
+`mapping_quality=A`, while cost quality is independently split into 96,866
+`B` and 655 `U`. Every available raw amount is traceable to its GTFS fare-rule
+and fare-attribute record, for a trace rate of 1.0.
+
+The 16 explicit raw zero-price records are retained as official zero amounts;
+zero is never used to fill a missing value. The builder and query do not use
+reverse-OD substitution, interpolation, nearest distance, path or segment
+sums, cross-route amounts, min/max/median/mean selection, fare-ID parsing, or
+missing-value fill.
+
+Every available amount carries:
+
+```text
+cost_applicability_status =
+  published_amount_only_passenger_payment_and_effective_period_unspecified
+```
+
+Thus `cost_quality=B` means a traceable official published amount under an
+exact route-direction-OD mapping. It does not mean the amount is an adult
+fare, an Octopus or cash fare, or the passenger's actual payable fare.
+
+### Time, `fullFare`, fixture, and integration boundary
+
+The two retained dates have deliberately different meanings:
+
+```text
+source_revision_cutoff_date = 2026-07-14
+source_download_date = 2026-07-20
+cost_effective_date = null
+cost_effective_date_status =
+  not_encoded_in_source_revision_cutoff_only
+```
+
+The revision cut-off is not a fare-effective date and is not interpreted as
+open-ended validity. The query supports only
+`temporal_basis=source_snapshot_only` with an empty `travel_date`; any
+nonempty date remains unresolved.
+
+The JSON supplies 1,161 route-sequence `fullFare` references. Across 98,182
+comparable raw GTFS candidate-record comparisons for unique ordered stop pairs,
+57,362 prices equal the corresponding JSON `fullFare` and 40,820 differ. These
+counts are independently recomputed and every reference row has
+`eligible_for_default_quote=false`.
+Amount equality does not establish semantic equivalence. No `fullFare` enters
+active OD rules, replaces a missing OD, fills a sectional fare, or implies an
+unconditional flat fare.
+
+The 24-case fixture independently exercises available and reverse-direction
+records, a raw zero fare, a real conflicting pair, a real identical-duplicate
+pair, route/direction/stop mismatches, unsupported passenger/payment/day/time
+requests, temporal failures, `fullFare` non-fallback, transfer requests, and
+generic `pt`. Four cases return a published component. There is no legal
+partial-direction route, missing required pair, or orphan record in this
+snapshot, so those source categories are marked not applicable rather than
+fabricated. A transfer request may retain an independently available
+published component, but `transfer_concession_hkd` is null and
+`transfer_concession_status=not_modelled`.
+
+Production integration is intentionally absent. The existing 557,104 generic
+PT legs lack actual mode, route, direction, and stop evidence, remain
+null/unresolved, and cannot call the GMB query. No GMB fare has entered MATSim
+plans, config, Java, scoring, network, schedule, vehicles, facilities, PT ASC,
+or marginal utility of money. Franchised bus and transfer-concession modelling
+remain outside this stage.
+
 ## Transfer concessions
 
 Transfer concessions remain unmodelled:
@@ -716,6 +840,24 @@ data/transport_costs/hongkong/pt_fare_v1/
     ferry_fare_validation.json
     prior_mode_protected_hashes.csv
     SHA256SUMS.txt
+  gmb_fare_v1/
+    README.md
+    gmb_source_schema_audit.csv
+    gmb_fare_semantics_summary.json
+    gmb_stop_crosswalk.csv
+    gmb_direction_evidence_audit.csv
+    gmb_route_direction_fare_readiness.csv
+    gmb_fare_rules.parquet
+    gmb_fare_rules_sample.csv
+    gmb_fare_conflicts.csv
+    gmb_unresolved_fare_rules.csv
+    gmb_route_full_fare_reference.csv
+    gmb_fare_query_fixture_input.csv
+    gmb_fare_query_fixture_output.csv
+    gmb_fare_summary.json
+    gmb_fare_validation.json
+    prior_mode_protected_hashes.csv
+    SHA256SUMS.txt
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -775,6 +917,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_ferry_fares.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_gmb_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_gmb_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\gmb_fare_v1\gmb_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\gmb_fare_v1\gmb_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_gmb_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -787,8 +942,18 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
 
 - The current production generic PT legs cannot be priced at passenger-trip
   level without an itinerary-bearing output or event reconstruction.
-- Bus/GMB route IDs and 100% forward OD coverage do not make their direction
-  field explicit in the fare schema.
+- GMB route IDs and 100% forward-OD coverage do not themselves prove
+  direction. GMB Core v1's exact direction mapping rests on a separate unique
+  match of every complete schedule stop sequence to an official
+  `routeId + routeSeq` JSON pattern.
+- GMB GTFS `price` does not identify passenger/payment conditions or a fare
+  effective period. Its 1,161 JSON `fullFare` values are reference-only and
+  never fill sectional or unresolved OD fares.
+- GMB's 361 conflicting and 294 identical-duplicate pairs remain
+  non-quoteable. A duplicate identical amount is not treated as a unique
+  official record.
+- Franchised-bus direction and fare rules are not part of GMB Core v1 and
+  remain a later, separately approved stage.
 - Five Ferry Core patterns lack an exact official direction stop pattern in
   the retained TD source.
 - Ferry GTFS `price` does not identify adult, cash/Octopus, class, vessel, or

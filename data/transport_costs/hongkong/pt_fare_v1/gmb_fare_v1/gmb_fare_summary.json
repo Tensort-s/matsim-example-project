@@ -1,0 +1,76 @@
+{
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "cost_quality_counts": {
+    "B": 96866,
+    "U": 655
+  },
+  "direction_status_counts": {
+    "official_route_sequence_exact_full_pattern": 1161
+  },
+  "full_fare_comparison_counts": {
+    "comparable_gtfs_candidate_record_count": 98182,
+    "gtfs_price_different_full_fare_count": 40820,
+    "gtfs_price_equal_full_fare_count": 57362
+  },
+  "full_fare_reference_count": 1161,
+  "full_fare_reference_in_active_rules": false,
+  "gtfs": {
+    "fare_attribute_count": 98269,
+    "fare_rule_count": 98269,
+    "orphan_fare_attribute_count": 0
+  },
+  "mapping_quality_counts": {
+    "A": 97521
+  },
+  "matched_forward_pair_count": 97521,
+  "matsim_scoring_integration": "not_performed",
+  "missing_forward_pair_count": 0,
+  "not_applicable_source_cases": {
+    "gtfs_orphan_fare_attribute": "all GMB fare attributes join to fare_rules",
+    "legal_partial_direction_unspecified": "all 1,161 schedule routes uniquely match an official JSON routeSeq full pattern",
+    "missing_required_pair": "all required schedule forward pairs have GTFS candidates"
+  },
+  "production_passenger_trip_pricing": "not_performed",
+  "prohibited_fallbacks": {
+    "aggregation": false,
+    "distance_or_nearest": false,
+    "fare_id_od_recovery": false,
+    "full_fare_fallback": false,
+    "missing_zero_fill": false,
+    "path_or_adjacent_sum": false,
+    "reverse_substitution": false
+  },
+  "published_amount_traceability_rate": 1.0,
+  "required_forward_pair_count": 97521,
+  "route_fare_readiness_counts": {
+    "partial_conflicting_or_duplicate_source_records": 69,
+    "ready_all_pairs_unique": 1092
+  },
+  "route_mapping_quality_counts": {
+    "A": 1161
+  },
+  "route_mapping_status_counts": {
+    "exact": 1161
+  },
+  "rule_status_counts": {
+    "ambiguous": 361,
+    "available": 96866,
+    "unresolved_duplicate_identical": 294
+  },
+  "schedule": {
+    "departure_count": 81081,
+    "distinct_facility_count": 13100,
+    "distinct_official_stop_id_count": 4760,
+    "line_count": 778,
+    "route_count": 1161,
+    "stop_occurrence_count": 13100
+  },
+  "schema_version": "hong_kong_gmb_fare_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "stop_crosswalk_status_counts": {
+    "exact": 13100
+  },
+  "transfer_concession_status": "not_modelled"
+}

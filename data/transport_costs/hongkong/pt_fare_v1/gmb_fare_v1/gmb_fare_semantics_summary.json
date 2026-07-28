@@ -1,0 +1,28 @@
+{
+  "answers": {
+    "fare_rules_direction_route_sequence_service_day_time_period": "unspecified_in_source",
+    "fare_rules_ordered_stop_od": "encoded",
+    "fare_rules_route_id": "encoded",
+    "json_fullFare": "route_sequence_reference_only",
+    "json_passenger_payment_effective_date": "unspecified_in_source",
+    "json_routeSeq": "official_route_sequence_proven_by_unique_complete_stop_pattern",
+    "json_stopSeq_stopId": "encoded",
+    "json_stop_or_section_fare": "unspecified_in_source",
+    "price_passenger_type": "unspecified_in_source",
+    "price_payment_medium": "unspecified_in_source",
+    "price_ticket_or_sectional_scope": "unspecified_in_source"
+  },
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "schema_version": "hong_kong_gmb_fare_semantics_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "source_sha256": {
+    "gmb_json": "9fae59795d2ee78fc5b22b83b78a26437497f0140cce7e2cf0af477a1e37432c",
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06"
+  },
+  "source_urls": {
+    "gmb_json": "https://static.data.gov.hk/td/routes-fares-geojson/JSON_GMB.json",
+    "gtfs": "https://static.data.gov.hk/td/pt-headway-en/gtfs.zip"
+  }
+}
