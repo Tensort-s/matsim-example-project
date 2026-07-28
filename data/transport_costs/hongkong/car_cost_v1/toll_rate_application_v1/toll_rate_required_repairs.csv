@@ -1,0 +1,4 @@
+repair_id,severity,component,finding,required_change
+TOLLRATE-R01,medium,scenario_calendar,The typical-weekday plans do not carry an exact calendar date; official day type A is an explicit analyst assumption.,Bind a real simulation calendar and legal day type before using the candidate outside the typical-workday scenario.
+TOLLRATE-R02,medium,passage_time,"Facility passage times are estimated from leg travel time and network weights, not observed timestamps.",Replace or validate estimated passage times if observed link-entry times become available.
+TOLLRATE-R03,high,integration,These are standalone toll candidates and do not repair the unified car-cost outputs or MATSim scoring.,Use a separately reviewed rebuild stage; do not overwrite existing low/base/high car-cost outputs in place.

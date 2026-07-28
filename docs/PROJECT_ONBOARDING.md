@@ -88,6 +88,7 @@ docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_CAR_COST_MODEL.md
 docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
+docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -173,6 +174,11 @@ The follow-up toll facility-network audit is documented in
 same-number ID collisions, resolves all 19 official toll features through the
 official road topology, and produces non-monetary per-leg toll identification
 for a later output-repair stage.
+The standalone private-car toll candidate built from that mapping is documented
+in `docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md`. It constructs ordered
+physical passage events, estimates non-observed passage times, and applies
+official `PC` flat or typical-workday time-varying rates without changing
+MATSim scoring or the existing unified car-cost outputs.
 
 The final local SimWrapper project for this configuration is:
 
