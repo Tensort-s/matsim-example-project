@@ -1,0 +1,276 @@
+{
+  "audit": "Hong Kong private car cost input feasibility audit",
+  "input_root_role": "canonical_project_read_only",
+  "absolute_input_root_saved": false,
+  "inputs": [
+    {
+      "input_id": "plans_routed",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 80681267,
+      "sha256": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim population XML compressed with gzip",
+      "actual_reads": {
+        "elements": [
+          "person",
+          "attributes",
+          "plan",
+          "activity",
+          "leg",
+          "route"
+        ],
+        "fields": [
+          "person.id",
+          "person.attributes.assignedVehicleId",
+          "person.attributes.householdId",
+          "plan.selected",
+          "activity.type",
+          "activity.facility",
+          "leg.mode",
+          "leg.dep_time",
+          "leg.trav_time",
+          "route.type",
+          "route.start_link",
+          "route.end_link",
+          "route.trav_time",
+          "route.distance",
+          "route.vehicleRefId",
+          "route.text_link_ids"
+        ]
+      }
+    },
+    {
+      "input_id": "plans_unrouted",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 26962315,
+      "sha256": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim population XML compressed with gzip",
+      "actual_reads": {
+        "elements": [
+          "person",
+          "plan",
+          "activity",
+          "leg"
+        ],
+        "fields": [
+          "person.id",
+          "plan.selected",
+          "activity.type",
+          "leg.mode"
+        ]
+      }
+    },
+    {
+      "input_id": "facilities",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 3232921,
+      "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim facilities XML compressed with gzip",
+      "actual_reads": {
+        "elements": [
+          "facility"
+        ],
+        "fields": [
+          "facility.id",
+          "facility.x",
+          "facility.y",
+          "facility.linkId"
+        ]
+      }
+    },
+    {
+      "input_id": "private_vehicles",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 78999,
+      "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim vehicle definitions XML compressed with gzip",
+      "actual_reads": {
+        "elements": [
+          "vehicleDefinitions",
+          "vehicleType",
+          "capacity",
+          "length",
+          "width",
+          "passengerCarEquivalents",
+          "networkMode",
+          "vehicle"
+        ],
+        "fields": [
+          "vehicleType.id",
+          "capacity.seats",
+          "capacity.standingRoomInPersons",
+          "length.meter",
+          "width.meter",
+          "passengerCarEquivalents.pce",
+          "networkMode.networkMode",
+          "vehicle.id",
+          "vehicle.type"
+        ]
+      }
+    },
+    {
+      "input_id": "trip_manifest",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/agent_trip_manifest_v2.parquet",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 12301450,
+      "sha256": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+      "git_state": "git_ignored_external_read_only",
+      "format": "Apache Parquet",
+      "actual_reads": {
+        "table": "agent_trip_manifest_v2",
+        "fields": [
+          "person_id",
+          "leg_sequence",
+          "population_group",
+          "role",
+          "mode",
+          "origin_type",
+          "destination_type",
+          "origin_facility_id",
+          "destination_facility_id",
+          "departure_time_s",
+          "is_discretionary"
+        ]
+      }
+    },
+    {
+      "input_id": "config",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 10690,
+      "sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim config XML",
+      "actual_reads": {
+        "elements": [
+          "config",
+          "module",
+          "param",
+          "parameterset"
+        ],
+        "fields": [
+          "module.name",
+          "param.name",
+          "param.value",
+          "parameterset.type"
+        ]
+      }
+    },
+    {
+      "input_id": "network",
+      "repository_relative_path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 2861518,
+      "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "git_state": "git_ignored_external_read_only",
+      "format": "MATSim network XML compressed with gzip",
+      "actual_reads": {
+        "elements": [
+          "node",
+          "link"
+        ],
+        "fields": [
+          "node.id",
+          "link.id",
+          "link.from",
+          "link.to",
+          "link.length",
+          "link.modes"
+        ]
+      }
+    },
+    {
+      "input_id": "road_gdb",
+      "repository_relative_path": "data/transit/hongkong/RdNet_IRNP.gdb",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "directory",
+      "size_bytes": 58971349,
+      "sha256": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+      "git_state": "git_ignored_external_read_only",
+      "format": "Esri File Geodatabase directory",
+      "actual_reads": {
+        "layers": [
+          "TUN_BRIDGE_TOLL",
+          "TUN_BRIDGE_TV_TOLL"
+        ],
+        "fields": [
+          "TUNNEL_BRIDGE_NAME",
+          "TUNNEL_BRIDGE_CHINESE_NAME",
+          "FEATURE_ID_1",
+          "FEATURE_ID_2",
+          "EFFECTIVE_DATE",
+          "GAZETTED_TOLL",
+          "CONCESSION_TOLL",
+          "VEHICLE_CLASS_DESCRIPTION",
+          "DAY_OF_WEEK",
+          "START_TIME",
+          "END_TIME",
+          "REMARKS",
+          "LAST_UPDATED_DATE"
+        ]
+      }
+    },
+    {
+      "input_id": "synthetic_households",
+      "repository_relative_path": "data/matsim_agents/hongkong/synthetic_households_tcs2022/synthetic_households.parquet",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 32775941,
+      "sha256": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
+      "git_state": "git_ignored_external_read_only",
+      "format": "Apache Parquet",
+      "actual_reads": {
+        "table": "synthetic_households",
+        "fields": [
+          "household_id",
+          "grid_id",
+          "tcs_zone",
+          "private_car_count",
+          "motorcycle_count",
+          "private_vehicle_count"
+        ]
+      }
+    },
+    {
+      "input_id": "fixed_link_grid",
+      "repository_relative_path": "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CityAndRegionSplit/hong_kong_fixed_link_grid/regions.shp",
+      "input_root_role": "canonical_project_read_only",
+      "exists": true,
+      "path_kind": "file",
+      "size_bytes": 5774392,
+      "sha256": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f",
+      "git_state": "git_ignored_external_read_only",
+      "format": "ESRI Shapefile main geometry file",
+      "actual_reads": {
+        "layer": "regions",
+        "fields": [
+          "grid_id",
+          "geometry"
+        ]
+      }
+    }
+  ]
+}
