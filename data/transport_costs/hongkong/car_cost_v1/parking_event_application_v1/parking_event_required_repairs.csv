@@ -1,0 +1,5 @@
+repair_id,severity,component,finding,required_change
+PARKING-R01,high,vehicle_chain,"466 arrivals overlap the same vehicle's next departure; 321 have a facility mismatch, with 52 in both diagnostics.",Keep these events unresolved unless the canonical vehicle chain is corrected upstream.
+PARKING-R02,high,terminal_event,2 terminal non-home arrivals lack a next-departure duration.,Provide explicit activity end-time evidence or keep their parking cost null.
+PARKING-R03,medium,price_precision,Destination facilities are not observed car parks with facility-specific tariffs.,Retain official_rate_bounded_zone_activity_proxy until a sourced facility-level car-park inventory exists.
+PARKING-R04,high,fixed_cost_boundary,"Residential parking and prepaid work subscriptions are fixed-cost boundaries, not repeated leg charges.",Do not attach residential or monthly work rates to ordinary marginal parking legs.

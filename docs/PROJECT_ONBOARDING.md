@@ -89,6 +89,7 @@ docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_CAR_COST_MODEL.md
 docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
 docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -179,6 +180,12 @@ in `docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md`. It constructs ordered
 physical passage events, estimates non-observed passage times, and applies
 official `PC` flat or typical-workday time-varying rates without changing
 MATSim scoring or the existing unified car-cost outputs.
+The standalone destination-parking candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md`. It reconstructs
+physical parking events from complete private-vehicle daily chains, preserves
+absolute model-day time, and applies low/base/high official-rate-bounded
+zone/activity proxies without changing MATSim scoring, toll candidates, or the
+existing unified car-cost outputs.
 
 The final local SimWrapper project for this configuration is:
 
