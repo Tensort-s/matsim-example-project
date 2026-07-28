@@ -52,8 +52,20 @@ class HongKongTaxiScenarioLoadAuditTest {
 		assertEquals(0, audit.missingTaxiAttributeValues);
 		assertEquals(0, audit.invalidTaxiAttributeRuntimeTypes);
 		assertEquals(0, audit.invalidTaxiAttributeValues);
+		assertEquals(0, audit.invalidFareScope);
+		assertEquals(0, audit.invalidFareModelVersion);
+		assertEquals(0, audit.negativeOrNonfiniteFare);
+		assertEquals(0, audit.invalidMainTripIndex);
+		assertEquals(0, audit.blankClassificationSource);
 		assertEquals(0, audit.attributeValidationFailures);
 		assertEquals(0, audit.nonTaxiLegsWithTaxiAttributes);
+		Map<String, Object> auditMap = audit.toMap();
+		assertEquals(Map.of("taxi", 1L), auditMap.get("taxi_actual_mode_counts"));
+		assertEquals(0L, auditMap.get("invalid_scope"));
+		assertEquals(0L, auditMap.get("invalid_model_version"));
+		assertEquals(0L, auditMap.get("negative_or_non_finite_fare"));
+		assertEquals(0L, auditMap.get("invalid_main_trip_index"));
+		assertEquals(0L, auditMap.get("blank_classification_source"));
 		assertEquals("taxi-person", audit.representativeTaxiPersonId);
 		assertEquals("walk-person", audit.representativeNonTaxiPersonId);
 	}

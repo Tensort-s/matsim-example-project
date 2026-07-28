@@ -1,4 +1,4 @@
-# Hong Kong taxi scenario load audit v1
+# Hong Kong taxi scenario load test v1
 
 This document defines the server-side load gate for the Hong Kong taxi
 behavioural pilot. The gate has one purpose: prove that the real routed taxi

@@ -93,6 +93,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 			exitCode = 1;
 		}
 
+		report.put("load_exit_code", exitCode);
 		report.put("process_exit_code", exitCode);
 		try {
 			writeJsonAtomically(validationPath, report);
@@ -174,9 +175,14 @@ public final class HongKongTaxiScenarioLoadAudit {
 		List<String> forbiddenOutputs = findForbiddenSimulationOutputs(validationPath.getParent());
 		report.put("forbidden_simulation_outputs", forbiddenOutputs);
 		report.put("run_flags", ordered(
+				"matsim_run", false,
+				"controler_run", false,
+				"qsim_run", false,
+				"routing_run", false,
+				"asc_experiment", false,
+				"fleet_simulation", false,
 				"controler_created", false,
 				"qsim_started", false,
-				"routing_run", false,
 				"iterations_run", false,
 				"asc_calibration_run", false,
 				"fleet_model_run", false
@@ -200,6 +206,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 				.toList();
 		report.put("required_checks", requiredChecks);
 		report.put("failed_checks", failedChecks);
+		report.put("all_checks_passed", failedChecks.isEmpty());
 		report.put("finished_utc", Instant.now().toString());
 		report.put("total_audit_duration_seconds", elapsedSeconds(auditStartedNanos));
 		report.put("status", failedChecks.isEmpty() ? "validated" : "failed");
@@ -283,6 +290,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 				audit.invalidTaxiAttributeRuntimeTypes++;
 			} else if (!hasValidValue(name, value, parameters)) {
 				audit.invalidTaxiAttributeValues++;
+				recordInvalidTypedValue(audit, name, value, parameters);
 			}
 		}
 
@@ -369,6 +377,34 @@ public final class HongKongTaxiScenarioLoadAudit {
 		return true;
 	}
 
+	private static void recordInvalidTypedValue(
+			PopulationAudit audit,
+			String name,
+			Object value,
+			HongKongTaxiScoringParameters parameters) {
+		if (HongKongTaxiLegAttributes.FARE_BASELINE_HKD.equals(name)) {
+			double fare = (Double) value;
+			if (!Double.isFinite(fare) || fare < 0.0) {
+				audit.negativeOrNonfiniteFare++;
+			}
+		} else if (HongKongTaxiLegAttributes.MAIN_TRIP_INDEX.equals(name)) {
+			if ((Integer) value < 0) {
+				audit.invalidMainTripIndex++;
+			}
+		} else if (HongKongTaxiLegAttributes.FARE_SCOPE.equals(name)) {
+			if (!parameters.fareScope().equals(value)) {
+				audit.invalidFareScope++;
+			}
+		} else if (HongKongTaxiLegAttributes.FARE_MODEL_VERSION.equals(name)) {
+			if (!parameters.fareModelVersion().equals(value)) {
+				audit.invalidFareModelVersion++;
+			}
+		} else if (HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE.equals(name)
+				&& ((String) value).isBlank()) {
+			audit.blankClassificationSource++;
+		}
+	}
+
 	private static Map<String, Object> auditScoringFactory(
 			Scenario scenario,
 			PopulationAudit populationAudit,
@@ -446,6 +482,11 @@ public final class HongKongTaxiScenarioLoadAudit {
 				audit.missingTaxiAttributeValues == 0
 						&& audit.invalidTaxiAttributeRuntimeTypes == 0
 						&& audit.invalidTaxiAttributeValues == 0
+						&& audit.invalidFareScope == 0
+						&& audit.invalidFareModelVersion == 0
+						&& audit.negativeOrNonfiniteFare == 0
+						&& audit.invalidMainTripIndex == 0
+						&& audit.blankClassificationSource == 0
 						&& audit.attributeValidationFailures == 0);
 		checks.put("non_taxi_legs_have_no_taxi_attributes",
 				audit.nonTaxiLegsWithTaxiAttributes == 0);
@@ -769,10 +810,16 @@ public final class HongKongTaxiScenarioLoadAudit {
 		));
 		report.put("required_checks", Map.of("audit_completed", false));
 		report.put("failed_checks", List.of("audit_completed"));
+		report.put("all_checks_passed", false);
 		report.put("run_flags", ordered(
+				"matsim_run", false,
+				"controler_run", false,
+				"qsim_run", false,
+				"routing_run", false,
+				"asc_experiment", false,
+				"fleet_simulation", false,
 				"controler_created", false,
 				"qsim_started", false,
-				"routing_run", false,
 				"iterations_run", false,
 				"asc_calibration_run", false,
 				"fleet_model_run", false
@@ -921,6 +968,11 @@ public final class HongKongTaxiScenarioLoadAudit {
 		long missingTaxiAttributeValues;
 		long invalidTaxiAttributeRuntimeTypes;
 		long invalidTaxiAttributeValues;
+		long invalidFareScope;
+		long invalidFareModelVersion;
+		long negativeOrNonfiniteFare;
+		long invalidMainTripIndex;
+		long blankClassificationSource;
 		long attributeValidationFailures;
 		long nonTaxiLegsWithTaxiAttributes;
 		long taxiLegsMissingRoute;
@@ -951,6 +1003,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 					"mode_counts", modeCounts,
 					"taxi_legs", taxiLegs,
 					"taxi_persons", taxiPersons,
+					"taxi_actual_mode_counts", Map.of("taxi", taxiLegs),
 					"taxi_type_counts", taxiTypeCounts,
 					"classification_source_counts", classificationSourceCounts,
 					"attribute_runtime_types", attributeRuntimeTypes,
@@ -958,6 +1011,11 @@ public final class HongKongTaxiScenarioLoadAudit {
 					"missing_taxi_attribute_values", missingTaxiAttributeValues,
 					"invalid_taxi_attribute_runtime_types", invalidTaxiAttributeRuntimeTypes,
 					"invalid_taxi_attribute_values", invalidTaxiAttributeValues,
+					"invalid_scope", invalidFareScope,
+					"invalid_model_version", invalidFareModelVersion,
+					"negative_or_non_finite_fare", negativeOrNonfiniteFare,
+					"invalid_main_trip_index", invalidMainTripIndex,
+					"blank_classification_source", blankClassificationSource,
 					"attribute_validation_failures", attributeValidationFailures,
 					"attribute_validation_failure_examples", attributeValidationFailureExamples,
 					"non_taxi_legs_with_taxi_attributes", nonTaxiLegsWithTaxiAttributes,

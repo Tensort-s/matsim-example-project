@@ -87,7 +87,7 @@ docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_TAXI_JAVA_SCORING.md
-docs/HONG_KONG_TAXI_SCENARIO_LOAD_AUDIT.md
+docs/HONG_KONG_TAXI_LOAD_TEST.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -162,7 +162,7 @@ The current `ride` mode is audited against 2026 Transport Department taxi
 controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
 read-only and does not modify the adopted v2 plans.
 The real routed taxi base plans have a separate full-scenario, no-simulation
-load gate in `docs/HONG_KONG_TAXI_SCENARIO_LOAD_AUDIT.md`. It validates typed
+load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
 taxi leg attributes, routes, fare-only scoring, and scoring-factory creation
 without creating a Controler, QSim, iteration, behavioural calibration, or
 taxi fleet.
