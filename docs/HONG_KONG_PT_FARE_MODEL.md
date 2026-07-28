@@ -355,6 +355,129 @@ The validator also closes the TD date-evidence gap: it directly parses
 against all five relevant TD manifest rows. It does not compare a hard-coded
 date to another hard-coded date.
 
+## Light Rail adult Octopus station-OD rules v1
+
+`light_rail_station_od_v1/` is a separate pure offline rule and query layer
+for explicit ordered Light Rail stop IDs. Its only supported request
+combination is:
+
+```text
+actual_transport_mode = light_rail
+fare_network_scope = light_rail_station_od
+passenger_type = adult
+payment_medium = Octopus
+```
+
+This scope is distinct from `domestic_mtr_station_od` and
+`airport_express_station_od`. No amount crosses those scope boundaries.
+
+### Official ordered stop-OD matrix
+
+The builder directly rereads and hashes:
+
+```text
+data/transit/hongkong/MTR/light_rail_fares.csv
+data/transit/hongkong/MTR/light_rail_routes_and_stops.csv
+```
+
+It then cross-checks every available amount against
+`official_fares_normalized.parquet`; the Parquet is not used as a substitute
+for the raw CSV.
+
+The official source contains 68 stops and a complete unique 68 by 68 ordered
+matrix:
+
+| Record status | Count |
+|---|---:|
+| Raw ordered OD records | 4,624 |
+| `available` | 4,624 |
+| `ambiguous` | 0 |
+| `unresolved` | 0 |
+| Official explicit zero fares | 68 |
+
+All 68 zero amounts are explicit same-stop source records with their own CSV
+line identifiers. They are not missing-value fills. Conversely, any future
+missing or conflicting record must retain null `cost_hkd`; the rules never
+select a reverse record, minimum, median, first candidate, nearest distance,
+path sum, MTR amount, Airport Express amount, or full-route fare.
+
+`light_rail_fare_conflicts.csv` and
+`light_rail_unresolved_od_pairs.csv` are currently empty because the raw
+matrix is complete and unique. Both files retain their full schema so future
+source changes cannot silently drop these audit categories.
+
+### Stop crosswalk and route readiness
+
+`light_rail_stop_crosswalk.csv` maps all 68 official stops exactly. Mapping
+uses only official stop ID/code pairs and exact code tokens in schedule
+facility IDs. It does not use fuzzy names or coordinate nearest neighbours.
+
+| Stop mapping | Count |
+|---|---:|
+| `exact` | 68 |
+| `ambiguous` | 0 |
+| `unresolved` | 0 |
+
+Stops shared by several Light Rail routes remain one official stop and are not
+treated as ambiguous.
+
+`light_rail_schedule_route_fare_readiness.csv` independently regenerates
+distinct, different-stop forward pairs from the production schedule order and
+checks them against the raw fare CSV:
+
+| Route audit field | Status | Count |
+|---|---|---:|
+| Mapping | `exact` | 15 |
+| Mapping | `partial` | 3 |
+| Mapping | `one_to_many_explicit` | 2 |
+| Quality | `A` | 15 |
+| Quality | `B` | 5 |
+| Fare readiness | `ready` | 20 |
+| Pattern | `exact_direction` | 15 |
+| Pattern | `short_turn` | 3 |
+| Pattern | `loop_multi_direction_composite` | 2 |
+
+All 3,603 required different-stop forward pairs have an official ordered fare,
+for coverage 1.0. Full fare readiness does not upgrade the three short turns
+from `partial/B`, and the 705/706 loops remain
+`one_to_many_explicit/B` composites rather than ordinary one-direction
+routes. Readiness means only that an explicit stop pair can be quoted; it does
+not identify a production passenger itinerary.
+
+### Offline query boundary
+
+`quote_hong_kong_light_rail_station_od_fares.py` returns a fare only for a
+unique available official ordered OD record. Every returned amount is labelled:
+
+```text
+fare_amount_role =
+  base_adult_octopus_fare_before_unmodelled_concessions
+```
+
+The Light Rail effective date remains `2024-06-30`, with evidence status
+`external_official_reference_not_locally_archived`. Therefore exact available
+quotes have maximum `cost_quality=B`. This status is not upgraded merely
+because the fare CSV itself is official.
+
+The 19-case fixture covers normal and reverse ordered OD records, a distinct
+raw record for each direction, an official zero fare, unknown/missing stops,
+missing/wrong scope, generic or missing mode, unsupported passenger/payment
+categories, a transfer-concession request, a pre-effective travel date, and
+an invalid date. The official matrix contains no missing same-stop, unresolved,
+or ambiguous OD case; those three source categories are explicitly marked not
+applicable rather than fabricated for the fixture.
+
+Transfer-concession requests may receive the available base fare, but
+`transfer_concession_hkd` remains null and
+`transfer_concession_status=not_modelled`. The result must not be described as
+the final discounted amount.
+
+This layer does not read or price the 557,104 generic production PT legs. They
+still lack actual mode and boarding/alighting stops, remain unresolved with
+null `cost_hkd`, and cannot call this query interface. No Light Rail fare has
+entered MATSim plans, config, scoring, network, schedule, vehicles, Java
+runners, ASC, or marginal utility of money.
+
 ## Transfer concessions
 
 Transfer concessions remain unmodelled:
@@ -409,6 +532,20 @@ data/transport_costs/hongkong/pt_fare_v1/
     mtr_station_od_summary.json
     mtr_station_od_validation.json
     SHA256SUMS.txt
+  light_rail_station_od_v1/
+    README.md
+    light_rail_stop_crosswalk.csv
+    light_rail_station_od_fare_rules.parquet
+    light_rail_station_od_fare_rules_sample.csv
+    light_rail_fare_conflicts.csv
+    light_rail_unresolved_od_pairs.csv
+    light_rail_schedule_route_fare_readiness.csv
+    light_rail_fare_query_fixture_input.csv
+    light_rail_fare_query_fixture_output.csv
+    light_rail_station_od_summary.json
+    light_rail_station_od_validation.json
+    mtr_station_od_v1_protected_hashes.csv
+    SHA256SUMS.txt
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -442,6 +579,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_mtr_station_od_fares.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_light_rail_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_light_rail_station_od_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\light_rail_station_od_v1\light_rail_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\light_rail_station_od_v1\light_rail_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_light_rail_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -464,6 +614,9 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
 - MTR station-OD v1 supports only adult Octopus and requires actual mode plus
   explicit boarding and alighting station IDs. It cannot be applied to the
   current generic production PT legs.
+- Light Rail station-OD v1 similarly supports only adult Octopus base fares
+  for explicit ordered Light Rail stop IDs. It excludes transfer concessions
+  and remains separate from the two MTR fare scopes.
 - This audit must not be connected to MATSim scoring until a separate,
   explicitly approved integration stage supplies verifiable itineraries and
   fare rules.

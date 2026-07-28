@@ -1,0 +1,56 @@
+{
+  "model": "Hong Kong Light Rail adult Octopus station-OD fare rules v1",
+  "model_role": "offline_explicit_light_rail_stop_od_quote_rules",
+  "official_stops": 68,
+  "stop_crosswalk": {
+    "exact": 68
+  },
+  "fare_rules": {
+    "raw_ordered_od_records": 4624,
+    "total_rule_records": 4624,
+    "available_records": 4624,
+    "ambiguous_records": 0,
+    "unresolved_records": 0,
+    "official_zero_fare_records": 68,
+    "raw_to_normalized_records_crosschecked": 4624
+  },
+  "route_mapping_status": {
+    "exact": 15,
+    "partial": 3,
+    "one_to_many_explicit": 2
+  },
+  "route_mapping_quality": {
+    "A": 15,
+    "B": 5
+  },
+  "route_fare_readiness": {
+    "ready": 20
+  },
+  "route_pattern_type": {
+    "exact_direction": 15,
+    "short_turn": 3,
+    "loop_multi_direction_composite": 2
+  },
+  "forward_pairs": {
+    "required": 3603,
+    "matched": 3603,
+    "coverage": 1.0
+  },
+  "fixture": {
+    "total": 19,
+    "priced": 7,
+    "unresolved": 12,
+    "not_applicable_source_cases": [
+      "same_stop_without_official_record",
+      "unresolved_official_od",
+      "ambiguous_official_od"
+    ],
+    "not_applicable_reason": "official Light Rail CSV is a complete unique 68x68 matrix"
+  },
+  "effective_date": "2024-06-30",
+  "effective_date_status": "external_official_reference_not_locally_archived",
+  "fare_amount_role": "base_adult_octopus_fare_before_unmodelled_concessions",
+  "transfer_concessions": "not_modelled",
+  "production_passenger_trip_pricing": "not_performed",
+  "prohibited_inference_methods_present": false
+}

@@ -754,6 +754,33 @@ cross-scope fallback, or missing-value zero fill. Airport Express retains six
 unresolved ordered pairs, and MTR effective-date evidence remains
 `external_official_reference_not_locally_archived`.
 
+Build the separate adult Octopus base-fare rules for explicit ordered Light
+Rail stop IDs:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_light_rail_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+```
+
+Run the Light Rail fixture query and independent raw-CSV/schedule validator:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_light_rail_station_od_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\light_rail_station_od_v1\light_rail_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\light_rail_station_od_v1\light_rail_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_light_rail_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+```
+
+Light Rail station-OD v1 supports only `light_rail`, adult, Octopus, its
+dedicated scope, and explicit ordered stop IDs. The 705/706 loops remain
+one-to-many composites, three schedule short turns remain partial, and all
+quoted amounts are labelled as base fares before unmodelled concessions.
+
 Outputs are under `data/transport_costs/hongkong/pt_fare_v1/`. These scripts
 are offline read-only consumers of the adopted MATSim inputs. They do not
 modify plans, config, scoring, network, transit schedule, vehicles, or Java

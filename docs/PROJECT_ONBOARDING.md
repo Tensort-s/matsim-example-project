@@ -387,3 +387,7 @@ runner. Transfer concessions remain explicit null fields. The separate
 future inputs with explicit `train` mode, domestic-versus-Airport-Express
 scope, and ordered boarding/alighting station IDs. It does not price the
 current generic PT legs; six Airport Express station pairs remain unresolved.
+The sibling `light_rail_station_od_v1/` layer supplies adult Octopus base
+fares only for explicit ordered Light Rail stop IDs. Its complete 68 by 68
+official matrix is kept separate from both MTR scopes; loop and short-turn
+route states remain explicit, and transfer concessions are not modelled.

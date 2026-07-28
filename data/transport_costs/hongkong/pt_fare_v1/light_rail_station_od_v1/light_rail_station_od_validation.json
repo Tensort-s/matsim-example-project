@@ -1,0 +1,98 @@
+{
+  "validator": "independent Hong Kong Light Rail station-OD validator v1",
+  "stop_crosswalk": {
+    "official_stops": 68,
+    "rows": 68,
+    "mapping_status": {
+      "exact": 68
+    },
+    "ambiguous_schedule_facilities": 0
+  },
+  "fare_rules": {
+    "raw_ordered_od_records": 4624,
+    "raw_unique_ordered_od_keys": 4624,
+    "available_records": 4624,
+    "ambiguous_records": 0,
+    "unresolved_records": 0,
+    "official_zero_fare_records": 68,
+    "available_costs_with_unique_raw_source_record": 4624,
+    "available_cost_trace_rate": 1.0,
+    "reverse_direction_substitution_present": false,
+    "distance_interpolation_present": false,
+    "path_summation_present": false,
+    "cross_scope_fallback_present": false,
+    "missing_fare_zero_fill_present": false
+  },
+  "route_readiness": {
+    "routes": 20,
+    "mapping_status": {
+      "exact": 15,
+      "partial": 3,
+      "one_to_many_explicit": 2
+    },
+    "mapping_quality": {
+      "A": 15,
+      "B": 5
+    },
+    "fare_readiness": {
+      "ready": 20
+    },
+    "route_pattern_type": {
+      "exact_direction": 15,
+      "short_turn": 3,
+      "loop_multi_direction_composite": 2
+    },
+    "forward_pairs_required": 3603,
+    "forward_pairs_matched": 3603,
+    "forward_pair_coverage": 1.0
+  },
+  "fixture": {
+    "cases": 19,
+    "passed": 19,
+    "priced": 7,
+    "unresolved": 12,
+    "source_unresolved_od_cases_available": 0,
+    "source_ambiguous_od_cases_available": 0,
+    "source_same_stop_missing_cases_available": 0
+  },
+  "effective_date_evidence": {
+    "effective_date": "2024-06-30",
+    "effective_date_status": "external_official_reference_not_locally_archived"
+  },
+  "transfer_concessions": {
+    "amounts_present": 0,
+    "status": "not_modelled",
+    "fare_amount_role": "base_adult_octopus_fare_before_unmodelled_concessions"
+  },
+  "mtr_station_od_v1": {
+    "files_checked": 11,
+    "all_unchanged": true
+  },
+  "production_pt_audit": {
+    "rows": 557104,
+    "priced_rows": 0,
+    "unresolved_rows": 557104
+  },
+  "protected_inputs": {
+    "files_checked": 8,
+    "all_unchanged": true
+  },
+  "portability": {
+    "text_files_checked": [
+      "light_rail_fare_conflicts.csv",
+      "light_rail_fare_query_fixture_input.csv",
+      "light_rail_fare_query_fixture_output.csv",
+      "light_rail_schedule_route_fare_readiness.csv",
+      "light_rail_station_od_fare_rules_sample.csv",
+      "light_rail_station_od_summary.json",
+      "light_rail_station_od_validation.json",
+      "light_rail_stop_crosswalk.csv",
+      "light_rail_unresolved_od_pairs.csv",
+      "mtr_station_od_v1_protected_hashes.csv",
+      "README.md",
+      "SHA256SUMS.txt"
+    ],
+    "absolute_local_paths_found": 0
+  },
+  "validation_passed": true
+}

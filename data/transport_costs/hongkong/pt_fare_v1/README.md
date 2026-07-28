@@ -20,11 +20,14 @@ The principal outputs are:
   provenance, portability, parsed TD date, and protected-input validation;
 - `mtr_station_od_v1/`: separate adult Octopus rules for explicit ordered
   domestic MTR and Airport Express station IDs, including an offline query
-  fixture and independent raw-CSV validator.
+  fixture and independent raw-CSV validator;
+- `light_rail_station_od_v1/`: separate adult Octopus base-fare rules for
+  explicit ordered Light Rail stop IDs, including loop/short-turn readiness,
+  conflict/unresolved tables, fixture queries, and independent validation.
 
 The cross-mode distance median introduced in commit `c7be4a` is withdrawn and
 its active estimate files are removed. Transfer concessions remain null. See
 `docs/HONG_KONG_PT_FARE_MODEL.md` for the corrected matching rules, unresolved
 trip policy, MTR station-OD query boundary, source dates, commands, and
-limitations. The MTR rule layer does not price current generic production PT
-trips.
+limitations. Neither station-OD rule layer prices current generic production
+PT trips.
