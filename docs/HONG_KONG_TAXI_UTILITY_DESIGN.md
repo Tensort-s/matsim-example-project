@@ -1,9 +1,11 @@
 # Hong Kong taxi utility design v1
 
 This document records the first offline taxi utility-conversion and parameter
-scenario design for the Hong Kong MATSim model. It is a diagnostic layer only:
-it does not modify any existing MATSim plans, configs, facilities, vehicles,
-networks, Java runners, simulation outputs, modes, or scoring parameters.
+scenario design for the Hong Kong MATSim model, together with the subsequent
+legacy `ride`-to-`taxi` utility bridge correction. These are diagnostic layers
+only: they do not modify any existing MATSim plans, configs, facilities,
+vehicles, networks, Java runners, simulation outputs, modes, or scoring
+parameters.
 
 ## Inputs
 
@@ -119,7 +121,7 @@ For that center scenario, the base-leg diagnostics are:
 
 ## ASC search
 
-The ASC grid tests:
+The original offline ASC grid tested:
 
 ```text
 taxi_asc = -3, -2, ..., +8
@@ -129,6 +131,12 @@ For each fare coefficient and fare-share combination, the grid reports the
 mean, median, P10, and P90 utility offset after adding ASC. This is an offline
 utility-offset table only. It is not a mode-share prediction.
 
+This original `-3` to `+8` grid did not bridge against the complete legacy
+`ride` score: in particular, it did not account for the existing
+`monetaryDistanceRate=-0.0015` distance term. It is therefore retained only as
+the historical offline parameter grid and **is no longer the center range for
+the first MATSim taxi ASC tests**.
+
 Fare coefficient and ASC cannot be identified from the same aggregate taxi
 total target alone. The intended calibration order is:
 
@@ -136,6 +144,85 @@ total target alone. The intended calibration order is:
    a separate price-sensitivity target;
 2. run MATSim with taxi as a behavioural pilot mode;
 3. calibrate `taxi_asc` against final MATSim taxi legs and validation metrics.
+
+## Legacy ride-to-taxi utility bridge correction
+
+The bridge uses all 37,286 base taxi passenger legs and compares the score each
+leg receives under the current `ride` parameters with the proposed central
+taxi fare specification:
+
+```text
+old_ride_score =
+  -1.5
+  + (-6.0 * travel_time_hours)
+  + (-0.0015 * route_distance_m)
+
+new_taxi_score_before_asc =
+  (-6.0 * travel_time_hours)
+  + (-0.05 * fare_baseline_hkd)
+
+asc_equivalent =
+  old_ride_score - new_taxi_score_before_asc
+```
+
+The `0.05 util/HKD` taxi fare coefficient enters as a negative fare
+disutility. Both scores use the same `-6 util/h` direct travel-time term, so
+that term cancels in `asc_equivalent`; the bridge is driven by the legacy
+`ride` constant and distance penalty relative to the new taxi fare penalty.
+
+The observed `asc_equivalent` distribution is:
+
+| Statistic | Utility |
+|---|---:|
+| Mean | -12.7502 |
+| Median | -9.4925 |
+| P10 | -29.6628 |
+| P25 | -16.5005 |
+| P75 | -4.8131 |
+| P90 | -2.9552 |
+| P95 | -2.1065 |
+
+The actual median is bracketed by the proposed coarse values and lies within
+0.5 util of `-9`; `-12` is also close to the observed mean. The first-round
+coarse test candidates are therefore retained as:
+
+```text
+ASC = -12
+ASC =  -9
+ASC =  -6
+```
+
+Their empirical percentile ranks in the leg-level bridge distribution are
+approximately 39.3%, 52.6%, and 69.3%, respectively. These are initial
+behavioral-pilot values, not calibrated final parameters and not a prediction
+of taxi mode share. No `taxi` mode is created by this bridge step.
+
+Bridge output directory:
+
+```text
+data/taxi/hongkong/processed/taxi_utility_bridge_v1/
+```
+
+Files:
+
+- `old_ride_vs_new_taxi_leg_audit.parquet`: one row per base taxi passenger
+  leg, with time, distance, fare, both score decompositions, and
+  `asc_equivalent`.
+- `old_ride_vs_new_taxi_summary.csv`: mean, median, P10, P25, P75, P90, and
+  P95 for input quantities and utility components.
+- `taxi_asc_initial_candidates.csv`: the three first-round coarse ASC values,
+  percentile ranks, offsets from the observed mean and median, and selection
+  rationale.
+- `taxi_utility_bridge_validation.json`: formulas, parameters, hashes,
+  row/key/finite-value checks, central utility-design cross-check, and
+  protected MATSim input non-modification checks.
+
+Reproduction command from this worktree:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\build_hong_kong_taxi_utility_bridge.py
+```
 
 ## Outputs
 
@@ -175,6 +262,17 @@ The current run produced:
 - input fare parquet and validation JSON SHA256 unchanged;
 - protected plans, config, facilities, vehicles, and network SHA256 unchanged;
 - `git status --short -- data/matsim_agents/hongkong` empty before and after.
+
+The bridge correction additionally produced:
+
+- exactly 37,286 unique base leg keys;
+- no missing, non-finite, or negative distance/time/fare values;
+- exact one-to-one agreement with the existing central
+  `farecoef_0p05_share_1p0` utility-design rows;
+- zero central-score and fare-utility difference at stored precision;
+- unchanged SHA256 values for the source audits and protected plans, config,
+  facilities, vehicles, and network;
+- no protected worktree changes and no MATSim run.
 
 This is a taxi behavioural pilot design, not an explicit taxi operating-fleet
 model. Tunnel and waiting costs remain excluded until the next fare-model
