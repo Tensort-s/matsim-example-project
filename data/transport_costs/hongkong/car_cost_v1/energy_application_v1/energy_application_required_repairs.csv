@@ -1,0 +1,4 @@
+repair_id,severity,component,finding,required_change
+ENERGY-R01,medium,individual_powertrain,"No individual private-car powertrain, fuel type, engine size, or age is present in canonical vehicles.",Keep the representative licensed-fleet proxy until a sourced vehicle-level attribute exists.
+ENERGY-R02,medium,combustion_proxy,Diesel and other non-electric licensed cars are included in a combustion proxy using petrol cost.,Add separately sourced diesel/other price and consumption only when the model can support those classes; do not relabel them as observed petrol cars.
+ENERGY-R03,low,electricity_weight,The base tariff uses rounded official 2025 customer account counts of 2.9m CLP and 0.6m HK Electric.,Pin the supporting official customer-account pages if a future parameter refresh changes these weights.

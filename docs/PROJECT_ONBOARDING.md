@@ -90,6 +90,7 @@ docs/HONG_KONG_CAR_COST_MODEL.md
 docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
 docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -186,6 +187,12 @@ physical parking events from complete private-vehicle daily chains, preserves
 absolute model-day time, and applies low/base/high official-rate-bounded
 zone/activity proxies without changing MATSim scoring, toll candidates, or the
 existing unified car-cost outputs.
+The standalone private-car energy candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md`. It independently
+reconstructs source parameters and route distances, applies one explicitly
+non-individual representative licensed-fleet proxy, and audits zero-distance
+routes without combining energy with tolls, parking, fixed ownership cost, or
+MATSim scoring.
 
 The final local SimWrapper project for this configuration is:
 

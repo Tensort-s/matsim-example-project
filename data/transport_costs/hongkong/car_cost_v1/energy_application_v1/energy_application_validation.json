@@ -1,0 +1,289 @@
+{
+  "audit": "Hong Kong private-car representative-fleet fuel-or-electricity application v1",
+  "source_commit": "a2c6286c8c382222af784ec357e9b14abb77a2c5",
+  "candidate_output_only": true,
+  "publishable_candidate": true,
+  "blocked": false,
+  "matsim_scoring_modified": false,
+  "unified_car_cost_modified": false,
+  "toll_candidate_modified": false,
+  "parking_candidate_modified": false,
+  "fixed_vehicle_ownership_cost_included": false,
+  "powertrain_semantics": {
+    "individual_powertrain_available": false,
+    "individual_powertrain_identifiable_leg_count": 0,
+    "individual_powertrain_identifiable_fraction": 0.0,
+    "vehicle_powertrain": "representative_hk_private_car_fleet_average_proxy",
+    "proxy_assignment_scope": "fleet_average_applied_to_each_private_car_leg",
+    "per_vehicle_powertrain_claimed": false,
+    "random_or_hash_powertrain_assignment_used": false,
+    "combustion_proxy_definition": "petrol_plus_diesel_plus_lpg_plus_hydrogen_plus_others",
+    "diesel_or_other_claimed_as_identified_petrol": false
+  },
+  "input_counts": {
+    "car_legs": 67718,
+    "private_car_legs": 64789,
+    "motorcycle_out_of_scope": 2929,
+    "unknown_vehicle_class": 0
+  },
+  "route_distance_audit": {
+    "unit": "m",
+    "unit_basis": "MATSim network and route distance in EPSG:32650 scenario metre convention",
+    "all_car": {
+      "present": 67718,
+      "nan": 0,
+      "negative": 0,
+      "zero": 37,
+      "positive": 67681
+    },
+    "private_car": {
+      "present": 64789,
+      "nan": 0,
+      "negative": 0,
+      "zero": 33,
+      "positive": 64756
+    },
+    "motorcycle": {
+      "present": 2929,
+      "nan": 0,
+      "negative": 0,
+      "zero": 4,
+      "positive": 2925
+    },
+    "private_car_zero_distance_classification": {
+      "valid_same_link_or_same_location_zero_distance": 33
+    },
+    "zero_distance_evidence": {
+      "all_33_route_link_count_one": true,
+      "all_33_start_end_same_link": true,
+      "all_33_no_interior_link": true,
+      "all_33_complete_sequence_and_topology_valid": true
+    },
+    "route_minus_complete_link_sequence_m": {
+      "min": -5066.423000000017,
+      "p10": -303.84399999999914,
+      "median": -83.03299999999945,
+      "p90": -15.854999999999563,
+      "p99": -5.435999999999694,
+      "max": -1.5169999999998254
+    },
+    "route_minus_complete_link_sequence_relative": {
+      "min": -1.0,
+      "p10": -0.041927048994618125,
+      "median": -0.0072144778873718006,
+      "p90": -0.0011250591546858816,
+      "p99": -0.00027197298479607703,
+      "max": -4.87467459056694e-05
+    },
+    "matsim_convention": "route_distance_equals_complete_link_sequence_length_minus_start_link_length",
+    "route_minus_convention_expected_max_abs_m": 5.820766091346741e-11,
+    "manifest_distance_field_available": false,
+    "manifest_distance_comparison_status": "not_available_manifest_has_no_distance_field",
+    "canonical_route_distance_replaced": false,
+    "feasibility_route_distance_max_abs_error_m": 0.0,
+    "feasibility_link_sum_max_abs_error_m": 0.0
+  },
+  "fleet_composition_recalculation": {
+    "licensed_petrol": 432752.0,
+    "licensed_diesel": 10338.0,
+    "licensed_electric": 141771.0,
+    "licensed_lpg": 0.0,
+    "licensed_hydrogen": 0.0,
+    "licensed_others": 53.0,
+    "licensed_total": 584914.0,
+    "licensed_combustion_proxy": 443143.0,
+    "combustion_proxy_share": 0.7576207784392236,
+    "electric_share": 0.24237922156077646,
+    "source_sheet": "T4.4",
+    "source_row_zero_based": 12,
+    "combustion_plus_electric_share_sum": 1.0,
+    "share_sum_error": 0.0,
+    "electric_is_official_licensed_electric_private_car_share": true,
+    "combustion_uses_petrol_cost_proxy_due_to_missing_inputs": true
+  },
+  "source_parameter_recalculation": {
+    "consumer_oil_price_walk_in_values_hkd_per_litre": [
+      22.67,
+      25.67,
+      25.67,
+      26.67,
+      31.77
+    ],
+    "consumer_oil_price_pump_values_hkd_per_litre": [
+      32.67,
+      32.67,
+      32.67,
+      32.67,
+      32.67
+    ],
+    "consumer_oil_observation_text": "10:47, 28 July 2026",
+    "electricity_customer_weight_formula": "(1.406*2900000+1.633*600000)/3500000",
+    "electricity_customer_weight_result_hkd_per_kwh": 1.4449142857142858,
+    "low_high_consumption_is_analyst_plus_minus_20_percent": true,
+    "scenario_semantics": "joint_price_and_consumption_scenario_envelope_not_statistical_confidence_interval",
+    "parameter_formula_errors": {
+      "low": {
+        "combustion_cost_hkd_per_km_error": 0.0,
+        "electric_cost_hkd_per_km_error": 0.0,
+        "fleet_average_hkd_per_km_error": 0.0
+      },
+      "base": {
+        "combustion_cost_hkd_per_km_error": 0.0,
+        "electric_cost_hkd_per_km_error": 0.0,
+        "fleet_average_hkd_per_km_error": 0.0
+      },
+      "high": {
+        "combustion_cost_hkd_per_km_error": 0.0,
+        "electric_cost_hkd_per_km_error": 0.0,
+        "fleet_average_hkd_per_km_error": 0.0
+      }
+    },
+    "maximum_parameter_formula_error": 0.0,
+    "old_parameter_table_recalculation_max_abs_errors": {
+      "petrol_price_hkd_per_litre": 0.0,
+      "electricity_price_hkd_per_kwh": 2.220446049250313e-16,
+      "fuel_consumption_l_per_100km": 0.0,
+      "electricity_consumption_kwh_per_100km": 0.0,
+      "combustion_proxy_share": 0.0,
+      "electric_share": 5.551115123125783e-17,
+      "energy_cost_hkd_per_km": 8.881784197001252e-16
+    },
+    "scenario_parameters": {
+      "low": {
+        "petrol_price_hkd_per_litre": 22.67,
+        "electricity_price_hkd_per_kwh": 1.406,
+        "fuel_consumption_l_per_100km": 9.28,
+        "electricity_consumption_kwh_per_100km": 16.0,
+        "combustion_cost_hkd_per_km": 2.103776,
+        "electric_cost_hkd_per_km": 0.22496,
+        "fleet_weighted_combustion_contribution_hkd_per_km": 1.593864410781756,
+        "fleet_weighted_electric_contribution_hkd_per_km": 0.05452562968231227,
+        "energy_cost_hkd_per_km": 1.6483900404640681
+      },
+      "base": {
+        "petrol_price_hkd_per_litre": 25.67,
+        "electricity_price_hkd_per_kwh": 1.4449142857142858,
+        "fuel_consumption_l_per_100km": 11.6,
+        "electricity_consumption_kwh_per_100km": 20.0,
+        "combustion_cost_hkd_per_km": 2.9777199999999997,
+        "electric_cost_hkd_per_km": 0.28898285714285715,
+        "fleet_weighted_combustion_contribution_hkd_per_km": 2.2559825443740444,
+        "fleet_weighted_electric_contribution_hkd_per_km": 0.07004343995869479,
+        "energy_cost_hkd_per_km": 2.3260259843327393
+      },
+      "high": {
+        "petrol_price_hkd_per_litre": 32.67,
+        "electricity_price_hkd_per_kwh": 1.633,
+        "fuel_consumption_l_per_100km": 13.92,
+        "electricity_consumption_kwh_per_100km": 24.0,
+        "combustion_cost_hkd_per_km": 4.547664,
+        "electric_cost_hkd_per_km": 0.39192,
+        "fleet_weighted_combustion_contribution_hkd_per_km": 3.4454047397600336,
+        "fleet_weighted_electric_contribution_hkd_per_km": 0.0949932645140995,
+        "energy_cost_hkd_per_km": 3.540398004274133
+      }
+    }
+  },
+  "scenario_outputs": {
+    "basic_validation": {
+      "low": {
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "non_null_cost_non_negative": true
+      },
+      "base": {
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "non_null_cost_non_negative": true
+      },
+      "high": {
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "non_null_cost_non_negative": true
+      }
+    },
+    "energy_status_counts": {
+      "low": {
+        "resolved_representative_fleet_average": 64756,
+        "out_of_scope_motorcycle": 2929,
+        "resolved_zero_distance_energy_zero": 33
+      },
+      "base": {
+        "resolved_representative_fleet_average": 64756,
+        "out_of_scope_motorcycle": 2929,
+        "resolved_zero_distance_energy_zero": 33
+      },
+      "high": {
+        "resolved_representative_fleet_average": 64756,
+        "out_of_scope_motorcycle": 2929,
+        "resolved_zero_distance_energy_zero": 33
+      }
+    },
+    "resolved_counts": {
+      "low": 64789,
+      "base": 64789,
+      "high": 64789
+    },
+    "unresolved_counts": {
+      "low": 0,
+      "base": 0,
+      "high": 0
+    },
+    "out_of_scope_counts": {
+      "low": 2929,
+      "base": 2929,
+      "high": 2929
+    },
+    "resolved_only_totals_hkd": {
+      "low": 1659564.3603039084,
+      "base": 2341793.9504491785,
+      "high": 3564398.1126762396
+    },
+    "resolved_only_statistics_hkd": {
+      "low": {
+        "mean": 25.61490932571746,
+        "median": 20.453589564667148,
+        "p90": 54.16921416489382
+      },
+      "base": {
+        "mean": 36.14493124526044,
+        "median": 28.861846791369157,
+        "p90": 76.4376128255154
+      },
+      "high": {
+        "mean": 55.01548276213924,
+        "median": 43.930044405390404,
+        "p90": 116.34417402115373
+      }
+    },
+    "leg_formula_max_abs_error_hkd": {
+      "low": 2.842170943040401e-14,
+      "base": 2.842170943040401e-14,
+      "high": 5.684341886080802e-14
+    },
+    "positive_distance_cost_monotonic": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "unresolved_and_out_of_scope_cost_null": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "only_validated_zero_distance_has_zero_cost": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "non_null_low_le_base_le_high": true
+  },
+  "protected_inputs": {
+    "all_existing_car_cost_files_unchanged": true,
+    "toll_network_mapping_v1_unchanged": true,
+    "toll_rate_application_v1_unchanged": true,
+    "parking_event_application_v1_unchanged": true,
+    "canonical_inputs_unchanged": true,
+    "all_protected_sha256_unchanged": true
+  }
+}
