@@ -1,0 +1,273 @@
+{
+  "scenario_family": "hong_kong_taxi_base_plans_conversion_v1",
+  "status": "validated",
+  "all_checks_passed": true,
+  "required_checks": {
+    "required_inputs_exist": true,
+    "branch_head_baseline_match": true,
+    "explicit_matsim_root_used": true,
+    "output_path_is_new_and_not_an_input": true,
+    "expected_input_hashes_match": true,
+    "mapping_validation_prerequisite_passed": true,
+    "target_mapping_has_37286_unique_valid_rows": true,
+    "base_explicit_plus_allocated_target_union_exact": true,
+    "unrouted_main_trip_and_activity_signatures_match": true,
+    "temporary_output_xml_fully_parsed": true,
+    "before_structure_counts_match_expected": true,
+    "after_structure_counts_match_expected": true,
+    "before_mode_counts_match_expected": true,
+    "after_mode_counts_match_expected": true,
+    "exactly_37286_ride_to_taxi_conversions": true,
+    "target_key_symmetric_difference_zero": true,
+    "all_non_target_ride_legs_remain_ride": true,
+    "no_other_mode_or_structure_changes": true,
+    "no_preexisting_taxi_attribute_conflicts": true,
+    "all_target_taxi_attributes_exactly_match": true,
+    "all_fares_finite_nonnegative_and_exact": true,
+    "all_target_route_hashes_match": true,
+    "all_879050_route_attributes_preserved": true,
+    "all_879050_route_text_values_preserved": true,
+    "all_1264870_activity_signatures_preserved": true,
+    "source_and_audit_inputs_unchanged_during_validation": true,
+    "selected_plans_remain_determinate": true,
+    "temporary_output_nonempty": true,
+    "output_atomic_move_hash_and_size_match": true,
+    "output_plans_exists_and_nonempty": true,
+    "leg_audit_has_37286_valid_rows": true,
+    "mode_summary_written": true,
+    "all_inputs_unchanged_after_output": true,
+    "external_source_plans_git_status_unchanged_clean": true,
+    "only_allowed_repository_paths_changed": true,
+    "no_config_java_scoring_fleet_or_xml_changed": true
+  },
+  "failed_checks": [],
+  "starting_repository_gate": {
+    "required_branch": "feature/hk-taxi-behavioral-pilot-v1",
+    "required_starting_head": "cc1a71dd8d27fd524293e43dde6e58046fadb322",
+    "baseline": "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d",
+    "ahead": 3,
+    "behind": 0,
+    "task_start_git_status_short": "",
+    "task_start_clean_verified_before_edits": true,
+    "repository_changes_at_script_invocation": [
+      "docs/HONG_KONG_TAXI_PLANS_CONVERSION.md",
+      "scripts/hong_kong_single_city/demand_generation/convert_hong_kong_taxi_behavioral_plans.py"
+    ]
+  },
+  "roots": {
+    "worktree_root": "F:/Matsim/worktrees/hk-taxi-pilot",
+    "explicit_matsim_root": "F:/Matsim/matsim-example-project",
+    "matsim_root_was_explicit": true,
+    "external_matsim_git_root": "F:/Matsim/matsim-example-project"
+  },
+  "input_paths": {
+    "plans_routed_5pct_v2.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+    "plans_unrouted_5pct_v2.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+    "taxi_unrouted_to_routed_main_leg_mapping.parquet": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_routed_main_leg_mapping_audit_v1/taxi_unrouted_to_routed_main_leg_mapping.parquet",
+    "taxi_routed_main_leg_mapping_validation.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_routed_main_leg_mapping_audit_v1/taxi_routed_main_leg_mapping_validation.json",
+    "taxi_leg_fare_estimates_base.parquet": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_fare_model_v1/taxi_leg_fare_estimates_base.parquet",
+    "taxi_fare_model_validation.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_fare_model_v1/taxi_fare_model_validation.json",
+    "taxi_candidate_leg_classification.csv": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_initial_plan_allocation_v1/taxi_candidate_leg_classification.csv",
+    "taxi_allocation_summary.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_initial_plan_allocation_v1/taxi_allocation_summary.json",
+    "old_ride_vs_new_taxi_leg_audit.parquet": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_leg_audit.parquet",
+    "taxi_utility_bridge_validation.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_utility_bridge_validation.json"
+  },
+  "input_sha256_before": {
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "taxi_unrouted_to_routed_main_leg_mapping.parquet": "760c2e613f35f03da132f3168770a6b2cac6c2edbc285775b1ce9c2ef7237ac5",
+    "taxi_routed_main_leg_mapping_validation.json": "9bf4075c17cb6ff8ceed1abba7cd74235a4d5ee199fee8a4d76938a2ff585985",
+    "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+    "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14",
+    "taxi_candidate_leg_classification.csv": "c4e090d57684228bf211590d317b68b526beff57afa78de06292ad9d0e1bb19f",
+    "taxi_allocation_summary.json": "866303ca16143022ec649b1cc331dfb538ed5e9373fc9248f77599e71d286980",
+    "old_ride_vs_new_taxi_leg_audit.parquet": "3e2031d7c402a789e017b689a634cd05e0e62e2ee86cf711b2c28e60d820b073",
+    "taxi_utility_bridge_validation.json": "9b39f911e786733cac0d692b2a44ea986b990673ef603904a86d80e79ed1b6ed"
+  },
+  "input_sha256_after": {
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "taxi_unrouted_to_routed_main_leg_mapping.parquet": "760c2e613f35f03da132f3168770a6b2cac6c2edbc285775b1ce9c2ef7237ac5",
+    "taxi_routed_main_leg_mapping_validation.json": "9bf4075c17cb6ff8ceed1abba7cd74235a4d5ee199fee8a4d76938a2ff585985",
+    "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+    "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14",
+    "taxi_candidate_leg_classification.csv": "c4e090d57684228bf211590d317b68b526beff57afa78de06292ad9d0e1bb19f",
+    "taxi_allocation_summary.json": "866303ca16143022ec649b1cc331dfb538ed5e9373fc9248f77599e71d286980",
+    "old_ride_vs_new_taxi_leg_audit.parquet": "3e2031d7c402a789e017b689a634cd05e0e62e2ee86cf711b2c28e60d820b073",
+    "taxi_utility_bridge_validation.json": "9b39f911e786733cac0d692b2a44ea986b990673ef603904a86d80e79ed1b6ed"
+  },
+  "expected_sha256_checks": {
+    "plans_routed_5pct_v2.xml.gz": true,
+    "plans_unrouted_5pct_v2.xml.gz": true,
+    "taxi_unrouted_to_routed_main_leg_mapping.parquet": true,
+    "taxi_leg_fare_estimates_base.parquet": true
+  },
+  "mapping_prerequisite": {
+    "status_audit_completed": true,
+    "audit_execution_succeeded": true,
+    "mapping_rule_valid": true,
+    "uniquely_mapped_ride_legs_37286": true,
+    "ambiguous_mappings_zero": true,
+    "missing_mappings_zero": true,
+    "existing_fare_route_extraction_valid": true,
+    "existing_bridge_inputs_valid": true,
+    "downstream_action_not_required": true
+  },
+  "output_plans": {
+    "path": "F:/Matsim/derived/hongkong/taxi_behavioral_pilot_v1/plans_routed_5pct_taxi_base.xml.gz",
+    "size_bytes": 82100567,
+    "sha256": "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27",
+    "created_via_temporary_file_and_atomic_move": true,
+    "inside_git_repository": false,
+    "pushed_to_remote": false,
+    "repository_policy_note": "The derived plans are stored outside both Git worktrees because /data/matsim_agents/ is excluded by the existing repository policy. Git LFS, .gitattributes, and .gitignore were not changed."
+  },
+  "before": {
+    "counts": {
+      "activities": 1264870,
+      "legs": 879050,
+      "persons": 385820,
+      "plans": 385820,
+      "routes": 879050
+    },
+    "mode_counts": {
+      "car": 67718,
+      "pt": 557104,
+      "ride": 56360,
+      "walk": 197868
+    },
+    "person_order_sha256": "387b17170af8337ff74caccc91f14aa7ac089820b82d70451ef50363c9057694",
+    "activity_signatures_sha256": "e2f3540326724ddf18a9b96814598ec71383ef9b277573c775e14adef43738a4",
+    "route_attributes_sha256": "bf66271ee16f335ca074ea894079154e21c822871866407f80be06abf5499fa4",
+    "route_text_sha256": "53b56da62cb46b89c3b8d82aeeafc1b071130ffecd4868330ce46bc82dd0ba09",
+    "normalized_structure_sha256": "4a4f4bf041d8d166f9baf7f507b10839683341184a74264f161a7b9c0f5fe434",
+    "selected_plan_unresolved_persons": 0,
+    "root_tag": "population",
+    "root_attributes": {}
+  },
+  "after": {
+    "counts": {
+      "activities": 1264870,
+      "legs": 879050,
+      "persons": 385820,
+      "plans": 385820,
+      "routes": 879050
+    },
+    "mode_counts": {
+      "car": 67718,
+      "pt": 557104,
+      "ride": 19074,
+      "taxi": 37286,
+      "walk": 197868
+    },
+    "person_order_sha256": "387b17170af8337ff74caccc91f14aa7ac089820b82d70451ef50363c9057694",
+    "activity_signatures_sha256": "e2f3540326724ddf18a9b96814598ec71383ef9b277573c775e14adef43738a4",
+    "route_attributes_sha256": "bf66271ee16f335ca074ea894079154e21c822871866407f80be06abf5499fa4",
+    "route_text_sha256": "53b56da62cb46b89c3b8d82aeeafc1b071130ffecd4868330ce46bc82dd0ba09",
+    "normalized_structure_sha256": "4a4f4bf041d8d166f9baf7f507b10839683341184a74264f161a7b9c0f5fe434",
+    "selected_plan_unresolved_persons": 0,
+    "root_tag": "population",
+    "root_attributes": {}
+  },
+  "conversion_counts": {
+    "target": 37286,
+    "converted": 37286,
+    "missing": 0,
+    "duplicate": 0,
+    "unexpected": 0,
+    "target_key_symmetric_difference": 0,
+    "explicit": 4614,
+    "allocated_base": 32672,
+    "private_car_passenger_not_converted": 3564,
+    "school_bus_not_converted": 9626,
+    "base_other_ride_not_converted": 5884
+  },
+  "taxi_population": {
+    "unique_persons": 15439,
+    "unique_tours": 15485,
+    "taxi_type_counts": {
+      "lantau_taxi": 62,
+      "new_territories_taxi": 3654,
+      "unresolved": 2533,
+      "urban_taxi": 31037
+    },
+    "classification_source_counts": {
+      "resident_discretionary_ride_assignment": 23100,
+      "v1_mode_detail_explicit_taxi": 4614,
+      "visitor_tcs_proxy_unspecified_ride": 9572
+    },
+    "unresolved_taxi_count": 2533
+  },
+  "fare_baseline_hkd": {
+    "mean": 109.86560907579253,
+    "median": 98.3,
+    "p10": 29.0,
+    "p90": 222.5,
+    "min": 24.0,
+    "max": 491.7
+  },
+  "attribute_validation": {
+    "required_attribute_names_and_classes": {
+      "hkTaxiFareBaselineHkd": "java.lang.Double",
+      "hkTaxiType": "java.lang.String",
+      "hkTaxiFareScope": "java.lang.String",
+      "hkTaxiFareModelVersion": "java.lang.String",
+      "hkTaxiClassificationSource": "java.lang.String",
+      "hkTaxiMainTripIndex": "java.lang.Integer"
+    },
+    "preexisting_name_conflicts": 0,
+    "exact_attribute_match_count": 37286,
+    "fare_attribute_mismatch_count": 0,
+    "utility_or_asc_attributes_written": false
+  },
+  "preservation": {
+    "route_attributes_compared": 879050,
+    "route_attributes_mismatches": 0,
+    "route_text_values_compared": 879050,
+    "route_text_mismatches": 0,
+    "target_route_hash_mismatches": 0,
+    "activity_signatures_compared": 1264870,
+    "activity_signature_mismatches": 0,
+    "normalized_structure_preserved": true,
+    "source_files_unchanged": true
+  },
+  "git_protection": {
+    "repository_changed_paths": [
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_leg_audit.csv",
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_mode_summary.csv",
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_validation.json",
+      "docs/HONG_KONG_TAXI_PLANS_CONVERSION.md",
+      "scripts/hong_kong_single_city/demand_generation/convert_hong_kong_taxi_behavioral_plans.py"
+    ],
+    "allowed_repository_paths": [
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_leg_audit.csv",
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_mode_summary.csv",
+      "data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_validation.json",
+      "docs/HONG_KONG_TAXI_PLANS_CONVERSION.md",
+      "scripts/hong_kong_single_city/demand_generation/convert_hong_kong_taxi_behavioral_plans.py"
+    ],
+    "unexpected_repository_changes": [],
+    "forbidden_repository_changes": [],
+    "external_protected_status_before": "",
+    "external_protected_status_after": ""
+  },
+  "execution_declarations": {
+    "matsim_run": false,
+    "qsim_run": false,
+    "routing_run": false,
+    "smoke_or_load_test_run": false,
+    "java_custom_scoring_run": false,
+    "asc_test_run": false,
+    "fleet_simulation_run": false,
+    "config_modified": false,
+    "java_modified": false,
+    "scoring_modified": false,
+    "fleet_modified": false,
+    "source_plans_modified": false
+  },
+  "output_files": [
+    "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_leg_audit.csv",
+    "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_mode_summary.csv",
+    "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_plans_conversion_v1/taxi_plans_conversion_validation.json"
+  ]
+}
