@@ -87,6 +87,7 @@ docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_CAR_COST_MODEL.md
+docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -167,6 +168,11 @@ The first private-car offline cost and data-quality audit is under
 confirmed link-level private-car tolls, destination-parking proxies, and one
 fixed vehicle-day ownership record. It does not modify the active car scoring,
 plans, config, network, facilities, vehicles, or simulation outputs.
+The follow-up toll facility-network audit is documented in
+`docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md`. It rejects cross-domain
+same-number ID collisions, resolves all 19 official toll features through the
+official road topology, and produces non-monetary per-leg toll identification
+for a later output-repair stage.
 
 The final local SimWrapper project for this configuration is:
 

@@ -11,6 +11,8 @@
       "path_kind": "file",
       "size_bytes": 80681267,
       "sha256": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim population XML compressed with gzip",
       "actual_reads": {
@@ -50,6 +52,8 @@
       "path_kind": "file",
       "size_bytes": 26962315,
       "sha256": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim population XML compressed with gzip",
       "actual_reads": {
@@ -75,6 +79,8 @@
       "path_kind": "file",
       "size_bytes": 3232921,
       "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim facilities XML compressed with gzip",
       "actual_reads": {
@@ -97,6 +103,8 @@
       "path_kind": "file",
       "size_bytes": 78999,
       "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim vehicle definitions XML compressed with gzip",
       "actual_reads": {
@@ -131,6 +139,8 @@
       "path_kind": "file",
       "size_bytes": 12301450,
       "sha256": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "Apache Parquet",
       "actual_reads": {
@@ -158,6 +168,8 @@
       "path_kind": "file",
       "size_bytes": 10690,
       "sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim config XML",
       "actual_reads": {
@@ -183,6 +195,8 @@
       "path_kind": "file",
       "size_bytes": 2861518,
       "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "MATSim network XML compressed with gzip",
       "actual_reads": {
@@ -208,6 +222,8 @@
       "path_kind": "directory",
       "size_bytes": 58971349,
       "sha256": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+      "sha256_scope": "directory_tree",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "Esri File Geodatabase directory",
       "actual_reads": {
@@ -240,6 +256,8 @@
       "path_kind": "file",
       "size_bytes": 32775941,
       "sha256": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
+      "sha256_scope": "file",
+      "shapefile_sidecars": [],
       "git_state": "git_ignored_external_read_only",
       "format": "Apache Parquet",
       "actual_reads": {
@@ -259,9 +277,47 @@
       "repository_relative_path": "data/worldcommuting_od/hongkong/custom_features/hong_kong_fixed_link_grid/CityAndRegionSplit/hong_kong_fixed_link_grid/regions.shp",
       "input_root_role": "canonical_project_read_only",
       "exists": true,
-      "path_kind": "file",
-      "size_bytes": 5774392,
-      "sha256": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f",
+      "path_kind": "shapefile_bundle",
+      "size_bytes": 22533388,
+      "sha256": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb",
+      "sha256_scope": "sorted_combination_of_all_same_stem_sidecars",
+      "shapefile_sidecars": [
+        {
+          "name": "regions.cpg",
+          "size_bytes": 5,
+          "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+        },
+        {
+          "name": "regions.dbf",
+          "size_bytes": 276016,
+          "sha256": "f8b3c594627a9d20c4c6cf77f5933ee1e48aa67710199c521362d962f368e9bf"
+        },
+        {
+          "name": "regions.geojson",
+          "size_bytes": 16265514,
+          "sha256": "15e3dc70dab526c537b49baeda8eeb5913fed451aec218854d8d0022738affba"
+        },
+        {
+          "name": "regions.png",
+          "size_bytes": 204279,
+          "sha256": "25ce9ef19fc3c86c58708e3f1221565c442490340be3d56c3495e25b74a7e7f2"
+        },
+        {
+          "name": "regions.prj",
+          "size_bytes": 402,
+          "sha256": "99a5a32f41f7df7e52e869dca1b2df8b2009ba20c28dbf95e61dc9c891dffd38"
+        },
+        {
+          "name": "regions.shp",
+          "size_bytes": 5774392,
+          "sha256": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f"
+        },
+        {
+          "name": "regions.shx",
+          "size_bytes": 12780,
+          "sha256": "c1fa394989a9a61a3fa11af06efca74e33050bdec07311bbbfc43965a436aa65"
+        }
+      ],
       "git_state": "git_ignored_external_read_only",
       "format": "ESRI Shapefile main geometry file",
       "actual_reads": {

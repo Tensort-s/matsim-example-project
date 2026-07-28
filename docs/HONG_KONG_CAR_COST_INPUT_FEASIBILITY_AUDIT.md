@@ -283,7 +283,6 @@ The physical chain audit finds:
 - no duration longer than 24 hours;
 - no vehicle shared across people or households;
 - no duplicate `parking_event_key`;
-- no arrival mapped to more than one parking candidate.
 
 Some time-overlap and facility-chain problems end at home. They remain visible
 as physical-chain diagnostics even though home cost readiness is classified as

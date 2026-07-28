@@ -52,8 +52,7 @@
     "duration_over_24h_events": 0,
     "duplicate_parking_event_key_count": 0,
     "legs_in_duplicate_parking_event_keys": 0,
-    "excess_leg_mappings_to_parking_events": 0,
-    "arrivals_with_multiple_parking_candidates": 0
+    "excess_leg_mappings_to_parking_events": 0
   },
   "route": {
     "private_car_routes": 64789,
@@ -474,8 +473,7 @@
     "duration_over_24h_events": 0,
     "duplicate_parking_event_key_count": 0,
     "legs_in_duplicate_parking_event_keys": 0,
-    "excess_leg_mappings_to_parking_events": 0,
-    "arrivals_with_multiple_parking_candidates": 0
+    "excess_leg_mappings_to_parking_events": 0
   },
   "fixed_vehicle_ownership_boundary": {
     "record_scope_required": [
@@ -737,7 +735,7 @@
     "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
     "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
     "synthetic_households": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
-    "fixed_link_grid": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f"
+    "fixed_link_grid": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
   },
   "input_hashes_after": {
     "plans_routed": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
@@ -749,7 +747,7 @@
     "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
     "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
     "synthetic_households": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
-    "fixed_link_grid": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f"
+    "fixed_link_grid": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
   },
   "protected_input_hashes_unchanged": true,
   "prototype_cost_parquet_hashes_before": {

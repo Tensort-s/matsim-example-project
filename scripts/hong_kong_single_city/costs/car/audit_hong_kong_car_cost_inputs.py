@@ -310,6 +310,26 @@ def sha256_directory(path: Path) -> str:
     return digest.hexdigest()
 
 
+def shapefile_sidecars(path: Path) -> list[Path]:
+    return sorted(
+        child
+        for child in path.parent.glob(f"{path.stem}.*")
+        if child.is_file()
+    )
+
+
+def sha256_file_bundle(paths: list[Path]) -> str:
+    digest = hashlib.sha256()
+    for child in sorted(paths, key=lambda item: item.name):
+        name = child.name.encode("utf-8")
+        digest.update(len(name).to_bytes(8, "big"))
+        digest.update(name)
+        with child.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+    return digest.hexdigest()
+
+
 def path_size(path: Path) -> int:
     if path.is_file():
         return path.stat().st_size
@@ -356,7 +376,13 @@ def resolve_required_inputs(input_root: Path) -> dict[str, Path]:
 
 def input_hashes(paths: dict[str, Path]) -> dict[str, str]:
     return {
-        key: sha256_directory(path) if path.is_dir() else sha256_file(path)
+        key: (
+            sha256_file_bundle(shapefile_sidecars(path))
+            if key == "fixed_link_grid"
+            else sha256_directory(path)
+            if path.is_dir()
+            else sha256_file(path)
+        )
         for key, path in paths.items()
     }
 
@@ -367,15 +393,41 @@ def build_inventory(
     rows = []
     for key, spec in INPUT_SPECS.items():
         path = paths[key]
+        sidecars = shapefile_sidecars(path) if key == "fixed_link_grid" else []
         rows.append(
             {
                 "input_id": key,
                 "repository_relative_path": spec["relative_path"],
                 "input_root_role": "canonical_project_read_only",
                 "exists": path.exists(),
-                "path_kind": "directory" if path.is_dir() else "file",
-                "size_bytes": path_size(path),
+                "path_kind": (
+                    "shapefile_bundle"
+                    if key == "fixed_link_grid"
+                    else "directory"
+                    if path.is_dir()
+                    else "file"
+                ),
+                "size_bytes": (
+                    sum(child.stat().st_size for child in sidecars)
+                    if sidecars
+                    else path_size(path)
+                ),
                 "sha256": hashes[key],
+                "sha256_scope": (
+                    "sorted_combination_of_all_same_stem_sidecars"
+                    if sidecars
+                    else "directory_tree"
+                    if path.is_dir()
+                    else "file"
+                ),
+                "shapefile_sidecars": [
+                    {
+                        "name": child.name,
+                        "size_bytes": child.stat().st_size,
+                        "sha256": sha256_file(child),
+                    }
+                    for child in sidecars
+                ],
                 "git_state": git_path_state(
                     input_root, str(spec["relative_path"]).replace("\\", "/")
                 ),
@@ -1966,7 +2018,6 @@ def main() -> None:
         "excess_leg_mappings_to_parking_events": int(
             (duplicate_event_keys - 1).sum() if len(duplicate_event_keys) else 0
         ),
-        "arrivals_with_multiple_parking_candidates": 0,
     }
     fixed_ownership = {
         "record_scope_required": ["vehicle_day", "household_day"],
