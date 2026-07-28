@@ -382,4 +382,8 @@ trip estimate from commit `c7be4a` is withdrawn. Current generic PT legs lack
 line, route, direction, stop, and transfer evidence, so `cost_hkd` remains
 null with quality `U`; unresolved is not a zero fare. The audit does not modify
 the adopted MATSim plans, config, scoring, network, schedule, vehicles, or
-runner. Transfer concessions remain explicit null fields.
+runner. Transfer concessions remain explicit null fields. The separate
+`mtr_station_od_v1/` layer provides auditable adult Octopus quotes only for
+future inputs with explicit `train` mode, domestic-versus-Airport-Express
+scope, and ordered boarding/alighting station IDs. It does not price the
+current generic PT legs; six Airport Express station pairs remain unresolved.

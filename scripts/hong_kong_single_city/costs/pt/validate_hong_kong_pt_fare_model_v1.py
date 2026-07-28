@@ -112,7 +112,7 @@ def validate_json_files(output_dir: Path) -> list[str]:
 
 def validate_source_manifest(
     source_root: Path, source_manifest: pd.DataFrame
-) -> dict[str, int]:
+) -> dict[str, Any]:
     required = [
         "source_id",
         "mode_scope",
@@ -144,7 +144,48 @@ def validate_source_manifest(
         if sha256(path) != row.sha256:
             raise AssertionError(f"Source SHA256 mismatch: {row.source_id}")
         checked += 1
-    return {"source_rows": len(source_manifest), "source_hashes_verified": checked}
+
+    date_evidence = source_manifest[
+        source_manifest["source_id"].eq("td_route_fare_revision_date")
+    ]
+    if len(date_evidence) != 1:
+        raise AssertionError("Expected one TD revision-date evidence row")
+    date_row = date_evidence.iloc[0]
+    date_path = source_root / Path(date_row["repository_relative_path"])
+    date_table = pd.read_csv(date_path, dtype=str, keep_default_na=False)
+    parsed_dates = {
+        pd.Timestamp(value).date().isoformat()
+        for value in date_table.to_numpy().ravel()
+        if str(value).strip()
+    }
+    if len(parsed_dates) != 1:
+        raise AssertionError(
+            f"TD revision-date file did not contain one date: {sorted(parsed_dates)}"
+        )
+    parsed_td_date = next(iter(parsed_dates))
+    td_source_ids = {
+        "td_gtfs",
+        "td_bus_route_fares",
+        "td_gmb_route_fares",
+        "td_ferry_route_fares",
+        "td_route_fare_revision_date",
+    }
+    td_sources = source_manifest[source_manifest["source_id"].isin(td_source_ids)]
+    if set(td_sources["source_id"]) != td_source_ids:
+        raise AssertionError("TD sources required for date validation are missing")
+    if not td_sources["effective_date"].eq(parsed_td_date).all():
+        raise AssertionError(
+            "Manifest TD effective dates differ from the locally parsed "
+            f"revision cut-off {parsed_td_date}"
+        )
+    if not td_sources["effective_date_status"].eq("local_source_proven").all():
+        raise AssertionError("TD sources are not marked local_source_proven")
+    return {
+        "source_rows": len(source_manifest),
+        "source_hashes_verified": checked,
+        "td_revision_cutoff_date_parsed_from_local_file": parsed_td_date,
+        "td_manifest_sources_matched_to_parsed_date": int(len(td_sources)),
+    }
 
 
 def validate_inventory(inventory: pd.DataFrame) -> dict[str, Any]:

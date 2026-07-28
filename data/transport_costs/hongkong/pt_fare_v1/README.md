@@ -17,9 +17,14 @@ The principal outputs are:
   `cost_hkd=null` and `cost_quality=U`;
 - `fare_source_manifest.csv` and `SHA256SUMS.txt`: provenance and integrity;
 - `pt_fare_independent_validation.json`: independent row, schema, mapping,
-  provenance, portability, and protected-input validation.
+  provenance, portability, parsed TD date, and protected-input validation;
+- `mtr_station_od_v1/`: separate adult Octopus rules for explicit ordered
+  domestic MTR and Airport Express station IDs, including an offline query
+  fixture and independent raw-CSV validator.
 
 The cross-mode distance median introduced in commit `c7be4a` is withdrawn and
 its active estimate files are removed. Transfer concessions remain null. See
 `docs/HONG_KONG_PT_FARE_MODEL.md` for the corrected matching rules, unresolved
-trip policy, source dates, commands, and limitations.
+trip policy, MTR station-OD query boundary, source dates, commands, and
+limitations. The MTR rule layer does not price current generic production PT
+trips.

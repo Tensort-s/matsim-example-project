@@ -213,6 +213,148 @@ The output also retains the serialized generic-route fields and explicit null
 columns for actual mode, line, route, direction, boarding stop, alighting
 stop, transfer chain, and source record.
 
+## MTR adult Octopus station-OD rules v1
+
+`mtr_station_od_v1/` is a pure offline rule and query layer for future inputs
+that explicitly provide an MTR boarding station and alighting station. It is
+not production passenger-trip pricing. It does not read the production plans,
+and the existing 557,104 generic PT audit rows remain unresolved with null
+`cost_hkd`.
+
+The only supported combination is:
+
+```text
+actual_transport_mode = train
+passenger_type = adult
+payment_medium = Octopus
+```
+
+The two rule scopes are strictly separate:
+
+```text
+domestic_mtr_station_od
+airport_express_station_od
+```
+
+Domestic records never fill an Airport Express request, and Airport Express
+records never fill a domestic request. Ordered OD keys are used exactly as
+published. The query does not substitute the reverse direction, sum fares
+along a path, interpolate by distance, select a nearest record, or fill a
+missing fare with zero.
+
+### Direct raw-source construction
+
+The builder rereads these original official CSVs rather than copying the
+normalized Parquet:
+
+```text
+data/transit/hongkong/MTR/mtr_lines_fares.csv
+data/transit/hongkong/MTR/airport_express_fares.csv
+data/transit/hongkong/MTR/mtr_lines_and_stations.csv
+```
+
+Every available fare has a stable original CSV line identifier,
+repository-relative source path, and source SHA256. The builder independently
+cross-checks all 9,216 domestic records and all 14 published Airport Express
+records against `official_fares_normalized.parquet`.
+
+Current rule counts are:
+
+| Scope | Total schedule/rule universe | Available | Conflicting | Missing |
+|---|---:|---:|---:|---:|
+| Domestic MTR | 9,216 | 9,216 | 0 | 0 |
+| Airport Express | 20 | 14 | 0 | 6 |
+
+The domestic source is a complete 96 by 96 ordered matrix. It contains 100
+officially explicit zero-fare rows: 96 same-station records and four linked
+station records. These are source values, not missing-value imputation.
+Unresolved rows never receive zero.
+
+The six Airport Express ordered pairs absent from the official CSV are:
+
+```text
+44 -> 45  Hong Kong -> Kowloon
+44 -> 46  Hong Kong -> Tsing Yi
+45 -> 44  Kowloon -> Hong Kong
+45 -> 46  Kowloon -> Tsing Yi
+46 -> 44  Tsing Yi -> Hong Kong
+46 -> 45  Tsing Yi -> Kowloon
+```
+
+They remain null and are listed in `mtr_unresolved_od_pairs.csv`. A reverse
+record, domestic record, or path sum is not used to fill them.
+
+### Station and route readiness audit
+
+`mtr_station_crosswalk.csv` contains 101 distinct official station IDs. Exact
+mapping requires an official line code and station-code token in the schedule
+facility ID; names and coordinates are not used.
+
+| Station mapping | Count |
+|---|---:|
+| `exact` | 100 |
+| `ambiguous` | 0 |
+| `unresolved` | 1 |
+
+The unresolved station is Racecourse (`station_id=70`), which is present in
+the domestic fare matrix but absent from the retained official
+line-and-station pattern and production schedule.
+
+`mtr_schedule_route_fare_readiness.csv` has one row for each of the 30 train
+routes. Readiness means that a fare can be queried if explicit boarding and
+alighting station IDs are later supplied; it does not mean a production
+passenger trip has been matched.
+
+| Route field | Status | Count |
+|---|---|---:|
+| Mapping | `exact` | 22 |
+| Mapping | `one_to_many_explicit` | 2 |
+| Mapping | `partial` | 6 |
+| Fare readiness | `ready` | 28 |
+| Fare readiness | `partial_missing_official_od` | 2 |
+
+The two TKL branch compositions remain
+`one_to_many_explicit`; short turns remain distinct. The two Airport Express
+directions are partially ready because each has 7 of 10 required forward OD
+pairs.
+
+### Offline query interface
+
+Use `quote_hong_kong_mtr_station_od_fares.py` with a CSV containing:
+
+```text
+quote_id
+actual_transport_mode
+fare_network_scope
+boarding_station_id
+alighting_station_id
+passenger_type
+payment_medium
+travel_date
+```
+
+A fare is returned only for one uniquely available official ordered OD rule
+with supported scope, mode, passenger type, payment medium, station IDs, and
+travel date. All other requests retain null `cost_hkd`, quality `U`, and a
+machine-readable unresolved reason.
+
+Although the OD record itself is exact, current MTR effective-date evidence
+remains `external_official_reference_not_locally_archived`. Consequently an
+available quote has maximum `cost_quality=B`, not A. Domestic MTR retains
+effective date `2024-06-30`; Airport Express retains `2025-06-22`.
+
+The 16-case fixture covers available domestic and Airport Express fares,
+independent reverse lookup, unknown and missing stations, missing and
+conflicting scope, the known Airport Express gap, unsupported passenger and
+payment categories, generic or missing mode, same-station absence, and a
+transfer-concession request. All 16 expected rows are generated by the query
+engine and independently reproduced by the validator.
+
+The validator also closes the TD date-evidence gap: it directly parses
+`routes_fares_last_updated.csv`, obtains `2026-07-14`, and checks that date
+against all five relevant TD manifest rows. It does not compare a hard-coded
+date to another hard-coded date.
+
 ## Transfer concessions
 
 Transfer concessions remain unmodelled:
@@ -255,6 +397,18 @@ data/transport_costs/hongkong/pt_fare_v1/
   protected_input_hash_comparison.csv
   pt_fare_independent_validation.json
   SHA256SUMS.txt
+  mtr_station_od_v1/
+    README.md
+    mtr_station_crosswalk.csv
+    mtr_station_od_fare_rules.parquet
+    mtr_station_od_fare_rules_sample.csv
+    mtr_unresolved_od_pairs.csv
+    mtr_schedule_route_fare_readiness.csv
+    mtr_fare_query_fixture_input.csv
+    mtr_fare_query_fixture_output.csv
+    mtr_station_od_summary.json
+    mtr_station_od_validation.json
+    SHA256SUMS.txt
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -275,6 +429,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_pt_fare_model_v1.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_mtr_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_mtr_station_od_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\mtr_station_od_v1\mtr_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\mtr_station_od_v1\mtr_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_mtr_station_od_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -291,8 +458,12 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
   field explicit in the fare schema.
 - Five Ferry Core patterns lack an exact official direction stop pattern in
   the retained TD source.
-- Airport Express lacks six required forward station-OD fare pairs.
+- Airport Express lacks six required forward station-OD fare pairs; MTR
+  station-OD v1 preserves them as explicit unresolved rules.
 - Transfer concessions and passenger eligibility are unmodelled.
+- MTR station-OD v1 supports only adult Octopus and requires actual mode plus
+  explicit boarding and alighting station IDs. It cannot be applied to the
+  current generic production PT legs.
 - This audit must not be connected to MATSim scoring until a separate,
   explicitly approved integration stage supplies verifiable itineraries and
   fare rules.

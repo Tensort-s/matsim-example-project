@@ -1,0 +1,131 @@
+{
+  "validator": "independent Hong Kong MTR station-OD fare validator v1",
+  "station_crosswalk": {
+    "rows": 101,
+    "mapping_status": {
+      "exact": 100,
+      "unresolved": 1
+    },
+    "ambiguous_schedule_facilities": 0
+  },
+  "fare_rules": {
+    "fare_network_scopes": {
+      "domestic_mtr_station_od": {
+        "total_records": 9216,
+        "available_records": 9216,
+        "conflicting_records": 0,
+        "missing_records": 0,
+        "official_zero_fare_records": 100,
+        "raw_official_ordered_od_records": 9216,
+        "available_costs_with_raw_source_record": 9216
+      },
+      "airport_express_station_od": {
+        "total_records": 20,
+        "available_records": 14,
+        "conflicting_records": 0,
+        "missing_records": 6,
+        "official_zero_fare_records": 0,
+        "raw_official_ordered_od_records": 14,
+        "available_costs_with_raw_source_record": 14
+      }
+    },
+    "all_available_costs_trace_to_raw_ordered_od": true,
+    "reverse_direction_substitution_present": false,
+    "distance_interpolation_present": false,
+    "path_summation_present": false,
+    "cross_scope_fallback_present": false,
+    "missing_fare_zero_fill_present": false
+  },
+  "airport_express_missing_ordered_od_pairs": [
+    {
+      "boarding_station_id": "44",
+      "alighting_station_id": "45"
+    },
+    {
+      "boarding_station_id": "44",
+      "alighting_station_id": "46"
+    },
+    {
+      "boarding_station_id": "45",
+      "alighting_station_id": "44"
+    },
+    {
+      "boarding_station_id": "45",
+      "alighting_station_id": "46"
+    },
+    {
+      "boarding_station_id": "46",
+      "alighting_station_id": "44"
+    },
+    {
+      "boarding_station_id": "46",
+      "alighting_station_id": "45"
+    }
+  ],
+  "train_route_readiness": {
+    "mapping_status": {
+      "exact": 22,
+      "partial": 6,
+      "one_to_many_explicit": 2
+    },
+    "mapping_quality": {
+      "A": 22,
+      "B": 6,
+      "C": 2
+    },
+    "fare_readiness": {
+      "ready": 28,
+      "partial_missing_official_od": 2
+    }
+  },
+  "fixture": {
+    "cases": 16,
+    "passed": 16,
+    "priced": 4,
+    "unresolved": 12
+  },
+  "mtr_effective_date_evidence": {
+    "domestic_mtr_station_od": {
+      "effective_date": "2024-06-30",
+      "effective_date_status": "external_official_reference_not_locally_archived"
+    },
+    "airport_express_station_od": {
+      "effective_date": "2025-06-22",
+      "effective_date_status": "external_official_reference_not_locally_archived"
+    }
+  },
+  "td_revision_date_validation": {
+    "parsed_date": "2026-07-14",
+    "manifest_rows_matched": 5,
+    "parsed_from_local_file": true
+  },
+  "transfer_concessions": {
+    "amounts_present": 0,
+    "status": "not_modelled"
+  },
+  "production_pt_audit": {
+    "rows": 557104,
+    "priced_rows": 0,
+    "unresolved_rows": 557104
+  },
+  "protected_inputs": {
+    "files_checked": 8,
+    "all_unchanged": true
+  },
+  "portability": {
+    "text_files_checked": [
+      "mtr_fare_query_fixture_input.csv",
+      "mtr_fare_query_fixture_output.csv",
+      "mtr_schedule_route_fare_readiness.csv",
+      "mtr_station_crosswalk.csv",
+      "mtr_station_od_fare_rules_sample.csv",
+      "mtr_station_od_summary.json",
+      "mtr_station_od_validation.json",
+      "mtr_unresolved_od_pairs.csv",
+      "README.md",
+      "SHA256SUMS.txt"
+    ],
+    "absolute_local_paths_found": 0
+  },
+  "validation_passed": true
+}

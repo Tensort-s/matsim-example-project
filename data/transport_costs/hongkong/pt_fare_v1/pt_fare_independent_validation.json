@@ -66,7 +66,9 @@
   },
   "fare_sources": {
     "source_rows": 13,
-    "source_hashes_verified": 13
+    "source_hashes_verified": 13,
+    "td_revision_cutoff_date_parsed_from_local_file": "2026-07-14",
+    "td_manifest_sources_matched_to_parsed_date": 5
   },
   "protected_inputs": {
     "files_checked": 8,

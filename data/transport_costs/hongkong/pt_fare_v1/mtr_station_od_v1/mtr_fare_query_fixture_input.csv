@@ -1,0 +1,17 @@
+quote_id,actual_transport_mode,fare_network_scope,boarding_station_id,alighting_station_id,passenger_type,payment_medium,travel_date,transfer_concession_requested
+domestic_available,train,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,false
+airport_express_available,train,airport_express_station_od,44,47,adult,Octopus,2026-07-28,false
+domestic_reverse_ordered,train,domestic_mtr_station_od,2,1,adult,Octopus,2026-07-28,false
+unknown_boarding,train,domestic_mtr_station_od,9999,2,adult,Octopus,2026-07-28,false
+unknown_alighting,train,domestic_mtr_station_od,1,9999,adult,Octopus,2026-07-28,false
+missing_scope,train,,1,2,adult,Octopus,2026-07-28,false
+domestic_ids_in_airport_scope,train,airport_express_station_od,1,2,adult,Octopus,2026-07-28,false
+airport_express_known_missing_pair,train,airport_express_station_od,44,45,adult,Octopus,2026-07-28,false
+unsupported_child,train,domestic_mtr_station_od,1,2,child,Octopus,2026-07-28,false
+unsupported_payment,train,domestic_mtr_station_od,1,2,adult,SingleJourneyTicket,2026-07-28,false
+generic_pt_mode,pt,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,false
+missing_actual_mode,,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,false
+airport_same_station_without_record,train,airport_express_station_od,44,44,adult,Octopus,2026-07-28,false
+missing_boarding,train,domestic_mtr_station_od,,2,adult,Octopus,2026-07-28,false
+missing_alighting,train,domestic_mtr_station_od,1,,adult,Octopus,2026-07-28,false
+transfer_concession_requested,train,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,true
