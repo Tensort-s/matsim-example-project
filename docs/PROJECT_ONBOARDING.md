@@ -86,6 +86,7 @@ docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
 docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
+docs/HONG_KONG_TAXI_JAVA_SCORING.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
