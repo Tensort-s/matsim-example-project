@@ -15,6 +15,7 @@ import org.matsim.core.scoring.ScoringFunctionFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HongKongTaxiScoringFunctionTest {
@@ -23,17 +24,14 @@ class HongKongTaxiScoringFunctionTest {
 
 	@Test
 	void wrapperForwardsEveryStandardScoringCall() {
-		Person person = HongKongTaxiTestFixtures.person("forwarding-person");
+		Person person = personWithTaxiFares("forwarding-person", 100.0);
 		RecordingScoringFunction delegate = new RecordingScoringFunction(10.0);
 		HongKongTaxiScoringFunction scoring = new HongKongTaxiScoringFunction(
 				delegate,
-				new HongKongTaxiFareScoring(
-						person.getId(),
-						HongKongTaxiScoringParameters.centralV1()
-				)
+				fareScoringFor(person)
 		);
 		Activity activity = PopulationUtils.createActivityFromCoord("home", new Coord(0.0, 0.0));
-		Leg leg = HongKongTaxiTestFixtures.taxiLeg(100.0);
+		Leg leg = experiencedTaxiLeg();
 		Event event = new Event(123.0) {
 			@Override
 			public String getEventType() {
@@ -69,16 +67,13 @@ class HongKongTaxiScoringFunctionTest {
 
 	@Test
 	void totalScoreIsExactlyDelegatePlusFareScore() {
-		Person person = HongKongTaxiTestFixtures.person("total-score-person");
+		Person person = personWithTaxiFares("total-score-person", 98.3);
 		RecordingScoringFunction delegate = new RecordingScoringFunction(7.5);
 		HongKongTaxiScoringFunction scoring = new HongKongTaxiScoringFunction(
 				delegate,
-				new HongKongTaxiFareScoring(
-						person.getId(),
-						HongKongTaxiScoringParameters.centralV1()
-				)
+				fareScoringFor(person)
 		);
-		scoring.handleLeg(HongKongTaxiTestFixtures.taxiLeg(98.3));
+		scoring.handleLeg(experiencedTaxiLeg());
 		assertEquals(7.5 - 4.915, scoring.getScore(), TOLERANCE);
 	}
 
@@ -91,19 +86,21 @@ class HongKongTaxiScoringFunctionTest {
 		ScoringFunctionFactory zeroDelegate = person -> new RecordingScoringFunction(0.0);
 		HongKongTaxiScoringParameters parameters = HongKongTaxiScoringParameters.centralV1();
 
+		Person lowPerson = personWithTaxiFares("low-money", 100.0);
+		Person highPerson = personWithTaxiFares("high-money", 100.0);
 		ScoringFunction low = new HongKongTaxiScoringFunctionFactory(
 				zeroDelegate,
 				lowMoneyUtility,
 				parameters
-		).createNewScoringFunction(HongKongTaxiTestFixtures.person("low-money"));
+		).createNewScoringFunction(lowPerson);
 		ScoringFunction high = new HongKongTaxiScoringFunctionFactory(
 				zeroDelegate,
 				highMoneyUtility,
 				parameters
-		).createNewScoringFunction(HongKongTaxiTestFixtures.person("high-money"));
+		).createNewScoringFunction(highPerson);
 
-		low.handleLeg(HongKongTaxiTestFixtures.taxiLeg(100.0));
-		high.handleLeg(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		low.handleLeg(experiencedTaxiLeg());
+		high.handleLeg(experiencedTaxiLeg());
 		assertEquals(-5.0, low.getScore(), TOLERANCE);
 		assertEquals(low.getScore(), high.getScore(), 0.0);
 	}
@@ -118,19 +115,120 @@ class HongKongTaxiScoringFunctionTest {
 				HongKongTaxiScoringParameters.centralV1()
 		);
 		ScoringFunction first = factory.createNewScoringFunction(
-				HongKongTaxiTestFixtures.person("first")
+				personWithTaxiFares("first", 100.0)
 		);
 		ScoringFunction second = factory.createNewScoringFunction(
-				HongKongTaxiTestFixtures.person("second")
+				personWithTaxiFares("second", 24.0)
 		);
 		assertNotSame(first, second);
 
-		first.handleLeg(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		first.handleLeg(experiencedTaxiLeg());
 		assertEquals(-5.0, first.getScore(), TOLERANCE);
 		assertEquals(0.0, second.getScore(), 0.0);
-		second.handleLeg(HongKongTaxiTestFixtures.taxiLeg(24.0));
+		second.handleLeg(experiencedTaxiLeg());
 		assertEquals(-1.2, second.getScore(), TOLERANCE);
 		assertEquals(-5.0, first.getScore(), TOLERANCE);
+	}
+
+	@Test
+	void factoryCreatesFreshFareCursorForRepeatedScorerCreation() {
+		Config config = HongKongTaxiTestFixtures.safeConfig();
+		ScoringFunctionFactory zeroDelegate = person -> new RecordingScoringFunction(0.0);
+		HongKongTaxiScoringFunctionFactory factory = new HongKongTaxiScoringFunctionFactory(
+				zeroDelegate,
+				config,
+				HongKongTaxiScoringParameters.centralV1()
+		);
+		Person person = personWithTaxiFares("repeat-person", 100.0);
+
+		ScoringFunction first = factory.createNewScoringFunction(person);
+		first.handleLeg(experiencedTaxiLeg());
+		first.finish();
+		ScoringFunction second = factory.createNewScoringFunction(person);
+		second.handleLeg(experiencedTaxiLeg());
+		second.finish();
+
+		assertNotSame(first, second);
+		assertEquals(-5.0, first.getScore(), TOLERANCE);
+		assertEquals(-5.0, second.getScore(), TOLERANCE);
+	}
+
+	@Test
+	void factoryReadsOnlySelectedPlanAndValidatesItAtCreation() {
+		Config config = HongKongTaxiTestFixtures.safeConfig();
+		ScoringFunctionFactory zeroDelegate = person -> new RecordingScoringFunction(0.0);
+		HongKongTaxiScoringFunctionFactory factory = new HongKongTaxiScoringFunctionFactory(
+				zeroDelegate,
+				config,
+				HongKongTaxiScoringParameters.centralV1()
+		);
+		Person person = HongKongTaxiTestFixtures.person("selected-plan-person");
+		Plan invalidUnselectedPlan = PopulationUtils.createPlan();
+		invalidUnselectedPlan.addLeg(PopulationUtils.createLeg("taxi"));
+		Plan validSelectedPlan = PopulationUtils.createPlan();
+		validSelectedPlan.addLeg(HongKongTaxiTestFixtures.taxiLeg(24.0));
+		person.addPlan(invalidUnselectedPlan);
+		person.addPlan(validSelectedPlan);
+		person.setSelectedPlan(validSelectedPlan);
+
+		ScoringFunction scoring = factory.createNewScoringFunction(person);
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+		assertEquals(-1.2, scoring.getScore(), TOLERANCE);
+
+		person.setSelectedPlan(invalidUnselectedPlan);
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> factory.createNewScoringFunction(person)
+		);
+	}
+
+	@Test
+	void eventAndTripInterfacesDoNotDuplicateExperiencedLegFareCharge() {
+		Person person = personWithTaxiFares("single-interface-person", 100.0);
+		HongKongTaxiScoringFunction scoring = new HongKongTaxiScoringFunction(
+				new RecordingScoringFunction(0.0),
+				fareScoringFor(person)
+		);
+		Event event = new Event(123.0) {
+			@Override
+			public String getEventType() {
+				return "synthetic-test-event";
+			}
+		};
+
+		scoring.handleEvent(event);
+		scoring.handleTrip(syntheticTrip());
+		assertEquals(0.0, scoring.getScore(), 0.0);
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+
+		assertEquals(-5.0, scoring.getScore(), TOLERANCE);
+	}
+
+	private static HongKongTaxiFareScoring fareScoringFor(Person person) {
+		HongKongTaxiScoringParameters parameters = HongKongTaxiScoringParameters.centralV1();
+		return new HongKongTaxiFareScoring(
+				HongKongTaxiPersonFareSchedule.fromSelectedPlan(person, parameters),
+				parameters
+		);
+	}
+
+	private static Person personWithTaxiFares(String id, double... fares) {
+		Person person = HongKongTaxiTestFixtures.person(id);
+		Plan selectedPlan = PopulationUtils.createPlan();
+		for (double fare : fares) {
+			selectedPlan.addLeg(HongKongTaxiTestFixtures.taxiLeg(fare));
+		}
+		person.addPlan(selectedPlan);
+		person.setSelectedPlan(selectedPlan);
+		return person;
+	}
+
+	private static Leg experiencedTaxiLeg() {
+		Leg leg = PopulationUtils.createLeg(HongKongTaxiScoringParameters.TAXI_MODE);
+		leg.setRoutingMode("ride");
+		return leg;
 	}
 
 	private static TripStructureUtils.Trip syntheticTrip() {

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.core.population.PopulationUtils;
 
 import java.math.BigDecimal;
@@ -41,56 +42,120 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void multipleTaxiLegsSumWithoutIntermediateRounding() {
-		HongKongTaxiFareScoring scoring = newScoring();
-		scoring.handleLeg(HongKongTaxiTestFixtures.taxiLeg(24.0));
-		scoring.handleLeg(HongKongTaxiTestFixtures.taxiLeg(98.3));
-		scoring.handleLeg(HongKongTaxiTestFixtures.taxiLeg(491.7));
+	void attributedSourceLegScoresAttributeFreeExperiencedLeg() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		Leg experienced = experiencedTaxiLeg();
+		assertTrue(experienced.getAttributes().getAsMap().isEmpty());
+
+		scoring.handleLeg(experienced);
+		scoring.finish();
+
+		assertEquals(-5.0, scoring.getScore(), TOLERANCE);
+		assertTrue(experienced.getAttributes().getAsMap().isEmpty());
+	}
+
+	@Test
+	void scheduleKeepsValidatedSnapshotWhenSourceLegIsLaterMutated() {
+		Leg source = HongKongTaxiTestFixtures.taxiLeg(24.0);
+		HongKongTaxiFareScoring scoring = scoringFor(source);
+		source.getAttributes().putAttribute(HongKongTaxiLegAttributes.FARE_BASELINE_HKD, 100.0);
+
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+
+		assertEquals(-1.2, scoring.getScore(), TOLERANCE);
+	}
+
+	@Test
+	void multipleTaxiFaresAreConsumedInSelectedPlanOrder() {
+		HongKongTaxiFareScoring scoring = scoringFor(
+				HongKongTaxiTestFixtures.taxiLeg(24.0),
+				HongKongTaxiTestFixtures.taxiLeg(98.3),
+				HongKongTaxiTestFixtures.taxiLeg(491.7)
+		);
+
+		scoring.handleLeg(experiencedTaxiLeg());
+		assertEquals(-1.2, scoring.getScore(), TOLERANCE);
+		scoring.handleLeg(experiencedTaxiLeg());
+		assertEquals(-6.115, scoring.getScore(), TOLERANCE);
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+
 		assertEquals(-30.7, scoring.getScore(), TOLERANCE);
 	}
 
 	@Test
-	void repeatedGetScoreIsIdempotent() {
-		HongKongTaxiFareScoring scoring = scored(100.0);
-		double first = scoring.getScore();
-		double second = scoring.getScore();
-		double third = scoring.getScore();
-		assertEquals(-5.0, first, TOLERANCE);
-		assertEquals(first, second, 0.0);
-		assertEquals(second, third, 0.0);
-	}
+	void nonTaxiLegDoesNotConsumeFareRecord() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		Leg ride = PopulationUtils.createLeg("ride");
+		ride.setRoutingMode("taxi");
 
-	@Test
-	void finishDoesNotChargeAgain() {
-		HongKongTaxiFareScoring scoring = scored(98.3);
+		scoring.handleLeg(ride);
+		assertEquals(0.0, scoring.getScore(), 0.0);
+		scoring.handleLeg(experiencedTaxiLeg());
 		scoring.finish();
-		scoring.finish();
-		assertEquals(-4.915, scoring.getScore(), TOLERANCE);
-	}
 
-	@Test
-	void taxiModeWithRideRoutingModeIsChargedOnce() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLeg(100.0);
-		leg.setRoutingMode("ride");
-		HongKongTaxiFareScoring scoring = newScoring();
-		scoring.handleLeg(leg);
-		assertEquals("taxi", leg.getMode());
-		assertEquals("ride", leg.getRoutingMode());
 		assertEquals(-5.0, scoring.getScore(), TOLERANCE);
 	}
 
 	@Test
-	void nonTaxiModeIsNotChargedEvenWithTaxiRoutingModeAndNoAttributes() {
-		Leg leg = PopulationUtils.createLeg("ride");
-		leg.setRoutingMode("taxi");
-		HongKongTaxiFareScoring scoring = newScoring();
-		scoring.handleLeg(leg);
-		assertEquals(0.0, scoring.getScore(), 0.0);
+	void extraExperiencedTaxiLegFailsImmediatelyWithContext() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(24.0));
+		scoring.handleLeg(experiencedTaxiLeg());
+
+		IllegalStateException error = assertThrows(
+				IllegalStateException.class,
+				() -> scoring.handleLeg(experiencedTaxiLeg())
+		);
+
+		assertMismatchContext(error, 1, 1, 1, "taxi", "ride");
 	}
 
 	@Test
-	void unresolvedTaxiTypeIsAccepted() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+	void fewerExperiencedTaxiLegsFailAtFinishWithContext() {
+		HongKongTaxiFareScoring scoring = scoringFor(
+				HongKongTaxiTestFixtures.taxiLeg(24.0),
+				HongKongTaxiTestFixtures.taxiLeg(100.0)
+		);
+		scoring.handleLeg(experiencedTaxiLeg());
+
+		IllegalStateException error = assertThrows(IllegalStateException.class, scoring::finish);
+
+		assertMismatchContext(error, 1, 2, 1, "<finish>", "<none>");
+	}
+
+	@Test
+	void experiencedTaxiLegWithoutSourceRecordFailsImmediately() {
+		HongKongTaxiFareScoring scoring = scoringFor();
+
+		IllegalStateException error = assertThrows(
+				IllegalStateException.class,
+				() -> scoring.handleLeg(experiencedTaxiLeg())
+		);
+
+		assertMismatchContext(error, 0, 0, 0, "taxi", "ride");
+	}
+
+	@Test
+	void wrongExperiencedRoutingModeFailsWithFullContextAndDoesNotConsume() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		Leg wrongRoutingMode = PopulationUtils.createLeg("taxi");
+		wrongRoutingMode.setRoutingMode("taxi");
+
+		IllegalStateException error = assertThrows(
+				IllegalStateException.class,
+				() -> scoring.handleLeg(wrongRoutingMode)
+		);
+
+		assertMismatchContext(error, 0, 1, 0, "taxi", "taxi");
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+		assertEquals(-5.0, scoring.getScore(), TOLERANCE);
+	}
+
+	@Test
+	void unresolvedTaxiTypeIsAcceptedInSourceSchedule() {
+		Leg source = HongKongTaxiTestFixtures.taxiLegWithValues(
 				24.0,
 				"unresolved",
 				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
@@ -98,13 +163,16 @@ class HongKongTaxiFareScoringTest {
 				"resident_discretionary_ride_assignment",
 				7
 		);
-		HongKongTaxiFareScoring scoring = newScoring();
-		scoring.handleLeg(leg);
+		HongKongTaxiFareScoring scoring = scoringFor(source);
+
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+
 		assertEquals(-1.2, scoring.getScore(), TOLERANCE);
 	}
 
 	@Test
-	void missingAnyRequiredAttributeFailsWithContext() {
+	void missingAnyRequiredSourceAttributeFailsWhileScheduleIsBuilt() {
 		List<String> names = List.of(
 				HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
 				HongKongTaxiLegAttributes.TAXI_TYPE,
@@ -114,18 +182,18 @@ class HongKongTaxiFareScoringTest {
 				HongKongTaxiLegAttributes.MAIN_TRIP_INDEX
 		);
 		for (String name : names) {
-			Leg leg = HongKongTaxiTestFixtures.taxiLeg(24.0);
-			leg.getAttributes().removeAttribute(name);
+			Leg source = HongKongTaxiTestFixtures.taxiLeg(24.0);
+			source.getAttributes().removeAttribute(name);
 			IllegalArgumentException error = assertThrows(
 					IllegalArgumentException.class,
-					() -> newScoring().handleLeg(leg)
+					() -> scoringFor(source)
 			);
-			assertErrorContext(error, name, "<missing>");
+			assertAttributeErrorContext(error, name, "<missing>");
 		}
 	}
 
 	@Test
-	void everyNonDoubleFareRuntimeTypeIsRejected() {
+	void everyNonDoubleSourceFareRuntimeTypeIsRejected() {
 		record InvalidFare(Object value, String runtimeType) {
 		}
 		List<InvalidFare> invalidFares = List.of(
@@ -136,7 +204,7 @@ class HongKongTaxiFareScoringTest {
 				new InvalidFare("98.3", "java.lang.String")
 		);
 		for (InvalidFare invalidFare : invalidFares) {
-			Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+			Leg source = HongKongTaxiTestFixtures.taxiLegWithValues(
 					invalidFare.value(),
 					"urban_taxi",
 					HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
@@ -146,9 +214,9 @@ class HongKongTaxiFareScoringTest {
 			);
 			IllegalArgumentException error = assertThrows(
 					IllegalArgumentException.class,
-					() -> newScoring().handleLeg(leg)
+					() -> scoringFor(source)
 			);
-			assertTypedErrorContext(
+			assertTypedAttributeErrorContext(
 					error,
 					HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
 					invalidFare.runtimeType(),
@@ -158,19 +226,19 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void negativeNanAndInfiniteFaresFail() {
+	void invalidNumericSourceFaresFail() {
 		for (double invalidFare : List.of(
 				-0.01,
 				Double.NaN,
 				Double.POSITIVE_INFINITY,
 				Double.NEGATIVE_INFINITY
 		)) {
-			Leg leg = HongKongTaxiTestFixtures.taxiLeg(invalidFare);
+			Leg source = HongKongTaxiTestFixtures.taxiLeg(invalidFare);
 			IllegalArgumentException error = assertThrows(
 					IllegalArgumentException.class,
-					() -> newScoring().handleLeg(leg)
+					() -> scoringFor(source)
 			);
-			assertTypedErrorContext(
+			assertTypedAttributeErrorContext(
 					error,
 					HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
 					"java.lang.Double",
@@ -180,8 +248,8 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void fareScopeMismatchFails() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+	void sourceFareScopeMismatchFails() {
+		Leg source = HongKongTaxiTestFixtures.taxiLegWithValues(
 				24.0,
 				"urban_taxi",
 				"congestion_proxy_v1",
@@ -189,16 +257,22 @@ class HongKongTaxiFareScoringTest {
 				"test_classification",
 				0
 		);
+
 		IllegalArgumentException error = assertThrows(
 				IllegalArgumentException.class,
-				() -> newScoring().handleLeg(leg)
+				() -> scoringFor(source)
 		);
-		assertErrorContext(error, HongKongTaxiLegAttributes.FARE_SCOPE, "congestion_proxy_v1");
+
+		assertAttributeErrorContext(
+				error,
+				HongKongTaxiLegAttributes.FARE_SCOPE,
+				"congestion_proxy_v1"
+		);
 	}
 
 	@Test
-	void fareModelVersionMismatchFails() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+	void sourceFareModelVersionMismatchFails() {
+		Leg source = HongKongTaxiTestFixtures.taxiLegWithValues(
 				24.0,
 				"urban_taxi",
 				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
@@ -206,11 +280,13 @@ class HongKongTaxiFareScoringTest {
 				"test_classification",
 				0
 		);
+
 		IllegalArgumentException error = assertThrows(
 				IllegalArgumentException.class,
-				() -> newScoring().handleLeg(leg)
+				() -> scoringFor(source)
 		);
-		assertErrorContext(
+
+		assertAttributeErrorContext(
 				error,
 				HongKongTaxiLegAttributes.FARE_MODEL_VERSION,
 				"hong_kong_taxi_fare_model_v2"
@@ -218,15 +294,16 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void doubleAndLongMainTripIndicesFail() {
+	void invalidSourceMainTripIndexTypesAndValuesFail() {
 		record InvalidIndex(Object value, String runtimeType) {
 		}
 		List<InvalidIndex> invalidIndices = List.of(
 				new InvalidIndex(2.0, "java.lang.Double"),
-				new InvalidIndex(2L, "java.lang.Long")
+				new InvalidIndex(2L, "java.lang.Long"),
+				new InvalidIndex(-1, "java.lang.Integer")
 		);
 		for (InvalidIndex invalidIndex : invalidIndices) {
-			Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
+			Leg source = HongKongTaxiTestFixtures.taxiLegWithValues(
 					24.0,
 					"urban_taxi",
 					HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
@@ -236,9 +313,9 @@ class HongKongTaxiFareScoringTest {
 			);
 			IllegalArgumentException error = assertThrows(
 					IllegalArgumentException.class,
-					() -> newScoring().handleLeg(leg)
+					() -> scoringFor(source)
 			);
-			assertTypedErrorContext(
+			assertTypedAttributeErrorContext(
 					error,
 					HongKongTaxiLegAttributes.MAIN_TRIP_INDEX,
 					invalidIndex.runtimeType(),
@@ -248,24 +325,7 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void negativeMainTripIndexFails() {
-		Leg leg = HongKongTaxiTestFixtures.taxiLegWithValues(
-				24.0,
-				"urban_taxi",
-				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
-				HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
-				"test_classification",
-				-1
-		);
-		IllegalArgumentException error = assertThrows(
-				IllegalArgumentException.class,
-				() -> newScoring().handleLeg(leg)
-		);
-		assertErrorContext(error, HongKongTaxiLegAttributes.MAIN_TRIP_INDEX, "-1");
-	}
-
-	@Test
-	void blankTaxiTypeAndClassificationSourceFail() {
+	void blankAndNonStringSourceTextAttributesFail() {
 		Leg blankType = HongKongTaxiTestFixtures.taxiLegWithValues(
 				24.0,
 				" ",
@@ -274,7 +334,7 @@ class HongKongTaxiFareScoringTest {
 				"test_classification",
 				0
 		);
-		assertThrows(IllegalArgumentException.class, () -> newScoring().handleLeg(blankType));
+		assertThrows(IllegalArgumentException.class, () -> scoringFor(blankType));
 
 		Leg blankSource = HongKongTaxiTestFixtures.taxiLegWithValues(
 				24.0,
@@ -284,60 +344,76 @@ class HongKongTaxiFareScoringTest {
 				"",
 				0
 		);
-		assertThrows(IllegalArgumentException.class, () -> newScoring().handleLeg(blankSource));
-	}
+		assertThrows(IllegalArgumentException.class, () -> scoringFor(blankSource));
 
-	@Test
-	void nonStringTextAttributesAreRejectedWithExactTypeContext() {
-		record InvalidTextAttribute(String name, Object value) {
-		}
-		List<InvalidTextAttribute> invalidAttributes = List.of(
-				new InvalidTextAttribute(HongKongTaxiLegAttributes.TAXI_TYPE, 1),
-				new InvalidTextAttribute(HongKongTaxiLegAttributes.FARE_SCOPE, 2L),
-				new InvalidTextAttribute(HongKongTaxiLegAttributes.FARE_MODEL_VERSION, 3.0F),
-				new InvalidTextAttribute(HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE, 4.0)
+		Leg nonStringScope = HongKongTaxiTestFixtures.taxiLeg(24.0);
+		nonStringScope.getAttributes().putAttribute(HongKongTaxiLegAttributes.FARE_SCOPE, 2L);
+		IllegalArgumentException error = assertThrows(
+				IllegalArgumentException.class,
+				() -> scoringFor(nonStringScope)
 		);
-		for (InvalidTextAttribute invalid : invalidAttributes) {
-			Leg leg = HongKongTaxiTestFixtures.taxiLeg(24.0);
-			leg.getAttributes().putAttribute(invalid.name(), invalid.value());
-			IllegalArgumentException error = assertThrows(
-					IllegalArgumentException.class,
-					() -> newScoring().handleLeg(leg)
-			);
-			assertTypedErrorContext(
-					error,
-					invalid.name(),
-					invalid.value().getClass().getName(),
-					"java.lang.String"
-			);
-		}
+		assertTypedAttributeErrorContext(
+				error,
+				HongKongTaxiLegAttributes.FARE_SCOPE,
+				"java.lang.Long",
+				"java.lang.String"
+		);
 	}
 
 	@Test
-	void scoreExplanationIdentifiesFareContribution() {
-		HongKongTaxiFareScoring scoring = scored(100.0);
+	void repeatedGetScoreAndFinishDoNotChargeAgain() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(98.3));
+		scoring.handleLeg(experiencedTaxiLeg());
+		double first = scoring.getScore();
+		double second = scoring.getScore();
+		scoring.finish();
+		scoring.finish();
+
+		assertEquals(-4.915, first, TOLERANCE);
+		assertEquals(first, second, 0.0);
+		assertEquals(first, scoring.getScore(), 0.0);
+	}
+
+	@Test
+	void scoreExplanationIdentifiesConsumedAndExpectedFareRecords() {
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(100.0));
+		scoring.handleLeg(experiencedTaxiLeg());
 		StringBuilder explanation = new StringBuilder();
 		scoring.explainScore(explanation);
+
 		assertTrue(explanation.toString().contains("hongKongTaxiFare"));
-		assertTrue(explanation.toString().contains("taxiLegs=1"));
+		assertTrue(explanation.toString().contains("consumedTaxiLegs=1"));
+		assertTrue(explanation.toString().contains("expectedTaxiLegs=1"));
 		assertTrue(explanation.toString().contains("score=-5.0"));
 	}
 
 	private static void assertFareScore(double fare, double expected) {
-		assertEquals(expected, scored(fare).getScore(), TOLERANCE);
+		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(fare));
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+		assertEquals(expected, scoring.getScore(), TOLERANCE);
 	}
 
-	private static HongKongTaxiFareScoring scored(double fare) {
-		HongKongTaxiFareScoring scoring = newScoring();
-		scoring.handleLeg(HongKongTaxiTestFixtures.taxiLeg(fare));
-		return scoring;
+	private static HongKongTaxiFareScoring scoringFor(Leg... sourceLegs) {
+		Person person = HongKongTaxiTestFixtures.person(PERSON_ID.toString());
+		Plan selectedPlan = PopulationUtils.createPlan();
+		for (Leg sourceLeg : sourceLegs) {
+			selectedPlan.addLeg(sourceLeg);
+		}
+		person.addPlan(selectedPlan);
+		person.setSelectedPlan(selectedPlan);
+		HongKongTaxiPersonFareSchedule schedule =
+				HongKongTaxiPersonFareSchedule.fromSelectedPlan(person, PARAMETERS);
+		return new HongKongTaxiFareScoring(schedule, PARAMETERS);
 	}
 
-	private static HongKongTaxiFareScoring newScoring() {
-		return new HongKongTaxiFareScoring(PERSON_ID, PARAMETERS);
+	private static Leg experiencedTaxiLeg() {
+		Leg leg = PopulationUtils.createLeg(HongKongTaxiScoringParameters.TAXI_MODE);
+		leg.setRoutingMode("ride");
+		return leg;
 	}
 
-	private static void assertErrorContext(
+	private static void assertAttributeErrorContext(
 			IllegalArgumentException error,
 			String attributeName,
 			String actualFragment) {
@@ -348,7 +424,7 @@ class HongKongTaxiFareScoringTest {
 		assertTrue(error.getMessage().contains("expected="));
 	}
 
-	private static void assertTypedErrorContext(
+	private static void assertTypedAttributeErrorContext(
 			IllegalArgumentException error,
 			String attributeName,
 			String actualType,
@@ -360,5 +436,21 @@ class HongKongTaxiFareScoringTest {
 		assertTrue(error.getMessage().contains("actual_type=" + actualType));
 		assertTrue(error.getMessage().contains("expected="));
 		assertTrue(error.getMessage().contains(expectedType));
+	}
+
+	private static void assertMismatchContext(
+			IllegalStateException error,
+			int taxiOrdinal,
+			int expectedCount,
+			int consumedCount,
+			String actualMode,
+			String actualRoutingMode) {
+		assertTrue(error.getMessage().contains("person_id=" + PERSON_ID));
+		assertTrue(error.getMessage().contains("taxi_ordinal=" + taxiOrdinal));
+		assertTrue(error.getMessage().contains("expected_count=" + expectedCount));
+		assertTrue(error.getMessage().contains("consumed_count=" + consumedCount));
+		assertTrue(error.getMessage().contains("actual_mode=" + actualMode));
+		assertTrue(error.getMessage().contains("actual_routingMode=" + actualRoutingMode));
+		assertTrue(error.getMessage().contains("reason="));
 	}
 }

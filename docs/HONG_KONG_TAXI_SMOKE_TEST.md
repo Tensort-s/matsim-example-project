@@ -85,8 +85,20 @@ are recorded, but the large files remain only on the server.
 
 ## Validation status
 
-The checkpoint implementation must pass local compile, the exact Taxi unit
-tests, and `git diff --check`, then be pushed before the server run. The
+The first remote `ASC=-9` two-iteration attempt stopped during iteration 0.
+The custom fare scorer received an experienced Taxi leg without
+`hkTaxiFareBaselineHkd`. This was a scoring data-interface defect:
+MATSim 2026.0 `EventsToLegs` reconstructs experienced legs from events and
+does not copy source-plan custom attributes.
+
+The current correction changes only that Java interface. At scoring-function
+creation, each person's selected-plan Taxi metadata is validated and copied
+into an immutable ordered fare schedule; attribute-free experienced Taxi legs
+consume it by zero-based Taxi ordinal. The design is restricted to the
+current fixed-plan, no-replanning, no-rerouting smoke scenario.
+
+The checkpoint implementation must pass local compile, the applicable Taxi
+tests, and `git diff --check`, then be pushed before a new server run. The
 server must use a new directory below:
 
 ```text
@@ -97,5 +109,6 @@ The formal scenario and the validated load-test directory remain read-only.
 All seven input SHA256 values must match
 `taxi_scenario_load_validation.json` before the Controler starts.
 
-Until the server result is recorded here, this smoke gate is implemented but
-not validated.
+The smoke has not been rerun as part of this correction. No MATSim Controler,
+QSim, scenario load, FUSELAB01 connection, or remote command was used.
+Therefore the Taxi technical smoke validation remains incomplete.

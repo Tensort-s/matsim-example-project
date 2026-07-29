@@ -44,9 +44,11 @@ public final class HongKongTaxiScoringFunctionFactory implements ScoringFunction
 	@Override
 	public ScoringFunction createNewScoringFunction(Person person) {
 		Objects.requireNonNull(person, "person");
+		HongKongTaxiPersonFareSchedule fareSchedule =
+				HongKongTaxiPersonFareSchedule.fromSelectedPlan(person, parameters);
 		return new HongKongTaxiScoringFunction(
 				delegateFactory.createNewScoringFunction(person),
-				new HongKongTaxiFareScoring(person.getId(), parameters)
+				new HongKongTaxiFareScoring(fareSchedule, parameters)
 		);
 	}
 }
