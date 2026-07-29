@@ -6,17 +6,23 @@
   },
   "cost_effective_date": "",
   "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "csdi_exact_route_key_match": {
+    "confirmed_franchised_operator_route_count": 2255,
+    "match_rate_within_confirmed_franchised_operator": 0.9960088691796009,
+    "matched_route_count": 2246
+  },
   "direction_status_counts": {
     "exact": 2358,
     "unresolved": 5
   },
   "explicit_raw_zero_candidate_record_count": 647,
   "fare_readiness_counts": {
+    "franchise_route_scope_unresolved": 9,
     "operator_scope_unresolved": 5,
     "other_bus_service_not_in_franchised_core": 103,
     "partial_conflicting_amounts": 251,
-    "partial_duplicate_records": 115,
-    "ready_all_pairs_unique": 1889
+    "partial_duplicate_records": 114,
+    "ready_all_pairs_unique": 1881
   },
   "full_fare_comparison_counts": {
     "comparable_gtfs_candidate_record_count": 776455,
@@ -47,9 +53,9 @@
     "XB": 27
   },
   "operator_scope_status_counts": {
-    "confirmed_franchised_bus": 2255,
+    "confirmed_franchised_operator": 2255,
     "operator_scope_unresolved": 5,
-    "other_bus_service": 103
+    "other_bus_operator": 103
   },
   "production_pricing_performed": false,
   "prohibited_methods_used": {
@@ -64,12 +70,20 @@
   },
   "query_interface_created": false,
   "required_forward_pair_count": 771666,
+  "route_franchise_scope_status_counts": {
+    "confirmed_franchised_route": 2246,
+    "franchise_route_scope_unresolved": 9,
+    "operator_scope_unresolved": 5,
+    "other_bus_service": 103
+  },
   "route_mapping_quality_counts": {
-    "A": 2358,
+    "A": 2349,
+    "B": 9,
     "U": 5
   },
   "route_mapping_status_counts": {
-    "exact": 2358,
+    "exact": 2349,
+    "partial": 9,
     "unresolved": 5
   },
   "schedule": {
@@ -81,6 +95,60 @@
     "stop_occurrence_count": 56066
   },
   "schema_version": "hong_kong_bus_scope_direction_audit_v1",
+  "scope_candidate_rows": [
+    {
+      "all_od_unique_route_count": 1881,
+      "conflicting_amounts_pair_count": 2603,
+      "duplicate_identical_pair_count": 1827,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 758563,
+      "route_count": 2246,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 365,
+      "route_count_with_conflicting_pairs": 251,
+      "route_count_with_duplicate_pairs": 165,
+      "route_franchise_scope_status": "confirmed_franchised_route",
+      "unique_candidate_pair_count": 754133
+    },
+    {
+      "all_od_unique_route_count": 8,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 34,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 2108,
+      "route_count": 9,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 1,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 1,
+      "route_franchise_scope_status": "franchise_route_scope_unresolved",
+      "unique_candidate_pair_count": 2074
+    },
+    {
+      "all_od_unique_route_count": 86,
+      "conflicting_amounts_pair_count": 20,
+      "duplicate_identical_pair_count": 139,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 10995,
+      "route_count": 103,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 17,
+      "route_count_with_conflicting_pairs": 4,
+      "route_count_with_duplicate_pairs": 13,
+      "route_franchise_scope_status": "other_bus_service",
+      "unique_candidate_pair_count": 10836
+    },
+    {
+      "all_od_unique_route_count": 0,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 0,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 0,
+      "route_count": 5,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 0,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 0,
+      "route_franchise_scope_status": "operator_scope_unresolved",
+      "unique_candidate_pair_count": 0
+    }
+  ],
   "source_download_date": "2026-07-20",
   "source_revision_cutoff_date": "2026-07-14",
   "source_sha256": {

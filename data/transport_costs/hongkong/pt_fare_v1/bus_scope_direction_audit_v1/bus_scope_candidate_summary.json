@@ -1,0 +1,67 @@
+{
+  "candidate_classification_change_reason": "",
+  "candidate_classification_changed_from_prior_audit": false,
+  "negative_operator_only_scope_case": {
+    "json_route_key": "CTB|1000690|1",
+    "matsim_route_id": "bus_1000690_1",
+    "route_franchise_scope_status": "franchise_route_scope_unresolved",
+    "status": "passed_real_operator_only_mismatch_not_confirmed"
+  },
+  "schema_version": "hong_kong_bus_route_scope_candidate_summary_v1",
+  "scope_rows": [
+    {
+      "all_od_unique_route_count": 1881,
+      "conflicting_amounts_pair_count": 2603,
+      "duplicate_identical_pair_count": 1827,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 758563,
+      "route_count": 2246,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 365,
+      "route_count_with_conflicting_pairs": 251,
+      "route_count_with_duplicate_pairs": 165,
+      "route_franchise_scope_status": "confirmed_franchised_route",
+      "unique_candidate_pair_count": 754133
+    },
+    {
+      "all_od_unique_route_count": 8,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 34,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 2108,
+      "route_count": 9,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 1,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 1,
+      "route_franchise_scope_status": "franchise_route_scope_unresolved",
+      "unique_candidate_pair_count": 2074
+    },
+    {
+      "all_od_unique_route_count": 86,
+      "conflicting_amounts_pair_count": 20,
+      "duplicate_identical_pair_count": 139,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 10995,
+      "route_count": 103,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 17,
+      "route_count_with_conflicting_pairs": 4,
+      "route_count_with_duplicate_pairs": 13,
+      "route_franchise_scope_status": "other_bus_service",
+      "unique_candidate_pair_count": 10836
+    },
+    {
+      "all_od_unique_route_count": 0,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 0,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 0,
+      "route_count": 5,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 0,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 0,
+      "route_franchise_scope_status": "operator_scope_unresolved",
+      "unique_candidate_pair_count": 0
+    }
+  ],
+  "total_required_forward_pair_count": 771666,
+  "total_route_count": 2363
+}

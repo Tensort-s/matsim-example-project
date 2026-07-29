@@ -781,22 +781,55 @@ this schedule distribution:
 
 | Official operator | Routes | Audit scope |
 |---|---:|---|
-| KMB | 1,152 | confirmed franchised bus |
-| CTB | 672 | confirmed franchised bus |
-| KMB+CTB | 187 | confirmed franchised bus, joint operators retained |
-| LWB | 149 | confirmed franchised bus |
-| NLB | 92 | confirmed franchised bus |
-| LWB+CTB | 3 | confirmed franchised bus, joint operators retained |
+| KMB | 1,152 | confirmed franchised operator |
+| CTB | 672 | confirmed franchised operator |
+| KMB+CTB | 187 | confirmed franchised operator, joint expression retained |
+| LWB | 149 | confirmed franchised operator |
+| NLB | 92 | confirmed franchised operator |
+| LWB+CTB | 3 | confirmed franchised operator, joint expression retained |
 | LRTFeeder | 45 | other bus service |
 | XB | 27 | other bus service |
 | DB | 18 | other bus service |
 | PI | 13 | other bus service |
 | no matched official operator | 5 | operator scope unresolved |
 
-This yields 2,255 confirmed franchised-bus routes, 103 other-bus routes, and
-five unresolved routes. Official GTFS agency names identify LRTFeeder as MTR
-Bus, DB and PI as resident services, and XB as a crossing-boundary coach
-service; they are not silently promoted into the franchised core.
+This operator-level test yields 2,255 routes belonging to a confirmed
+franchised operator, 103 routes belonging to other bus operators, and five
+operator-unresolved routes. It does not by itself confirm any concrete route.
+Official GTFS agency names identify LRTFeeder as MTR Bus, DB and PI as
+resident services, and XB as a crossing-boundary coach service; they are not
+silently promoted into the franchised core.
+
+Route-level evidence is a separate exact-key test. A route is
+`confirmed_franchised_route` only when:
+
+1. its complete schedule stop sequence uniquely matches an official Bus JSON
+   `companyCode + routeId + routeSeq + stopSeq` pattern; and
+2. the exact normalized `(COMPANY_CODE, ROUTE_ID, ROUTE_SEQ)` key occurs in
+   the official CSDI franchised-bus geometry.
+
+Operator code alone, route name, terminals, geometry proximity, and the
+MATSim suffix cannot satisfy the second test. Each audit row retains the CSDI
+feature index and `OBJECTID`; same-key multiplicity would be retained rather
+than reduced to the first feature.
+
+Of the 2,255 operator-confirmed JSON routes, 2,246 have an exact CSDI route
+key and nine remain `franchise_route_scope_unresolved`, for a route-key match
+rate of 0.996008869. The missing CSDI keys are:
+
+```text
+CTB|1000690|1
+CTB|1000691|1
+CTB|1000692|1
+CTB|1000693|1
+CTB|1000695|1
+CTB|1000695|2
+KMB|8263|1
+LWB|1000697|1
+LWB|1000698|1
+```
+
+These nine retain exact JSON directions but are not route-level confirmed.
 
 The five unresolved schedule proxy routes remain:
 
@@ -808,9 +841,11 @@ bus_8780_1
 bus_8780_2
 ```
 
-They have no exact retained Bus JSON operator/stop pattern. Their ten proxy
-facilities likewise contain no official stop ID, so no operator, direction,
-stop, or fare evidence is invented.
+They have no exact retained Bus JSON operator/stop pattern. CSDI happens to
+contain those five route keys, but a CSDI key alone does not satisfy the
+required JSON full-pattern condition. Their ten proxy facilities likewise
+contain no official stop ID, so no operator, direction, stop, or fare
+evidence is invented.
 
 ### Stop and official-direction evidence
 
@@ -830,6 +865,15 @@ Finding a GTFS candidate for every ordered stop pair does not establish
 direction. Direction is exact here only because of the separate unique
 complete-pattern comparison.
 
+The evidence layers must therefore be read independently:
+
+- operator-level franchise evidence identifies an official operator class;
+- route-level franchise evidence requires an exact CSDI route key;
+- direction evidence requires a unique complete Bus JSON stop pattern;
+- OD evidence reports raw GTFS candidate cardinality and amounts;
+- an active fare rule would require a later explicitly approved selection and
+  applicability stage, and does not exist in this audit.
+
 ### Ordered-OD candidates are not passenger costs
 
 All 771,666 required forward pairs have one or more direct raw GTFS
@@ -841,6 +885,20 @@ route/origin/destination candidates:
 | `duplicate_identical` | 2,000 |
 | `conflicting_amounts` | 2,623 |
 | `missing` | 0 |
+
+The same unchanged classification split by route-level scope is:
+
+| Route-level scope | Routes | Required pairs | Unique | Duplicate | Conflict | Missing |
+|---|---:|---:|---:|---:|---:|---:|
+| `confirmed_franchised_route` | 2,246 | 758,563 | 754,133 | 1,827 | 2,603 | 0 |
+| `franchise_route_scope_unresolved` | 9 | 2,108 | 2,074 | 34 | 0 | 0 |
+| `other_bus_service` | 103 | 10,995 | 10,836 | 139 | 20 | 0 |
+| `operator_scope_unresolved` | 5 | 0 | 0 | 0 | 0 | 0 |
+
+Within the 2,246 route-level confirmed routes, 1,881 have only unique OD
+candidates. Another 365 have at least one duplicate or conflicting pair and
+are not fully ready; candidate uniqueness is not upgraded into an active fare
+rule.
 
 Each candidate retains its `fare_id`, raw `fare_rules.txt` and
 `fare_attributes.txt` line numbers, published price, currency, route and
@@ -855,13 +913,19 @@ substitution, distance interpolation, nearest records, segment/path sums,
 cross-route/operator amounts, fare-ID text recovery, `fullFare` fallback, and
 missing-value fill.
 
+Only a future record that is both route-level confirmed and uniquely
+represented by one raw OD candidate could be considered for a formal
+published-amount rule in a later Bus Core v1 stage. This audit does not create
+that rule or a query interface.
+
 For all 2,363 routes, fare readiness is:
 
 | Fare readiness | Routes |
 |---|---:|
-| `ready_all_pairs_unique` | 1,889 |
+| `ready_all_pairs_unique` | 1,881 |
 | `partial_conflicting_amounts` | 251 |
-| `partial_duplicate_records` | 115 |
+| `partial_duplicate_records` | 114 |
+| `franchise_route_scope_unresolved` | 9 |
 | `other_bus_service_not_in_franchised_core` | 103 |
 | `operator_scope_unresolved` | 5 |
 
@@ -1009,6 +1073,9 @@ data/transport_costs/hongkong/pt_fare_v1/
     bus_fare_semantics_summary.json
     bus_operator_scope_audit.csv
     bus_route_scope_audit.csv
+    bus_route_franchise_scope_evidence.csv
+    bus_route_scope_candidate_crosstab.csv
+    bus_scope_candidate_summary.json
     bus_stop_crosswalk.csv
     bus_direction_evidence_audit.csv
     bus_route_direction_readiness.csv
@@ -1128,8 +1195,9 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
   official record.
 - Franchised-bus direction and fare rules are not part of GMB Core v1 and
   remain separate from GMB Core v1.
-- The bus readiness audit classifies 2,255 routes in the confirmed
-  franchised-bus operator scope, but creates no active bus fare or query.
+- The bus readiness audit finds 2,255 routes in the confirmed franchised
+  operator scope, but only 2,246 have an exact CSDI route-level key; nine
+  remain route-scope unresolved. It creates no active bus fare or query.
   Duplicate and conflicting GTFS candidates remain unresolved audit states.
 - `transportMode=bus` also contains 103 officially identified other-bus
   service routes and five unresolved proxy routes. These are not promoted

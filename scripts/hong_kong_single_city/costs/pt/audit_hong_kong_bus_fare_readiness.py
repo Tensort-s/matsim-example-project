@@ -54,6 +54,7 @@ CANDIDATE_COLUMNS = [
     "matsim_route_id",
     "service_scope",
     "operator_scope_status",
+    "route_franchise_scope_status",
     "official_operator",
     "official_operator_components_json",
     "official_route_id",
@@ -114,6 +115,15 @@ def stop_id_from_facility(facility_id: str) -> str:
 def route_parts(route_id: str) -> tuple[str, str]:
     match = re.match(r"^bus_(\d+)_([^_]+)", route_id)
     return (match.group(1), match.group(2)) if match else ("", "")
+
+
+def normalize_numeric_identifier(value: Any) -> str:
+    text = str(value).strip()
+    try:
+        number = float(text)
+    except ValueError:
+        return text
+    return str(int(number)) if number.is_integer() else text
 
 
 def forward_pairs(stops: list[str]) -> set[tuple[str, str]]:
@@ -460,10 +470,23 @@ def main() -> None:
     geometry_props = [
         feature.get("properties") or {} for feature in raw_geometry["features"]
     ]
-    franchised_codes = {
-        str(item["COMPANY_CODE"]) for item in geometry_props if item.get("COMPANY_CODE")
-    }
-    json_codes = {str(item["companyCode"]) for item in json_props}
+    csdi_key_records: dict[
+        tuple[str, str, str], list[dict[str, Any]]
+    ] = defaultdict(list)
+    for feature_index, item in enumerate(geometry_props):
+        key = (
+            str(item.get("COMPANY_CODE", "")).strip(),
+            normalize_numeric_identifier(item.get("ROUTE_ID", "")),
+            normalize_numeric_identifier(item.get("ROUTE_SEQ", "")),
+        )
+        csdi_key_records[key].append(
+            {
+                "feature_index": feature_index,
+                "object_id": item.get("OBJECTID", ""),
+            }
+        )
+    franchised_codes = {key[0] for key in csdi_key_records if key[0]}
+    json_codes = {str(item["companyCode"]).strip() for item in json_props}
     bus_agencies = json_codes
     agency_by_id = {row["agency_id"]: row for row in gtfs["agency.txt"]}
     gtfs_stops = {row["stop_id"] for row in gtfs["stops.txt"]}
@@ -473,7 +496,11 @@ def main() -> None:
         tuple[str, str, str], list[tuple[int, int, dict[str, Any]]]
     ] = defaultdict(list)
     for index, item in enumerate(json_props):
-        key = (str(item["routeId"]), str(item["routeSeq"]), str(item["companyCode"]))
+        key = (
+            normalize_numeric_identifier(item["routeId"]),
+            normalize_numeric_identifier(item["routeSeq"]),
+            str(item["companyCode"]).strip(),
+        )
         json_groups[key].append((int(item["stopSeq"]), index, item))
     patterns = {
         key: [
@@ -496,19 +523,37 @@ def main() -> None:
         ]
         route_matches[route["matsim_route_id"]] = candidates
         operator = candidates[0][2] if len(candidates) == 1 else ""
-        scope = (
-            "confirmed_franchised_bus"
+        operator_scope = (
+            "confirmed_franchised_operator"
             if operator in franchised_codes
-            else "other_bus_service"
+            else "other_bus_operator"
             if operator in json_codes
+            else "operator_scope_unresolved"
+        )
+        csdi_key = (
+            (operator, candidates[0][0], candidates[0][1])
+            if len(candidates) == 1
+            else ("", route["official_route_id"], "")
+        )
+        csdi_records = csdi_key_records.get(csdi_key, [])
+        route_scope = (
+            "confirmed_franchised_route"
+            if operator_scope == "confirmed_franchised_operator" and csdi_records
+            else "franchise_route_scope_unresolved"
+            if operator_scope == "confirmed_franchised_operator"
+            else "other_bus_service"
+            if operator_scope == "other_bus_operator"
             else "operator_scope_unresolved"
         )
         pairs = forward_pairs(route["stop_ids"])
         route_meta[route["matsim_route_id"]] = {
             "operator": operator,
-            "scope": scope,
+            "operator_scope": operator_scope,
+            "route_scope": route_scope,
             "pairs": pairs,
             "candidate_keys": candidates,
+            "csdi_key": csdi_key,
+            "csdi_records": csdi_records,
         }
         required_keys.update(
             (route["official_route_id"], origin, destination)
@@ -552,9 +597,9 @@ def main() -> None:
     for operator in sorted(json_codes | {""}):
         components = operator.split("+") if operator else []
         scope = (
-            "confirmed_franchised_bus"
+            "confirmed_franchised_operator"
             if operator in franchised_codes
-            else "other_bus_service"
+            else "other_bus_operator"
             if operator
             else "operator_scope_unresolved"
         )
@@ -574,19 +619,19 @@ def main() -> None:
                 "service_scope": scope,
                 "scope_evidence": (
                     "operator_code_present_in_official_CSDI_franchised_bus_geometry_layer"
-                    if scope == "confirmed_franchised_bus"
+                    if scope == "confirmed_franchised_operator"
                     else "official_GTFS_agency_name_and_bus_JSON_companyCode_identify_non_core_service"
-                    if scope == "other_bus_service"
+                    if scope == "other_bus_operator"
                     else "no_exact_official_bus_JSON_route_pattern_or_operator"
                 ),
                 "scope_evidence_source_file": (
                     GEOMETRY_REL.as_posix()
-                    if scope == "confirmed_franchised_bus"
+                    if scope == "confirmed_franchised_operator"
                     else f"{GTFS_REL.as_posix()}::agency.txt;{JSON_REL.as_posix()}"
                 ),
                 "scope_evidence_sha256": (
                     source_hashes["franchised_bus_geometry"]
-                    if scope == "confirmed_franchised_bus"
+                    if scope == "confirmed_franchised_operator"
                     else source_hashes["gtfs"] + ";" + source_hashes["bus_json"]
                 ),
             }
@@ -595,6 +640,7 @@ def main() -> None:
     write_csv(operator_audit, output_dir / "bus_operator_scope_audit.csv")
 
     route_scope_rows: list[dict[str, Any]] = []
+    route_franchise_evidence_rows: list[dict[str, Any]] = []
     direction_rows: list[dict[str, Any]] = []
     readiness_rows: list[dict[str, Any]] = []
     route_pair_counts: dict[str, Counter[str]] = defaultdict(Counter)
@@ -614,7 +660,9 @@ def main() -> None:
         meta = route_meta[route_id]
         matches = meta["candidate_keys"]
         operator = meta["operator"]
-        scope = meta["scope"]
+        operator_scope = meta["operator_scope"]
+        route_scope = meta["route_scope"]
+        csdi_records = meta["csdi_records"]
         official_sequence = matches[0][1] if len(matches) == 1 else ""
         direction_status = "exact" if len(matches) == 1 else "unresolved"
         mapping_status = "exact" if len(matches) == 1 else "unresolved"
@@ -629,20 +677,92 @@ def main() -> None:
                 "official_operator": operator,
                 "official_operator_components_json": compact_json(components),
                 "joint_operation": len(components) > 1,
-                "service_scope": scope,
-                "operator_scope_status": scope,
+                "service_scope": route_scope,
+                "operator_scope_status": operator_scope,
+                "route_franchise_scope_status": route_scope,
                 "route_identifier_status": (
                     "exact_official_route_id" if len(matches) == 1 else "route_unresolved"
                 ),
                 "json_pattern_candidate_count": len(matches),
                 "known_unmatched_route": route_id in KNOWN_UNMATCHED,
                 "scope_evidence": (
-                    "exact_bus_JSON_route_pattern_plus_official_operator_scope"
-                    if len(matches) == 1
+                    "exact_bus_JSON_pattern_and_exact_CSDI_company_route_sequence_key"
+                    if route_scope == "confirmed_franchised_route"
+                    else "exact_bus_JSON_pattern_but_CSDI_route_key_absent"
+                    if route_scope == "franchise_route_scope_unresolved"
+                    else "official_non_franchised_bus_operator_and_exact_JSON_pattern"
+                    if route_scope == "other_bus_service"
                     else "no_exact_official_bus_JSON_route_pattern"
                 ),
                 "unresolved_reason": (
-                    "" if len(matches) == 1 else "official_route_operator_and_stop_pattern_not_found"
+                    ""
+                    if route_scope in ("confirmed_franchised_route", "other_bus_service")
+                    else "operator_confirmed_but_exact_CSDI_route_key_absent"
+                    if route_scope == "franchise_route_scope_unresolved"
+                    else "official_route_operator_and_stop_pattern_not_found"
+                ),
+            }
+        )
+        json_route_key = (
+            f"{operator}|{matches[0][0]}|{matches[0][1]}"
+            if len(matches) == 1
+            else ""
+        )
+        csdi_route_key = (
+            "|".join(meta["csdi_key"]) if len(matches) == 1 else ""
+        )
+        route_franchise_evidence_rows.append(
+            {
+                "matsim_line_id": route["matsim_line_id"],
+                "matsim_route_id": route_id,
+                "official_operator": operator,
+                "official_operator_components_json": compact_json(components),
+                "official_route_id": route["official_route_id"],
+                "official_route_sequence": official_sequence,
+                "operator_scope_status": operator_scope,
+                "route_franchise_scope_status": route_scope,
+                "json_direction_status": direction_status,
+                "json_route_key": json_route_key,
+                "csdi_route_key": csdi_route_key,
+                "csdi_exact_key_match": bool(csdi_records),
+                "csdi_candidate_count": len(csdi_records),
+                "csdi_object_ids_json": compact_json(
+                    [record["object_id"] for record in csdi_records]
+                ),
+                "csdi_source_feature_indices_json": compact_json(
+                    [record["feature_index"] for record in csdi_records]
+                ),
+                "csdi_key_multiplicity_status": (
+                    "unique_feature"
+                    if len(csdi_records) == 1
+                    else "multiple_features_same_exact_key"
+                    if len(csdi_records) > 1
+                    else "no_exact_key"
+                ),
+                "matsim_route_suffix": route["matsim_route_suffix"],
+                "matsim_route_suffix_used_as_scope_evidence": False,
+                "scope_evidence_method": (
+                    "exact_companyCode_routeId_routeSeq_key_in_CSDI_franchised_bus_geometry"
+                    if csdi_records
+                    else "exact_CSDI_route_key_absence_after_complete_key_inventory"
+                    if len(matches) == 1
+                    else "no_JSON_company_route_sequence_key_available"
+                ),
+                "scope_evidence_source_file": GEOMETRY_REL.as_posix(),
+                "scope_evidence_sha256": source_hashes["franchised_bus_geometry"],
+                "mapping_quality": (
+                    "A"
+                    if route_scope in ("confirmed_franchised_route", "other_bus_service")
+                    else "B"
+                    if route_scope == "franchise_route_scope_unresolved"
+                    else "U"
+                ),
+                "unresolved_reason": (
+                    ""
+                    if route_scope in ("confirmed_franchised_route", "other_bus_service")
+                    else "operator_and_JSON_direction_confirmed_but_exact_CSDI_route_key_absent"
+                    if route_scope == "franchise_route_scope_unresolved"
+                    else "official_operator_and_JSON_direction_unresolved"
                 ),
             }
         )
@@ -708,8 +828,9 @@ def main() -> None:
             row = {
                 "matsim_line_id": route["matsim_line_id"],
                 "matsim_route_id": route_id,
-                "service_scope": scope,
-                "operator_scope_status": scope,
+                "service_scope": route_scope,
+                "operator_scope_status": operator_scope,
+                "route_franchise_scope_status": route_scope,
                 "official_operator": operator,
                 "official_operator_components_json": compact_json(components),
                 "official_route_id": route["official_route_id"],
@@ -802,10 +923,12 @@ def main() -> None:
         duplicate = counts["duplicate_identical"]
         conflict = counts["conflicting_amounts"]
         missing = counts["missing"]
-        if meta["scope"] == "operator_scope_unresolved":
+        if meta["route_scope"] == "operator_scope_unresolved":
             readiness = "operator_scope_unresolved"
-        elif meta["scope"] == "other_bus_service":
+        elif meta["route_scope"] == "other_bus_service":
             readiness = "other_bus_service_not_in_franchised_core"
+        elif meta["route_scope"] == "franchise_route_scope_unresolved":
+            readiness = "franchise_route_scope_unresolved"
         elif missing:
             readiness = "partial_missing_pairs"
         elif conflict:
@@ -819,8 +942,9 @@ def main() -> None:
             {
                 "matsim_line_id": route["matsim_line_id"],
                 "matsim_route_id": route_id,
-                "service_scope": meta["scope"],
-                "operator_scope_status": meta["scope"],
+                "service_scope": meta["route_scope"],
+                "operator_scope_status": meta["operator_scope"],
+                "route_franchise_scope_status": meta["route_scope"],
                 "official_operator": meta["operator"],
                 "official_operator_components_json": compact_json(
                     meta["operator"].split("+") if meta["operator"] else []
@@ -843,8 +967,20 @@ def main() -> None:
                     (required - missing) / required if required else 0.0
                 ),
                 "fare_readiness": readiness,
-                "mapping_status": "exact" if len(matches) == 1 else "unresolved",
-                "mapping_quality": "A" if len(matches) == 1 else "U",
+                "mapping_status": (
+                    "exact"
+                    if meta["route_scope"] in ("confirmed_franchised_route", "other_bus_service")
+                    else "partial"
+                    if meta["route_scope"] == "franchise_route_scope_unresolved"
+                    else "unresolved"
+                ),
+                "mapping_quality": (
+                    "A"
+                    if meta["route_scope"] in ("confirmed_franchised_route", "other_bus_service")
+                    else "B"
+                    if meta["route_scope"] == "franchise_route_scope_unresolved"
+                    else "U"
+                ),
                 "unresolved_reason": (
                     "known_schedule_proxy_route_without_official_operator_stop_or_fare_evidence"
                     if route_id in KNOWN_UNMATCHED
@@ -856,11 +992,119 @@ def main() -> None:
         )
 
     route_scope = pd.DataFrame(route_scope_rows)
+    route_franchise_evidence = pd.DataFrame(route_franchise_evidence_rows)
     direction = pd.DataFrame(direction_rows)
     readiness = pd.DataFrame(readiness_rows)
     write_csv(route_scope, output_dir / "bus_route_scope_audit.csv")
+    write_csv(
+        route_franchise_evidence,
+        output_dir / "bus_route_franchise_scope_evidence.csv",
+    )
     write_csv(direction, output_dir / "bus_direction_evidence_audit.csv")
     write_csv(readiness, output_dir / "bus_route_direction_readiness.csv")
+
+    scope_order = (
+        "confirmed_franchised_route",
+        "franchise_route_scope_unresolved",
+        "other_bus_service",
+        "operator_scope_unresolved",
+    )
+    scope_candidate_rows: list[dict[str, Any]] = []
+    for scope_name in scope_order:
+        subset = readiness[
+            readiness["route_franchise_scope_status"] == scope_name
+        ]
+        fully_unique = (
+            (subset["required_forward_pair_count"] > 0)
+            & (
+                subset["unique_candidate_pair_count"]
+                == subset["required_forward_pair_count"]
+            )
+            & (subset["duplicate_pair_count"] == 0)
+            & (subset["conflict_pair_count"] == 0)
+            & (subset["missing_pair_count"] == 0)
+        )
+        scope_candidate_rows.append(
+            {
+                "route_franchise_scope_status": scope_name,
+                "route_count": len(subset),
+                "required_forward_pair_count": int(
+                    subset["required_forward_pair_count"].sum()
+                ),
+                "unique_candidate_pair_count": int(
+                    subset["unique_candidate_pair_count"].sum()
+                ),
+                "duplicate_identical_pair_count": int(
+                    subset["duplicate_pair_count"].sum()
+                ),
+                "conflicting_amounts_pair_count": int(
+                    subset["conflict_pair_count"].sum()
+                ),
+                "missing_pair_count": int(subset["missing_pair_count"].sum()),
+                "all_od_unique_route_count": int(fully_unique.sum()),
+                "route_count_with_duplicate_pairs": int(
+                    (subset["duplicate_pair_count"] > 0).sum()
+                ),
+                "route_count_with_conflicting_pairs": int(
+                    (subset["conflict_pair_count"] > 0).sum()
+                ),
+                "route_count_not_fully_ready_due_duplicate_or_conflict": int(
+                    (
+                        (subset["duplicate_pair_count"] > 0)
+                        | (subset["conflict_pair_count"] > 0)
+                    ).sum()
+                ),
+            }
+        )
+    scope_candidate_crosstab = pd.DataFrame(scope_candidate_rows)
+    write_csv(
+        scope_candidate_crosstab,
+        output_dir / "bus_route_scope_candidate_crosstab.csv",
+    )
+    operator_only_mismatches = [
+        row
+        for row in route_franchise_evidence_rows
+        if row["operator_scope_status"] == "confirmed_franchised_operator"
+        and not row["csdi_exact_key_match"]
+    ]
+    negative_case = (
+        {
+            "status": "passed_real_operator_only_mismatch_not_confirmed",
+            "matsim_route_id": operator_only_mismatches[0]["matsim_route_id"],
+            "json_route_key": operator_only_mismatches[0]["json_route_key"],
+            "route_franchise_scope_status": operator_only_mismatches[0][
+                "route_franchise_scope_status"
+            ],
+        }
+        if operator_only_mismatches
+        else {
+            "status": "not_applicable_no_operator_only_mismatch_found",
+            "matsim_route_id": "",
+            "json_route_key": "",
+            "route_franchise_scope_status": "",
+        }
+    )
+    scope_candidate_summary = {
+        "schema_version": "hong_kong_bus_route_scope_candidate_summary_v1",
+        "scope_rows": scope_candidate_rows,
+        "negative_operator_only_scope_case": negative_case,
+        "total_route_count": int(scope_candidate_crosstab["route_count"].sum()),
+        "total_required_forward_pair_count": int(
+            scope_candidate_crosstab["required_forward_pair_count"].sum()
+        ),
+        "candidate_classification_changed_from_prior_audit": False,
+        "candidate_classification_change_reason": "",
+    }
+    (output_dir / "bus_scope_candidate_summary.json").write_text(
+        json.dumps(
+            scope_candidate_summary,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     facility_usage: dict[str, list[dict[str, str]]] = defaultdict(list)
     for route in schedule:
@@ -966,7 +1210,8 @@ def main() -> None:
             "fullFare_unconditional_flat_fare": UNSPECIFIED,
             "route_specific_fare_effective_date": UNSPECIFIED,
             "official_operator_code_dictionary": "GTFS_agency_plus_bus_JSON_companyCode",
-            "franchised_scope_evidence": "official_CSDI_franchised_bus_geometry_COMPANY_CODE_set",
+            "operator_level_franchised_scope_evidence": "operator_code_occurs_in_official_CSDI_franchised_bus_geometry",
+            "route_level_franchised_scope_evidence": "exact_companyCode_ROUTE_ID_ROUTE_SEQ_key_occurs_in_official_CSDI_franchised_bus_geometry",
             "joint_operation_expression": "plus_delimited_complete_operator_code_retained",
         },
         "source_urls": {
@@ -1017,7 +1262,29 @@ def main() -> None:
             ),
         },
         "operator_route_counts": dict(Counter(meta["operator"] for meta in route_meta.values())),
-        "operator_scope_status_counts": dict(Counter(meta["scope"] for meta in route_meta.values())),
+        "operator_scope_status_counts": dict(
+            Counter(meta["operator_scope"] for meta in route_meta.values())
+        ),
+        "route_franchise_scope_status_counts": dict(
+            Counter(meta["route_scope"] for meta in route_meta.values())
+        ),
+        "csdi_exact_route_key_match": {
+            "matched_route_count": sum(
+                bool(meta["csdi_records"]) for meta in route_meta.values()
+            ),
+            "confirmed_franchised_operator_route_count": sum(
+                meta["operator_scope"] == "confirmed_franchised_operator"
+                for meta in route_meta.values()
+            ),
+            "match_rate_within_confirmed_franchised_operator": (
+                sum(bool(meta["csdi_records"]) for meta in route_meta.values())
+                / sum(
+                    meta["operator_scope"] == "confirmed_franchised_operator"
+                    for meta in route_meta.values()
+                )
+            ),
+        },
+        "scope_candidate_rows": scope_candidate_rows,
         "stop_crosswalk_status_counts": dict(Counter(crosswalk["mapping_status"])),
         "direction_status_counts": dict(Counter(readiness["direction_status"])),
         "route_mapping_status_counts": dict(Counter(readiness["mapping_status"])),
@@ -1068,6 +1335,10 @@ integration.
   {len(schedule):,} routes, {sum(row["departure_count"] for row in schedule):,}
   departures.
 - Operator scope: {summary["operator_scope_status_counts"]}.
+- Route-level franchise scope: {summary["route_franchise_scope_status_counts"]}.
+- A route is confirmed only when its complete Bus JSON pattern and exact
+  CSDI `COMPANY_CODE+ROUTE_ID+ROUTE_SEQ` key both exist; operator code alone
+  is insufficient.
 - Direction is exact only for a unique complete official
   `routeId+routeSeq+stopSeq` match. MATSim suffixes are never evidence.
 - Ordered-OD candidate states: {dict(status_counts)}.

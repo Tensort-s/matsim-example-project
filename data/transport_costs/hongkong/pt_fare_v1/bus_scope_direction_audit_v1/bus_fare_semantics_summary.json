@@ -4,11 +4,12 @@
     "bus_json_per_stop_or_sectional_fare": "unspecified_in_source",
     "fare_rules_direction_route_sequence_day_time": "unspecified_in_source",
     "fare_rules_route_and_ordered_od": "encoded",
-    "franchised_scope_evidence": "official_CSDI_franchised_bus_geometry_COMPANY_CODE_set",
     "fullFare_unconditional_flat_fare": "unspecified_in_source",
     "gtfs_price_passenger_payment_ticket_scope": "unspecified_in_source",
     "joint_operation_expression": "plus_delimited_complete_operator_code_retained",
     "official_operator_code_dictionary": "GTFS_agency_plus_bus_JSON_companyCode",
+    "operator_level_franchised_scope_evidence": "operator_code_occurs_in_official_CSDI_franchised_bus_geometry",
+    "route_level_franchised_scope_evidence": "exact_companyCode_ROUTE_ID_ROUTE_SEQ_key_occurs_in_official_CSDI_franchised_bus_geometry",
     "route_specific_fare_effective_date": "unspecified_in_source"
   },
   "cost_effective_date": "",

@@ -76,6 +76,15 @@ def route_parts(route_id: str) -> tuple[str, str]:
     return (match.group(1), match.group(2)) if match else ("", "")
 
 
+def normalize_numeric_identifier(value: Any) -> str:
+    text = str(value).strip()
+    try:
+        number = float(text)
+    except ValueError:
+        return text
+    return str(int(number)) if number.is_integer() else text
+
+
 def forward_pairs(stops: list[str]) -> set[tuple[str, str]]:
     return {
         (stops[i], stops[j])
@@ -259,6 +268,9 @@ def main() -> None:
         "bus_fare_semantics_summary.json",
         "bus_operator_scope_audit.csv",
         "bus_route_scope_audit.csv",
+        "bus_route_franchise_scope_evidence.csv",
+        "bus_route_scope_candidate_crosstab.csv",
+        "bus_scope_candidate_summary.json",
         "bus_stop_crosswalk.csv",
         "bus_direction_evidence_audit.csv",
         "bus_route_direction_readiness.csv",
@@ -297,10 +309,23 @@ def main() -> None:
     geometry_props = [
         feature.get("properties") or {} for feature in geometry["features"]
     ]
-    franchised_codes = {
-        str(item["COMPANY_CODE"]) for item in geometry_props if item.get("COMPANY_CODE")
-    }
-    json_codes = {str(item["companyCode"]) for item in json_props}
+    csdi_key_records: dict[
+        tuple[str, str, str], list[dict[str, Any]]
+    ] = defaultdict(list)
+    for feature_index, item in enumerate(geometry_props):
+        key = (
+            str(item.get("COMPANY_CODE", "")).strip(),
+            normalize_numeric_identifier(item.get("ROUTE_ID", "")),
+            normalize_numeric_identifier(item.get("ROUTE_SEQ", "")),
+        )
+        csdi_key_records[key].append(
+            {
+                "feature_index": feature_index,
+                "object_id": item.get("OBJECTID", ""),
+            }
+        )
+    franchised_codes = {key[0] for key in csdi_key_records if key[0]}
+    json_codes = {str(item["companyCode"]).strip() for item in json_props}
     gtfs_stops = {row["stop_id"] for row in gtfs["stops.txt"]}
     json_stop_ids = {str(item["stopId"]) for item in json_props}
     agency_by_id = {row["agency_id"]: row for row in gtfs["agency.txt"]}
@@ -308,7 +333,11 @@ def main() -> None:
     groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for item in json_props:
         groups[
-            (str(item["routeId"]), str(item["routeSeq"]), str(item["companyCode"]))
+            (
+                normalize_numeric_identifier(item["routeId"]),
+                normalize_numeric_identifier(item["routeSeq"]),
+                str(item["companyCode"]).strip(),
+            )
         ].append(item)
     patterns = {
         key: [
@@ -327,17 +356,35 @@ def main() -> None:
             if key[0] == route["official_route_id"] and pattern == route["stops"]
         ]
         operator = matches[0][2] if len(matches) == 1 else ""
-        scope = (
-            "confirmed_franchised_bus"
+        operator_scope = (
+            "confirmed_franchised_operator"
             if operator in franchised_codes
-            else "other_bus_service"
+            else "other_bus_operator"
             if operator in json_codes
+            else "operator_scope_unresolved"
+        )
+        csdi_key = (
+            (operator, matches[0][0], matches[0][1])
+            if len(matches) == 1
+            else ("", route["official_route_id"], "")
+        )
+        csdi_records = csdi_key_records.get(csdi_key, [])
+        route_scope_status = (
+            "confirmed_franchised_route"
+            if operator_scope == "confirmed_franchised_operator" and csdi_records
+            else "franchise_route_scope_unresolved"
+            if operator_scope == "confirmed_franchised_operator"
+            else "other_bus_service"
+            if operator_scope == "other_bus_operator"
             else "operator_scope_unresolved"
         )
         route_meta[route["matsim_route_id"]] = {
             "matches": matches,
             "operator": operator,
-            "scope": scope,
+            "operator_scope": operator_scope,
+            "route_scope": route_scope_status,
+            "csdi_key": csdi_key,
+            "csdi_records": csdi_records,
         }
         required_keys.update(
             (route["official_route_id"], origin, destination)
@@ -369,6 +416,21 @@ def main() -> None:
     route_scope = pd.read_csv(
         output_dir / "bus_route_scope_audit.csv", dtype=str, keep_default_na=False
     )
+    route_franchise = pd.read_csv(
+        output_dir / "bus_route_franchise_scope_evidence.csv",
+        dtype=str,
+        keep_default_na=False,
+    )
+    scope_crosstab = pd.read_csv(
+        output_dir / "bus_route_scope_candidate_crosstab.csv",
+        dtype=str,
+        keep_default_na=False,
+    )
+    scope_candidate_summary = json.loads(
+        (output_dir / "bus_scope_candidate_summary.json").read_text(
+            encoding="utf-8"
+        )
+    )
     crosswalk = pd.read_csv(
         output_dir / "bus_stop_crosswalk.csv", dtype=str, keep_default_na=False
     )
@@ -399,7 +461,7 @@ def main() -> None:
         (output_dir / "bus_fare_semantics_summary.json").read_text(encoding="utf-8")
     )
 
-    # 1-5: complete schedule and operator-scope classification.
+    # 1-5: complete schedule plus separate operator- and route-scope evidence.
     independent_schedule = {
         "line_count": len({row["matsim_line_id"] for row in schedule}),
         "route_count": len(schedule),
@@ -414,20 +476,66 @@ def main() -> None:
     route_ids = {row["matsim_route_id"] for row in schedule}
     check_2 = (
         len(route_scope) == len(schedule)
+        and len(route_franchise) == len(schedule)
         and len(readiness) == len(schedule)
         and set(route_scope["matsim_route_id"]) == route_ids
+        and set(route_franchise["matsim_route_id"]) == route_ids
         and set(readiness["matsim_route_id"]) == route_ids
     )
-    expected_scope_counts = Counter(meta["scope"] for meta in route_meta.values())
+    expected_operator_counts = Counter(
+        meta["operator_scope"] for meta in route_meta.values()
+    )
+    expected_route_counts = Counter(meta["route_scope"] for meta in route_meta.values())
+    evidence_lookup = route_franchise.set_index("matsim_route_id").to_dict("index")
     check_3 = (
-        Counter(route_scope["operator_scope_status"]) == expected_scope_counts
-        and summary["operator_scope_status_counts"] == dict(expected_scope_counts)
-        and all(
+        Counter(route_scope["operator_scope_status"]) == expected_operator_counts
+        and Counter(route_scope["route_franchise_scope_status"]) == expected_route_counts
+        and summary["operator_scope_status_counts"] == dict(expected_operator_counts)
+        and summary["route_franchise_scope_status_counts"] == dict(expected_route_counts)
+        and set(expected_route_counts)
+        == {
+            "confirmed_franchised_route",
+            "franchise_route_scope_unresolved",
+            "other_bus_service",
+            "operator_scope_unresolved",
+        }
+    )
+    for route in schedule:
+        meta = route_meta[route["matsim_route_id"]]
+        row = evidence_lookup[route["matsim_route_id"]]
+        expected_records = meta["csdi_records"]
+        check_3 &= (
+            row["operator_scope_status"] == meta["operator_scope"]
+            and row["route_franchise_scope_status"] == meta["route_scope"]
+            and row["csdi_exact_key_match"] == ("True" if expected_records else "False")
+            and int(row["csdi_candidate_count"]) == len(expected_records)
+            and json.loads(row["csdi_object_ids_json"])
+            == [record["object_id"] for record in expected_records]
+            and json.loads(row["csdi_source_feature_indices_json"])
+            == [record["feature_index"] for record in expected_records]
+            and (
+                meta["route_scope"] != "confirmed_franchised_route"
+                or (
+                    meta["operator_scope"] == "confirmed_franchised_operator"
+                    and bool(expected_records)
+                    and row["scope_evidence_sha256"] == sha256(source_root / GEOMETRY_REL)
+                )
+            )
+        )
+    operator_only_mismatches = [
+        route_id
+        for route_id, meta in route_meta.items()
+        if meta["operator_scope"] == "confirmed_franchised_operator"
+        and not meta["csdi_records"]
+    ]
+    negative_case = scope_candidate_summary["negative_operator_only_scope_case"]
+    check_4 = (
+        all(
             row["operator_scope_status"]
             == (
-                "confirmed_franchised_bus"
+                "confirmed_franchised_operator"
                 if row["official_operator_code"] in franchised_codes
-                else "other_bus_service"
+                else "other_bus_operator"
                 if row["official_operator_code"]
                 else "operator_scope_unresolved"
             )
@@ -438,24 +546,43 @@ def main() -> None:
             for code in json_codes
             if code in agency_by_id
         )
-    )
-    check_4 = all(
+        and all(
+            route_meta[route_id]["route_scope"]
+            == "franchise_route_scope_unresolved"
+            for route_id in operator_only_mismatches
+        )
+        and (
+            negative_case["status"]
+            == "passed_real_operator_only_mismatch_not_confirmed"
+            and negative_case["matsim_route_id"] in operator_only_mismatches
+            if operator_only_mismatches
+            else negative_case["status"]
+            == "not_applicable_no_operator_only_mismatch_found"
+        )
+        and all(
         json.loads(row["official_operator_components_json"])
         == row["official_operator"].split("+")
         for row in route_scope.to_dict("records")
         if "+" in row["official_operator"]
-    ) and all(
+        )
+        and all(
         json.loads(row["official_operator_components_json"])
         == row["official_operator_code"].split("+")
         for row in operator.to_dict("records")
         if "+" in row["official_operator_code"]
+        )
     )
     unresolved_scope = route_scope[
-        route_scope["operator_scope_status"] == "operator_scope_unresolved"
+        route_scope["route_franchise_scope_status"] == "operator_scope_unresolved"
     ]
     check_5 = (
         set(unresolved_scope["matsim_route_id"]) == KNOWN_UNMATCHED
         and (unresolved_scope["known_unmatched_route"] == "True").all()
+        and all(
+            route_meta[route_id]["route_scope"]
+            == "franchise_route_scope_unresolved"
+            for route_id in operator_only_mismatches
+        )
     )
 
     # 6-9: stop and direction evidence.
@@ -481,6 +608,7 @@ def main() -> None:
     for route in schedule:
         meta = route_meta[route["matsim_route_id"]]
         row = direction_lookup[route["matsim_route_id"]]
+        scope_row = evidence_lookup[route["matsim_route_id"]]
         exact = len(meta["matches"]) == 1
         check_8 &= (
             int(row["candidate_count"]) == len(meta["matches"])
@@ -496,6 +624,8 @@ def main() -> None:
             row["matsim_route_suffix"] == route["suffix"]
             and row["matsim_route_suffix_used_as_direction_evidence"] == "False"
             and "suffix" not in row["direction_evidence"].lower()
+            and scope_row["matsim_route_suffix_used_as_scope_evidence"] == "False"
+            and "suffix" not in scope_row["scope_evidence_method"].lower()
         )
 
     # 10-15: independently reproduce every ordered-OD candidate record.
@@ -504,6 +634,7 @@ def main() -> None:
     expected = expected_rows(schedule, route_meta, lookup)
     candidate_total = 0
     status_counts: Counter[str] = Counter()
+    scope_pair_counts: dict[str, Counter[str]] = defaultdict(Counter)
     zero_records = 0
     check_10 = True
     check_11 = True
@@ -520,6 +651,8 @@ def main() -> None:
                 break
             candidate_total += 1
             status_counts[status] += 1
+            meta = route_meta[route["matsim_route_id"]]
+            scope_pair_counts[meta["route_scope"]][status] += 1
             expected_zero = sum(record["price"] == 0 for record in records)
             zero_records += expected_zero
             check_10 &= (
@@ -527,6 +660,8 @@ def main() -> None:
                 and row["matsim_route_id"] == route["matsim_route_id"]
                 and row["boarding_stop_id"] == origin
                 and row["alighting_stop_id"] == destination
+                and row["operator_scope_status"] == meta["operator_scope"]
+                and row["route_franchise_scope_status"] == meta["route_scope"]
             )
             check_11 &= (
                 int(row["candidate_count"]) == len(records)
@@ -571,6 +706,28 @@ def main() -> None:
         pass
     independently_required = sum(len(forward_pairs(route["stops"])) for route in schedule)
     check_10 &= candidate_total == independently_required
+    crosstab_lookup = scope_crosstab.set_index(
+        "route_franchise_scope_status"
+    ).to_dict("index")
+    for scope_name, route_count in expected_route_counts.items():
+        row = crosstab_lookup[scope_name]
+        check_10 &= (
+            int(row["route_count"]) == route_count
+            and int(row["required_forward_pair_count"])
+            == sum(
+                len(forward_pairs(route["stops"]))
+                for route in schedule
+                if route_meta[route["matsim_route_id"]]["route_scope"] == scope_name
+            )
+            and int(row["unique_candidate_pair_count"])
+            == scope_pair_counts[scope_name]["unique_candidate"]
+            and int(row["duplicate_identical_pair_count"])
+            == scope_pair_counts[scope_name]["duplicate_identical"]
+            and int(row["conflicting_amounts_pair_count"])
+            == scope_pair_counts[scope_name]["conflicting_amounts"]
+            and int(row["missing_pair_count"])
+            == scope_pair_counts[scope_name]["missing"]
+        )
     check_12 &= summary["candidate_status_counts"] == dict(status_counts)
     check_13 &= (
         summary["explicit_raw_zero_candidate_record_count"] == zero_records
@@ -616,6 +773,11 @@ def main() -> None:
     )
     check_19 = (
         not (repo_root / "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_bus_fares.py").exists()
+        and not (
+            repo_root
+            / "scripts/hong_kong_single_city/costs/pt/build_hong_kong_bus_fares.py"
+        ).exists()
+        and not (repo_root / BASE_REL / "bus_fare_v1").exists()
         and summary["query_interface_created"] is False
         and summary["production_pricing_performed"] is False
         and summary["matsim_scoring_integration"] == "not_performed"
@@ -678,10 +840,10 @@ def main() -> None:
     check_23 = rebuild_ok
     checks = [
         ("01_schedule_inventory_directly_recomputed", check_1),
-        ("02_one_scope_and_readiness_row_per_bus_route", check_2),
-        ("03_operator_scope_has_official_evidence", check_3),
-        ("04_joint_operator_relationship_retained", check_4),
-        ("05_five_known_unmatched_routes_explicit", check_5),
+        ("02_one_route_franchise_evidence_row_per_bus_route", check_2),
+        ("03_confirmed_routes_have_exact_traceable_CSDI_keys", check_3),
+        ("04_operator_only_negative_case_and_joint_operators_retained", check_4),
+        ("05_missing_CSDI_keys_and_known_unmatched_remain_unresolved", check_5),
         ("06_facility_stop_id_mapping_directly_verified", check_6),
         ("07_no_fuzzy_or_nearest_stop_matching", check_7),
         ("08_direction_requires_unique_complete_official_pattern", check_8),
@@ -707,7 +869,15 @@ def main() -> None:
         "checks": [{"name": name, "passed": bool(value)} for name, value in checks],
         "independent_counts": {
             "schedule": independent_schedule,
-            "operator_scope_status_counts": dict(expected_scope_counts),
+            "operator_scope_status_counts": dict(expected_operator_counts),
+            "route_franchise_scope_status_counts": dict(expected_route_counts),
+            "scope_candidate_status_counts": {
+                scope_name: dict(counts)
+                for scope_name, counts in scope_pair_counts.items()
+            },
+            "operator_only_CSDI_key_mismatch_route_count": len(
+                operator_only_mismatches
+            ),
             "required_forward_pairs": independently_required,
             "candidate_status_counts": dict(status_counts),
             "explicit_raw_zero_candidate_records": zero_records,

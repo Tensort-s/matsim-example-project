@@ -5,19 +5,19 @@
       "passed": true
     },
     {
-      "name": "02_one_scope_and_readiness_row_per_bus_route",
+      "name": "02_one_route_franchise_evidence_row_per_bus_route",
       "passed": true
     },
     {
-      "name": "03_operator_scope_has_official_evidence",
+      "name": "03_confirmed_routes_have_exact_traceable_CSDI_keys",
       "passed": true
     },
     {
-      "name": "04_joint_operator_relationship_retained",
+      "name": "04_operator_only_negative_case_and_joint_operators_retained",
       "passed": true
     },
     {
-      "name": "05_five_known_unmatched_routes_explicit",
+      "name": "05_missing_CSDI_keys_and_known_unmatched_remain_unresolved",
       "passed": true
     },
     {
@@ -105,13 +105,20 @@
     },
     "explicit_raw_zero_candidate_records": 647,
     "full_fare_references": 2358,
+    "operator_only_CSDI_key_mismatch_route_count": 9,
     "operator_scope_status_counts": {
-      "confirmed_franchised_bus": 2255,
+      "confirmed_franchised_operator": 2255,
       "operator_scope_unresolved": 5,
-      "other_bus_service": 103
+      "other_bus_operator": 103
     },
     "production_pt_rows": 557104,
     "required_forward_pairs": 771666,
+    "route_franchise_scope_status_counts": {
+      "confirmed_franchised_route": 2246,
+      "franchise_route_scope_unresolved": 9,
+      "operator_scope_unresolved": 5,
+      "other_bus_service": 103
+    },
     "schedule": {
       "departure_count": 69589,
       "distinct_facility_count": 56066,
@@ -119,6 +126,23 @@
       "line_count": 1614,
       "route_count": 2363,
       "stop_occurrence_count": 56066
+    },
+    "scope_candidate_status_counts": {
+      "confirmed_franchised_route": {
+        "conflicting_amounts": 2603,
+        "duplicate_identical": 1827,
+        "unique_candidate": 754133
+      },
+      "franchise_route_scope_unresolved": {
+        "duplicate_identical": 34,
+        "unique_candidate": 2074
+      },
+      "operator_scope_unresolved": {},
+      "other_bus_service": {
+        "conflicting_amounts": 20,
+        "duplicate_identical": 139,
+        "unique_candidate": 10836
+      }
     },
     "stop_crosswalk_status_counts": {
       "exact": 56056,
@@ -584,9 +608,9 @@
     }
   ],
   "rebuild_determinism": {
-    "current_overall_sha256": "3512f80733c9f6c70d481edac7b49d7533f4e2a38d9bdd7fb1f9aa2a1404d20d",
+    "current_overall_sha256": "0503a9e521d93d26ec30875e47cb23034a4f1019703cce9974106245fd20b154",
     "passed": true,
-    "rebuilt_overall_sha256": "3512f80733c9f6c70d481edac7b49d7533f4e2a38d9bdd7fb1f9aa2a1404d20d"
+    "rebuilt_overall_sha256": "0503a9e521d93d26ec30875e47cb23034a4f1019703cce9974106245fd20b154"
   },
   "schema_version": "hong_kong_bus_scope_direction_validation_v1",
   "source_sha256": {
