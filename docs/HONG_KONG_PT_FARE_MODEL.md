@@ -19,7 +19,8 @@ files are no longer active outputs.
 The following products from `c7be4a` remain valid and are retained:
 
 - official source URLs, download dates, and SHA256;
-- 886,532 normalized official adult Octopus fare records;
+- 886,532 normalized source-fare records retained under mode-specific
+  passenger/payment semantics;
 - the production `transitSchedule` inventory;
 - 3,621 official direction-level full-fare records;
 - the five known unmatched bus routes;
@@ -61,9 +62,63 @@ Official references:
 - [MTR 2026/27 fare freeze](https://www.mtr.com.hk/archive/corporate/en/press_release/PR-26-023-E.pdf)
 - [Airport Express fares effective 2025-06-22](https://www.mtr.com.hk/archive/corporate/en/press_release/PR-25-032-E.pdf)
 
-The normalized modelling reference is adult Octopus. It is not assigned to a
-passenger trip unless the trip contains sufficient itinerary and eligibility
+There is no global passenger-fare basis. MTR and Light Rail rules are adult
+Octopus. GMB, Ferry, and strict Bus GTFS amounts do not encode a common
+passenger/payment basis. Bus simulation candidates assume a generic passenger
+only for coverage and retain B/C/D quality plus anomaly provenance. No
+mode-specific amount is assigned to a production passenger trip unless an
+approved future integration supplies sufficient itinerary and eligibility
 evidence.
+
+## Canonical PT fare interface registry
+
+The canonical release entry points for
+`integration/hk-multimodal-cost-v1` are:
+
+```text
+data/transport_costs/hongkong/pt_fare_v1/
+  canonical_pt_fare_interface_manifest.json
+  pt_fare_layer_registry.csv
+  pt_fare_release_validation.json
+```
+
+The registry replaces the ambiguous practice of treating the older top-level
+normalized catalog as one cross-mode fare interface. That catalog remains a
+historical source-normalization and cross-check layer. Each mode now has an
+explicit audit path, strict rule path, simulation-candidate path, quote
+interface, passenger/payment/date semantics, unresolved policy, quality range,
+approval state, and path-level SHA256 map.
+
+| Mode | Canonical strict layer | Future simulation candidate | Fare semantics |
+|---|---|---|---|
+| MTR | `mtr_station_od_v1` | same strict layer | adult Octopus; domestic and Airport Express separate |
+| Light Rail | `light_rail_station_od_v1` | same strict layer | adult Octopus base fare |
+| GMB | `gmb_fare_v1` | same strict layer | published amount; passenger/payment basis unspecified; duplicate/conflict unresolved |
+| Ferry | `ferry_fare_v1` | same strict layer | published amount; passenger/payment/class/vessel/day applicability unspecified |
+| Bus | `bus_fare_v1` | `bus_fare_simulation_v1` | strict Bus Core remains separate from B/C/D coverage assumptions |
+
+`bus_fare_v1` is canonical for strict source-backed Bus rules: 754,133 active
+rules, covering 0.9772790300466783 of all 771,666 Bus forward ODs.
+`bus_fare_simulation_v1` is canonical only as a future coverage-first
+simulation candidate: 771,666 rules, 100% OD coverage, B=764,969, C=4,074,
+D=2,623, 18,170 OD assumptions, and 20,533 anomaly rows after including all
+2,363 route fallbacks. It is not a statement that all Bus simulation values
+are official adult Octopus fares and it never overwrites Bus Core.
+
+The production boundary remains:
+
+```text
+production_pt_leg_count = 557104
+priced_production_pt_leg_count = 0
+unresolved_production_pt_leg_count = 557104
+matsim_scoring_approved = false
+joint_mode_choice_calibration_approved = false
+```
+
+The generic PT legs lack actual mode, line, route, boarding stop, alighting
+stop, and transfer chain. Distance medians, cross-mode aggregation,
+nearest-neighbour values, and route `fullFare` substitution are prohibited.
+Future pricing requires a runtime or post-routing explicit PT itinerary.
 
 ## Production schedule inventory
 
@@ -1143,6 +1198,9 @@ before/after hashes are identical.
 ```text
 data/transport_costs/hongkong/pt_fare_v1/
   README.md
+  canonical_pt_fare_interface_manifest.json
+  pt_fare_layer_registry.csv
+  pt_fare_release_validation.json
   fare_source_manifest.csv
   official_fares_normalized.parquet
   official_route_full_fares.csv
