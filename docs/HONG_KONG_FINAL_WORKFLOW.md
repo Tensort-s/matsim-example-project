@@ -273,9 +273,14 @@ This is an auxiliary offline audit. It does not change
 production MATSim input. The independently rebuilt energy, toll, and parking
 candidates are exposed through a strict, null-preserving unified marginal-cost
 interface; fixed ownership remains an accounting-only sidecar. Neither this
-interface nor the underlying candidates approve MATSim scoring adoption.
+interface nor the underlying candidates approve MATSim scoring adoption. The
+follow-up event-level scoring design is also blocked: the existing distance
+money term has unverified currency/economic semantics, 835 parking events are
+non-randomly unresolved, and no baseline replay has been approved or run.
 Details: `docs/HONG_KONG_CAR_COST_MODEL.md` and
-`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`.
+`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`, plus the
+design-only audit in
+`docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md`.
 
 ### 10. Final simulation and visualization
 

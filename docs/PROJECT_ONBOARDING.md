@@ -93,6 +93,7 @@ docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
+docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -208,6 +209,13 @@ leg identity, retains unresolved and out-of-scope costs as null, and publishes
 low/base/high complete-leg totals for audit only. Fixed ownership remains a
 separate accounting sidecar. The interface does not approve or modify MATSim
 scoring or joint mode-choice calibration.
+The subsequent scoring-adoption design and double-counting audit is documented
+in `docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md`. It finds that the
+existing 0.7 currency/km distance term cannot be called HKD or fuel without new
+provenance, rejects static iteration-time leg lookup, and defines future
+experienced-event and baseline-replay contracts. The design is reviewable but
+blocked; it implements no scoring and keeps fixed ownership permanently outside
+the current daily behavioral model.
 
 The final local SimWrapper project for this configuration is:
 
