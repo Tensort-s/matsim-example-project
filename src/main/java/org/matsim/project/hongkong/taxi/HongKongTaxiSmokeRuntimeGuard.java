@@ -41,13 +41,24 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			"org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory";
 
 	private final Config config;
+	private final HongKongTaxiPtRoutePreparation.PreparationAudit preparationAudit;
+	private final HongKongTaxiPtRoutePreparation.TaxiSnapshot sourceTaxiSnapshot;
 	private final Map<Integer, IterationEvents> iterations = new LinkedHashMap<>();
+	private final Map<Integer, HongKongTaxiPtRoutePreparation.PtRuntimeAudit>
+			preparedPtByIteration = new LinkedHashMap<>();
+	private final Map<Integer, HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit>
+			taxiInvarianceByIteration = new LinkedHashMap<>();
 	private final Map<String, Boolean> dangerousEventTypes = new ConcurrentHashMap<>();
 	private Map<String, Object> startupAudit = Map.of();
 	private IterationEvents current;
 
-	public HongKongTaxiSmokeRuntimeGuard(Config config) {
+	public HongKongTaxiSmokeRuntimeGuard(
+			Config config,
+			HongKongTaxiPtRoutePreparation.PreparationAudit preparationAudit,
+			HongKongTaxiPtRoutePreparation.TaxiSnapshot sourceTaxiSnapshot) {
 		this.config = config;
+		this.preparationAudit = preparationAudit;
+		this.sourceTaxiSnapshot = sourceTaxiSnapshot;
 	}
 
 	@Override
@@ -116,6 +127,33 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		if (iteration < 0 || iteration > 1) {
 			throw new IllegalStateException("Forbidden smoke iteration: " + iteration);
 		}
+		if (preparedPtByIteration.containsKey(iteration)) {
+			throw new IllegalStateException(
+					"Duplicate BeforeMobsim PT preparation audit: " + iteration);
+		}
+		HongKongTaxiPtRoutePreparation.PtRuntimeAudit ptAudit =
+				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(
+						event.getServices().getScenario());
+		HongKongTaxiPtRoutePreparation.requireFormalPrepared(ptAudit);
+		HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit taxiAudit =
+				HongKongTaxiPtRoutePreparation.compareTaxi(
+						sourceTaxiSnapshot,
+						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+								event.getServices().getScenario().getPopulation())
+				);
+		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(taxiAudit);
+		if (iteration == 1) {
+			HongKongTaxiPtRoutePreparation.PtRuntimeAudit first =
+					preparedPtByIteration.get(0);
+			if (first == null) {
+				throw new IllegalStateException(
+						"Iteration 1 reached BeforeMobsim before iteration 0");
+			}
+			requireStablePreparedPt(first, ptAudit);
+		}
+		preparedPtByIteration.put(iteration, ptAudit);
+		taxiInvarianceByIteration.put(iteration, taxiAudit);
+
 		current = new IterationEvents(iteration);
 		current.startedNanos = System.nanoTime();
 		current.executedPlans = event.getServices().getScenario()
@@ -171,11 +209,101 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		return result;
 	}
 
+	public Map<String, Object> ptPreparationAudit() {
+		Map<String, Object> prepared = new LinkedHashMap<>();
+		preparedPtByIteration.forEach((iteration, audit) ->
+				prepared.put(Integer.toString(iteration), audit.toMap()));
+		Map<String, Object> taxi = new LinkedHashMap<>();
+		taxiInvarianceByIteration.forEach((iteration, audit) ->
+				taxi.put(Integer.toString(iteration), audit.toMap()));
+		boolean samePtFingerprint = preparedPtByIteration.size() == 2
+				&& preparedPtByIteration.get(0).fingerprintSha256()
+				.equals(preparedPtByIteration.get(1).fingerprintSha256());
+		return ordered(
+				"source_clear_audit", preparationAudit.toMap(),
+				"prepared_pt_by_iteration", prepared,
+				"taxi_invariance_by_iteration", taxi,
+				"before_mobsim_audit_count", preparedPtByIteration.size(),
+				"pt_route_fingerprint_unchanged_after_iteration_0",
+						samePtFingerprint
+		);
+	}
+
+	public boolean preparedPtAndTaxiGuardsPassed() {
+		return preparedPtByIteration.size() == 2
+				&& taxiInvarianceByIteration.size() == 2
+				&& preparedPtByIteration.values().stream().allMatch(audit ->
+						audit.totalPtLegs()
+								== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS
+								&& audit.routeNull() == 0
+								&& audit.genericRouteImpl() == 0
+								&& audit.transitPassengerRoute()
+								== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS)
+				&& taxiInvarianceByIteration.values().stream()
+						.allMatch(HongKongTaxiPtRoutePreparation
+								.TaxiInvarianceAudit::exact)
+				&& preparedPtByIteration.get(0).fingerprintSha256()
+						.equals(preparedPtByIteration.get(1).fingerprintSha256());
+	}
+
+	public int beforeMobsimAuditCount() {
+		return preparedPtByIteration.size();
+	}
+
+	static void requireStablePreparedPt(
+			HongKongTaxiPtRoutePreparation.PtRuntimeAudit iteration0,
+			HongKongTaxiPtRoutePreparation.PtRuntimeAudit laterIteration) {
+		if (!iteration0.fingerprintSha256()
+				.equals(laterIteration.fingerprintSha256())) {
+			throw new IllegalStateException(
+					"PT routes changed after the one-shot iteration-0 startup "
+							+ "rebuild: iteration0="
+							+ iteration0.fingerprintSha256()
+							+ ", later_iteration="
+							+ laterIteration.fingerprintSha256());
+		}
+	}
+
 	public boolean completedExactlyTwoIterations() {
 		return iterations.size() == 2
 				&& iterations.containsKey(0)
 				&& iterations.containsKey(1)
 				&& iterations.values().stream().allMatch(audit -> audit.passed);
+	}
+
+	public Map<String, Object> fareScheduleAudit(
+			HongKongTaxiSmokeOutputAudit.RuntimeLogAudit runtimeLogAudit) {
+		Map<String, Object> byIteration = new LinkedHashMap<>();
+		boolean exact = iterations.size() == 2 && runtimeLogAudit.exact();
+		for (Map.Entry<Integer, IterationEvents> entry : iterations.entrySet()) {
+			IterationEvents events = entry.getValue();
+			boolean iterationExact =
+					events.taxiDepartures == EXPECTED_TAXI_LEGS
+							&& events.taxiArrivals == EXPECTED_TAXI_LEGS
+							&& events.unmatchedTaxiDepartures == 0
+							&& events.unmatchedTaxiArrivals == 0
+							&& events.passed;
+			exact &= iterationExact;
+			long consumed = events.taxiDepartures;
+			byIteration.put(Integer.toString(entry.getKey()), ordered(
+					"scheduled_taxi_legs", EXPECTED_TAXI_LEGS,
+					"experienced_taxi_departures", events.taxiDepartures,
+					"experienced_taxi_arrivals", events.taxiArrivals,
+					"consumed_taxi_fare_entries", consumed,
+					"unconsumed_fare_schedule_entries",
+							Math.max(0L, EXPECTED_TAXI_LEGS - consumed),
+					"extra_experienced_taxi_legs",
+							Math.max(0L, consumed - EXPECTED_TAXI_LEGS),
+					"exact", iterationExact
+			));
+		}
+		return ordered(
+				"by_iteration", byIteration,
+				"completion_enforces_exact_consumption", true,
+				"runtime_fare_schedule_mismatch_lines",
+						runtimeLogAudit.taxiFareScheduleMismatch(),
+				"exact", exact
+		);
 	}
 
 	private static boolean taxiConfigIsSafe(

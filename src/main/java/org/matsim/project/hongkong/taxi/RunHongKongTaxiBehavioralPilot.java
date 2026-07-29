@@ -130,16 +130,8 @@ public final class RunHongKongTaxiBehavioralPilot {
 		report.put("maven_version",
 				System.getProperty("hkTaxiSmoke.mavenVersion", "<not-supplied>"));
 		report.put("matsim_version", HongKongTaxiSmokeOutputAudit.matsimVersion());
-		report.put("run_flags", ordered(
-				"controler_run", false,
-				"qsim_run", false,
-				"asc_value", -9.0,
-				"asc_calibration_run", false,
-				"replanning_run", false,
-				"routing_run", false,
-				"mode_choice_run", false,
-				"fleet_model_run", false
-		));
+		report.put("run_flags", smokeRunFlags(
+				false, false, false, false, 0));
 		return report;
 	}
 
@@ -153,10 +145,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		requireInput(baseConfig, "base config");
 		requireInput(taxiPlans, "taxi plans");
 		requireFullSha(checkpointSha);
-		if (Files.exists(outputDirectory)) {
-			throw new IllegalArgumentException(
-					"Smoke output directory already exists: " + outputDirectory);
-		}
+		requireNewOutputDirectory(outputDirectory);
 
 		Config config = ConfigUtils.loadConfig(baseConfig.toString());
 		Map<String, Map<String, Double>> scoringBefore = snapshotScoring(config);
@@ -194,9 +183,12 @@ public final class RunHongKongTaxiBehavioralPilot {
 				"first_iteration", config.controller().getFirstIteration(),
 				"last_iteration", config.controller().getLastIteration(),
 				"asc_value", -9.0,
-				"replanning_enabled", false,
-				"mode_choice_enabled", false,
-				"routing_enabled", false,
+				"behavioral_replanning", false,
+				"mode_choice", false,
+				"pt_startup_route_clear", true,
+				"pt_startup_route_rebuild", true,
+				"pt_startup_routing_scope", "pt_only_before_iteration_0",
+				"taxi_routing", false,
 				"strategy_settings_count",
 						config.replanning().getStrategySettings().size(),
 				"overwrite_policy",
@@ -215,40 +207,67 @@ public final class RunHongKongTaxiBehavioralPilot {
 		report.put("non_taxi_scoring_modes_after", withoutTaxi(scoringAfter));
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
+		HongKongTaxiSmokeOutputAudit.PlanAudit sourceAudit =
+				HongKongTaxiSmokeOutputAudit.auditPopulation(scenario.getPopulation());
+		HongKongTaxiPtRoutePreparation.TaxiSnapshot sourceTaxiSnapshot =
+				HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+						scenario.getPopulation());
+		report.put("source_taxi_fingerprint", sourceTaxiSnapshot.toMap());
+
+		HongKongTaxiPtRoutePreparation.PreparationAudit preparationAudit =
+				HongKongTaxiPtRoutePreparation.clearPtRoutes(scenario);
+		HongKongTaxiPtRoutePreparation.requireFormalSource(preparationAudit);
+		report.put("pt_route_preparation", preparationAudit.toMap());
+		@SuppressWarnings("unchecked")
+		Map<String, Object> preparationFlags =
+				(Map<String, Object>) report.get("run_flags");
+		preparationFlags.put("pt_startup_route_clear", true);
+
+		HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit taxiAfterClear =
+				HongKongTaxiPtRoutePreparation.compareTaxi(
+						sourceTaxiSnapshot,
+						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+								scenario.getPopulation())
+				);
+		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(taxiAfterClear);
+		report.put("taxi_invariance_after_pt_clear", taxiAfterClear.toMap());
+
 		int assignedVehicles = assignExplicitCarVehicles(scenario);
 		Map<String, Long> supply = supplyCounts(scenario);
 		report.put("scenario_supply_counts", supply);
 		report.put("assigned_explicit_car_vehicles", assignedVehicles);
 
-		HongKongTaxiSmokeOutputAudit.PlanAudit sourceAudit =
-				HongKongTaxiSmokeOutputAudit.auditPopulation(scenario.getPopulation());
 		report.put("source_plans_audit", sourceAudit.toMap());
 
 		HongKongTaxiSmokeRuntimeGuard guard =
-				new HongKongTaxiSmokeRuntimeGuard(config);
+				new HongKongTaxiSmokeRuntimeGuard(
+						config,
+						preparationAudit,
+						sourceTaxiSnapshot
+				);
 		Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new SwissRailRaptorModule());
 		controler.addOverridingModule(new HongKongTaxiScoringModule(
 				HongKongTaxiScoringParameters.centralV1()));
 		controler.addControllerListener(guard);
-		report.put("run_flags", ordered(
-				"controler_run", true,
-				"qsim_run", false,
-				"asc_value", -9.0,
-				"asc_calibration_run", false,
-				"replanning_run", false,
-				"routing_run", false,
-				"mode_choice_run", false,
-				"fleet_model_run", false
-		));
+		report.put("run_flags", smokeRunFlags(
+				true,
+				false,
+				true,
+				false,
+				config.replanning().getStrategySettings().size()));
 		try {
 			controler.run();
 		} finally {
 			report.put("runtime_guard", guard.startupAudit());
+			report.put("pt_startup_preparation_guard",
+					guard.ptPreparationAudit());
 			report.put("iteration_event_audits", guard.iterationAudits());
 			@SuppressWarnings("unchecked")
 			Map<String, Object> flags = (Map<String, Object>) report.get("run_flags");
 			flags.put("qsim_run", !guard.iterationAudits().isEmpty());
+			flags.put("pt_startup_route_rebuild",
+					guard.beforeMobsimAuditCount() > 0);
 		}
 
 		Map<String, Object> iterationPlans = new LinkedHashMap<>();
@@ -274,9 +293,15 @@ public final class RunHongKongTaxiBehavioralPilot {
 				HongKongTaxiSmokeOutputAudit.fileSnapshot(finalPlans));
 		HongKongTaxiSmokeOutputAudit.PlanAudit finalAudit =
 				HongKongTaxiSmokeOutputAudit.auditPopulationFile(finalPlans);
+		HongKongTaxiSmokeOutputAudit.RuntimeLogAudit runtimeLogAudit =
+				HongKongTaxiSmokeOutputAudit.auditRuntimeLog(
+						outputDirectory.resolve("logfile.log"));
 		report.put("iteration_plans_audits", iterationPlans);
 		report.put("final_output_plans_audit", finalAudit.toMap());
 		report.put("output_files", outputFiles);
+		report.put("runtime_log_audit", runtimeLogAudit.toMap());
+		report.put("fare_schedule_audit",
+				guard.fareScheduleAudit(runtimeLogAudit));
 
 		Map<String, Object> inputAfter = snapshotFiles(inputPaths);
 		report.put("input_files_after_run", inputAfter);
@@ -302,28 +327,47 @@ public final class RunHongKongTaxiBehavioralPilot {
 				mainModesBefore.equals(List.copyOf(config.qsim().getMainModes())));
 		checks.put("taxi_not_qsim_main_mode",
 				!config.qsim().getMainModes().contains("taxi"));
-		checks.put("replanning_mode_choice_and_routing_disabled",
+		checks.put("behavioral_replanning_and_mode_choice_disabled",
 				config.replanning().getStrategySettings().isEmpty());
+		checks.put("deterministic_pt_startup_routing_declared", true);
 		checks.put("complete_supply_exact", supplyExact(supply));
 		checks.put("source_plans_exact", plansExact(sourceAudit, false));
+		checks.put("source_pt_clear_exact",
+				preparationAudit.totalPtLegs()
+						== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS
+						&& preparationAudit.genericPtRoutesBefore()
+						== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS
+						&& preparationAudit.ptRoutesCleared()
+						== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS
+						&& preparationAudit.nonPtRoutesChanged() == 0);
 		checks.put("runtime_factory_and_module_guard_passed",
 				startupGuardPassed(guard.startupAudit()));
+		checks.put("prepared_pt_and_taxi_before_mobsim_guards_passed",
+				guard.preparedPtAndTaxiGuardsPassed());
 		checks.put("iterations_0_and_1_completed",
 				guard.completedExactlyTwoIterations());
-		checks.put("each_iteration_output_plans_exact_and_finite",
+		checks.put("each_iteration_output_plans_fixed_except_prepared_pt",
 				outputAudits.stream().allMatch(audit ->
 						plansExact(audit, true)
 								&& HongKongTaxiSmokeOutputAudit
-								.sameStructureModesAttributesAndRoutes(sourceAudit, audit)));
-		checks.put("final_output_plans_exact_and_finite",
+								.sameFixedPlansAllowPreparedPt(sourceAudit, audit)));
+		checks.put("iteration_0_and_1_output_plans_identical",
+				outputAudits.size() == 2
+						&& HongKongTaxiSmokeOutputAudit
+						.sameStructureModesAttributesAndRoutes(
+								outputAudits.get(0), outputAudits.get(1)));
+		checks.put("final_output_plans_fixed_except_prepared_pt",
 				plansExact(finalAudit, true)
 						&& HongKongTaxiSmokeOutputAudit
-						.sameStructureModesAttributesAndRoutes(sourceAudit, finalAudit));
+						.sameFixedPlansAllowPreparedPt(sourceAudit, finalAudit));
+		checks.put("runtime_log_has_no_pt_or_taxi_errors",
+				runtimeLogAudit.exact());
 		checks.put("source_taxi_plans_sha_unchanged",
 				EXPECTED_PLANS_SHA.equals(snapshotSha(inputAfter, "taxi_plans")));
 		checks.put("controler_and_qsim_ran", true);
 		checks.put("asc_is_fixed_minus_9", true);
-		checks.put("no_asc_calibration_replanning_routing_or_fleet", true);
+		checks.put("no_asc_calibration_behavioral_replanning_taxi_routing_or_fleet",
+				true);
 
 		List<String> failed = checks.entrySet().stream()
 				.filter(entry -> !entry.getValue())
@@ -344,6 +388,31 @@ public final class RunHongKongTaxiBehavioralPilot {
 		taxi.setMonetaryDistanceRate(0.0);
 		taxi.setDailyMonetaryConstant(0.0);
 		taxi.setDailyUtilityConstant(0.0);
+	}
+
+	static Map<String, Object> smokeRunFlags(
+			boolean controlerRun,
+			boolean qsimRun,
+			boolean ptClear,
+			boolean ptRebuild,
+			int strategySettingsCount) {
+		return ordered(
+				"controler_run", controlerRun,
+				"qsim_run", qsimRun,
+				"pt_startup_route_clear", ptClear,
+				"pt_startup_route_rebuild", ptRebuild,
+				"pt_startup_routing_scope", "pt_only_before_iteration_0",
+				"routing_run", true,
+				"routing_scope", "deterministic_pt_startup_rebuild_only",
+				"behavioral_replanning", false,
+				"strategy_settings_count", strategySettingsCount,
+				"mode_choice", false,
+				"taxi_routing", false,
+				"taxi_mode_conversion", false,
+				"asc_value", -9.0,
+				"asc_calibration", false,
+				"fleet_model", false
+		);
 	}
 
 	static Map<String, Map<String, Double>> snapshotScoring(Config config) {
@@ -462,14 +531,13 @@ public final class RunHongKongTaxiBehavioralPilot {
 		Map<String, Object> map = audit.toMap();
 		@SuppressWarnings("unchecked")
 		Map<String, Long> modes = (Map<String, Long>) map.get("mode_counts");
-		return ((Number) map.get("persons")).longValue() == 385_820L
+		boolean shared = ((Number) map.get("persons")).longValue() == 385_820L
 				&& ((Number) map.get("plans")).longValue() == 385_820L
-				&& ((Number) map.get("activities")).longValue() == 1_264_870L
-				&& ((Number) map.get("legs")).longValue() == 879_050L
-				&& ((Number) map.get("routes")).longValue() == 879_050L
+				&& ((Number) map.get("main_activities")).longValue() == 1_264_870L
+				&& ((Number) map.get("fixed_non_pt_main_legs")).longValue()
+						== 321_946L
 				&& ((Number) map.get("taxi_legs")).longValue() == 37_286L
 				&& ((Number) map.get("taxi_persons")).longValue() == 15_439L
-				&& modes.equals(EXPECTED_MODE_COUNTS)
 				&& EXPECTED_TAXI_TYPES.equals(map.get("taxi_type_counts"))
 				&& EXPECTED_CLASSIFICATIONS.equals(
 						map.get("classification_source_counts"))
@@ -479,6 +547,17 @@ public final class RunHongKongTaxiBehavioralPilot {
 				&& Map.of("ride", 37_286L)
 						.equals(map.get("taxi_routing_mode_counts"))
 				&& (!scoresMustBeFinite || audit.allSelectedScoresFinite());
+		if (!shared) {
+			return false;
+		}
+		if (scoresMustBeFinite) {
+			return modes.getOrDefault("taxi", 0L) == 37_286L
+					&& modes.getOrDefault("pt", 0L) == 557_104L;
+		}
+		return ((Number) map.get("activities")).longValue() == 1_264_870L
+				&& ((Number) map.get("legs")).longValue() == 879_050L
+				&& ((Number) map.get("routes")).longValue() == 879_050L
+				&& modes.equals(EXPECTED_MODE_COUNTS);
 	}
 
 	private static boolean hashesExact(Map<String, Object> snapshots) {
@@ -507,6 +586,13 @@ public final class RunHongKongTaxiBehavioralPilot {
 	private static void requireInput(Path path, String label) {
 		if (!Files.isRegularFile(path)) {
 			throw new IllegalArgumentException(label + " is not a regular file: " + path);
+		}
+	}
+
+	static void requireNewOutputDirectory(Path outputDirectory) {
+		if (Files.exists(outputDirectory)) {
+			throw new IllegalArgumentException(
+					"Smoke output directory already exists: " + outputDirectory);
 		}
 	}
 

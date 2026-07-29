@@ -148,8 +148,9 @@ The stable cross-file comparison matched all 557,104 PT legs, with zero
 missing, extra, or ambiguous rows. All 557,104 were completely identical:
 route-type changes, route-content changes, leg-attribute changes, mode
 changes, and routing-mode changes were each zero. The Taxi conversion
-therefore did not create or alter the PT route defect; the same invalid
-runtime type is already present in the original routed plans.
+therefore did not create or alter the PT route objects; the same
+startup-intermediate representation is already present in the original
+routed plans.
 
 The complete run log contains 237,950 `pt-leg has no TransitRoute` lines,
 237,950 unique persons, and 237,950 uniquely mapped PT legs. It also contains
@@ -158,6 +159,35 @@ per-person counts. Every logged runtime class is `GenericRouteImpl`; all log
 rows map uniquely to selected-plan PT elements. The first error is log line
 286 for `hk_person_02893021`. Its complete five-element selected-plan context
 is retained in `representative_failure_examples.csv`.
+
+## Baseline startup-contract reconciliation
+
+The route objects above are invalid if sent directly to QSim, but they are
+not evidence that the adopted baseline lacked real PT simulation. The formal
+baseline worker command includes:
+
+```text
+--simulate --clear-pt-routes
+```
+
+`RunHongKong5Pct` scans every person, every plan, and every plan element;
+only a non-null route on `mode=pt` is set to null. The `Controler` then
+installs `SwissRailRaptorModule`, allowing PrepareForSim/Raptor to construct
+schedule-backed transit-passenger routes before QSim. The baseline log records
+exactly 557,104 cleared PT routes.
+
+The failed Taxi smoke installed SwissRailRaptor but did not perform the
+required clear. Because all existing generic routes were non-null, they were
+not rebuilt and reached QSim unchanged. Its earlier `routing_run=false`
+identity was therefore inaccurate: deterministic PT startup rebuilding is a
+routing operation, although it is not behavioural replanning.
+
+The corrective smoke contract is explicit: clear exactly 557,104 source
+generic PT routes before creating the `Controler`, rebuild them once before
+iteration 0, require 557,104 legal schedule-backed
+`TransitPassengerRoute` objects before QSim, and require the identical
+prepared-route fingerprint before iteration 1. Strict Taxi and non-PT
+fingerprints must remain unchanged throughout.
 
 ## Taxi departure attribution
 
@@ -214,13 +244,21 @@ causality.
 
 ## Interpretation boundary
 
-Strict baseline runtime comparison remains unavailable because the historical
-formal outputs found on the server lack a verified checkpoint plus complete
-input-SHA manifest. No baseline Controler was run. The supported conclusion
-is narrower and direct: original and Taxi plans have exactly the same invalid
-PT runtime objects, and observed pre-Taxi PT agent removals explain 7,024 of
-7,056 missing Taxi departures. Fare-schedule mismatch lines and invalid Taxi
-attribute lines are both zero.
+Strict output-to-output baseline comparison remains unavailable because the
+historical formal outputs found on the server lack a verified checkpoint plus
+complete input-SHA manifest. No baseline Controler was run for this audit.
+Code, bundle, and baseline-log evidence nevertheless establishes the startup
+contract directly. The supported conclusion is: original and Taxi plans have
+exactly the same PT startup-intermediate objects; Taxi conversion did not
+alter them; the failed Taxi runner omitted the baseline-required clear/rebuild
+step; and observed pre-Taxi PT agent removals explain 7,024 of 7,056 missing
+Taxi departures. Fare-schedule mismatch lines and invalid Taxi attribute
+lines are both zero.
+
+This attribution does not authorize PT fare/scoring changes, car-cost changes,
+capacity changes, ASC changes, Taxi rerouting, or fleet/DVRP work. The next
+validation is one fixed `ASC=-9`, no-replanning two-iteration smoke with only
+the aligned PT startup preparation.
 
 The committed compact products contain 37,286 expected Taxi rows, 7,056
 missing-attribution rows, 237,950 per-person PT-removal rows, PT summaries,

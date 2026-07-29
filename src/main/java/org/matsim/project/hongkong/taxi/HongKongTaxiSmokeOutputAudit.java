@@ -13,6 +13,7 @@ import org.matsim.core.population.io.PopulationReader;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.misc.OptionalTime;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
@@ -50,6 +51,9 @@ public final class HongKongTaxiSmokeOutputAudit {
 		PlanAudit audit = new PlanAudit();
 		MessageDigest taxiDigest = sha256Digest();
 		MessageDigest routeDigest = sha256Digest();
+		MessageDigest strictTaxiDigest = sha256Digest();
+		MessageDigest mainActivityDigest = sha256Digest();
+		MessageDigest fixedNonPtDigest = sha256Digest();
 		HongKongTaxiScoringParameters parameters = HongKongTaxiScoringParameters.centralV1();
 		List<Double> allScores = new ArrayList<>();
 		List<Double> taxiPersonScores = new ArrayList<>();
@@ -66,13 +70,27 @@ public final class HongKongTaxiSmokeOutputAudit {
 			for (Plan plan : person.getPlans()) {
 				audit.plans++;
 				int elementIndex = 0;
+				int taxiOrdinal = 0;
+				int mainActivityOrdinal = 0;
+				int fixedNonPtOrdinal = 0;
 				for (PlanElement element : plan.getPlanElements()) {
-					if (element instanceof Activity) {
+					if (element instanceof Activity activity) {
 						audit.activities++;
+						if (!"pt interaction".equals(activity.getType())) {
+							audit.mainActivities++;
+							update(mainActivityDigest, mainActivityFingerprint(
+									person, mainActivityOrdinal++, activity));
+						}
 					} else if (element instanceof Leg leg) {
 						audit.legs++;
 						audit.modeCounts.merge(leg.getMode(), 1L, Long::sum);
 						updateRouteFingerprint(routeDigest, person, elementIndex, leg);
+						if (!"pt".equals(leg.getMode())
+								&& !"pt".equals(leg.getRoutingMode())) {
+							audit.fixedNonPtMainLegs++;
+							update(fixedNonPtDigest, fixedNonPtFingerprint(
+									person, fixedNonPtOrdinal++, leg));
+						}
 						Route route = leg.getRoute();
 						if (route != null) {
 							audit.routes++;
@@ -87,7 +105,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 							}
 						}
 						if ("taxi".equals(leg.getMode())) {
-							auditTaxiLeg(audit, taxiDigest, leg, person, parameters);
+							auditTaxiLeg(audit, taxiDigest, strictTaxiDigest,
+									taxiOrdinal++, leg, person, parameters);
 						}
 					}
 					elementIndex++;
@@ -98,6 +117,10 @@ public final class HongKongTaxiSmokeOutputAudit {
 		audit.taxiPersonScoreStatistics = summarize(taxiPersonScores);
 		audit.nonTaxiPersonScoreStatistics = summarize(nonTaxiPersonScores);
 		audit.taxiAttributeFingerprintSha256 = hex(taxiDigest.digest());
+		audit.strictTaxiFingerprintSha256 = hex(strictTaxiDigest.digest());
+		audit.mainActivityFingerprintSha256 = hex(mainActivityDigest.digest());
+		audit.fixedNonPtMainLegFingerprintSha256 =
+				hex(fixedNonPtDigest.digest());
 		audit.planRouteFingerprintSha256 = hex(routeDigest.digest());
 		return audit;
 	}
@@ -134,6 +157,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 	private static void auditTaxiLeg(
 			PlanAudit audit,
 			MessageDigest digest,
+			MessageDigest strictDigest,
+			int taxiOrdinal,
 			Leg leg,
 			Person person,
 			HongKongTaxiScoringParameters parameters) {
@@ -164,6 +189,94 @@ public final class HongKongTaxiSmokeOutputAudit {
 				+ metadata.fareModelVersion() + "\t"
 				+ metadata.classificationSource() + "\t"
 				+ metadata.mainTripIndex() + "\n");
+		update(strictDigest, person.getId() + "\t" + taxiOrdinal + "\t"
+				+ leg.getMode() + "\t" + String.valueOf(leg.getRoutingMode()) + "\t"
+				+ optionalTime(leg.getDepartureTime()) + "\t"
+				+ strictRoute(leg.getRoute()) + "\t"
+				+ strictTaxiAttributes(leg) + "\n");
+	}
+
+	private static String mainActivityFingerprint(
+			Person person,
+			int ordinal,
+			Activity activity) {
+		String coordinate = activity.getCoord() == null ? "<null>"
+				: Double.toHexString(activity.getCoord().getX()) + ","
+						+ Double.toHexString(activity.getCoord().getY());
+		return person.getId() + "\t" + ordinal + "\t"
+				+ activity.getType() + "\t"
+				+ String.valueOf(activity.getLinkId()) + "\t"
+				+ String.valueOf(activity.getFacilityId()) + "\t"
+				+ coordinate + "\t"
+				+ optionalTime(activity.getStartTime()) + "\t"
+				+ optionalTime(activity.getEndTime()) + "\t"
+				+ optionalTime(activity.getMaximumDuration()) + "\n";
+	}
+
+	private static String fixedNonPtFingerprint(
+			Person person,
+			int ordinal,
+			Leg leg) {
+		return person.getId() + "\t" + ordinal + "\t"
+				+ leg.getMode() + "\t" + String.valueOf(leg.getRoutingMode()) + "\t"
+				+ optionalTime(leg.getDepartureTime()) + "\t"
+				+ optionalTime(leg.getTravelTime()) + "\t"
+				+ strictRoute(leg.getRoute()) + "\t"
+				+ allAttributes(leg) + "\n";
+	}
+
+	private static String strictRoute(Route route) {
+		if (route == null) {
+			return "<null>";
+		}
+		return route.getClass().getName() + "|"
+				+ String.valueOf(route.getStartLinkId()) + "|"
+				+ String.valueOf(route.getEndLinkId()) + "|"
+				+ Double.toHexString(route.getDistance()) + "|"
+				+ optionalTime(route.getTravelTime()) + "|"
+				+ String.valueOf(route.getRouteDescription());
+	}
+
+	private static String strictTaxiAttributes(Leg leg) {
+		List<String> names = List.of(
+				HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
+				HongKongTaxiLegAttributes.TAXI_TYPE,
+				HongKongTaxiLegAttributes.FARE_SCOPE,
+				HongKongTaxiLegAttributes.FARE_MODEL_VERSION,
+				HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE,
+				HongKongTaxiLegAttributes.MAIN_TRIP_INDEX
+		);
+		StringBuilder result = new StringBuilder();
+		for (String name : names) {
+			Object value = leg.getAttributes().getAttribute(name);
+			result.append(name).append("=")
+					.append(value == null ? "<null>" : value.getClass().getName())
+					.append(":").append(canonicalValue(value)).append(";");
+		}
+		return result.toString();
+	}
+
+	private static String allAttributes(Leg leg) {
+		Map<String, Object> sorted = new TreeMap<>(
+				leg.getAttributes().getAsMap());
+		StringBuilder result = new StringBuilder();
+		for (Map.Entry<String, Object> entry : sorted.entrySet()) {
+			Object value = entry.getValue();
+			result.append(entry.getKey()).append("=")
+					.append(value == null ? "<null>" : value.getClass().getName())
+					.append(":").append(canonicalValue(value)).append(";");
+		}
+		return result.toString();
+	}
+
+	private static String canonicalValue(Object value) {
+		if (value instanceof Double number) {
+			return Double.toHexString(number);
+		}
+		if (value instanceof Float number) {
+			return Float.toHexString(number);
+		}
+		return String.valueOf(value);
 	}
 
 	private static void updateRouteFingerprint(
@@ -206,6 +319,68 @@ public final class HongKongTaxiSmokeOutputAudit {
 						.equals(output.taxiAttributeFingerprintSha256)
 				&& source.planRouteFingerprintSha256
 						.equals(output.planRouteFingerprintSha256);
+	}
+
+	/**
+	 * Allows only PT route preparation/stage expansion. Main activities, Taxi
+	 * legs, and every non-PT main leg remain byte-semantically fixed.
+	 */
+	public static boolean sameFixedPlansAllowPreparedPt(
+			PlanAudit source,
+			PlanAudit output) {
+		return source.persons == output.persons
+				&& source.plans == output.plans
+				&& source.mainActivities == output.mainActivities
+				&& source.fixedNonPtMainLegs == output.fixedNonPtMainLegs
+				&& source.mainActivityFingerprintSha256
+						.equals(output.mainActivityFingerprintSha256)
+				&& source.fixedNonPtMainLegFingerprintSha256
+						.equals(output.fixedNonPtMainLegFingerprintSha256)
+				&& source.taxiLegs == output.taxiLegs
+				&& source.taxiPersons == output.taxiPersons
+				&& source.strictTaxiFingerprintSha256
+						.equals(output.strictTaxiFingerprintSha256)
+				&& source.taxiTypeCounts.equals(output.taxiTypeCounts)
+				&& source.classificationSourceCounts
+						.equals(output.classificationSourceCounts)
+				&& source.taxiRoutingModeCounts.equals(output.taxiRoutingModeCounts)
+				&& source.mainTripIndexSum == output.mainTripIndexSum
+				&& close(source.fareSumHkd, output.fareSumHkd);
+	}
+
+	public static RuntimeLogAudit auditRuntimeLog(Path logFile) {
+		requireRegularFile(logFile, "runtime log");
+		long ptMissingTransitRoute = 0;
+		long ptUnknownStop = 0;
+		long taxiFareMismatch = 0;
+		long invalidTaxiAttribute = 0;
+		try (BufferedReader reader = Files.newBufferedReader(
+				logFile, StandardCharsets.UTF_8)) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				ptMissingTransitRoute += bool(
+						line.contains("pt-leg has no TransitRoute"));
+				ptUnknownStop += bool(line.contains(
+						"pt-agent doesn't know to what transit stop to go"));
+				taxiFareMismatch += bool(line.contains(
+						"Hong Kong taxi fare schedule mismatch"));
+				invalidTaxiAttribute += bool(line.contains(
+						"Invalid Hong Kong taxi leg attribute"));
+			}
+		} catch (IOException error) {
+			throw new IllegalStateException("Cannot audit runtime log " + logFile,
+					error);
+		}
+		return new RuntimeLogAudit(
+				ptMissingTransitRoute,
+				ptUnknownStop,
+				taxiFareMismatch,
+				invalidTaxiAttribute
+		);
+	}
+
+	private static long bool(boolean value) {
+		return value ? 1L : 0L;
 	}
 
 	public static Map<String, Object> fileSnapshot(Path path) {
@@ -434,11 +609,37 @@ public final class HongKongTaxiSmokeOutputAudit {
 		return escaped.toString();
 	}
 
+	public record RuntimeLogAudit(
+			long ptLegHasNoTransitRoute,
+			long ptAgentUnknownTransitStop,
+			long taxiFareScheduleMismatch,
+			long invalidTaxiLegAttribute) {
+
+		public boolean exact() {
+			return ptLegHasNoTransitRoute == 0
+					&& ptAgentUnknownTransitStop == 0
+					&& taxiFareScheduleMismatch == 0
+					&& invalidTaxiLegAttribute == 0;
+		}
+
+		public Map<String, Object> toMap() {
+			return ordered(
+					"pt_leg_has_no_transit_route", ptLegHasNoTransitRoute,
+					"pt_agent_unknown_transit_stop", ptAgentUnknownTransitStop,
+					"taxi_fare_schedule_mismatch", taxiFareScheduleMismatch,
+					"invalid_taxi_leg_attribute", invalidTaxiLegAttribute,
+					"exact", exact()
+			);
+		}
+	}
+
 	public static final class PlanAudit {
 		long persons;
 		long plans;
 		long activities;
+		long mainActivities;
 		long legs;
+		long fixedNonPtMainLegs;
 		long routes;
 		long taxiLegs;
 		long taxiPersons;
@@ -453,6 +654,9 @@ public final class HongKongTaxiSmokeOutputAudit {
 		long finiteTaxiPersonSelectedPlanScores;
 		double fareSumHkd;
 		String taxiAttributeFingerprintSha256;
+		String strictTaxiFingerprintSha256;
+		String mainActivityFingerprintSha256;
+		String fixedNonPtMainLegFingerprintSha256;
 		String planRouteFingerprintSha256;
 		final Map<String, Long> modeCounts = new TreeMap<>();
 		final Map<String, Long> taxiTypeCounts = new TreeMap<>();
@@ -476,7 +680,9 @@ public final class HongKongTaxiSmokeOutputAudit {
 					"persons", persons,
 					"plans", plans,
 					"activities", activities,
+					"main_activities", mainActivities,
 					"legs", legs,
+					"fixed_non_pt_main_legs", fixedNonPtMainLegs,
 					"routes", routes,
 					"mode_counts", modeCounts,
 					"taxi_legs", taxiLegs,
@@ -492,6 +698,12 @@ public final class HongKongTaxiSmokeOutputAudit {
 					"main_trip_index_sum", mainTripIndexSum,
 					"taxi_attribute_fingerprint_sha256",
 							taxiAttributeFingerprintSha256,
+					"strict_taxi_fingerprint_sha256",
+							strictTaxiFingerprintSha256,
+					"main_activity_fingerprint_sha256",
+							mainActivityFingerprintSha256,
+					"fixed_non_pt_main_leg_fingerprint_sha256",
+							fixedNonPtMainLegFingerprintSha256,
 					"plan_route_fingerprint_sha256", planRouteFingerprintSha256,
 					"missing_selected_plan_scores", missingSelectedPlanScores,
 					"finite_selected_plan_scores", finiteSelectedPlanScores,

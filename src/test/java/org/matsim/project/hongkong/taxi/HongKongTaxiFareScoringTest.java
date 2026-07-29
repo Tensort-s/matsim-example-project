@@ -99,6 +99,34 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
+	void ptStageExpansionDoesNotChangeTaxiFareOrdinal() {
+		Person person = HongKongTaxiTestFixtures.person(PERSON_ID.toString());
+		Plan selectedPlan = PopulationUtils.createPlan();
+		Leg accessWalk = PopulationUtils.createLeg("walk");
+		accessWalk.setRoutingMode("pt");
+		selectedPlan.addLeg(accessWalk);
+		selectedPlan.addLeg(PopulationUtils.createLeg("pt"));
+		Leg egressWalk = PopulationUtils.createLeg("walk");
+		egressWalk.setRoutingMode("pt");
+		selectedPlan.addLeg(egressWalk);
+		selectedPlan.addLeg(HongKongTaxiTestFixtures.taxiLeg(98.3));
+		person.addPlan(selectedPlan);
+		person.setSelectedPlan(selectedPlan);
+
+		HongKongTaxiPersonFareSchedule schedule =
+				HongKongTaxiPersonFareSchedule.fromSelectedPlan(person, PARAMETERS);
+		HongKongTaxiFareScoring scoring =
+				new HongKongTaxiFareScoring(schedule, PARAMETERS);
+		scoring.handleLeg(accessWalk);
+		scoring.handleLeg(PopulationUtils.createLeg("pt"));
+		scoring.handleLeg(egressWalk);
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
+
+		assertEquals(-4.915, scoring.getScore(), TOLERANCE);
+	}
+
+	@Test
 	void extraExperiencedTaxiLegFailsImmediatelyWithContext() {
 		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(24.0));
 		scoring.handleLeg(experiencedTaxiLeg());
