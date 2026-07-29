@@ -100,3 +100,130 @@ Expected files include:
 
 The failed smoke logs, events, plans, and other large simulation products stay
 on the server and are never committed.
+
+## Validated execution
+
+The audit was run on FUSELAB01 from detached checkpoint
+`6d4038e01dfb7a68e6a6e9989ae7b5de7a552f66` in:
+
+```text
+/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/
+dependency_audit_v1_6d4038e_a2
+```
+
+The runtime was Java 25.0.3, Maven 3.9.8, and MATSim 2026.0. The read-only
+audit took 2 minutes 49 seconds, used 8,214,820 KiB maximum resident memory,
+and exited 0. Its validation status is `validated`; all 26 required checks
+passed. The recorded run flags confirm that no Controler, QSim, routing,
+replanning, ASC experiment, or fleet run occurred.
+
+All inputs had identical SHA256 values before and after:
+
+| Input | SHA256 |
+|---|---|
+| base formal config | `662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4` |
+| original routed plans | `c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea` |
+| Taxi plans | `f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27` |
+| network | `dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95` |
+| transit schedule | `eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed` |
+| transit vehicles | `16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429` |
+| facilities | `74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e` |
+| private vehicles | `5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994` |
+| iteration 0 events | `f29dc764341bb7e481a9f55ed0831e3a7a958a31c9a8fbdec6844de0a6675cf5` |
+| failed run log | `7b0b85f1c1132dd208e0366b7d690d3c920c12f39b96e359bf7f9f173b5a69ea` |
+| failed-smoke validation | `2eec227ceb01792c01f3dad034f5a86cc905feb78876389c0eab2b852b30f772` |
+| load-test validation | `114a97f53e0f4bc2d4bdcda103a7c07580fe0e9820a147858eb36d873afdf595` |
+
+## PT route and conversion findings
+
+Both the original and Taxi plans contain exactly 557,104 selected-plan PT
+legs. MATSim 2026.0 deserialized every one as
+`org.matsim.core.population.routes.GenericRouteImpl`; zero implement
+`TransitPassengerRoute`, and zero are
+`DefaultTransitPassengerRoute` or another legal transit-passenger route.
+Consequently, all 557,104 lack accessible access-stop, egress-stop, line, and
+transit-route IDs in the runtime interface.
+
+The stable cross-file comparison matched all 557,104 PT legs, with zero
+missing, extra, or ambiguous rows. All 557,104 were completely identical:
+route-type changes, route-content changes, leg-attribute changes, mode
+changes, and routing-mode changes were each zero. The Taxi conversion
+therefore did not create or alter the PT route defect; the same invalid
+runtime type is already present in the original routed plans.
+
+The complete run log contains 237,950 `pt-leg has no TransitRoute` lines,
+237,950 unique persons, and 237,950 uniquely mapped PT legs. It also contains
+237,950 `pt-agent doesn't know...` lines for the identical person set and
+per-person counts. Every logged runtime class is `GenericRouteImpl`; all log
+rows map uniquely to selected-plan PT elements. The first error is log line
+286 for `hk_person_02893021`. Its complete five-element selected-plan context
+is retained in `representative_failure_examples.csv`.
+
+## Taxi departure attribution
+
+The event reconciliation is exact:
+
+| Metric | Count |
+|---|---:|
+| expected Taxi legs | 37,286 |
+| observed Taxi departures | 30,230 |
+| observed Taxi arrivals | 30,230 |
+| missing Taxi departures | 7,056 |
+| duplicate Taxi departures | 0 |
+| unexpected Taxi departures | 0 |
+| unmatched departures / arrivals | 0 / 0 |
+
+The mutually exclusive missing-leg attribution closes to 7,056:
+
+| Category | Missing legs | Unique persons |
+|---|---:|---:|
+| `invalid_pt_before_taxi_agent_removed` | 7,024 | 2,926 |
+| `taxi_departure_missing_without_observed_upstream_blocker` | 32 | 14 |
+
+For the 7,024 first-category legs, the mapped invalid PT leg is before the
+missing Taxi element and its agent removal is observed in the run log. The
+remaining 32 legs are not forced into a PT or stuck category: their 14 persons
+have no qualifying PT removal or stuck event before the expected Taxi time.
+Their final observed `stuckAndAbort` events are all at 108,000 seconds, after
+the affected Taxi departure times of 61,200 to 91,800 seconds, so those
+end-time events are not evidence of an upstream cause.
+
+## Whole-model stuck findings
+
+Events independently reproduce 12,387 stuck events for 12,387 unique persons:
+11,753 `car`, 579 `walk`, and 55 null-mode. The numeric-hour distribution is:
+
+```text
+7:1, 8:137, 9:314, 10:432, 11:246, 12:304, 13:356, 14:416,
+15:453, 16:581, 17:672, 18:1315, 19:1495, 20:1483, 21:1240,
+22:884, 23:487, 24:420, 25:249, 26:118, 27:63, 28:63, 29:5,
+30:653
+```
+
+The most frequent links have only 60 events each
+(`road_102439_0_f` and `road_59920_0_f`), followed by
+`road_58563_0_f` (59), `road_164493_0_f` (58), and
+`road_102664_0_f` (56). No non-null stuck link is absent from the network.
+There are 33 stuck events belonging to persons who have an expected Taxi leg,
+but none occurs before an expected Taxi departure; the unique-person
+intersection with PT-removal persons is zero. The 653 events at the QSim end
+time of 108,000 seconds are reported separately. These observations do not
+justify automatically assigning car, walk, or null stuck events to the PT
+defect, nor do they isolate network capacity, vehicle, or route-endpoint
+causality.
+
+## Interpretation boundary
+
+Strict baseline runtime comparison remains unavailable because the historical
+formal outputs found on the server lack a verified checkpoint plus complete
+input-SHA manifest. No baseline Controler was run. The supported conclusion
+is narrower and direct: original and Taxi plans have exactly the same invalid
+PT runtime objects, and observed pre-Taxi PT agent removals explain 7,024 of
+7,056 missing Taxi departures. Fare-schedule mismatch lines and invalid Taxi
+attribute lines are both zero.
+
+The committed compact products contain 37,286 expected Taxi rows, 7,056
+missing-attribution rows, 237,950 per-person PT-removal rows, PT summaries,
+stuck summaries, representative examples, and the validation JSON. They are
+the complete auditable evidence for this checkpoint; the server logs, events,
+and plans remain external.
