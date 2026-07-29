@@ -168,12 +168,19 @@ The current `ride` mode is audited against 2026 Transport Department taxi
 controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
 read-only and does not modify the adopted v2 plans.
 
-The first private-car offline cost and data-quality audit is under
+The private-car offline cost workspace is under
 `data/transport_costs/hongkong/car_cost_v1/` and documented in
-`docs/HONG_KONG_CAR_COST_MODEL.md`. It separates representative fleet energy,
-confirmed link-level private-car tolls, destination-parking proxies, and one
-fixed vehicle-day ownership record. It does not modify the active car scoring,
-plans, config, network, facilities, vehicles, or simulation outputs.
+`docs/HONG_KONG_CAR_COST_MODEL.md`. Its authoritative release pointer is
+`canonical_car_cost_interface_manifest.json`, and the current canonical
+offline behavioral-cost interface is exclusively
+`unified_marginal_cost_interface_v1/`. The original top-level leg estimates,
+validation, and summaries are preserved with their original hashes but marked
+`superseded_offline_prototype`: their 1,008 charged legs predate the current
+facility-network mapping and physical passage-event reconstruction. The
+canonical candidate has 25,858 charged legs, 38,931 confirmed no-charge legs,
+and 30,837 physical passage events. Future integration must not read the old
+top-level leg totals. Neither version approves or modifies active MATSim
+scoring, plans, config, network, facilities, vehicles, or simulation outputs.
 The follow-up toll facility-network audit is documented in
 `docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md`. It rejects cross-domain
 same-number ID collisions, resolves all 19 official toll features through the

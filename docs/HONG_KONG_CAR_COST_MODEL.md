@@ -26,6 +26,55 @@ The four cost components remain separate:
 The first three are candidate marginal costs. Fixed ownership cost is one
 vehicle-day record per used private car and is never repeated on each leg.
 
+## Canonical release status
+
+The current canonical offline behavioral-cost interface is:
+
+```text
+data/transport_costs/hongkong/car_cost_v1/
+  unified_marginal_cost_interface_v1/
+```
+
+Its release control file is:
+
+```text
+data/transport_costs/hongkong/car_cost_v1/
+  canonical_car_cost_interface_manifest.json
+```
+
+All future offline behavioral-cost integration must resolve the canonical path
+through that manifest and read only `unified_marginal_cost_interface_v1`.
+This remains an offline candidate: MATSim scoring and scoring implementation
+are not approved.
+
+The original top-level `car_leg_cost_estimates_<scenario>.parquet`,
+`car_cost_model_validation.json`, and `car_cost_summary_by_*.csv` files remain
+in place with their original SHA256 for provenance. They are now explicitly:
+
+```text
+superseded_offline_prototype
+```
+
+They must not be used as current behavioral totals or as MATSim scoring input.
+`car_cost_version_transition_audit.csv` records the status, exact hash,
+replacement, and source commit for each file. The supporting top-level source
+manifest and rule tables are retained as historical prototype provenance, not
+as the canonical combined behavior interface.
+
+The prototype reported 1,008 confirmed charged private-car legs. Subsequent
+official toll-facility/network topology mapping, WHC alias resolution, ordered
+physical-passage reconstruction, and time-dependent rate application produce
+the current canonical candidate:
+
+- 25,858 confirmed charged private-car legs;
+- 38,931 confirmed no-charge private-car legs;
+- 30,837 physical toll-facility passage events;
+- 63,954 complete private-car marginal-cost legs;
+- 835 parking-incomplete private-car legs retained as null.
+
+This transition changes version authority only. It does not change any cost
+method, energy parameter, toll rate, parking rule, or MATSim input.
+
 ## Read-only production inputs
 
 The feature worktree does not contain ignored Hong Kong production data.
@@ -228,7 +277,11 @@ record per used vehicle with `leg_sequence=-1` and
 `record_scope=vehicle_day_fixed_cost_not_leg`. These values are excluded from
 all leg marginal totals.
 
-## Output interface
+## Historical prototype output interface
+
+The files in this section describe the initial top-level output contract from
+commit `797f103e4cb12fbcc83a8cf9669bdbb1feb13b48`. They are preserved but
+superseded. See **Canonical release status** above for the current authority.
 
 Output directory:
 
@@ -281,9 +334,9 @@ They also record vehicle class, representative powertrain treatment,
 origin facility/zone, parking session, toll facility/link/status,
 record scope, and unresolved reason.
 
-## Results
+## Historical prototype results (superseded)
 
-### Component distributions
+### Prototype component distributions
 
 Statistics below are over the applicable private-car leg or used-vehicle
 records. A zero toll is a confirmed no-charge route, not missing data.
@@ -311,11 +364,11 @@ Private-car marginal totals, excluding fixed ownership cost:
 | base | 61.640 | 77.199 | 178.424 |
 | high | 84.039 | 107.605 | 260.460 |
 
-### Identification and unresolved data
+### Prototype identification and unresolved data
 
-- toll identification among private-car legs: 100%;
-- confirmed charged private-car legs: 1,008 (1.556%);
-- confirmed no-charge private-car legs: 63,781;
+- prototype toll identification among private-car legs: 100%;
+- prototype confirmed charged private-car legs: 1,008 (1.556%);
+- prototype confirmed no-charge private-car legs: 63,781;
 - base parking identification among private-car legs: 99.588%;
 - base parking unresolved duration: 164;
 - base parking unresolved TCS zone: 103;
@@ -332,7 +385,7 @@ Base confirmed toll facilities:
 | Western Harbour Crossing | 44 |
 | Lion Rock Tunnel plus Tai Lam Tunnel | 1 |
 
-## Validation
+## Historical prototype validation
 
 `car_cost_model_validation.json` confirms:
 
@@ -354,10 +407,12 @@ Base confirmed toll facilities:
 The scripts pass `py_compile`; repository-level `git diff --check` is part of
 the final worktree verification.
 
-## Recommended first behavioural pilot
+## Current behavioral-integration boundary
 
-If a later, separately approved MATSim implementation is undertaken, the first
-leg-marginal cost should contain:
+The initial recommendation below is retained conceptually, but its data source
+is now exclusively `unified_marginal_cost_interface_v1`; the old top-level
+Parquet totals are prohibited. If a later, separately approved MATSim
+implementation is undertaken, its candidate leg-marginal composition is:
 
 1. representative `fuel_or_electricity`;
 2. confirmed link-level `toll`;
@@ -375,7 +430,12 @@ Do not include:
 
 ## Commands
 
-Build pinned sources and rules:
+The following commands reproduce the superseded initial prototype and are
+retained for provenance only. They do not produce the current canonical
+interface and must not be used to overwrite the historical files during normal
+integration.
+
+Build pinned prototype sources and rules:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
@@ -387,11 +447,20 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 Use `--refresh-sources` only when intentionally updating the source snapshot
 date and reviewing every resulting parameter change.
 
-Estimate costs and run internal validation:
+Estimate prototype costs and run its historical internal validation:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\car\estimate_hong_kong_car_leg_costs.py `
   --input-project-root F:\Matsim\matsim-example-project `
   --output-dir .\data\transport_costs\hongkong\car_cost_v1
+```
+
+Generate only the canonical release manifest, transition audit, and release
+validation without recalculating costs:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\car\finalize_hong_kong_car_cost_v1_canonical.py `
+  --input-project-root F:\Matsim\matsim-example-project
 ```
