@@ -88,6 +88,7 @@ docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_TAXI_JAVA_SCORING.md
 docs/HONG_KONG_TAXI_LOAD_TEST.md
+docs/HONG_KONG_TAXI_SMOKE_TEST.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -166,6 +167,10 @@ load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
 taxi leg attributes, routes, fare-only scoring, and scoring-factory creation
 without creating a Controler, QSim, iteration, behavioural calibration, or
 taxi fleet.
+The subsequent fixed-ASC, iterations 0-1 technical integration gate is
+defined in `docs/HONG_KONG_TAXI_SMOKE_TEST.md`. It freezes replanning and
+routing, keeps Taxi outside QSim main modes, verifies the live custom scoring
+factory, and audits each QSim iteration without introducing a Taxi/DVRP fleet.
 
 The final local SimWrapper project for this configuration is:
 
