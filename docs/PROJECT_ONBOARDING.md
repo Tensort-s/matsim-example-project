@@ -91,6 +91,7 @@ docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
 docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -193,6 +194,12 @@ reconstructs source parameters and route distances, applies one explicitly
 non-individual representative licensed-fleet proxy, and audits zero-distance
 routes without combining energy with tolls, parking, fixed ownership cost, or
 MATSim scoring.
+The standalone fixed-ownership candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md`. It independently
+rebuilds the 21,020 used-private-car set, audits official licence and monthly
+parking source categories, and writes one partial fixed-cost record per
+vehicle and scenario, never per leg. It does not combine the result with
+energy, tolls, destination parking, unified car costs, or MATSim scoring.
 
 The final local SimWrapper project for this configuration is:
 
