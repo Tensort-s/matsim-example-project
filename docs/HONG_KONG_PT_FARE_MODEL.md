@@ -871,8 +871,9 @@ The evidence layers must therefore be read independently:
 - route-level franchise evidence requires an exact CSDI route key;
 - direction evidence requires a unique complete Bus JSON stop pattern;
 - OD evidence reports raw GTFS candidate cardinality and amounts;
-- an active fare rule would require a later explicitly approved selection and
-  applicability stage, and does not exist in this audit.
+- the audit itself creates no active fare rule; the following Bus Core v1
+  stage consumes only the route-confirmed, exact-direction, unique-candidate
+  subset under its separately validated applicability rules.
 
 ### Ordered-OD candidates are not passenger costs
 
@@ -913,10 +914,10 @@ substitution, distance interpolation, nearest records, segment/path sums,
 cross-route/operator amounts, fare-ID text recovery, `fullFare` fallback, and
 missing-value fill.
 
-Only a future record that is both route-level confirmed and uniquely
-represented by one raw OD candidate could be considered for a formal
-published-amount rule in a later Bus Core v1 stage. This audit does not create
-that rule or a query interface.
+Only a record that is both route-level confirmed and uniquely represented by
+one raw OD candidate is eligible for the following Bus Core v1 formal
+published-amount layer. This audit itself does not create that rule or a query
+interface.
 
 For all 2,363 routes, fare readiness is:
 
@@ -963,6 +964,67 @@ No travel-date eligibility is performed. The 557,104 generic production PT
 legs still lack bus itinerary evidence and remain null/unresolved. This stage
 does not change plans, config, Java, network, schedule, vehicles, facilities,
 PT ASC, marginal utility of money, or MATSim scoring.
+
+## Franchised-bus Core v1 published-amount rules
+
+`bus_fare_v1/` is the machine-readable offline rule and strict snapshot-query
+layer built on the preceding read-only scope/direction audit. Bus Core v1
+covers only `confirmed_franchised_route` records whose complete MATSim stop
+sequence uniquely matches an official Bus JSON `routeId + routeSeq` direction,
+whose exact `COMPANY_CODE + ROUTE_ID + ROUTE_SEQ` key exists in CSDI, and whose
+forward ordered stop OD has exactly one raw GTFS candidate with one distinct
+amount.
+
+The resulting active universe contains 754,133 rules across 2,246 confirmed
+franchised routes. This is 99.416001044% of the 758,563 forward pairs in those
+routes and 97.727903005% of all 771,666 bus-mode forward pairs. Every active
+rule directly retains its unique `fare_id`, raw `fare_rules.txt` and
+`fare_attributes.txt` line numbers, source SHA256, route/direction, and ordered
+boarding/alighting stop IDs. The active rules include 637 explicit unique raw
+zero-price records; these are not missing-value fills.
+
+An active amount is only the retained GTFS published numeric amount. The source
+does not identify an adult, child, cash, Octopus, service-class, day-type,
+time-period, or ticket-product basis. Consequently all five applicability
+dimensions are `unspecified_in_source`, the available mapping is `exact/A`,
+and `cost_quality=B`; Bus Core v1 never creates `cost_quality=A`. The query
+returns the same amount as `published_fare_hkd` and `cost_hkd` only when the
+request explicitly uses `unspecified` for those dimensions, supplies no travel
+date, requests `source_snapshot_only`, requests no transfer concession, and
+exactly matches the active line, route, official route/direction, and ordered
+stops.
+
+The complete 17,533 non-active forward pairs remain machine-readable and
+unquoteable:
+
+| Exclusion reason | Ordered pairs |
+|---|---:|
+| confirmed-route identical duplicate records | 1,827 |
+| confirmed-route conflicting amounts | 2,603 |
+| nine franchise-route-scope-unresolved routes | 2,108 |
+| 103 other-bus-service routes | 10,995 |
+
+The identical duplicates are not collapsed. Conflicts are not resolved by
+minimum, maximum, average, median, or first record. The nine CSDI route-scope
+gaps are excluded even though 2,074 of their pairs have a unique GTFS
+candidate. The five known unmatched proxy routes remain separately listed as
+operator-scope unresolved; their schedules contain no valid different-stop
+forward pairs. Together, active plus excluded/unresolved remains the complete
+771,666-pair universe.
+
+All 2,358 JSON `fullFare` values remain reference-only with
+`eligible_for_default_quote=false`. They cannot fill a missing OD, replace a
+sectional amount, resolve duplicates/conflicts, or act as query fallback.
+Reverse-OD substitution is also prohibited: an opposite-direction trip is
+quoteable only through its own independently matched route and forward OD.
+
+The source revision cut-off `2026-07-14` is provenance, not a fare effective
+date. `cost_effective_date` therefore remains null and a nonempty
+`travel_date` is rejected. Transfer-concession amounts remain null with status
+`not_modelled`. These published-amount rules have not been applied to the
+557,104 generic production PT legs, which remain null/unresolved/U, and have
+not entered plans, config, Java, network, schedule, vehicles, PT ASC, marginal
+utility of money, or MATSim scoring.
 
 ## Transfer concessions
 
@@ -1091,6 +1153,28 @@ data/transport_costs/hongkong/pt_fare_v1/
     bus_scope_direction_validation.json
     prior_mode_protected_hashes.csv
     SHA256SUMS.txt
+  bus_fare_v1/
+    README.md
+    bus_fare_rules.parquet
+    bus_fare_rules_sample.csv
+    bus_unresolved_fare_rules.parquet
+    bus_unresolved_fare_rules_sample.csv
+    bus_fare_conflicts.parquet
+    bus_fare_conflicts_sample.csv
+    bus_fare_duplicate_records.parquet
+    bus_fare_duplicate_records_sample.csv
+    bus_excluded_scope_pairs.parquet
+    bus_excluded_scope_pairs_sample.csv
+    bus_unresolved_routes.csv
+    bus_route_direction_fare_readiness.csv
+    bus_route_full_fare_reference.csv
+    bus_fare_semantics_summary.json
+    bus_fare_summary.json
+    bus_fare_query_fixture_input.csv
+    bus_fare_query_fixture_output.csv
+    bus_fare_validation.json
+    protected_hashes.csv
+    SHA256SUMS.txt
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -1171,6 +1255,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_bus_fare_readiness.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_bus_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_bus_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\bus_fare_v1\bus_fare_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\bus_fare_v1\bus_fare_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_bus_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -1193,15 +1290,21 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
 - GMB's 361 conflicting and 294 identical-duplicate pairs remain
   non-quoteable. A duplicate identical amount is not treated as a unique
   official record.
-- Franchised-bus direction and fare rules are not part of GMB Core v1 and
-  remain separate from GMB Core v1.
+- Franchised-bus Core v1 remains separate from GMB Core v1; neither mode's
+  rules may be used as fallback for the other.
 - The bus readiness audit finds 2,255 routes in the confirmed franchised
   operator scope, but only 2,246 have an exact CSDI route-level key; nine
-  remain route-scope unresolved. It creates no active bus fare or query.
-  Duplicate and conflicting GTFS candidates remain unresolved audit states.
+  remain route-scope unresolved and are excluded from Bus Core v1.
+  Duplicate and conflicting GTFS candidates remain unresolved and
+  unquoteable.
 - `transportMode=bus` also contains 103 officially identified other-bus
   service routes and five unresolved proxy routes. These are not promoted
   into the franchised core.
+- Bus GTFS `price` does not identify an adult, Octopus, cash, service-class,
+  day/time, or fare-effective-period basis. Bus Core v1 therefore quotes only
+  strict source-snapshot published amounts with all those dimensions
+  unspecified; it models neither transfer concessions nor JSON `fullFare`
+  fallback.
 - Five Ferry Core patterns lack an exact official direction stop pattern in
   the retained TD source.
 - Ferry GTFS `price` does not identify adult, cash/Octopus, class, vessel, or
