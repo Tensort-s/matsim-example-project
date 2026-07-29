@@ -270,7 +270,12 @@ data/transport_costs/hongkong/car_cost_v1/
 
 This is an auxiliary offline audit. It does not change
 `car monetaryDistanceRate`, global money utility, mode choice, or any
-production MATSim input. Details: `docs/HONG_KONG_CAR_COST_MODEL.md`.
+production MATSim input. The independently rebuilt energy, toll, and parking
+candidates are exposed through a strict, null-preserving unified marginal-cost
+interface; fixed ownership remains an accounting-only sidecar. Neither this
+interface nor the underlying candidates approve MATSim scoring adoption.
+Details: `docs/HONG_KONG_CAR_COST_MODEL.md` and
+`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`.
 
 ### 10. Final simulation and visualization
 

@@ -1,0 +1,5 @@
+repair_id,severity,blocking,component,finding,required_change
+UNIFIED-R01,low,False,toll_vehicle_identity,The toll leg candidate does not embed vehicle_ref_id or vehicle_class.,Continue strict one-to-one enrichment from canonical identity unless a future toll candidate adds the fields.
+UNIFIED-R02,medium,False,destination_parking,835 private-car legs have unresolved destination parking and therefore no complete marginal total.,"Repair vehicle-chain, destination-zone, or terminal duration evidence before treating those totals as complete."
+UNIFIED-R03,medium,False,fixed_ownership_scope,The fixed sidecar covers used vehicles only; unused owned vehicles are not observed.,Keep the sidecar out of daily mode-choice behavior and use it only for accounting or future ownership analysis.
+UNIFIED-R04,high,False,scoring_adoption,This publishable offline interface has no approval for MATSim scoring or joint mode-choice calibration.,"Require a separate approved behavioral design, monetary utility calibration, implementation, and validation."

@@ -1,0 +1,95 @@
+scenario,summary_dimension,group_value,cost_component,record_count,private_car_count,motorcycle_count,resolved_count,unresolved_count,out_of_scope_count,complete_private_car_count,incomplete_private_car_count,resolved_only_total_hkd,complete_behavioral_total_hkd,accounting_sidecar_total_hkd,mean_hkd,median_hkd,p90_hkd,included_in_behavioral_marginal_total,notes
+low,scenario_overview,all_car_legs,,67718,64789,2929,0,0,0,63954,835,,,,,,,False,Fixed ownership cost excluded; incomplete totals remain null.
+low,component,fuel_or_electricity,fuel_or_electricity,67718,64789,2929,64789,0,2929,0,0,1659564.3603039084,,,25.61490932571746,20.453589564667148,54.16921416489382,True,Component retained independently; only complete legs enter behavioral marginal totals.
+low,fuel_or_electricity_status,out_of_scope_motorcycle,fuel_or_electricity,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,fuel_or_electricity_status,resolved_representative_fleet_average,fuel_or_electricity,64756,64756,0,64756,0,0,0,0,1659564.3603039086,,,,,,True,Source candidate status retained verbatim.
+low,fuel_or_electricity_status,resolved_zero_distance_energy_zero,fuel_or_electricity,33,33,0,33,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+low,component,toll,toll,67718,64789,2929,64789,0,2929,0,0,732821.0,,,11.310886107209557,0.0,40.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+low,toll_status,confirmed_charge,toll,25858,25858,0,25858,0,0,0,0,732821.0,,,,,,True,Source candidate status retained verbatim.
+low,toll_status,confirmed_no_charge,toll,38931,38931,0,38931,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+low,toll_status,out_of_scope,toll,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,component,destination_parking,destination_parking,67718,64789,2929,63954,835,2929,0,0,838964.0,,,13.118241235888295,0.0,38.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+low,destination_parking_status,out_of_scope_motorcycle,destination_parking,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,destination_parking_status,resolved_home_marginal_zero_fixed_separate,destination_parking,28390,28390,0,28390,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+low,destination_parking_status,resolved_proxy_charge,destination_parking,26959,26959,0,26959,0,0,0,0,838964.0,,,,,,True,Source candidate status retained verbatim.
+low,destination_parking_status,resolved_work_subscription_assumed_prepaid,destination_parking,8605,8605,0,8605,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+low,destination_parking_status,unresolved_missing_destination_zone,destination_parking,98,98,0,0,98,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,destination_parking_status,unresolved_missing_next_departure_non_home,destination_parking,2,2,0,0,2,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,destination_parking_status,unresolved_next_departure_facility_mismatch,destination_parking,269,269,0,0,269,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,destination_parking_status,unresolved_vehicle_time_overlap,destination_parking,466,466,0,0,466,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+low,behavioral_complete,three_required_components_resolved,,63954,63954,0,0,0,0,63954,835,,3178496.276113128,,49.69972599232461,44.54051903235287,94.77790885701594,True,Energy plus toll plus destination parking; fixed ownership cost excluded.
+low,destination_activity_group,education,,278,278,0,0,0,0,232,46,,5578.369299044112,,24.044695254500486,18.381425733700986,49.385502294737606,True,Statistics use complete private-car legs only.
+low,destination_activity_group,home,,30088,28858,1230,0,0,0,28390,468,,1065855.3455405007,,37.5433372856816,31.13753012824703,78.55487213292547,True,Statistics use complete private-car legs only.
+low,destination_activity_group,leisure,,16669,15652,1017,0,0,0,15565,87,,1031221.9665775171,,66.25261590604029,61.77790990777503,107.19995382228872,True,Statistics use complete private-car legs only.
+low,destination_activity_group,medical_personal_business,,3478,3271,207,0,0,0,3258,13,,192338.7411367594,,59.035832147562736,51.7952347310098,96.89127910207804,True,Statistics use complete private-car legs only.
+low,destination_activity_group,shopping,,8421,7946,475,0,0,0,7904,42,,447671.14197616803,,56.63855541196458,47.552816692805834,96.60498026124068,True,Statistics use complete private-car legs only.
+low,destination_activity_group,work,,8784,8784,0,0,0,0,8605,179,,435830.71158313885,,50.64854289170702,43.488325997524264,101.86482143480146,True,Statistics use complete private-car legs only.
+low,distance_band,gt0_to_5km,,12228,11609,619,0,0,0,11564,45,,256776.52561132167,,22.20481888717759,22.7317177444222,46.5466794911749,True,Statistics use complete private-car legs only.
+low,distance_band,gt10_to_20km,,21876,20835,1041,0,0,0,20648,187,,1016139.2556092684,,49.21247847778324,46.95957796700744,84.8679782393756,True,Statistics use complete private-car legs only.
+low,distance_band,gt20_to_40km,,15701,15183,518,0,0,0,14901,282,,1086810.013850885,,72.93537439439534,68.25288202218283,110.9525429452026,True,Statistics use complete private-car legs only.
+low,distance_band,gt40km,,3158,3105,53,0,0,0,2881,224,,317414.25061182224,,110.1750262449921,107.62543548142413,151.76727691084358,True,Statistics use complete private-car legs only.
+low,distance_band,gt5_to_10km,,14718,14024,694,0,0,0,13927,97,,500696.23042983096,,35.95147773604013,33.72938460176385,71.81047943315959,True,Statistics use complete private-car legs only.
+low,distance_band,zero_distance,,37,33,4,0,0,0,33,0,,660.0,,20.0,20.0,40.0,True,Statistics use complete private-car legs only.
+low,fixed_accounting_sidecar_reference,partial_fixed_vehicle_ownership_proxy,,21020,0,0,0,0,0,0,0,,,243910.77566921085,,,,False,Accounting sidecar only; never copied or summed into a leg.
+base,scenario_overview,all_car_legs,,67718,64789,2929,0,0,0,63954,835,,,,,,,False,Fixed ownership cost excluded; incomplete totals remain null.
+base,component,fuel_or_electricity,fuel_or_electricity,67718,64789,2929,64789,0,2929,0,0,2341793.9504491785,,,36.14493124526044,28.861846791369157,76.4376128255154,True,Component retained independently; only complete legs enter behavioral marginal totals.
+base,fuel_or_electricity_status,out_of_scope_motorcycle,fuel_or_electricity,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,fuel_or_electricity_status,resolved_representative_fleet_average,fuel_or_electricity,64756,64756,0,64756,0,0,0,0,2341793.950449178,,,,,,True,Source candidate status retained verbatim.
+base,fuel_or_electricity_status,resolved_zero_distance_energy_zero,fuel_or_electricity,33,33,0,33,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+base,component,toll,toll,67718,64789,2929,64789,0,2929,0,0,751760.0,,,11.603204247634629,0.0,40.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+base,toll_status,confirmed_charge,toll,25858,25858,0,25858,0,0,0,0,751760.0,,,,,,True,Source candidate status retained verbatim.
+base,toll_status,confirmed_no_charge,toll,38931,38931,0,38931,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+base,toll_status,out_of_scope,toll,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,component,destination_parking,destination_parking,67718,64789,2929,63954,835,2929,0,0,2624827.0,,,41.04242111517653,32.0,110.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+base,destination_parking_status,out_of_scope_motorcycle,destination_parking,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,destination_parking_status,resolved_home_marginal_zero_fixed_separate,destination_parking,28390,28390,0,28390,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+base,destination_parking_status,resolved_proxy_charge,destination_parking,35564,35564,0,35564,0,0,0,0,2624827.0,,,,,,True,Source candidate status retained verbatim.
+base,destination_parking_status,unresolved_missing_destination_zone,destination_parking,98,98,0,0,98,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,destination_parking_status,unresolved_missing_next_departure_non_home,destination_parking,2,2,0,0,2,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,destination_parking_status,unresolved_next_departure_facility_mismatch,destination_parking,269,269,0,0,269,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,destination_parking_status,unresolved_vehicle_time_overlap,destination_parking,466,466,0,0,466,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+base,behavioral_complete,three_required_components_resolved,,63954,63954,0,0,0,0,63954,835,,5648792.214478275,,88.3258625649416,70.36818765142436,188.32856759383736,True,Energy plus toll plus destination parking; fixed ownership cost excluded.
+base,destination_activity_group,education,,278,278,0,0,0,0,232,46,,7913.744213456338,,34.1109664373118,26.584281688668597,66.44173752276124,True,Statistics use complete private-car legs only.
+base,destination_activity_group,home,,30088,28858,1230,0,0,0,28390,468,,1384002.029756147,,48.749631199582495,41.13145876521922,100.32791517787481,True,Statistics use complete private-car legs only.
+base,destination_activity_group,leisure,,16669,15652,1017,0,0,0,15565,87,,1435054.291053852,,92.19751307766477,87.48658573270174,141.73849995258908,True,Statistics use complete private-car legs only.
+base,destination_activity_group,medical_personal_business,,3478,3271,207,0,0,0,3258,13,,265202.8036675125,,81.40049222452808,74.17630470058126,127.08112214262619,True,Statistics use complete private-car legs only.
+base,destination_activity_group,shopping,,8421,7946,475,0,0,0,7904,42,,617529.1819880977,,78.12869205315002,68.71258397144499,125.64526032344051,True,Statistics use complete private-car legs only.
+base,destination_activity_group,work,,8784,8784,0,0,0,0,8605,179,,1939090.163799209,,225.3445861474967,220.1065397298163,303.61950330114695,True,Statistics use complete private-car legs only.
+base,distance_band,gt0_to_5km,,12228,11609,619,0,0,0,11564,45,,483416.27813176275,,41.803552242456135,39.34390368968415,83.9159115643041,True,Statistics use complete private-car legs only.
+base,distance_band,gt10_to_20km,,21876,20835,1041,0,0,0,20648,187,,1800806.7319161906,,87.2145840718806,70.95316920630822,185.171289297281,True,Statistics use complete private-car legs only.
+base,distance_band,gt20_to_40km,,15701,15183,518,0,0,0,14901,282,,1882983.578928339,,126.36625588405738,105.70608328805068,228.02916333645447,True,Statistics use complete private-car legs only.
+base,distance_band,gt40km,,3158,3105,53,0,0,0,2881,224,,560050.305031427,,194.394413409034,170.7443900542456,313.4127755077372,True,Statistics use complete private-car legs only.
+base,distance_band,gt5_to_10km,,14718,14024,694,0,0,0,13927,97,,920413.3204705556,,66.08841247006215,53.83863809518999,132.65708385176757,True,Statistics use complete private-car legs only.
+base,distance_band,zero_distance,,37,33,4,0,0,0,33,0,,1122.0,,34.0,32.0,70.4,True,Statistics use complete private-car legs only.
+base,fixed_accounting_sidecar_reference,partial_fixed_vehicle_ownership_proxy,,21020,0,0,0,0,0,0,0,,,2651066.580595832,,,,False,Accounting sidecar only; never copied or summed into a leg.
+high,scenario_overview,all_car_legs,,67718,64789,2929,0,0,0,63954,835,,,,,,,False,Fixed ownership cost excluded; incomplete totals remain null.
+high,component,fuel_or_electricity,fuel_or_electricity,67718,64789,2929,64789,0,2929,0,0,3564398.1126762396,,,55.01548276213924,43.930044405390404,116.34417402115373,True,Component retained independently; only complete legs enter behavioral marginal totals.
+high,fuel_or_electricity_status,out_of_scope_motorcycle,fuel_or_electricity,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,fuel_or_electricity_status,resolved_representative_fleet_average,fuel_or_electricity,64756,64756,0,64756,0,0,0,0,3564398.11267624,,,,,,True,Source candidate status retained verbatim.
+high,fuel_or_electricity_status,resolved_zero_distance_energy_zero,fuel_or_electricity,33,33,0,33,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+high,component,toll,toll,67718,64789,2929,64789,0,2929,0,0,769064.0,,,11.870286622729166,0.0,40.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+high,toll_status,confirmed_charge,toll,25858,25858,0,25858,0,0,0,0,769064.0,,,,,,True,Source candidate status retained verbatim.
+high,toll_status,confirmed_no_charge,toll,38931,38931,0,38931,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+high,toll_status,out_of_scope,toll,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,component,destination_parking,destination_parking,67718,64789,2929,63954,835,2929,0,0,3363957.0,,,52.599634112018016,42.0,192.0,True,Component retained independently; only complete legs enter behavioral marginal totals.
+high,destination_parking_status,out_of_scope_motorcycle,destination_parking,2929,0,2929,0,0,2929,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,destination_parking_status,resolved_home_marginal_zero_fixed_separate,destination_parking,28390,28390,0,28390,0,0,0,0,0.0,,,,,,True,Source candidate status retained verbatim.
+high,destination_parking_status,resolved_proxy_charge,destination_parking,35564,35564,0,35564,0,0,0,0,3363957.0,,,,,,True,Source candidate status retained verbatim.
+high,destination_parking_status,unresolved_missing_destination_zone,destination_parking,98,98,0,0,98,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,destination_parking_status,unresolved_missing_next_departure_non_home,destination_parking,2,2,0,0,2,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,destination_parking_status,unresolved_next_departure_facility_mismatch,destination_parking,269,269,0,0,269,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,destination_parking_status,unresolved_vehicle_time_overlap,destination_parking,466,466,0,0,466,0,0,0,,,,,,,False,Source candidate status retained verbatim.
+high,behavioral_complete,three_required_components_resolved,,63954,63954,0,0,0,0,63954,835,,7598354.10688336,,118.80967737566625,93.972610270291,267.6499230484641,True,Energy plus toll plus destination parking; fixed ownership cost excluded.
+high,destination_activity_group,education,,278,278,0,0,0,0,232,46,,10352.627451319297,,44.62339418672111,33.63648979850312,79.77102832331252,True,Statistics use complete private-car legs only.
+high,destination_activity_group,home,,30088,28858,1230,0,0,0,28390,468,,1948077.7383718335,,68.6184479877363,58.0466846696362,140.03416279550694,True,Statistics use complete private-car legs only.
+high,destination_activity_group,leisure,,16669,15652,1017,0,0,0,15565,87,,1840450.8371617878,,118.24290633869501,112.44795980586873,179.71452245756657,True,Statistics use complete private-car legs only.
+high,destination_activity_group,medical_personal_business,,3478,3271,207,0,0,0,3258,13,,341948.68047100963,,104.9566238400889,95.29681008464819,162.95565085281652,True,Statistics use complete private-car legs only.
+high,destination_activity_group,shopping,,8421,7946,475,0,0,0,7904,42,,799303.7947791357,,101.12649225444531,90.99661215317303,162.1905431576891,True,Statistics use complete private-car legs only.
+high,destination_activity_group,work,,8784,8784,0,0,0,0,8605,179,,2658220.428648275,,308.91579647278036,299.61369042707383,393.91957648621224,True,Statistics use complete private-car legs only.
+high,distance_band,gt0_to_5km,,12228,11609,619,0,0,0,11564,45,,622378.9013955758,,53.820382341367676,51.58596747478063,101.96283804088371,True,Statistics use complete private-car legs only.
+high,distance_band,gt10_to_20km,,21876,20835,1041,0,0,0,20648,187,,2388394.346325232,,115.67194625751803,94.11932503107684,259.7365637269938,True,Statistics use complete private-car legs only.
+high,distance_band,gt20_to_40km,,15701,15183,518,0,0,0,14901,282,,2608965.87155042,,175.08662986044024,145.36795156518912,329.39923435836295,True,Statistics use complete private-car legs only.
+high,distance_band,gt40km,,3158,3105,53,0,0,0,2881,224,,789408.6358671861,,274.005080134393,235.91854816356968,431.9147305804861,True,Statistics use complete private-car legs only.
+high,distance_band,gt5_to_10km,,14718,14024,694,0,0,0,13927,97,,1187794.3517449463,,85.28716534393239,70.5081920800979,186.47733272902198,True,Statistics use complete private-car legs only.
+high,distance_band,zero_distance,,37,33,4,0,0,0,33,0,,1412.0,,42.78787878787879,42.0,82.80000000000001,True,Statistics use complete private-car legs only.
+high,fixed_accounting_sidecar_reference,partial_fixed_vehicle_ownership_proxy,,21020,0,0,0,0,0,0,0,,,3856274.147651632,,,,False,Accounting sidecar only; never copied or summed into a leg.

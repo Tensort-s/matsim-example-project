@@ -92,6 +92,7 @@ docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -200,6 +201,13 @@ rebuilds the 21,020 used-private-car set, audits official licence and monthly
 parking source categories, and writes one partial fixed-cost record per
 vehicle and scenario, never per leg. It does not combine the result with
 energy, tolls, destination parking, unified car costs, or MATSim scoring.
+The unified offline marginal-cost interface is documented in
+`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`. It joins the
+three independently audited trip-conditional components by strict canonical
+leg identity, retains unresolved and out-of-scope costs as null, and publishes
+low/base/high complete-leg totals for audit only. Fixed ownership remains a
+separate accounting sidecar. The interface does not approve or modify MATSim
+scoring or joint mode-choice calibration.
 
 The final local SimWrapper project for this configuration is:
 
