@@ -1026,6 +1026,97 @@ date. `cost_effective_date` therefore remains null and a nonempty
 not entered plans, config, Java, network, schedule, vehicles, PT ASC, marginal
 utility of money, or MATSim scoring.
 
+## Bus simulation coverage layer v1
+
+`bus_fare_simulation_v1/` is a separate coverage-first modelling layer. It
+does not alter the official audit or Bus Core v1 and must not be interpreted
+as a replacement for either. Its purpose is to give every one of the 771,666
+required bus forward ODs a reproducible non-null model amount and to give all
+2,363 scheduled bus routes a route-level fallback for later simulation work.
+
+The layer keeps two amount fields distinct:
+
+- `official_published_fare_hkd` is populated only for a unique raw GTFS OD
+  amount, including scope-relaxed unique records;
+- `model_fare_hkd`, copied to `cost_hkd`, is the coverage-first value and may
+  be an identical-duplicate consensus, a selected conflicting candidate, or
+  a route fallback.
+
+The 771,666 OD rules resolve as follows:
+
+| Resolution method | Rules | Quality |
+|---|---:|---|
+| confirmed Bus Core direct unique GTFS OD | 754,133 | B |
+| other-bus-service direct unique GTFS OD | 10,836 | B |
+| CSDI-route-scope-unresolved direct unique GTFS OD | 2,074 | C |
+| identical raw-candidate consensus | 2,000 | C |
+| terminal OD candidate matching JSON `fullFare` | 4 | D |
+| unique modal raw candidate | 59 | D |
+| median-nearest existing candidate, tie higher | 2,560 | D |
+
+Thus the quality distribution is B=764,969, C=4,074, and D=2,623. No
+simulation assumption receives quality A. Conflict resolution never averages
+amounts or creates a value outside the actual candidate set. It first checks
+whether an official-direction terminal OD has exactly one candidate amount
+equal to JSON `fullFare`, then uses a unique raw-record mode, and finally
+selects the actual candidate nearest the median position of distinct amounts,
+choosing the higher amount on an equal-distance tie. Candidate values,
+frequencies, min/max/spread, record IDs, selected amount, and rationale remain
+auditable.
+
+The original 637 active unique zero rules remain exactly zero. Ten raw zero
+records form five all-zero identical-duplicate groups, producing five
+additional zero consensus rules. All 642 resulting zero rules carry
+`explicit_raw_zero_fare`, an anomaly flag, and audit priority 3. Route,
+operator, distance, and stop-count fallback never creates a zero value.
+
+All 2,358 routes with an exact Bus JSON direction use their unique positive
+JSON `fullFare` only as a quality-D route fallback, never as an OD official
+amount. The five operator-scope-unresolved proxy routes use the final
+distance/stop-count cohort fallback:
+
+| MATSim route | Model fallback (HKD) | Level and method |
+|---|---:|---|
+| `bus_1000004_1` | 21.3 | 5, all-bus distance/stop cohort |
+| `bus_1000004_2` | 16.5 | 5, all-bus distance/stop cohort |
+| `bus_1000611_1` | 21.3 | 5, all-bus distance/stop cohort |
+| `bus_8780_1` | 35.0 | 5, all-bus distance/stop cohort |
+| `bus_8780_2` | 35.0 | 5, all-bus distance/stop cohort |
+
+The query layer always prefers an exact line/route/direction/forward-OD rule.
+For a known route with an unmatched, reversed, or otherwise unavailable OD,
+it returns that route's fallback and marks `fallback_used=true`; only a
+completely unknown route remains unresolved. Passenger/payment/class
+specification, a travel date, or a requested transfer concession does not make
+the coverage-first amount null. Instead, the response explicitly states:
+
+```text
+transfer_concession_status = not_modelled_ignored_for_v1
+eligibility_status = not_modelled_generic_passenger_assumed
+temporal_status =
+  source_snapshot_applied_without_route_specific_effective_date
+```
+
+The anomaly table contains 18,170 anomalous OD rules plus all 2,363 route
+fallbacks. Its priority counts are 1=1,995, 2=12,910, 3=642, 4=2,623, and
+5=2,363; priority 0 contains the 753,496 direct unique nonzero confirmed OD
+rules outside the anomaly table. These values support audit ordering, not a
+claim that assumptions are official fares.
+
+The four layers remain distinct:
+
+1. the official audit preserves raw scope, direction, candidates, duplicates,
+   conflicts, and unresolved evidence;
+2. Bus Core v1 publishes only strict unique confirmed-route snapshot rules;
+3. the simulation layer assigns clearly labelled model values for 100% bus
+   coverage;
+4. MATSim scoring integration is not implemented.
+
+The production 557,104 generic PT audit rows remain null/unresolved/U.
+Eligibility, resident or cross-boundary qualification, adult/child,
+cash/Octopus, special-service entitlement, transfer concessions, and
+route-specific effective dates remain unmodelled.
+
 ## Transfer concessions
 
 Transfer concessions remain unmodelled:
@@ -1175,6 +1266,21 @@ data/transport_costs/hongkong/pt_fare_v1/
     bus_fare_validation.json
     protected_hashes.csv
     SHA256SUMS.txt
+  bus_fare_simulation_v1/
+    README.md
+    SHA256SUMS.txt
+    bus_simulation_fare_rules.parquet
+    bus_simulation_fare_rules_sample.csv
+    bus_simulation_fare_anomalies.parquet
+    bus_simulation_fare_anomalies_sample.csv
+    bus_route_fallback_fares.csv
+    bus_fare_resolution_method_summary.csv
+    bus_fare_resolution_quality_summary.csv
+    bus_simulation_query_fixture_input.csv
+    bus_simulation_query_fixture_output.csv
+    bus_simulation_fare_summary.json
+    bus_simulation_fare_validation.json
+    protected_hashes.csv
 ```
 
 The withdrawn distance curve and unconditional trip-estimate files are absent
@@ -1268,6 +1374,19 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_bus_fares.py `
   --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\build_hong_kong_bus_simulation_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\quote_hong_kong_bus_simulation_fares.py `
+  --input .\data\transport_costs\hongkong\pt_fare_v1\bus_fare_simulation_v1\bus_simulation_query_fixture_input.csv `
+  --output .\data\transport_costs\hongkong\pt_fare_v1\bus_fare_simulation_v1\bus_simulation_query_fixture_output.csv
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\costs\pt\validate_hong_kong_bus_simulation_fares.py `
+  --source-project-root F:\Matsim\matsim-example-project
 ```
 
 The independent validator does not import builder-calculated validation
@@ -1305,6 +1424,14 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
   strict source-snapshot published amounts with all those dimensions
   unspecified; it models neither transfer concessions nor JSON `fullFare`
   fallback.
+- The bus simulation layer deliberately relaxes those applicability gates for
+  coverage. Duplicate consensus, conflict selection, scope-relaxed values,
+  and route fallback are model assumptions with B/C/D quality and anomaly
+  metadata; they are not unique official passenger fares.
+- The coverage-first query's route fallback is suitable only for keeping a
+  later model executable when an exact OD is unavailable. It must not be used
+  to claim an observed fare, eligibility, concession, or historical
+  travel-date validity.
 - Five Ferry Core patterns lack an exact official direction stop pattern in
   the retained TD source.
 - Ferry GTFS `price` does not identify adult, cash/Octopus, class, vessel, or

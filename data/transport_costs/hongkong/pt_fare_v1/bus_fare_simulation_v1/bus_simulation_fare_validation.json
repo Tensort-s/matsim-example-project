@@ -1,0 +1,1067 @@
+{
+  "checks": [
+    {
+      "name": "01_bus_audit_and_bus_core_v1_unchanged",
+      "passed": true
+    },
+    {
+      "name": "02_each_of_771666_required_ODs_has_exactly_one_rule",
+      "passed": true
+    },
+    {
+      "name": "03_model_and_cost_fares_all_non_null",
+      "passed": true
+    },
+    {
+      "name": "04_cost_hkd_equals_model_fare_hkd",
+      "passed": true
+    },
+    {
+      "name": "05_754133_active_rules_exactly_match_bus_core",
+      "passed": true
+    },
+    {
+      "name": "06_1827_confirmed_duplicates_use_common_amount",
+      "passed": true
+    },
+    {
+      "name": "07_2603_confirmed_conflicts_follow_selection_algorithm",
+      "passed": true
+    },
+    {
+      "name": "08_2074_scope_unresolved_unique_use_direct_gtfs",
+      "passed": true
+    },
+    {
+      "name": "09_34_scope_unresolved_duplicates_use_consensus",
+      "passed": true
+    },
+    {
+      "name": "10_10836_other_service_unique_use_direct_gtfs",
+      "passed": true
+    },
+    {
+      "name": "11_139_other_service_duplicates_use_consensus",
+      "passed": true
+    },
+    {
+      "name": "12_20_other_service_conflicts_follow_algorithm",
+      "passed": true
+    },
+    {
+      "name": "13_conflict_selection_never_leaves_candidate_set",
+      "passed": true
+    },
+    {
+      "name": "14_conflicts_retain_min_max_spread_and_all_record_ids",
+      "passed": true
+    },
+    {
+      "name": "15_637_active_unique_zeros_preserved",
+      "passed": true
+    },
+    {
+      "name": "16_no_fallback_or_resolution_invents_zero",
+      "passed": true
+    },
+    {
+      "name": "17_five_operator_unresolved_routes_have_fallbacks",
+      "passed": true
+    },
+    {
+      "name": "18_all_2363_routes_have_fallbacks",
+      "passed": true
+    },
+    {
+      "name": "19_route_fallback_priority_strictly_executed",
+      "passed": true
+    },
+    {
+      "name": "20_exact_OD_query_precedes_route_fallback",
+      "passed": true
+    },
+    {
+      "name": "21_known_route_unknown_OD_returns_fallback",
+      "passed": true
+    },
+    {
+      "name": "22_only_unknown_route_returns_unresolved",
+      "passed": true
+    },
+    {
+      "name": "23_all_simulation_assumptions_are_anomalies",
+      "passed": true
+    },
+    {
+      "name": "24_no_cost_quality_A",
+      "passed": true
+    },
+    {
+      "name": "25_B_C_D_match_resolution_methods",
+      "passed": true
+    },
+    {
+      "name": "26_all_fixture_cases_pass",
+      "passed": true
+    },
+    {
+      "name": "27_mtr_light_rail_ferry_gmb_unchanged",
+      "passed": true
+    },
+    {
+      "name": "28_eight_protected_matsim_inputs_unchanged",
+      "passed": true
+    },
+    {
+      "name": "29_production_pt_audit_unchanged",
+      "passed": true
+    },
+    {
+      "name": "30_no_plans_config_java_scoring_network_schedule_vehicle_change",
+      "passed": true
+    },
+    {
+      "name": "31_outputs_contain_no_absolute_paths",
+      "passed": true
+    },
+    {
+      "name": "32_complete_build_and_fixture_query_byte_identical",
+      "passed": true
+    },
+    {
+      "name": "33_python_csv_json_parquet_and_git_diff_checks_pass",
+      "passed": true
+    }
+  ],
+  "fixture_results": [
+    {
+      "passed": true,
+      "quote_id": "confirmed_official_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "confirmed_official_zero"
+    },
+    {
+      "passed": true,
+      "quote_id": "confirmed_duplicate_consensus"
+    },
+    {
+      "passed": true,
+      "quote_id": "confirmed_conflict_unique_mode"
+    },
+    {
+      "passed": true,
+      "quote_id": "confirmed_conflict_median_tie_higher"
+    },
+    {
+      "passed": true,
+      "quote_id": "terminal_OD_matching_JSON_fullFare"
+    },
+    {
+      "passed": true,
+      "quote_id": "route_scope_unresolved_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "route_scope_unresolved_duplicate"
+    },
+    {
+      "passed": true,
+      "quote_id": "LRTFeeder_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "DB_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "PI_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "XB_unique"
+    },
+    {
+      "passed": true,
+      "quote_id": "other_service_conflict"
+    },
+    {
+      "passed": true,
+      "quote_id": "known_operator_unresolved_route_fallback"
+    },
+    {
+      "passed": true,
+      "quote_id": "known_route_unknown_OD_fallback"
+    },
+    {
+      "passed": true,
+      "quote_id": "transfer_requested_returns_base"
+    },
+    {
+      "passed": true,
+      "quote_id": "specified_passenger_payment_returns_generic"
+    },
+    {
+      "passed": true,
+      "quote_id": "travel_date_returns_snapshot"
+    },
+    {
+      "passed": true,
+      "quote_id": "reverse_OD_uses_route_fallback"
+    },
+    {
+      "passed": true,
+      "quote_id": "unknown_route_unresolved"
+    }
+  ],
+  "independent_counts": {
+    "active_unique_zero_rules": 637,
+    "anomaly_priority_counts": {
+      "1": 1995,
+      "2": 12910,
+      "3": 642,
+      "4": 2623,
+      "5": 2363
+    },
+    "anomaly_table_rows": 20533,
+    "conflict_method_counts": {
+      "median_nearest_existing_candidate_tie_higher": 2560,
+      "modal_raw_official_candidate_amount": 59,
+      "terminal_OD_candidate_matching_JSON_fullFare": 4
+    },
+    "duplicate_consensus_zero_rules": 5,
+    "explicit_zero_rules": 642,
+    "fixture_cases": 20,
+    "fixture_passed": 20,
+    "non_null_model_fares": 771666,
+    "ordered_OD_anomalies": 18170,
+    "production_pt_rows": 557104,
+    "quality_counts": {
+      "B": 764969,
+      "C": 4074,
+      "D": 2623
+    },
+    "required_OD_rules": 771666,
+    "resolution_method_counts": {
+      "direct_unique_gtfs_ordered_od": 754133,
+      "direct_unique_gtfs_ordered_od_other_bus_scope": 10836,
+      "direct_unique_gtfs_ordered_od_route_scope_unresolved": 2074,
+      "identical_raw_candidate_consensus": 2000,
+      "median_nearest_existing_candidate_tie_higher": 2560,
+      "modal_raw_official_candidate_amount": 59,
+      "terminal_OD_candidate_matching_JSON_fullFare": 4
+    },
+    "route_fallbacks": 2363
+  },
+  "missing_required_files": [],
+  "protected_hash_results": [
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/README.md",
+      "sha256_after": "6fa299653de28c73c3cfc49566c28ac9241e4edf207e1b42870006080d9a4268",
+      "sha256_before": "6fa299653de28c73c3cfc49566c28ac9241e4edf207e1b42870006080d9a4268",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/SHA256SUMS.txt",
+      "sha256_after": "dbf198c344711366f93b48f0a42b54200fd89c4f22ea3d4131619658b8f13f9c",
+      "sha256_before": "dbf198c344711366f93b48f0a42b54200fd89c4f22ea3d4131619658b8f13f9c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_direction_evidence_audit.csv",
+      "sha256_after": "cd329c6779e48597ea343658e10bee242be3f93a9d125585ff50747dd3aec35f",
+      "sha256_before": "cd329c6779e48597ea343658e10bee242be3f93a9d125585ff50747dd3aec35f",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_fare_semantics_summary.json",
+      "sha256_after": "1f9413005c5130fe64201481396fb3483be4fec02b5ef80075c593845c0524b2",
+      "sha256_before": "1f9413005c5130fe64201481396fb3483be4fec02b5ef80075c593845c0524b2",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_missing_required_pairs.csv",
+      "sha256_after": "3ad9572a8125a1b1bc66dc4364179c5e5064d3a76e3ad0817d9be018601393c0",
+      "sha256_before": "3ad9572a8125a1b1bc66dc4364179c5e5064d3a76e3ad0817d9be018601393c0",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_conflicts.parquet",
+      "sha256_after": "8465e5f6d17e70e65cc9b75f59b4efeae62897ed27607311d8d9b5278105d741",
+      "sha256_before": "8465e5f6d17e70e65cc9b75f59b4efeae62897ed27607311d8d9b5278105d741",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_conflicts_sample.csv",
+      "sha256_after": "42540de68ce767d3919ccc788d0336b3ac9a871dac4ecc78e34ae16c09dfaf13",
+      "sha256_before": "42540de68ce767d3919ccc788d0336b3ac9a871dac4ecc78e34ae16c09dfaf13",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_duplicate_records.parquet",
+      "sha256_after": "76f446bf9765c71d5731091288f73d9a5422db57f57cdd279d38d49dfa0c9ded",
+      "sha256_before": "76f446bf9765c71d5731091288f73d9a5422db57f57cdd279d38d49dfa0c9ded",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_duplicate_records_sample.csv",
+      "sha256_after": "416e617f6db7b6748c2b790953935470b6f9395ac8fabcb51adc3b451fd07870",
+      "sha256_before": "416e617f6db7b6748c2b790953935470b6f9395ac8fabcb51adc3b451fd07870",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_fare_candidate_audit.parquet",
+      "sha256_after": "375b31d701c5fc664a3a1bd4ea8bff4197dd6f62c81b4d34b1dff00803377b8b",
+      "sha256_before": "375b31d701c5fc664a3a1bd4ea8bff4197dd6f62c81b4d34b1dff00803377b8b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_od_fare_candidate_audit_sample.csv",
+      "sha256_after": "c57f21312d868041ed6f22da9e9a4c81f7d9fbec95f6e449b8b7be3813e6da11",
+      "sha256_before": "c57f21312d868041ed6f22da9e9a4c81f7d9fbec95f6e449b8b7be3813e6da11",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_operator_scope_audit.csv",
+      "sha256_after": "4cbedf101c5579686f6e47aa88b8336d87b3d9f6ee0540f39a8e74e9f260a755",
+      "sha256_before": "4cbedf101c5579686f6e47aa88b8336d87b3d9f6ee0540f39a8e74e9f260a755",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_route_direction_readiness.csv",
+      "sha256_after": "9964b9622596fecd422215cadf191a19d6ffe3675488a4ba84711a8e20fb4309",
+      "sha256_before": "9964b9622596fecd422215cadf191a19d6ffe3675488a4ba84711a8e20fb4309",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_route_franchise_scope_evidence.csv",
+      "sha256_after": "e2af4055617f5859833f483088463b14edb5fa67378366ca40c93f09f10b727b",
+      "sha256_before": "e2af4055617f5859833f483088463b14edb5fa67378366ca40c93f09f10b727b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_route_full_fare_reference.csv",
+      "sha256_after": "a5b97bbf97388981389072659fb37bafd9375a5acabc336d9adb17dc37ec9629",
+      "sha256_before": "a5b97bbf97388981389072659fb37bafd9375a5acabc336d9adb17dc37ec9629",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_route_scope_audit.csv",
+      "sha256_after": "a22ede0087576830a85cb773da96467c4c652def9c2d58b6219c90d108f4f97c",
+      "sha256_before": "a22ede0087576830a85cb773da96467c4c652def9c2d58b6219c90d108f4f97c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_route_scope_candidate_crosstab.csv",
+      "sha256_after": "409cec5eda9b90d2a696e5344f4dbf582a0f43a30b32ad46b546d272d8fa9025",
+      "sha256_before": "409cec5eda9b90d2a696e5344f4dbf582a0f43a30b32ad46b546d272d8fa9025",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_scope_candidate_summary.json",
+      "sha256_after": "157f3509b3a36d658f55da8822812737d7619d610c722aa6ac02b5a5b52b0191",
+      "sha256_before": "157f3509b3a36d658f55da8822812737d7619d610c722aa6ac02b5a5b52b0191",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_scope_direction_summary.json",
+      "sha256_after": "7b2d0ff57639f393a54c9d0455411b1ab283772adb0863dd3950e0e2631b9bde",
+      "sha256_before": "7b2d0ff57639f393a54c9d0455411b1ab283772adb0863dd3950e0e2631b9bde",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_scope_direction_validation.json",
+      "sha256_after": "3668f31b2af5644c24ff863eadfdb2e0b3b2d99fce00b8b5d31866a3abc753a0",
+      "sha256_before": "3668f31b2af5644c24ff863eadfdb2e0b3b2d99fce00b8b5d31866a3abc753a0",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_source_schema_audit.csv",
+      "sha256_after": "18ded5268078c6c2e9977cb51904ae0330b2d38aa99768d714fafc0868afe0cc",
+      "sha256_before": "18ded5268078c6c2e9977cb51904ae0330b2d38aa99768d714fafc0868afe0cc",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_stop_crosswalk.csv",
+      "sha256_after": "a437fa2c95e940f895c694904e03f6235d5db504b9bed3b66debc02fd410976d",
+      "sha256_before": "a437fa2c95e940f895c694904e03f6235d5db504b9bed3b66debc02fd410976d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_scope_direction_audit_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/prior_mode_protected_hashes.csv",
+      "sha256_after": "15c2f279fdbf68a88c26a6123bf8fb3a94aa23df0dcf72f002f250756db6a28b",
+      "sha256_before": "15c2f279fdbf68a88c26a6123bf8fb3a94aa23df0dcf72f002f250756db6a28b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/README.md",
+      "sha256_after": "4cbbc6e2e40895c4b35f6fce3d820cc7893ff97b747b2bdcada41acf529b6494",
+      "sha256_before": "4cbbc6e2e40895c4b35f6fce3d820cc7893ff97b747b2bdcada41acf529b6494",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/SHA256SUMS.txt",
+      "sha256_after": "fd2a1f6931aa33309af6d0f8f69edcf5ec8d3440876176956201f3f7bd77cfe5",
+      "sha256_before": "fd2a1f6931aa33309af6d0f8f69edcf5ec8d3440876176956201f3f7bd77cfe5",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_excluded_scope_pairs.parquet",
+      "sha256_after": "30ed9cc0d45173d6aca89a37b637781f35e03092b03c864f74ce9009abe04a00",
+      "sha256_before": "30ed9cc0d45173d6aca89a37b637781f35e03092b03c864f74ce9009abe04a00",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_excluded_scope_pairs_sample.csv",
+      "sha256_after": "1448b7b3f09a48e450460067c98fbd660906a0eee99538822b8df809f7a7e86d",
+      "sha256_before": "1448b7b3f09a48e450460067c98fbd660906a0eee99538822b8df809f7a7e86d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_conflicts.parquet",
+      "sha256_after": "46f7da8cd6721495c4fb69d4d2a9866e98a69ab0e1297907f4e80b140b6290ec",
+      "sha256_before": "46f7da8cd6721495c4fb69d4d2a9866e98a69ab0e1297907f4e80b140b6290ec",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_conflicts_sample.csv",
+      "sha256_after": "680eebed00acb58decedd90e50985ae1469d366cc82aaf4b050986ff84c808ed",
+      "sha256_before": "680eebed00acb58decedd90e50985ae1469d366cc82aaf4b050986ff84c808ed",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_duplicate_records.parquet",
+      "sha256_after": "b8ffcfeac0760041b133867fcae13c73a890ab8aff497e0c34c2ba74e3084d8e",
+      "sha256_before": "b8ffcfeac0760041b133867fcae13c73a890ab8aff497e0c34c2ba74e3084d8e",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_duplicate_records_sample.csv",
+      "sha256_after": "74f04d1ac9fba6a185f511ccfa45831b549c8a8491e91458b7b06b802e267696",
+      "sha256_before": "74f04d1ac9fba6a185f511ccfa45831b549c8a8491e91458b7b06b802e267696",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_query_fixture_input.csv",
+      "sha256_after": "7d347653569ad41b502ae69dcdfd5492c1988e938c1288bbf6e1c19a50000c01",
+      "sha256_before": "7d347653569ad41b502ae69dcdfd5492c1988e938c1288bbf6e1c19a50000c01",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_query_fixture_output.csv",
+      "sha256_after": "e4fbc48bc055e156e94515a3db9efb339ed0292b76677c0b9a42f2e5bfb7960a",
+      "sha256_before": "e4fbc48bc055e156e94515a3db9efb339ed0292b76677c0b9a42f2e5bfb7960a",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_rules.parquet",
+      "sha256_after": "6a67270cc996dfc9217380e17cb1ed662daccd3f4c74fb52e766f321646237b4",
+      "sha256_before": "6a67270cc996dfc9217380e17cb1ed662daccd3f4c74fb52e766f321646237b4",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_rules_sample.csv",
+      "sha256_after": "820fde3b3734f5e41b8dc59e2ba0c9d537d827a73be0343cd382e0fb243b267b",
+      "sha256_before": "820fde3b3734f5e41b8dc59e2ba0c9d537d827a73be0343cd382e0fb243b267b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_semantics_summary.json",
+      "sha256_after": "2de68b1c02a1f65d2a060d122a4de4da3abcb0da322964c465260b2f5c79f600",
+      "sha256_before": "2de68b1c02a1f65d2a060d122a4de4da3abcb0da322964c465260b2f5c79f600",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_summary.json",
+      "sha256_after": "f62f1ca081cc113d1c4704ef7c3acc0525d5edb173a1c20eb665f8140f923f31",
+      "sha256_before": "f62f1ca081cc113d1c4704ef7c3acc0525d5edb173a1c20eb665f8140f923f31",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_validation.json",
+      "sha256_after": "0f668b941490744f061598456e44a2fd77d3020955fde24c95e9fa7505633552",
+      "sha256_before": "0f668b941490744f061598456e44a2fd77d3020955fde24c95e9fa7505633552",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_route_direction_fare_readiness.csv",
+      "sha256_after": "9964b9622596fecd422215cadf191a19d6ffe3675488a4ba84711a8e20fb4309",
+      "sha256_before": "9964b9622596fecd422215cadf191a19d6ffe3675488a4ba84711a8e20fb4309",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_route_full_fare_reference.csv",
+      "sha256_after": "a5b97bbf97388981389072659fb37bafd9375a5acabc336d9adb17dc37ec9629",
+      "sha256_before": "a5b97bbf97388981389072659fb37bafd9375a5acabc336d9adb17dc37ec9629",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_unresolved_fare_rules.parquet",
+      "sha256_after": "e59521e8df7061c74f7e4757906d1661722768a0f5de15001f0a23156f01466b",
+      "sha256_before": "e59521e8df7061c74f7e4757906d1661722768a0f5de15001f0a23156f01466b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_unresolved_fare_rules_sample.csv",
+      "sha256_after": "62df8533669d0f5586ea78f5de81789c67c34cc75d15a130e0944973988b72a4",
+      "sha256_before": "62df8533669d0f5586ea78f5de81789c67c34cc75d15a130e0944973988b72a4",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_unresolved_routes.csv",
+      "sha256_after": "e32b3b9ef9942515babbdd09cc47ef14153dc91e6aaf9dfb878c5f280613f8f9",
+      "sha256_before": "e32b3b9ef9942515babbdd09cc47ef14153dc91e6aaf9dfb878c5f280613f8f9",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "bus_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/protected_hashes.csv",
+      "sha256_after": "0a56af1a44320210deff171ee5ef3a33f77c84fe47a1ed5aa7983b78253d7c60",
+      "sha256_before": "0a56af1a44320210deff171ee5ef3a33f77c84fe47a1ed5aa7983b78253d7c60",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/README.md",
+      "sha256_after": "45264a51f915871e006a54e0086beadc45757588d2ee850185cd236d3d6a16b5",
+      "sha256_before": "45264a51f915871e006a54e0086beadc45757588d2ee850185cd236d3d6a16b5",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/SHA256SUMS.txt",
+      "sha256_after": "d456ee51cd1ecf1137945991591d136771eef9da890545b9f1b75c6a08c92656",
+      "sha256_before": "d456ee51cd1ecf1137945991591d136771eef9da890545b9f1b75c6a08c92656",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_fare_query_fixture_input.csv",
+      "sha256_after": "ce5d040a4e4f3c09b460be1fd7a8d2be9f2bfbf33049e187444905e8e86283e1",
+      "sha256_before": "ce5d040a4e4f3c09b460be1fd7a8d2be9f2bfbf33049e187444905e8e86283e1",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_fare_query_fixture_output.csv",
+      "sha256_after": "812825f6eb9ce12721bb750dfc585268427502f571d382319b1151d571af4deb",
+      "sha256_before": "812825f6eb9ce12721bb750dfc585268427502f571d382319b1151d571af4deb",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_schedule_route_fare_readiness.csv",
+      "sha256_after": "e23ce3407932a9c268a21c80ad857acd67db27649d7d5f899224e434592d8fd1",
+      "sha256_before": "e23ce3407932a9c268a21c80ad857acd67db27649d7d5f899224e434592d8fd1",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_crosswalk.csv",
+      "sha256_after": "f566103c1529f18fe39f92e41601a1e77ba00e4b77d35fb5a5b8ff77ecaf7926",
+      "sha256_before": "f566103c1529f18fe39f92e41601a1e77ba00e4b77d35fb5a5b8ff77ecaf7926",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_fare_rules.parquet",
+      "sha256_after": "0829574983542c8178a562463d1711f93fe8381dfda7a7ad88bb7a8c7c2701fa",
+      "sha256_before": "0829574983542c8178a562463d1711f93fe8381dfda7a7ad88bb7a8c7c2701fa",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_fare_rules_sample.csv",
+      "sha256_after": "4afb5b5b4bf9b7e6b9becf8c87acaf261f6f5a122be1ad3144dfa8cfba1811a7",
+      "sha256_before": "4afb5b5b4bf9b7e6b9becf8c87acaf261f6f5a122be1ad3144dfa8cfba1811a7",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_summary.json",
+      "sha256_after": "a9295ddd824c6852ee3512ea9d37a09369eec9c2dad1ef8fe3d61ce4159987cb",
+      "sha256_before": "a9295ddd824c6852ee3512ea9d37a09369eec9c2dad1ef8fe3d61ce4159987cb",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_validation.json",
+      "sha256_after": "2bb2c0ea999601f26d9323370b78d78803dbdb3070cc061231e3dd8a75c3564f",
+      "sha256_before": "2bb2c0ea999601f26d9323370b78d78803dbdb3070cc061231e3dd8a75c3564f",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "mtr_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_unresolved_od_pairs.csv",
+      "sha256_after": "abeec5d11d67da2a3b53397bb4ab2f93bf042dc2421ea0e535221467388c0c35",
+      "sha256_before": "abeec5d11d67da2a3b53397bb4ab2f93bf042dc2421ea0e535221467388c0c35",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/README.md",
+      "sha256_after": "39c3d12450a9db7c0e48fb59c8df10c542b0cbd900f2615553ae85b676df1c82",
+      "sha256_before": "39c3d12450a9db7c0e48fb59c8df10c542b0cbd900f2615553ae85b676df1c82",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/SHA256SUMS.txt",
+      "sha256_after": "3a05103dd6ebcef354f6d83cdb08f6eca7dd45b0d06916aca8d1bb95625d3893",
+      "sha256_before": "3a05103dd6ebcef354f6d83cdb08f6eca7dd45b0d06916aca8d1bb95625d3893",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_fare_conflicts.csv",
+      "sha256_after": "e461324176d343890208846f09932c887aec508e23e816d1b2b733139e2fef9d",
+      "sha256_before": "e461324176d343890208846f09932c887aec508e23e816d1b2b733139e2fef9d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_fare_query_fixture_input.csv",
+      "sha256_after": "a9fae50ffe065cfc52b64e171816c8c56ba0bcec995b2466709d9946c304f12c",
+      "sha256_before": "a9fae50ffe065cfc52b64e171816c8c56ba0bcec995b2466709d9946c304f12c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_fare_query_fixture_output.csv",
+      "sha256_after": "7f101a3dfd179f0484845b588973f1e9570a3a37519aab13449a875220c9a667",
+      "sha256_before": "7f101a3dfd179f0484845b588973f1e9570a3a37519aab13449a875220c9a667",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_schedule_route_fare_readiness.csv",
+      "sha256_after": "3526d52045d1cec981871c3884875c77db242f9438a2398fbaef06597da83d74",
+      "sha256_before": "3526d52045d1cec981871c3884875c77db242f9438a2398fbaef06597da83d74",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_fare_rules.parquet",
+      "sha256_after": "92596e56342eeffe5374aa4ed7dba9a5b57986ab3257623e64e04cb837a64004",
+      "sha256_before": "92596e56342eeffe5374aa4ed7dba9a5b57986ab3257623e64e04cb837a64004",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_fare_rules_sample.csv",
+      "sha256_after": "98fbcb046d22c40e34f5355a2e476cc3dc3f8c5f6539e02c8020bdb462d7b275",
+      "sha256_before": "98fbcb046d22c40e34f5355a2e476cc3dc3f8c5f6539e02c8020bdb462d7b275",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_summary.json",
+      "sha256_after": "b9c300cb8d8f66766d8f911235861fb8a72fe2f6a09a1a33ae712c309ab14e23",
+      "sha256_before": "b9c300cb8d8f66766d8f911235861fb8a72fe2f6a09a1a33ae712c309ab14e23",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_validation.json",
+      "sha256_after": "8892a47afa013ac8c6b306e47de220298c8ece2947af0b130427973b2abcde80",
+      "sha256_before": "8892a47afa013ac8c6b306e47de220298c8ece2947af0b130427973b2abcde80",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_stop_crosswalk.csv",
+      "sha256_after": "448f921cd1eac9338f883ef3f3d94ce2f04047ca3687f15a712d70b86e905942",
+      "sha256_before": "448f921cd1eac9338f883ef3f3d94ce2f04047ca3687f15a712d70b86e905942",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_unresolved_od_pairs.csv",
+      "sha256_after": "e461324176d343890208846f09932c887aec508e23e816d1b2b733139e2fef9d",
+      "sha256_before": "e461324176d343890208846f09932c887aec508e23e816d1b2b733139e2fef9d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "light_rail_station_od_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/mtr_station_od_v1_protected_hashes.csv",
+      "sha256_after": "e7b42fb870e1997626881076d4adb4e0611bcaf445022c4100fbf72b8fd022c0",
+      "sha256_before": "e7b42fb870e1997626881076d4adb4e0611bcaf445022c4100fbf72b8fd022c0",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/README.md",
+      "sha256_after": "b8715635e227a307a713459c9b48b4aa97946681bdb3d8f79191885cf09c789a",
+      "sha256_before": "b8715635e227a307a713459c9b48b4aa97946681bdb3d8f79191885cf09c789a",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/SHA256SUMS.txt",
+      "sha256_after": "c2dddabaf6fd3b5044afd786d8fd1ebd750bab3166821018ad872b64b4277575",
+      "sha256_before": "c2dddabaf6fd3b5044afd786d8fd1ebd750bab3166821018ad872b64b4277575",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_conflicts.csv",
+      "sha256_after": "e0a6f048a7cb4c70d1d43ed549e8b778785aa10af0b7b2e6a52ac6ad09f7710f",
+      "sha256_before": "e0a6f048a7cb4c70d1d43ed549e8b778785aa10af0b7b2e6a52ac6ad09f7710f",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_query_fixture_input.csv",
+      "sha256_after": "d5edf1264c923e482915bf4477a5a3ef6d7d8799c0e8d7a6aa0ebb2b59a356db",
+      "sha256_before": "d5edf1264c923e482915bf4477a5a3ef6d7d8799c0e8d7a6aa0ebb2b59a356db",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_query_fixture_output.csv",
+      "sha256_after": "b2bbe7c959eba885c65d678b28cbf46453c03d791278fce03acecf409b8f9c11",
+      "sha256_before": "b2bbe7c959eba885c65d678b28cbf46453c03d791278fce03acecf409b8f9c11",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_rules.parquet",
+      "sha256_after": "8d79774373f9de9b086382fce611a13750e63c664444fe7eb15555e44c6d189d",
+      "sha256_before": "8d79774373f9de9b086382fce611a13750e63c664444fe7eb15555e44c6d189d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_rules_sample.csv",
+      "sha256_after": "ce42dbb7cb09a877cb3b447d8a2a2b91bca536092b6c298a5c882b3f1e8c7855",
+      "sha256_before": "ce42dbb7cb09a877cb3b447d8a2a2b91bca536092b6c298a5c882b3f1e8c7855",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_semantics_summary.json",
+      "sha256_after": "e0f9223584fcffa2b5a3af50cc049d31a6ed4df1a994b0423ed9c8b9ce70e7a0",
+      "sha256_before": "e0f9223584fcffa2b5a3af50cc049d31a6ed4df1a994b0423ed9c8b9ce70e7a0",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_summary.json",
+      "sha256_after": "d91bf3ffbc47e4aaff2af38ef12aeaedc021ebe839f5d1aa1c9141b085cab479",
+      "sha256_before": "d91bf3ffbc47e4aaff2af38ef12aeaedc021ebe839f5d1aa1c9141b085cab479",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_validation.json",
+      "sha256_after": "f9a0d728aef642976f31776f78fa64668659566bb888339ecd3422318c587b49",
+      "sha256_before": "f9a0d728aef642976f31776f78fa64668659566bb888339ecd3422318c587b49",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_route_direction_fare_readiness.csv",
+      "sha256_after": "543a0f8b9f3a6ca0fec38b52d66d2fc7edb69642f7d3d427d2b37ed80beb190e",
+      "sha256_before": "543a0f8b9f3a6ca0fec38b52d66d2fc7edb69642f7d3d427d2b37ed80beb190e",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_route_full_fare_reference.csv",
+      "sha256_after": "7811de76b3ddb275b172f5b029dfe6f0e0f43750d5a1c889778e3eaaab121d8c",
+      "sha256_before": "7811de76b3ddb275b172f5b029dfe6f0e0f43750d5a1c889778e3eaaab121d8c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_source_schema_audit.csv",
+      "sha256_after": "aa368de857d1e2130355e231e5aa7048d3e1661739a624e2b3adbb9c1408141c",
+      "sha256_before": "aa368de857d1e2130355e231e5aa7048d3e1661739a624e2b3adbb9c1408141c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_stop_crosswalk.csv",
+      "sha256_after": "e70ce12e78cff13d050b17d3026e2c43b1adde386c6d9c4ed3017757ef702892",
+      "sha256_before": "e70ce12e78cff13d050b17d3026e2c43b1adde386c6d9c4ed3017757ef702892",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_unresolved_fare_rules.csv",
+      "sha256_after": "c60ff722946a40bd4c32b90d9ef7a0f37d4a1fdaab2b35e364f0dfffd37a25c1",
+      "sha256_before": "c60ff722946a40bd4c32b90d9ef7a0f37d4a1fdaab2b35e364f0dfffd37a25c1",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "ferry_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/prior_mode_protected_hashes.csv",
+      "sha256_after": "10286ce2ee3868a02599e0a61387b66ff55876452eaa572b571b4544d98b971b",
+      "sha256_before": "10286ce2ee3868a02599e0a61387b66ff55876452eaa572b571b4544d98b971b",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/README.md",
+      "sha256_after": "f566a37b201ea26fbc779044f51b5b436810b10e8a6a0127910403ef9d237c76",
+      "sha256_before": "f566a37b201ea26fbc779044f51b5b436810b10e8a6a0127910403ef9d237c76",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/SHA256SUMS.txt",
+      "sha256_after": "20a44042cd861311c78bbead5c8ce09a0cf87354639c38d491a65bab4294e261",
+      "sha256_before": "20a44042cd861311c78bbead5c8ce09a0cf87354639c38d491a65bab4294e261",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_direction_evidence_audit.csv",
+      "sha256_after": "7c52e3a99257c832cd660a07f20b27f974b8d225db17e9d397a0bcdf266ede1c",
+      "sha256_before": "7c52e3a99257c832cd660a07f20b27f974b8d225db17e9d397a0bcdf266ede1c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_conflicts.csv",
+      "sha256_after": "824f1e8ed88a90a43a32a94f65034e93f99f58d5dac5e395fbb2543b993d2177",
+      "sha256_before": "824f1e8ed88a90a43a32a94f65034e93f99f58d5dac5e395fbb2543b993d2177",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_query_fixture_input.csv",
+      "sha256_after": "33c9e027a293bcffad29b26a924fa3cd6a9a049fbaf1b8482e8b1315754eec32",
+      "sha256_before": "33c9e027a293bcffad29b26a924fa3cd6a9a049fbaf1b8482e8b1315754eec32",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_query_fixture_output.csv",
+      "sha256_after": "b22b06680adb481280373e18ba6c6ebb8a922f7b6bb6877009f9c96bf66b6d8d",
+      "sha256_before": "b22b06680adb481280373e18ba6c6ebb8a922f7b6bb6877009f9c96bf66b6d8d",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_rules.parquet",
+      "sha256_after": "edc794e0940985b64056041e1449d26a8bc3d3331f37df3475d04726c86e14f7",
+      "sha256_before": "edc794e0940985b64056041e1449d26a8bc3d3331f37df3475d04726c86e14f7",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_rules_sample.csv",
+      "sha256_after": "194908d233610cce5e259f9eb5fd75f137f90384424d78894c99c4305e6c2655",
+      "sha256_before": "194908d233610cce5e259f9eb5fd75f137f90384424d78894c99c4305e6c2655",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_semantics_summary.json",
+      "sha256_after": "b0bb0750cc527a40687b2c9d31e8b8bbca8d5eb1dd599af8380c3df865b86c7a",
+      "sha256_before": "b0bb0750cc527a40687b2c9d31e8b8bbca8d5eb1dd599af8380c3df865b86c7a",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_summary.json",
+      "sha256_after": "49968110e8f326ad14a9b98826b80c6d043a8dc26c6f42ee85feeb0de1f52079",
+      "sha256_before": "49968110e8f326ad14a9b98826b80c6d043a8dc26c6f42ee85feeb0de1f52079",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_validation.json",
+      "sha256_after": "adfcbd85d3da0393f3386e2261cb154fe6edfe16664da2fe7251065340124346",
+      "sha256_before": "adfcbd85d3da0393f3386e2261cb154fe6edfe16664da2fe7251065340124346",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_route_direction_fare_readiness.csv",
+      "sha256_after": "d73b667706222235191b6532dc4b5392be65e3ab1643e9aa7469af5fdfc23b41",
+      "sha256_before": "d73b667706222235191b6532dc4b5392be65e3ab1643e9aa7469af5fdfc23b41",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_route_full_fare_reference.csv",
+      "sha256_after": "a6bd1dc71dd4c5a005df9b408471ea9bb5057e3fd2fa1130de59f5b28a6f8be4",
+      "sha256_before": "a6bd1dc71dd4c5a005df9b408471ea9bb5057e3fd2fa1130de59f5b28a6f8be4",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_source_schema_audit.csv",
+      "sha256_after": "6fb5ba2acb551590971bb4fce3fd62c60426d2c5b530c86569b2351db6244f38",
+      "sha256_before": "6fb5ba2acb551590971bb4fce3fd62c60426d2c5b530c86569b2351db6244f38",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_stop_crosswalk.csv",
+      "sha256_after": "1b026525a5dfdd7f7aa0231e0a3480f94b11372675ee88a4cd135ce5fb58bcef",
+      "sha256_before": "1b026525a5dfdd7f7aa0231e0a3480f94b11372675ee88a4cd135ce5fb58bcef",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_unresolved_fare_rules.csv",
+      "sha256_after": "a908a53165e16e40ecbe5ec48393339c3bc0141a423549e1c0942907e33e2cda",
+      "sha256_before": "a908a53165e16e40ecbe5ec48393339c3bc0141a423549e1c0942907e33e2cda",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "gmb_fare_v1",
+      "repository_relative_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/prior_mode_protected_hashes.csv",
+      "sha256_after": "fd235f25eeca915d7523560a099dc6793920f30c1af8c0f686f9f4b517a41ec7",
+      "sha256_before": "fd235f25eeca915d7523560a099dc6793920f30c1af8c0f686f9f4b517a41ec7",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+      "sha256_after": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "sha256_before": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+      "sha256_after": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+      "sha256_before": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+      "sha256_after": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429",
+      "sha256_before": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+      "sha256_after": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "sha256_before": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+      "sha256_after": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "sha256_before": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+      "sha256_after": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "sha256_before": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+      "sha256_after": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "sha256_before": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "unchanged": true
+    },
+    {
+      "protected_scope": "matsim_protected_input",
+      "repository_relative_path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+      "sha256_after": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "sha256_before": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "unchanged": true
+    }
+  ],
+  "rebuild_determinism": {
+    "current_build_query_overall_sha256": "695c349a11e695269870be46de9b8c87e4cbc70f23b9f1b7f1f35aab4702af3d",
+    "different_files": [],
+    "passed": true,
+    "rebuilt_build_query_overall_sha256": "695c349a11e695269870be46de9b8c87e4cbc70f23b9f1b7f1f35aab4702af3d"
+  },
+  "schema_version": "hong_kong_bus_simulation_fare_validation_v1",
+  "status": "passed",
+  "summary_consistency": {
+    "model_fare_coverage": 1.0,
+    "route_fallback_coverage": 1.0
+  },
+  "unmatched_route_fallbacks": [
+    {
+      "fallback_level": "5",
+      "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+      "matsim_route_id": "bus_1000004_1",
+      "route_fallback_fare_hkd": "21.3"
+    },
+    {
+      "fallback_level": "5",
+      "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+      "matsim_route_id": "bus_1000004_2",
+      "route_fallback_fare_hkd": "16.5"
+    },
+    {
+      "fallback_level": "5",
+      "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+      "matsim_route_id": "bus_1000611_1",
+      "route_fallback_fare_hkd": "21.3"
+    },
+    {
+      "fallback_level": "5",
+      "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+      "matsim_route_id": "bus_8780_1",
+      "route_fallback_fare_hkd": "35.0"
+    },
+    {
+      "fallback_level": "5",
+      "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+      "matsim_route_id": "bus_8780_2",
+      "route_fallback_fare_hkd": "35.0"
+    }
+  ]
+}

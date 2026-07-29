@@ -1,0 +1,60 @@
+{
+  "active_unique_zero_rule_count": 637,
+  "anomaly_priority_counts": {
+    "1": 1995,
+    "2": 12910,
+    "3": 642,
+    "4": 2623,
+    "5": 2363
+  },
+  "anomaly_table_count_including_route_fallbacks": 20533,
+  "audit_priority_counts": {
+    "0": 753496,
+    "1": 1995,
+    "2": 12910,
+    "3": 642,
+    "4": 2623
+  },
+  "cost_effective_date": "",
+  "duplicate_consensus_zero_rule_count": 5,
+  "eligibility_status": "not_modelled_generic_passenger_assumed",
+  "explicit_zero_rule_count": 642,
+  "fixture_case_count": 20,
+  "matsim_scoring_integration": "not_performed",
+  "model_fare_coverage": 1.0,
+  "non_null_model_fare_count": 771666,
+  "ordered_od_anomaly_count": 18170,
+  "quality_counts": {
+    "B": 764969,
+    "C": 4074,
+    "D": 2623
+  },
+  "required_forward_pair_count": 771666,
+  "resolution_method_counts": {
+    "direct_unique_gtfs_ordered_od": 754133,
+    "direct_unique_gtfs_ordered_od_other_bus_scope": 10836,
+    "direct_unique_gtfs_ordered_od_route_scope_unresolved": 2074,
+    "identical_raw_candidate_consensus": 2000,
+    "median_nearest_existing_candidate_tie_higher": 2560,
+    "modal_raw_official_candidate_amount": 59,
+    "terminal_OD_candidate_matching_JSON_fullFare": 4
+  },
+  "resolution_status_counts": {
+    "official_conflict_candidate_selected": 2623,
+    "official_duplicate_consensus": 2000,
+    "official_unique": 754133,
+    "official_unique_scope_relaxed": 12910
+  },
+  "route_fallback_count": 2363,
+  "route_fallback_coverage": 1.0,
+  "schema_version": "hong_kong_bus_simulation_fare_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "source_sha256": {
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06",
+    "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "schedule": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+  },
+  "temporal_status": "source_snapshot_applied_without_route_specific_effective_date",
+  "transfer_concession_status": "not_modelled_ignored_for_v1"
+}
