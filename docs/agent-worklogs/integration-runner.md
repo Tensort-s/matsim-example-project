@@ -1,0 +1,89 @@
+# INT-RUNNER append-only worklog
+
+This file is an append-only audit record. Never edit or delete an earlier
+entry. Corrections, session replacements, and superseding decisions must be
+appended as new entries.
+
+## Session history
+
+- Current session: `019fb38e-919f-7d92-a376-af88b49d5900`
+
+## Entry 1 — Stage 0 registration
+
+```yaml
+timestamp: "2026-07-30 Asia/Shanghai"
+session_id: "019fb38e-919f-7d92-a376-af88b49d5900"
+stage_id: "Stage 0 registration"
+input_commit_sha: "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Registered the persistent INT-RUNNER lane with no Git write authority."
+evidence_paths:
+  - "agent-lanes.md"
+decisions:
+  - "Runs require a Supervisor-authorized exact pushed SHA and an explicit run specification."
+hard_gate_status: "NOT_EVALUATED"
+diagnostic_findings: []
+blockers:
+  - "No Stage 0 run is authorized."
+handoff_to: "INT-EXECUTOR"
+next_allowed_action: "Wait for a later explicit Supervisor run authorization."
+```
+
+## Entry 2 — Stage 0 WORKLOG HANDOFF
+
+Faithfully transcribed from the actual INT-RUNNER handoff:
+
+```yaml
+timestamp: "2026-07-30 Asia/Shanghai"
+session_id: "019fb38e-919f-7d92-a376-af88b49d5900"
+source_thread_id: "019fb38c-07b4-7242-b7a8-aa00594636fe"
+lane_id: "INT-RUNNER"
+stage_id: 0
+registry:
+  INT-SUPERVISOR: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+  INT-EXECUTOR: "019fb38f-c992-74f1-9894-c6009784a697"
+  INT-RUNNER: "019fb38e-919f-7d92-a376-af88b49d5900"
+  INT-REVIEWER: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+project:
+  repository: "Tensort-s/matsim-example-project"
+  integration_worktree: "F:\\Matsim\\worktrees\\hk-cost-integration"
+  integration_branch: "integration/hk-multimodal-cost-v1"
+  server_root: "by@100.103.8.34:/mnt/DiskM/by"
+input_commit_sha: "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+merge_order: "Taxi -> PT -> Car"
+write_scope: "No Git writes; append-only run and evidence directories only."
+actions_or_observations:
+  - "Accepted and recorded all Bootstrap registry IDs."
+  - "Confirmed zero Git writes."
+  - "Confirmed only Supervisor-authorized pushed exact SHA may be run."
+  - "Confirmed every attempt must use a new, non-overwriting, traceable directory."
+  - "Confirmed unchanged reruns are prohibited."
+  - "Confirmed Evidence Handoff must be delivered to INT-EXECUTOR."
+  - "No Git operation was performed."
+  - "No server task was started."
+  - "No local or remote evidence directory was created."
+  - "No model, configuration, input, or runtime parameter was changed."
+evidence_paths: []
+decisions:
+  - "Stage 0 remains control-plane only."
+  - "INT-RUNNER will not independently initiate a run."
+  - "INT-RUNNER will not repair model failures or declare a stage passed."
+  - "Reviewer findings do not authorize progression without Supervisor direction."
+  - "A failed run cannot be repeated unchanged unless a one-time external infrastructure failure is demonstrated."
+hard_gate_status: "NOT_EVALUATED — Stage 0 contains no authorized run"
+diagnostic_findings: []
+trend_findings: []
+blockers:
+  - "No later-stage run authorization has been issued by INT-SUPERVISOR."
+  - "No exact execution specification has been supplied."
+handoff_to: "INT-SUPERVISOR"
+next_allowed_action: "Wait for INT-SUPERVISOR to authorize an exact pushed commit SHA and explicit run specification; do not run a server task during Stage 0."
+```

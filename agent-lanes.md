@@ -1,0 +1,149 @@
+# Hong Kong multimodal-cost integration agent lanes
+
+## Current lane registry
+
+This is the current registry for the persistent Hong Kong MATSim multimodal-cost
+integration lanes. When a lane session is replaced, update only its
+`current_session_id` here and append the old and new IDs to that lane's worklog
+session history. Never delete earlier worklog history.
+
+| lane | purpose | current_session_id | write_scope | worklog |
+|---|---|---|---|---|
+| INT-SUPERVISOR | Overall architecture, stage planning, gates and escalation | 019fb38e-0963-7f01-9461-ba84c9aa6378 | Read-only; no repository or run-directory writes | docs/agent-worklogs/integration-supervisor.md |
+| INT-EXECUTOR | Sole integration worktree writer; merge, implementation, local validation, commit and push | 019fb38f-c992-74f1-9894-c6009784a697 | F:\Matsim\worktrees\hk-cost-integration on integration/hk-multimodal-cost-v1 only | docs/agent-worklogs/integration-executor.md |
+| INT-RUNNER | Exact-SHA server runs, smoke, calibration, 50 iterations and evidence capture | 019fb38e-919f-7d92-a376-af88b49d5900 | No Git writes; append-only run and evidence directories only | docs/agent-worklogs/integration-runner.md |
+| INT-REVIEWER | Independent pushed-commit and run-evidence review | 019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e | Read-only; no repository or run-directory writes | docs/agent-worklogs/integration-reviewer.md |
+
+## Authority and evidence boundary
+
+- `INT-EXECUTOR` is the sole writer for
+  `F:\Matsim\worktrees\hk-cost-integration` and
+  `integration/hk-multimodal-cost-v1`.
+- `INT-SUPERVISOR` and `INT-REVIEWER` are read-only. `INT-RUNNER` performs no
+  Git writes and may write only to new, append-only run and evidence
+  directories after explicit Supervisor authorization.
+- Only `INT-SUPERVISOR` advances stages. Executor and Runner report facts and
+  evidence; Reviewer independently assesses an exact pushed commit and run
+  evidence. No other lane declares a stage passed.
+- Protected `master` and feature branches must not be modified or force-pushed.
+  No other worktree may be modified. Git merges, rather than manual file copies
+  from another worktree, are the only allowed feature-integration mechanism.
+
+## Locked Stage 0 identity
+
+```text
+baseline:
+  a3d6445cfd79a74b6fd6bd01e547d7df8055a64d
+feature/hk-taxi-behavioral-pilot-v1:
+  aa0d4794fa3af8458c906db1614fd418893e4bd4
+feature/hk-pt-fare-model-v1:
+  0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103
+feature/hk-car-cost-model-v1:
+  fc906efd3afb98e027cc6cca44060dec9e32aa46
+merge order:
+  Taxi -> PT -> Car
+```
+
+Stage 0 is control-plane initialization only. It authorizes no Taxi, PT, or
+Car merge and no Stage 1 implementation, test, or run.
+
+## Gate classifications
+
+### Hard Gate
+
+A Hard Gate includes compilation or mandatory-test failure; unexpected input
+hash changes; duplicate charging; unexplained missing charges; Taxi-to-`ride`
+conversion; broken `mode` or `routingMode`; unresolved values filled with
+zero; fixed ownership charged per leg; non-finite scores; incomplete required
+iterations; wrong commit SHA or inputs; a non-unique interface; or a protected
+branch change.
+
+### Diagnostic
+
+Diagnostics include PrepareForSim duration, peak memory, PT segment counts,
+Taxi route changes, cost means, mode share, fallback use, stuck conditions
+that do not make outputs incomplete, warnings, and speed. A diagnostic does
+not automatically fail a stage unless it demonstrably defeats the stage
+objective and the reason is recorded.
+
+### Trend
+
+Trends include mode share, stuck counts, scores, cost distributions,
+replanning, and iteration duration across iterations or experiments.
+
+## Run-identity and historical-evidence rules
+
+- A failed run must not be repeated under an identical run identity with no
+  relevant change merely by selecting a new directory. A rerun requires a new
+  commit, config, input, environment repair, verifiable hypothesis, or a
+  demonstrated one-time infrastructure failure. Record the change, its
+  mechanism, and the metric that will verify it.
+- Every server attempt uses a new directory. Existing server files and prior
+  attempts are never overwritten or deleted.
+- Historical commits, documents, guards, and failed-run evidence remain
+  available and are labelled historical, legacy, or superseded as applicable.
+  A historical guard does not control a new canonical contract. Replacing a
+  guard requires a recorded reason and equivalent protection for the new
+  architecture.
+
+## Standard stage loop
+
+```text
+Supervisor Brief
+  -> Executor implement/test/commit/push
+  -> Reviewer review exact pushed SHA
+  -> if BLOCKED: Supervisor issues rework
+  -> if PASS and a run is needed: Supervisor authorizes Runner
+  -> Runner executes exact SHA and returns Evidence Handoff
+  -> Executor commits compact evidence and pushes
+  -> Reviewer re-reviews exact pushed SHA and run evidence
+  -> Supervisor advances the stage
+```
+
+## Model-policy escalation boundary
+
+Escalate to the user before changing economic or behavioral semantics,
+monetary utility, ASC range or target, non-random missing-data treatment or
+new imputation, the economic meaning of `car monetaryDistanceRate`, mode
+definitions, capacity or demand scale, unsupported fare or parking
+assumptions, destructive Git operations, a `master` merge, or choosing between
+two materially different research interpretations.
+
+Ordinary merge conflicts, class refactors, Guice bindings, scoring factories,
+tests, compilation, server paths, performance, logging, validation formatting,
+duplicate-charge prevention, and other non-model implementation defects do not
+require user escalation.
+
+## Required stage sequence
+
+The integration must pass these stages in order:
+
+0. control-plane initialization;
+1. Taxi runtime;
+2. canonical PT offline interface;
+3. canonical Car offline interface, using only
+   `unified_marginal_cost_interface_v1` with fixed ownership excluded;
+4. completeness audit;
+5. combined scoring with Taxi migrated first;
+6. PT itinerary and stuck resolution;
+7. PT runtime;
+8. Car runtime, introducing fuel/electricity, confirmed toll, and resolved
+   parking independently;
+9. joint short smoke;
+10. 5- and 10-iteration runs;
+11. joint calibration;
+12. frozen 50-iteration release candidate;
+13. post-run acceptance.
+
+No merge to `master` is allowed without explicit user authorization.
+
+## Accepted Taxi boundary entering integration
+
+Independent Taxi smoke is no longer a merge prerequisite. Native routing is
+technically accepted: all 37,286 Taxi legs retain
+`mode=taxi,routingMode=taxi`, Taxi-to-`ride` is zero, standard PrepareForSim
+completes, and all 37,286 prepared routes have calculable fares. The historical
+two-iteration run remains incomplete: iteration 0 recorded 35,088 departures,
+35,087 arrivals, one Taxi stuck, and 2,198 later Taxi legs blocked mainly by
+upstream PT/walk execution. `ASC=-9` is a placeholder, not a calibration
+result. No explicit Taxi fleet is authorized.

@@ -70,6 +70,11 @@ runs/hongkong/run_manifest.json
 scripts/hong_kong_single_city/README.md
 ```
 
+For the active multimodal-cost integration, [`agent-lanes.md`](../agent-lanes.md)
+is the current persistent-lane registry. The files under
+[`docs/agent-worklogs/`](agent-worklogs/) are append-only audit records for
+lane handoffs, evidence, decisions, gates, blockers, and allowed next actions.
+
 Detailed provenance documents include:
 
 ```text
