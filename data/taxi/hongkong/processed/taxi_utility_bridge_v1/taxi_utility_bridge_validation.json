@@ -1,0 +1,297 @@
+{
+  "scenario_family": "hong_kong_taxi_utility_bridge_v1",
+  "validation_stage": "old_ride_new_taxi_bridge_validation_closure",
+  "status": "validated",
+  "all_checks_passed": true,
+  "failed_required_checks": [],
+  "required_checks": {
+    "row_count_ok": true,
+    "all_scenarios_are_base": true,
+    "unique_leg_keys": true,
+    "all_required_values_finite": true,
+    "distance_time_fare_nonnegative": true,
+    "fare_validation_row_count_matches": true,
+    "utility_design_validation_row_count_matches": true,
+    "ride_scoring_matches_bridge_parameters": true,
+    "effective_global_marginal_utility_of_money_is_1p0": true,
+    "utility_design_all_leg_keys_matched": true,
+    "utility_design_scores_match_within_1e_12": true,
+    "equivalence_error_within_1e_12": true,
+    "simplified_formula_error_within_1e_12": true,
+    "time_cancellation_error_within_1e_12": true,
+    "input_hashes_unchanged": true,
+    "protected_matsim_hashes_unchanged": true,
+    "worktree_protected_status_empty_before_after": true,
+    "external_matsim_root_protected_status_empty_before_after": true,
+    "grouped_counts_match": true,
+    "outputs_exist_and_nonempty": true,
+    "only_allowed_repository_paths_changed": true
+  },
+  "base_taxi_passenger_legs": 37286,
+  "expected_base_taxi_passenger_legs": 37286,
+  "leg_key": [
+    "person_id",
+    "tour_id",
+    "leg_sequence"
+  ],
+  "formula": {
+    "travel_time_hours": "actual_travel_time_s / 3600",
+    "old_ride_score": "-1.5 + (-6.0 * travel_time_hours) + (-0.0015 * effective_global_marginal_utility_of_money * route_distance_m)",
+    "new_taxi_fare_utility": "-0.05 * fare_baseline_hkd * 1.0",
+    "new_taxi_score_before_asc": "(-6.0 * travel_time_hours) + new_taxi_fare_utility",
+    "asc_equivalent": "old_ride_score - new_taxi_score_before_asc",
+    "asc_equivalent_simplified": "-1.5 - 0.0015 * effective_global_marginal_utility_of_money * route_distance_m + 0.05 * fare_baseline_hkd",
+    "global_money_note": "The legacy ride monetaryDistanceRate is a MATSim monetary-distance term and is multiplied by the effective global marginalUtilityOfMoney. The custom taxi fare coefficient is already in util/HKD and is not multiplied by global marginalUtilityOfMoney."
+  },
+  "parameters": {
+    "ride_constant": -1.5,
+    "travel_utility_per_hour": -6.0,
+    "ride_monetary_distance_rate_per_m": -0.0015,
+    "effective_global_marginal_utility_of_money": 1.0,
+    "taxi_fare_utility_per_hkd": 0.05,
+    "taxi_fare_share_factor": 1.0
+  },
+  "effective_global_marginal_utility_of_money_source": {
+    "source_type": "retained_utility_design_value_with_no_config_override",
+    "source_path": "data/taxi/hongkong/processed/taxi_utility_design_v1/taxi_utility_design_validation.json",
+    "source_field": "global_marginal_utility_of_money_retained",
+    "config_parameter_present": false,
+    "config_path_checked": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+    "effective_value": 1.0
+  },
+  "observed_ride_scoring_from_config": {
+    "constant": -1.5,
+    "marginalUtilityOfTraveling_util_hr": -6.0,
+    "monetaryDistanceRate": -0.0015
+  },
+  "formula_error_max_abs": {
+    "max_abs_equivalence_error": 1.4210854715202004e-14,
+    "max_abs_simplified_formula_error": 1.4210854715202004e-14,
+    "max_abs_time_utility_cancellation_error": 0.0
+  },
+  "asc_equivalent_statistics": {
+    "mean": -12.750181231333478,
+    "median": -9.492480499999996,
+    "p10": -29.66278650000001,
+    "p25": -16.500543874999998,
+    "p75": -4.813097000000003,
+    "p90": -2.9551655000000006,
+    "p95": -2.1064564999999997,
+    "min": -73.62940050000002,
+    "max": -0.04999999999999982
+  },
+  "overall_diagnostics": {
+    "asc_equivalent_min": -73.62940050000002,
+    "asc_equivalent_max": -0.04999999999999982,
+    "corr_asc_equivalent_route_distance_m": -0.9994468347409778,
+    "corr_asc_equivalent_fare_baseline_hkd": -0.9914854519835233,
+    "asc_equivalent_lt_minus3_share": 0.8846483934989003,
+    "asc_equivalent_minus3_to_plus8_share": 0.1153516065010996,
+    "asc_equivalent_gt_plus8_share": 0.0,
+    "asc_equivalent_lt_minus12_share": 0.3934184412379982,
+    "asc_equivalent_minus12_to_minus6_share": 0.2999249047900016,
+    "asc_equivalent_gt_minus6_share": 0.3066566539720002
+  },
+  "candidate_selection": {
+    "status": "provisional_technical_candidates",
+    "selected_candidates": [
+      -12.0,
+      -9.0,
+      -6.0
+    ],
+    "labels": [
+      "more_negative_asc",
+      "center_asc",
+      "less_negative_asc"
+    ],
+    "reason": "-12 is close to the observed mean, -9 is close to the observed median, and -6 supplies a less-negative coarse test. The distribution is wide, so these remain provisional technical candidates rather than calibrated ASCs.",
+    "minus12_close_to_mean": true,
+    "minus9_close_to_median": true,
+    "single_asc_cannot_preserve_all_leg_utilities": true
+  },
+  "residual_distribution_anchors": {
+    "floor_p10": -30.0,
+    "round_p50": -9.0,
+    "ceil_p90": -2.0
+  },
+  "provisional_candidate_residual_diagnostics": [
+    {
+      "candidate_asc": -12.0,
+      "candidate_label": "more_negative_asc",
+      "residual_mean_absolute": 7.8892632667355045,
+      "residual_median_absolute": 6.452674000000002,
+      "residual_rmse": 10.719480230319654,
+      "residual_abs_le_1_util_share": 0.08035187469827818,
+      "residual_abs_le_3_util_share": 0.238293193155608,
+      "asc_equivalent_percentile_rank": 0.3934184412379982
+    },
+    {
+      "candidate_asc": -9.0,
+      "candidate_label": "center_asc",
+      "residual_mean_absolute": 7.629332738735718,
+      "residual_median_absolute": 5.062431249999994,
+      "residual_rmse": 11.331740545750893,
+      "residual_abs_le_1_util_share": 0.10094941801212251,
+      "residual_abs_le_3_util_share": 0.2999249047900016,
+      "asc_equivalent_percentile_rank": 0.5256128305530225
+    },
+    {
+      "candidate_asc": -6.0,
+      "candidate_label": "less_negative_asc",
+      "residual_mean_absolute": 8.281723064353914,
+      "residual_median_absolute": 4.201145,
+      "residual_rmse": 12.645530087118358,
+      "residual_abs_le_1_util_share": 0.09923295606930214,
+      "residual_abs_le_3_util_share": 0.3590355629458778,
+      "asc_equivalent_percentile_rank": 0.6933433460279997
+    }
+  ],
+  "grouped_summary": {
+    "grouping_dimensions": [
+      "overall",
+      "taxi_type",
+      "route_distance_bin",
+      "departure_time_period"
+    ],
+    "distance_bins": [
+      "0–2 km",
+      "2–5 km",
+      "5–10 km",
+      "10–20 km",
+      "20–30 km",
+      ">30 km"
+    ],
+    "distance_bin_rule": "left-closed, right-open; final bin has no upper bound",
+    "departure_time_periods": [
+      "00:00–06:59",
+      "07:00–09:59",
+      "10:00–15:59",
+      "16:00–19:59",
+      "20:00–23:59"
+    ],
+    "departure_time_rule": "departure_time_s modulo 86400, left-closed hour intervals",
+    "leg_count_sums_by_dimension": {
+      "overall": 37286,
+      "taxi_type": 37286,
+      "route_distance_bin": 37286,
+      "departure_time_period": 37286
+    }
+  },
+  "utility_design_center_crosscheck": {
+    "center_scenario_id": "farecoef_0p05_share_1p0",
+    "center_rows": 37286,
+    "center_leg_keys_unique": true,
+    "joined_rows": 37286,
+    "all_leg_keys_matched": true,
+    "max_abs_new_score_difference": 0.0,
+    "max_abs_fare_utility_difference": 0.0,
+    "scores_match_within_1e_12": true
+  },
+  "roots": {
+    "worktree_root": "F:/Matsim/worktrees/hk-taxi-pilot",
+    "worktree_git_repository_root": "F:/Matsim/worktrees/hk-taxi-pilot",
+    "explicit_matsim_root": "F:/Matsim/matsim-example-project",
+    "matsim_root_was_explicit": true,
+    "resolved_matsim_root": "F:/Matsim/matsim-example-project",
+    "external_matsim_git_repository_root": "F:/Matsim/matsim-example-project"
+  },
+  "input_paths": {
+    "taxi_leg_fare_estimates_base.parquet": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_fare_model_v1/taxi_leg_fare_estimates_base.parquet",
+    "taxi_fare_model_validation.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_fare_model_v1/taxi_fare_model_validation.json",
+    "taxi_leg_utility_audit_base.parquet": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_utility_design_v1/taxi_leg_utility_audit_base.parquet",
+    "taxi_utility_design_validation.json": "F:/Matsim/worktrees/hk-taxi-pilot/data/taxi/hongkong/processed/taxi_utility_design_v1/taxi_utility_design_validation.json"
+  },
+  "protected_matsim_input_paths": {
+    "plans_unrouted_5pct_v2.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+    "plans_routed_5pct_v2.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+    "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+    "facilities_5pct_v2.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+    "privateVehicles_5pct.xml.gz": "F:/Matsim/matsim-example-project/data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+    "network.xml.gz": "F:/Matsim/matsim-example-project/data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz"
+  },
+  "input_hashes_before": {
+    "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+    "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14",
+    "taxi_leg_utility_audit_base.parquet": "83ae03ab51548ca5d0a0427289d1ca165dd67a7dbee27217071756fec698958d",
+    "taxi_utility_design_validation.json": "ca6d61debacbfca32cdf757f074a913dcda8e4d91a77c517e688c2c166c888d3"
+  },
+  "input_hashes_after": {
+    "taxi_leg_fare_estimates_base.parquet": "8a90cc100a911efbc893552447fc1089bf3098bc7ce45df9fe3e4e95a6452b86",
+    "taxi_fare_model_validation.json": "b8408f47488aea7072afe05a549341ac986d0db7e5410114899948eafe8d2c14",
+    "taxi_leg_utility_audit_base.parquet": "83ae03ab51548ca5d0a0427289d1ca165dd67a7dbee27217071756fec698958d",
+    "taxi_utility_design_validation.json": "ca6d61debacbfca32cdf757f074a913dcda8e4d91a77c517e688c2c166c888d3"
+  },
+  "protected_matsim_hashes_before": {
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+  },
+  "protected_matsim_hashes_after": {
+    "plans_unrouted_5pct_v2.xml.gz": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+  },
+  "git_protection": {
+    "worktree_protected_pathspecs": [
+      "data/matsim_agents/hongkong",
+      "data/transit/hongkong",
+      "data/taxi/hongkong/processed/taxi_fare_model_v1",
+      "data/taxi/hongkong/processed/taxi_utility_design_v1",
+      "scenarios",
+      "src"
+    ],
+    "worktree_protected_status_before": "",
+    "worktree_protected_status_after": "",
+    "external_matsim_root_protected_pathspecs": [
+      "data/matsim_agents/hongkong",
+      "data/transit/hongkong",
+      "scenarios",
+      "src"
+    ],
+    "external_matsim_root_protected_status_before": "",
+    "external_matsim_root_protected_status_after": "",
+    "repository_changed_paths": [
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_grouped_summary.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_leg_audit.parquet",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_summary.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_asc_candidate_residual_diagnostics.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_asc_initial_candidates.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_utility_bridge_validation.json",
+      "docs/HONG_KONG_TAXI_UTILITY_DESIGN.md",
+      "scripts/hong_kong_single_city/costs/build_hong_kong_taxi_utility_bridge.py"
+    ],
+    "allowed_repository_paths": [
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_grouped_summary.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_leg_audit.parquet",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/old_ride_vs_new_taxi_summary.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_asc_candidate_residual_diagnostics.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_asc_initial_candidates.csv",
+      "data/taxi/hongkong/processed/taxi_utility_bridge_v1/taxi_utility_bridge_validation.json",
+      "docs/HONG_KONG_TAXI_UTILITY_DESIGN.md",
+      "scripts/hong_kong_single_city/costs/build_hong_kong_taxi_utility_bridge.py"
+    ],
+    "unexpected_changed_paths": []
+  },
+  "output_hashes": {
+    "old_ride_vs_new_taxi_leg_audit.parquet": "3e2031d7c402a789e017b689a634cd05e0e62e2ee86cf711b2c28e60d820b073",
+    "old_ride_vs_new_taxi_summary.csv": "e629efce90c8973687962bba0692304343e606b2ef4d80691c0a398d1ab15255",
+    "taxi_asc_initial_candidates.csv": "2dcbc3bcdadeb46950c85227b33f5b521026a3a8bd558f08b4a1c492dd4ff70c",
+    "old_ride_vs_new_taxi_grouped_summary.csv": "9d9106329d747021f608c58e6b67a0ede183d08c6ba6984709cd2c1ba9c3f176",
+    "taxi_asc_candidate_residual_diagnostics.csv": "2dbd2265a32b3a1e1de6ebeb4287f1aeb5d59a5d6b455e9f561eb312d99e56fe"
+  },
+  "non_modification_statement": "No MATSim plans, configs, networks, facilities, vehicles, Java files, modes, or simulation outputs were modified. No MATSim, QSim, Controler, smoke test, or mode-share calibration was run.",
+  "outputs": [
+    "old_ride_vs_new_taxi_leg_audit.parquet",
+    "old_ride_vs_new_taxi_summary.csv",
+    "taxi_asc_initial_candidates.csv",
+    "taxi_utility_bridge_validation.json",
+    "old_ride_vs_new_taxi_grouped_summary.csv",
+    "taxi_asc_candidate_residual_diagnostics.csv"
+  ]
+}

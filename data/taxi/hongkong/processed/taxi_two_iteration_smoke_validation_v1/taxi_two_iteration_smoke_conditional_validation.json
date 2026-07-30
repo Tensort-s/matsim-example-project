@@ -1,0 +1,88 @@
+{
+  "audit": "hong_kong_taxi_two_iteration_smoke_conditional_validation_v1",
+  "recorded_utc": "2026-07-30T13:24:40.992Z",
+  "checkpoint_sha": "531dba35477b052a4336c091b797a0ceb4497fc0",
+  "server_attempt": {
+    "attempt": 1,
+    "path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/two_iteration_smoke_531dba3_attempt1",
+    "process_exit_code": 1,
+    "total_wall_time_seconds": 1328.440976114,
+    "peak_resident_set_kib": 12131484
+  },
+  "status": {
+    "taxi_technical_integration": "PASS",
+    "overall_two_iteration_completion": "NOT PASSED",
+    "stage_status": "CONDITIONAL PASS — upstream PT execution limitation"
+  },
+  "iteration_0": {
+    "planned_taxi_legs": 37286,
+    "taxi_departures": 35088,
+    "taxi_arrivals": 35087,
+    "unmatched_taxi_departures": 1,
+    "unmatched_taxi_arrivals": 0,
+    "taxi_stuck": 1,
+    "total_stuck": 86245,
+    "pt_stuck": 79045,
+    "qsim_completed": true,
+    "iteration_completed": false
+  },
+  "upstream_blocked_taxi": {
+    "missing_taxi_legs": 2198,
+    "affected_persons": 924,
+    "missing_by_last_stuck_mode": {
+      "pt": 2156,
+      "walk": 32,
+      "taxi": 1,
+      "no_stuck_event": 9
+    },
+    "missing_with_person_stuck_event": 2189,
+    "missing_without_person_stuck_event": 9,
+    "planned_departure_at_or_after_30h_among_missing": 0,
+    "main_cause": "preceding PT or walk execution became stuck and prevented later Taxi legs from executing",
+    "not_attributed_to": [
+      "Taxi routing failure",
+      "Taxi-to-ride conversion",
+      "route-based fare calculation failure"
+    ]
+  },
+  "iteration_1": {
+    "status": "not_started",
+    "reason": "iteration 0 scoring correctly rejected unconsumed route-based fare schedule entries after upstream-blocked Taxi legs"
+  },
+  "taxi_technical_checks": {
+    "native_taxi_routing_installed": true,
+    "standard_prepare_for_sim_impl": true,
+    "custom_pt_rebuild_invocations": 0,
+    "route_based_taxi_fare_installed": true,
+    "taxi_mode_and_routing_mode_preserved": true,
+    "taxi_to_ride": 0,
+    "invalid_taxi_routes": 0,
+    "taxi_network_vehicle_events": 0,
+    "dvrp_request_pickup_dispatch_or_fleet_events": 0,
+    "taxi_person_money_events": 0,
+    "duplicate_taxi_charging": false,
+    "input_files_unchanged": true
+  },
+  "fare_schedule": {
+    "calculation_failure": false,
+    "duplicate_or_extra_consumption": false,
+    "fully_consumed": false,
+    "unconsumed_entries": 2198,
+    "interpretation": "The scorer correctly detected selected-plan Taxi fare entries that could not be consumed because the corresponding Taxi legs never executed."
+  },
+  "pt_runtime": {
+    "fatal_route_stop_line_or_unknown_mode_errors": 0,
+    "execution_limitation": "PT stuck prevented completion of downstream Taxi legs for affected persons."
+  },
+  "input_integrity": {
+    "all_seven_sha256_gates_passed_before": true,
+    "all_seven_sha256_gates_passed_after": true,
+    "detached_source_worktree_clean": true,
+    "shaded_jar_sha256": "acd33a13b807d5b97f842701563a5459fc28392e27642f05b4fde3178c0e8168"
+  },
+  "scope": {
+    "smoke_rerun_performed_for_this_record": false,
+    "model_or_parameter_changes": false,
+    "guard_changes": false
+  }
+}

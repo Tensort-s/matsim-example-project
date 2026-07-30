@@ -1,0 +1,47 @@
+﻿plan_source,activity_type,activity_count,present_in_unrouted,present_in_routed,count_difference,proposed_stage_activity,stage_classification_reason
+unrouted,accommodation,19457,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,accommodation,19457,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,border,28193,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,border,28193,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,car interaction,0,False,True,135436,True,Routed-only MATSim interaction activity; removing every occurrence restores the exact unrouted main-activity signature sequence.
+routed,car interaction,135436,False,True,135436,True,Routed-only MATSim interaction activity; removing every occurrence restores the exact unrouted main-activity signature sequence.
+unrouted,dining,36630,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,dining,36630,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,education_tertiary,11270,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,education_tertiary,11270,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,home,698403,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,home,698403,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,leisure,32616,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,leisure,32616,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,medical,8468,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,medical,8468,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,other,197,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,other,197,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,personal_business,12545,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,personal_business,12545,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,primary_activity,11612,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,primary_activity,11612,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school,1901,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school,1901,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school_escort,278,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school_escort,278,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school_kindergarten,6649,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school_kindergarten,6649,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school_primary,14834,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school_primary,14834,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school_secondary,14909,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school_secondary,14909,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,school_special,416,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,school_special,416,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,secondary_activity,7265,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,secondary_activity,7265,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,shopping,44242,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,shopping,44242,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,social,18582,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,social,18582,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,vfr,331,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,vfr,331,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,work,130957,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,work,130957,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+unrouted,work_mobile,29679,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.
+routed,work_mobile,29679,True,True,0,False,Present in the unrouted main-activity inventory and retained as a main activity.

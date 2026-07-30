@@ -74,6 +74,8 @@ For the active multimodal-cost integration, [`agent-lanes.md`](../agent-lanes.md
 is the current persistent-lane registry. The files under
 [`docs/agent-worklogs/`](agent-worklogs/) are append-only audit records for
 lane handoffs, evidence, decisions, gates, blockers, and allowed next actions.
+The staged Taxi/PT/Car merge contract and current integration evidence are in
+[`docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md`](HONG_KONG_MULTIMODAL_COST_INTEGRATION.md).
 
 Detailed provenance documents include:
 
@@ -91,6 +93,9 @@ docs/HONG_KONG_MATSIM_AGENTS_5PCT.md
 docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md
 docs/HONG_KONG_TAXI_FARE_MODEL.md
 docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
+docs/HONG_KONG_TAXI_JAVA_SCORING.md
+docs/HONG_KONG_TAXI_LOAD_TEST.md
+docs/HONG_KONG_TAXI_SMOKE_TEST.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -164,6 +169,15 @@ capacity-factor, transit-capacity, or route-specific stop-link assumptions.
 The current `ride` mode is audited against 2026 Transport Department taxi
 controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
 read-only and does not modify the adopted v2 plans.
+The real routed taxi base plans have a separate full-scenario, no-simulation
+load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
+taxi leg attributes, routes, fare-only scoring, and scoring-factory creation
+without creating a Controler, QSim, iteration, behavioural calibration, or
+taxi fleet.
+The subsequent fixed-ASC, iterations 0-1 technical integration gate is
+defined in `docs/HONG_KONG_TAXI_SMOKE_TEST.md`. It freezes replanning and
+routing, keeps Taxi outside QSim main modes, verifies the live custom scoring
+factory, and audits each QSim iteration without introducing a Taxi/DVRP fleet.
 
 The final local SimWrapper project for this configuration is:
 

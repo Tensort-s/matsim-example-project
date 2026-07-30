@@ -1,0 +1,6 @@
+mode,before_count,after_count,difference,expected_before_count,expected_after_count
+car,67718,67718,0,67718,67718
+pt,557104,557104,0,557104,557104
+ride,56360,19074,-37286,56360,19074
+taxi,0,37286,37286,0,37286
+walk,197868,197868,0,197868,197868

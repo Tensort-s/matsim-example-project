@@ -1,0 +1,137 @@
+{
+  "audit": "hong_kong_taxi_integration_stage1_merge_v1",
+  "status": "ready_for_merge_commit",
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_1_GATE",
+  "recorded_at": "2026-07-30T23:32:12+08:00",
+  "branch": "integration/hk-multimodal-cost-v1",
+  "input_commit_sha": "476f25254a99e4b9c47d5b439a6e7b658a412f80",
+  "taxi_source_sha": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+  "locked_unmerged_source_shas": {
+    "pt": "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+    "car": "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+  },
+  "merge": {
+    "command": "git merge --no-ff --no-commit aa0d4794fa3af8458c906db1614fd418893e4bd4",
+    "merge_head": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+    "automatic_merge_completed": true,
+    "conflict_count": 0,
+    "conflict_paths": [],
+    "taxi_code_test_data_and_topic_documentation_match_locked_source": true,
+    "stage_0_control_plane_preserved": true
+  },
+  "compile": {
+    "command": ".\\mvnw.cmd -DskipTests compile",
+    "exit_code": 0,
+    "result": "BUILD SUCCESS",
+    "duration_seconds": 12.286,
+    "java_version": "25.0.2"
+  },
+  "maven_tests": {
+    "command": ".\\mvnw.cmd test",
+    "exit_code": 0,
+    "result": "BUILD SUCCESS",
+    "duration_seconds": 77.0,
+    "report_directory": "target/surefire-reports",
+    "report_files": 11,
+    "tests": 61,
+    "taxi_tests": 60,
+    "generic_regression_tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "test_classes": {
+      "HongKongTaxiFareCalculatorTest": 7,
+      "HongKongTaxiFareScoringTest": 10,
+      "HongKongTaxiPrepareForSimLifecycleTest": 1,
+      "HongKongTaxiPtRoutePreparationTest": 8,
+      "HongKongTaxiRoutingModuleTest": 3,
+      "HongKongTaxiScenarioLoadAuditTest": 3,
+      "HongKongTaxiScoringConfigGuardTest": 8,
+      "HongKongTaxiScoringFunctionTest": 8,
+      "HongKongTaxiSmokeDependencyAuditTest": 8,
+      "HongKongTaxiSmokeIntegrationTest": 4,
+      "RunMatsimWithoutApplicationTest": 1
+    }
+  },
+  "python_tests": {
+    "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts\\hong_kong_single_city\\demand_generation\\test_prepare_hong_kong_taxi_native_routing.py",
+    "exit_code": 0,
+    "tests": 2,
+    "result": "OK"
+  },
+  "script_interface_checks": {
+    "interpreter": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe",
+    "help_exit_code": 0,
+    "scripts_checked": [
+      "scripts/hong_kong_single_city/costs/build_hong_kong_taxi_utility_bridge.py",
+      "scripts/hong_kong_single_city/demand_generation/audit_hong_kong_taxi_routed_main_leg_mapping.py",
+      "scripts/hong_kong_single_city/demand_generation/convert_hong_kong_taxi_behavioral_plans.py",
+      "scripts/hong_kong_single_city/demand_generation/prepare_hong_kong_taxi_native_routing.py"
+    ]
+  },
+  "structured_evidence": {
+    "merged_json_files_parsed": 9,
+    "parse_failures": 0,
+    "native_routing_validation": {
+      "path": "data/taxi/hongkong/processed/taxi_native_routing_v1/taxi_native_routing_validation.json",
+      "status": "validated",
+      "taxi_legs": 37286,
+      "mode_taxi_routing_mode_taxi": 37286,
+      "taxi_to_ride": 0
+    },
+    "prepare_for_sim_validation": {
+      "path": "data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/taxi_prepare_for_sim_validation.json",
+      "status": "validated",
+      "binding_class": "org.matsim.core.controler.PrepareForSimImpl",
+      "custom_rebuild_invocation_delta": 0,
+      "taxi_legs_before": 37286,
+      "taxi_legs_after": 37286,
+      "mode_or_routing_mode_changes": 0,
+      "calculated_route_fares": 37286,
+      "route_fare_calculation_failures": 0
+    },
+    "route_fare_parity_validation": {
+      "path": "data/taxi/hongkong/processed/taxi_route_fare_scoring_v1/taxi_route_fare_parity_validation.json",
+      "status": "validated",
+      "taxi_legs": 37286,
+      "exact_count": 37286,
+      "mismatch_count": 0,
+      "maximum_absolute_difference_hkd": 0.0
+    },
+    "historical_two_iteration_record": {
+      "path": "data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/taxi_two_iteration_smoke_conditional_validation.json",
+      "taxi_technical_integration": "PASS",
+      "overall_two_iteration_completion": "NOT PASSED",
+      "planned_taxi_legs": 37286,
+      "departures": 35088,
+      "arrivals": 35087,
+      "taxi_stuck": 1,
+      "upstream_blocked_taxi_legs": 2198,
+      "rerun_performed_for_this_record": false
+    }
+  },
+  "scope": {
+    "pt_feature_merged": false,
+    "car_feature_merged": false,
+    "pt_scoring_added": false,
+    "car_scoring_added": false,
+    "model_policy_changed": false,
+    "fare_policy_changed": false,
+    "demand_or_capacity_changed": false,
+    "taxi_asc_calibrated": false,
+    "explicit_taxi_fleet_added": false,
+    "hong_kong_scenario_run": false,
+    "standalone_taxi_smoke_rerun": false,
+    "remote_run": false,
+    "maven_suite_included_generic_regression_fixture": true,
+    "generic_regression_fixture_note": "RunMatsimWithoutApplicationTest is an existing small repository test fixture; no Hong Kong scenario or standalone Taxi smoke was run."
+  },
+  "diagnostics": [
+    "Maven warns that ${parent.version} is deprecated.",
+    "MATSim ScoringFunction.handleEvent and related APIs emit deprecation warnings.",
+    "Java 25 native-access and Unsafe deprecation warnings are emitted by dependencies.",
+    "Guice line-number inspection reports unsupported class-file major version 69, but injection and all tests pass.",
+    "Synthetic test fixtures emit configuration, routing-randomness, storage-capacity, and attribute-converter warnings."
+  ],
+  "post_commit_and_push_checks": "Recorded in the INT-EXECUTOR Stage 1 handoff because a commit cannot contain its own SHA."
+}

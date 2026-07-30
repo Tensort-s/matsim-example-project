@@ -1,0 +1,572 @@
+{
+  "audit" : "hong_kong_taxi_smoke_dependency_audit_v1",
+  "audit_status" : "validated",
+  "all_audit_integrity_checks_passed" : true,
+  "started_utc" : "2026-07-29T09:33:10.202879752Z",
+  "audit_checkpoint_sha" : "6d4038e01dfb7a68e6a6e9989ae7b5de7a552f66",
+  "matsim_version" : "2026.0",
+  "java_version" : "25.0.3",
+  "run_flags" : {
+    "controler_run" : false,
+    "qsim_run" : false,
+    "routing_run" : false,
+    "replanning_run" : false,
+    "asc_experiment" : false,
+    "fleet_run" : false
+  },
+  "input_files_before" : {
+    "load_validation" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/results/taxi_scenario_load_validation.json",
+      "size_bytes" : 13324,
+      "sha256" : "114a97f53e0f4bc2d4bdcda103a7c07580fe0e9820a147858eb36d873afdf595"
+    },
+    "taxi_plans" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+      "size_bytes" : 82100567,
+      "sha256" : "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27"
+    },
+    "network" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+      "size_bytes" : 2861518,
+      "sha256" : "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    "original_plans" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/plans_routed_5pct_v2.xml.gz",
+      "size_bytes" : 80681267,
+      "sha256" : "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+    },
+    "transit_schedule" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+      "size_bytes" : 7182822,
+      "sha256" : "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    "iteration_0_events" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/ITERS/it.0/0.events.xml.zst",
+      "size_bytes" : 657948151,
+      "sha256" : "f29dc764341bb7e481a9f55ed0831e3a7a958a31c9a8fbdec6844de0a6675cf5"
+    },
+    "facilities" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+      "size_bytes" : 3232921,
+      "sha256" : "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    "transit_vehicles" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+      "size_bytes" : 455967,
+      "sha256" : "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "private_vehicles" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+      "size_bytes" : 78999,
+      "sha256" : "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    },
+    "failed_validation" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/results/taxi_smoke_validation.json",
+      "size_bytes" : 17848,
+      "sha256" : "2eec227ceb01792c01f3dad034f5a86cc905feb78876389c0eab2b852b30f772"
+    },
+    "base_config" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+      "size_bytes" : 11682,
+      "sha256" : "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4"
+    },
+    "failed_run_log" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/logfile.log",
+      "size_bytes" : 96472518,
+      "sha256" : "7b0b85f1c1132dd208e0366b7d690d3c920c12f39b96e359bf7f9f173b5a69ea"
+    }
+  },
+  "paths" : {
+    "load_validation" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/results/taxi_scenario_load_validation.json",
+    "taxi_plans" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+    "network" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+    "original_plans" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/plans_routed_5pct_v2.xml.gz",
+    "transit_schedule" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+    "iteration_0_events" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/ITERS/it.0/0.events.xml.zst",
+    "facilities" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+    "failed_validation" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/results/taxi_smoke_validation.json",
+    "private_vehicles" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+    "transit_vehicles" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+    "base_config" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+    "failed_run_log" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/logfile.log",
+    "output_directory" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/dependency_audit_v1_6d4038e_a2/results"
+  },
+  "smoke_status" : "failed",
+  "smoke_process_exit_code" : 1,
+  "pt_route_runtime_type_audit" : {
+    "original" : {
+      "persons" : 385820,
+      "total_pt_legs" : 557104,
+      "route_null" : 0,
+      "implements_transit_passenger_route" : 0,
+      "generic_route_impl" : 557104,
+      "default_transit_passenger_route" : 0,
+      "other_legal_transit_passenger_route" : 0,
+      "access_stop_missing" : 557104,
+      "egress_stop_missing" : 557104,
+      "line_id_missing" : 557104,
+      "transit_route_id_missing" : 557104,
+      "access_stop_not_in_schedule" : 0,
+      "egress_stop_not_in_schedule" : 0,
+      "line_not_in_schedule" : 0,
+      "route_not_in_schedule" : 0,
+      "stop_link_execution_position_incompatible" : 0,
+      "stop_link_check_unavailable" : 557104,
+      "runtime_class_counts" : {
+        "org.matsim.core.population.routes.GenericRouteImpl" : 557104
+      },
+      "invalid_reason_counts" : {
+        "line_id_missing" : 557104,
+        "transit_route_id_missing" : 557104,
+        "not_transit_passenger_route" : 557104,
+        "egress_stop_missing" : 557104,
+        "access_stop_missing" : 557104
+      },
+      "expected_taxi_legs" : 0,
+      "expected_taxi_persons" : 0
+    },
+    "taxi" : {
+      "persons" : 385820,
+      "total_pt_legs" : 557104,
+      "route_null" : 0,
+      "implements_transit_passenger_route" : 0,
+      "generic_route_impl" : 557104,
+      "default_transit_passenger_route" : 0,
+      "other_legal_transit_passenger_route" : 0,
+      "access_stop_missing" : 557104,
+      "egress_stop_missing" : 557104,
+      "line_id_missing" : 557104,
+      "transit_route_id_missing" : 557104,
+      "access_stop_not_in_schedule" : 0,
+      "egress_stop_not_in_schedule" : 0,
+      "line_not_in_schedule" : 0,
+      "route_not_in_schedule" : 0,
+      "stop_link_execution_position_incompatible" : 0,
+      "stop_link_check_unavailable" : 557104,
+      "runtime_class_counts" : {
+        "org.matsim.core.population.routes.GenericRouteImpl" : 557104
+      },
+      "invalid_reason_counts" : {
+        "line_id_missing" : 557104,
+        "transit_route_id_missing" : 557104,
+        "not_transit_passenger_route" : 557104,
+        "egress_stop_missing" : 557104,
+        "access_stop_missing" : 557104
+      },
+      "expected_taxi_legs" : 37286,
+      "expected_taxi_persons" : 15439
+    }
+  },
+  "pt_route_conversion_comparison" : {
+    "original_pt_legs" : 557104,
+    "taxi_pt_legs" : 557104,
+    "matched" : 557104,
+    "missing" : 0,
+    "extra" : 0,
+    "ambiguous" : 0,
+    "completely_identical" : 557104,
+    "route_type_changed" : 0,
+    "route_content_changed" : 0,
+    "leg_attributes_changed" : 0,
+    "mode_changed" : 0,
+    "routing_mode_changed" : 0
+  },
+  "pt_removal_log_audit" : {
+    "pt_no_transit_route_log_lines" : 237950,
+    "unique_persons" : 237950,
+    "unique_mapped_pt_legs" : 237950,
+    "pt_no_stop_log_lines" : 237950,
+    "unique_no_stop_persons" : 237950,
+    "person_sets_equal" : true,
+    "pending_route_rows" : 0,
+    "unavailable_plan_leg_mappings" : 0,
+    "route_class_mismatches" : 0,
+    "fare_schedule_mismatch_log_lines" : 0,
+    "taxi_attribute_error_log_lines" : 0,
+    "route_runtime_class_counts" : {
+      "org.matsim.core.population.routes.GenericRouteImpl" : 237950
+    },
+    "route_description_examples" : {
+      "org.matsim.core.population.routes.GenericRouteImpl" : ""
+    },
+    "first_error_timestamp" : "2026-07-29T15:18:13,443",
+    "first_error_log_line" : 286,
+    "first_error_person" : "hk_person_02893021"
+  },
+  "taxi_event_reconciliation" : {
+    "expected_taxi_legs" : 37286,
+    "observed_departures" : 30230,
+    "observed_arrivals" : 30230,
+    "matched_departures" : 30230,
+    "missing_departures" : 7056,
+    "duplicate_departures" : 0,
+    "unexpected_departures" : 0,
+    "unmatched_departures" : 0,
+    "unmatched_arrivals" : 0
+  },
+  "missing_taxi_departure_attribution" : {
+    "total" : 7056,
+    "category_counts" : {
+      "invalid_pt_before_taxi_agent_removed" : 7024,
+      "taxi_departure_missing_without_observed_upstream_blocker" : 32
+    }
+  },
+  "stuck_event_audit" : {
+    "total_events" : 12387,
+    "unique_persons" : 12387,
+    "mode_counts" : {
+      "car" : 11753,
+      "<null>" : 55,
+      "walk" : 579
+    },
+    "hour_counts" : {
+      "19" : 1495,
+      "18" : 1315,
+      "17" : 672,
+      "16" : 581,
+      "15" : 453,
+      "14" : 416,
+      "13" : 356,
+      "12" : 304,
+      "11" : 246,
+      "10" : 432,
+      "29" : 5,
+      "28" : 63,
+      "27" : 63,
+      "26" : 118,
+      "25" : 249,
+      "24" : 420,
+      "23" : 487,
+      "22" : 884,
+      "21" : 1240,
+      "20" : 1483,
+      "9" : 314,
+      "8" : 137,
+      "7" : 1,
+      "30" : 653
+    },
+    "top_links" : [ {
+      "link_id" : "road_102439_0_f",
+      "count" : 60
+    }, {
+      "link_id" : "road_59920_0_f",
+      "count" : 60
+    }, {
+      "link_id" : "road_58563_0_f",
+      "count" : 59
+    }, {
+      "link_id" : "road_164493_0_f",
+      "count" : 58
+    }, {
+      "link_id" : "road_102664_0_f",
+      "count" : 56
+    }, {
+      "link_id" : "<null>",
+      "count" : 55
+    }, {
+      "link_id" : "road_102668_0_f",
+      "count" : 54
+    }, {
+      "link_id" : "road_57207_0_f",
+      "count" : 54
+    }, {
+      "link_id" : "road_102665_0_f",
+      "count" : 53
+    }, {
+      "link_id" : "road_93080_0_f",
+      "count" : 52
+    }, {
+      "link_id" : "road_58561_0_f",
+      "count" : 51
+    }, {
+      "link_id" : "road_57663_0_f",
+      "count" : 50
+    }, {
+      "link_id" : "road_59041_0_f",
+      "count" : 50
+    }, {
+      "link_id" : "road_102580_0_r",
+      "count" : 49
+    }, {
+      "link_id" : "road_102429_0_r",
+      "count" : 48
+    }, {
+      "link_id" : "road_58562_0_f",
+      "count" : 48
+    }, {
+      "link_id" : "road_57689_0_f",
+      "count" : 46
+    }, {
+      "link_id" : "road_103730_0_f",
+      "count" : 45
+    }, {
+      "link_id" : "road_92922_0_f",
+      "count" : 44
+    }, {
+      "link_id" : "road_102658_0_f",
+      "count" : 43
+    } ],
+    "taxi_person_events" : 33,
+    "unique_taxi_persons" : 33,
+    "events_before_an_expected_taxi" : 0,
+    "unique_person_intersection_with_pt_removal" : 0,
+    "stuck_links_missing_from_network" : 0,
+    "max_event_time_seconds" : 108000.0,
+    "events_at_max_time" : 653,
+    "representative_events" : [ {
+      "personId" : "pt_veh_dep_gmb_2001558_1_00004_gmb_legal_max_19",
+      "time" : 28208.0,
+      "mode" : "car",
+      "linkId" : "road_296651_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_01433907",
+      "time" : 28879.0,
+      "mode" : "car",
+      "linkId" : "road_263403_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_1232_2_00016_bus_kmb_fleet_weighted",
+      "time" : 29066.0,
+      "mode" : "car",
+      "linkId" : "road_57706_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_1213_2_00008_bus_kmb_fleet_weighted",
+      "time" : 29068.0,
+      "mode" : "car",
+      "linkId" : "road_62756_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_06373021",
+      "time" : 29080.0,
+      "mode" : "car",
+      "linkId" : "road_56930_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_03687445",
+      "time" : 29464.0,
+      "mode" : "car",
+      "linkId" : "road_58244_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2008629_2_00015_gmb_legal_max_19",
+      "time" : 29475.0,
+      "mode" : "car",
+      "linkId" : "road_57156_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2007992_1_00012_gmb_legal_max_19",
+      "time" : 29621.0,
+      "mode" : "car",
+      "linkId" : "road_56929_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_04582326",
+      "time" : 29672.0,
+      "mode" : "car",
+      "linkId" : "road_57357_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_1236_1_00013_bus_kmb_fleet_weighted",
+      "time" : 29724.0,
+      "mode" : "car",
+      "linkId" : "road_57795_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_04155468",
+      "time" : 29782.0,
+      "mode" : "car",
+      "linkId" : "road_64698_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2007996_1_00018_gmb_legal_max_19",
+      "time" : 29862.0,
+      "mode" : "car",
+      "linkId" : "road_59108_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2007995_1_00020_gmb_legal_max_19",
+      "time" : 29876.0,
+      "mode" : "car",
+      "linkId" : "road_59998_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_8213_1_00004_bus_kmb_fleet_weighted",
+      "time" : 29961.0,
+      "mode" : "car",
+      "linkId" : "road_57806_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_1467_2_00005_bus_lwb_fleet_weighted",
+      "time" : 29977.0,
+      "mode" : "car",
+      "linkId" : "road_57794_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_04135555",
+      "time" : 29978.0,
+      "mode" : "car",
+      "linkId" : "road_58246_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "hk_person_03457368",
+      "time" : 29994.0,
+      "mode" : "car",
+      "linkId" : "road_59623_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2001887_1_00011_gmb_legal_max_19",
+      "time" : 30025.0,
+      "mode" : "car",
+      "linkId" : "road_59559_0_f",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_bus_1232_2_00018_bus_kmb_fleet_weighted",
+      "time" : 30069.0,
+      "mode" : "car",
+      "linkId" : "road_272273_0_r",
+      "reason" : ""
+    }, {
+      "personId" : "pt_veh_dep_gmb_2005683_1_00027_gmb_legal_max_19",
+      "time" : 30095.0,
+      "mode" : "car",
+      "linkId" : "road_7815_0_r",
+      "reason" : ""
+    } ]
+  },
+  "baseline_runtime_comparison" : {
+    "status" : "unavailable",
+    "reason" : "Existing historical base logs/events lack a verified checkpoint and complete input-SHA manifest; they are not used for causal conclusions."
+  },
+  "conversion_causality_conclusion" : {
+    "pt_mapping_unique" : true,
+    "route_type_changes" : 0,
+    "route_content_changes" : 0,
+    "leg_attribute_changes" : 0,
+    "taxi_conversion_changed_pt_routes" : false
+  },
+  "input_files_after" : {
+    "load_validation" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/results/taxi_scenario_load_validation.json",
+      "size_bytes" : 13324,
+      "sha256" : "114a97f53e0f4bc2d4bdcda103a7c07580fe0e9820a147858eb36d873afdf595"
+    },
+    "taxi_plans" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/load_test_v1_fdc36b2/inputs/plans_routed_5pct_taxi_base.xml.gz",
+      "size_bytes" : 82100567,
+      "sha256" : "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27"
+    },
+    "network" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+      "size_bytes" : 2861518,
+      "sha256" : "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    "original_plans" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/plans_routed_5pct_v2.xml.gz",
+      "size_bytes" : 80681267,
+      "sha256" : "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+    },
+    "transit_schedule" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+      "size_bytes" : 7182822,
+      "sha256" : "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    "iteration_0_events" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/ITERS/it.0/0.events.xml.zst",
+      "size_bytes" : 657948151,
+      "sha256" : "f29dc764341bb7e481a9f55ed0831e3a7a958a31c9a8fbdec6844de0a6675cf5"
+    },
+    "facilities" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+      "size_bytes" : 3232921,
+      "sha256" : "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    "transit_vehicles" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+      "size_bytes" : 455967,
+      "sha256" : "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "private_vehicles" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+      "size_bytes" : 78999,
+      "sha256" : "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    },
+    "failed_validation" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/results/taxi_smoke_validation.json",
+      "size_bytes" : 17848,
+      "sha256" : "2eec227ceb01792c01f3dad034f5a86cc905feb78876389c0eab2b852b30f772"
+    },
+    "base_config" : {
+      "path" : "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+      "size_bytes" : 11682,
+      "sha256" : "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4"
+    },
+    "failed_run_log" : {
+      "path" : "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/smoke_asc_minus9_2it_2bb935d/output/logfile.log",
+      "size_bytes" : 96472518,
+      "sha256" : "7b0b85f1c1132dd208e0366b7d690d3c920c12f39b96e359bf7f9f173b5a69ea"
+    }
+  },
+  "required_checks" : {
+    "audit_checkpoint_is_full_sha" : true,
+    "matsim_version_is_2026_0" : true,
+    "smoke_status_remains_failed" : true,
+    "load_validation_is_validated" : true,
+    "input_hashes_unchanged" : true,
+    "original_pt_categories_close" : true,
+    "taxi_pt_categories_close" : true,
+    "pt_mapping_unique_and_closed" : true,
+    "pt_log_route_rows_complete" : true,
+    "pt_log_person_sets_equal" : true,
+    "pt_log_person_counts_equal" : true,
+    "pt_log_mappings_available" : true,
+    "pt_log_route_classes_match_plans" : true,
+    "pt_log_lines_match_report" : true,
+    "expected_taxi_exact" : true,
+    "observed_taxi_departures_match_validation" : true,
+    "observed_taxi_arrivals_match_validation" : true,
+    "missing_taxi_exact" : true,
+    "taxi_departure_arithmetic_closes" : true,
+    "taxi_event_unmatched_matches_validation" : true,
+    "stuck_events_match_validation" : true,
+    "stuck_mode_categories_close" : true,
+    "attribution_categories_close" : true,
+    "event_collector_counts_close" : true,
+    "fare_schedule_mismatch_absent" : true,
+    "source_taxi_attributes_valid" : true
+  },
+  "failed_checks" : [ ],
+  "output_files" : {
+    "expected_taxi_leg_audit.csv" : {
+      "size_bytes" : 5027441,
+      "sha256" : "1f54e0fddc052de3c9561b043f83cb35d15ff4f6f0e57e57f0e1104505a203dd"
+    },
+    "missing_taxi_departure_attribution.csv" : {
+      "size_bytes" : 1353203,
+      "sha256" : "ff1e58e0908ef3ebb050a04332fec2a2adabda85111ad066760efc17f74da506"
+    },
+    "pt_removal_person_counts.csv" : {
+      "size_bytes" : 6928410,
+      "sha256" : "d2a2c17bc9aed570695cff0cd3f053303ed2e502570aa8425910002db04572fb"
+    },
+    "pt_route_conversion_comparison.csv" : {
+      "size_bytes" : 290,
+      "sha256" : "d3520f173544748769acc00715d58852e7fbb6165e87268028b979ba1e662e9f"
+    },
+    "pt_route_runtime_type_summary.csv" : {
+      "size_bytes" : 2879,
+      "sha256" : "c2dc103bb9b330bfe00c2c38167d0ea0432f96dfd56cdfcc52d38c7d56a8794c"
+    },
+    "representative_failure_examples.csv" : {
+      "size_bytes" : 4846,
+      "sha256" : "a3297cb47656884390eb3b657ad14658b7c5b9f39d1077a23d55337ff546fb35"
+    },
+    "stuck_event_summary.csv" : {
+      "size_bytes" : 57701,
+      "sha256" : "bf1cc09c8888b1c7004e2d9b36e9a2cd8be3adbd6010e25ea083b446324824fb"
+    }
+  },
+  "finished_utc" : "2026-07-29T09:35:32.149747564Z",
+  "process_exit_code" : 0
+}

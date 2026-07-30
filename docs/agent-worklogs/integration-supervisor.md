@@ -75,3 +75,50 @@ blockers:
 handoff_to: "Bootstrap Coordinator; INT-EXECUTOR for faithful append to the Stage 0 supervisor worklog"
 next_allowed_action: "Receive and audit the initialization exact pushed SHA plus Executor, Runner, and Reviewer confirmations; do not issue Stage 1 before every Stage 0 gate is satisfied."
 ```
+
+## Entry 3 — Stage 0 gate closure and Stage 1 authorization
+
+Faithfully transcribed from the actual INT-SUPERVISOR handoff:
+
+```yaml
+timestamp: "2026-07-30T23:24:02+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 0 gate closure / Stage 1 authorization"
+input_commit_sha: "476f25254a99e4b9c47d5b439a6e7b658a412f80"
+source_branch_shas:
+  baseline: "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d"
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Independently audited local HEAD, integration ref, tracking ref, remote integration ref, commit topology, file scope, feature ancestry, locked source refs, lane registry, worklog fields, and lane confirmations."
+  - "Received INT-REVIEWER PASS for exact pushed SHA 476f25254a99e4b9c47d5b439a6e7b658a412f80."
+  - "Confirmed Reviewer found all Stage 0 hard gates satisfied and no blockers."
+  - "Confirmed INT-RUNNER made zero Git writes and performed no Stage 0 run."
+  - "Confirmed INT-EXECUTOR remains sole writer and the reviewed worktree was clean."
+  - "Closed Stage 0 as PASS."
+  - "Determined no model-policy or other user-escalation item exists."
+  - "Issued the formal Stage 1 Taxi merge Brief to INT-EXECUTOR."
+  - "Did not modify any repository, worktree, branch, or run directory."
+  - "Did not authorize INT-RUNNER or an independent Taxi smoke."
+evidence_paths:
+  - "agent-lanes.md"
+  - "docs/PROJECT_ONBOARDING.md"
+  - "docs/agent-worklogs/integration-supervisor.md"
+  - "docs/agent-worklogs/integration-executor.md"
+  - "docs/agent-worklogs/integration-runner.md"
+  - "docs/agent-worklogs/integration-reviewer.md"
+decisions:
+  - "Stage 0: PASS."
+  - "Stage 1 is formally authorized for INT-EXECUTOR only."
+  - "Stage 1 canonical input is 476f25254a99e4b9c47d5b439a6e7b658a412f80."
+  - "Stage 1 Taxi source is locked to aa0d4794fa3af8458c906db1614fd418893e4bd4."
+  - "PT and Car remain locked but unmerged."
+  - "No independent Taxi smoke is required or authorized."
+  - "INT-RUNNER remains unauthorized."
+hard_gate_status: "STAGE_0_PASS__STAGE_1_AUTHORIZED"
+diagnostic_findings: []
+blockers: []
+handoff_to: "INT-EXECUTOR; Bootstrap Coordinator; later INT-REVIEWER after Executor pushes Stage 1"
+next_allowed_action: "INT-EXECUTOR may execute only the formal Stage 1 Brief, commit and push the exact result, then return evidence for independent Reviewer review; no Runner action."
+```

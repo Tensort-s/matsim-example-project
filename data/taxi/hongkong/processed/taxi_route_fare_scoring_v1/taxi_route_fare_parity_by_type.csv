@@ -1,0 +1,5 @@
+requested_taxi_type,applied_taxi_type,count,baseline_mean_hkd,baseline_median_hkd,calculated_mean_hkd,calculated_median_hkd,mean_absolute_difference_hkd,max_absolute_difference_hkd,unresolved_urban_fallback
+lantau_taxi,lantau_taxi,62,34.69516129032258,29.7,34.69516129032258,29.7,0.0,0.0,false
+new_territories_taxi,new_territories_taxi,3654,100.2772030651341,80.6,100.2772030651341,80.6,0.0,0.0,false
+unresolved,urban_taxi,2533,191.7459928938018,213.1,191.7459928938018,213.1,0.0,0.0,true
+urban_taxi,urban_taxi,31037,104.46217417920546,96.2,104.46217417920546,96.2,0.0,0.0,false
