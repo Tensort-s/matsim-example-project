@@ -50,6 +50,7 @@ public final class ValidateHongKongTaxiPrepareForSim {
 			execute(
 					Path.of(args[0]).toAbsolutePath().normalize(),
 					Path.of(args[1]).toAbsolutePath().normalize(),
+					validation,
 					args[3],
 					report);
 			exitCode = Boolean.TRUE.equals(report.get("all_checks_passed")) ? 0 : 2;
@@ -96,6 +97,7 @@ public final class ValidateHongKongTaxiPrepareForSim {
 	private static void execute(
 			Path baseConfig,
 			Path taxiPlans,
+			Path validation,
 			String checkpointSha,
 			Map<String, Object> report) {
 		requireRegularFile(baseConfig, "base config");
@@ -106,6 +108,13 @@ public final class ValidateHongKongTaxiPrepareForSim {
 		}
 
 		Config config = ConfigUtils.loadConfig(baseConfig.toString());
+		Path controllerOutput = validation.resolveSibling("controller_output");
+		if (Files.exists(controllerOutput)) {
+			throw new IllegalArgumentException(
+					"PrepareForSim validation Controler output already exists: "
+							+ controllerOutput);
+		}
+		config.controller().setOutputDirectory(controllerOutput.toString());
 		double flowCapacityBefore = config.qsim().getFlowCapFactor();
 		double storageCapacityBefore = config.qsim().getStorageCapFactor();
 		List<String> mainModesBefore = List.copyOf(config.qsim().getMainModes());
@@ -124,7 +133,8 @@ public final class ValidateHongKongTaxiPrepareForSim {
 				RunHongKongTaxiBehavioralPilot.snapshotFiles(inputPaths);
 		report.put("paths", ordered(
 				"base_config", baseConfig.toString(),
-				"taxi_plans", taxiPlans.toString()));
+				"taxi_plans", taxiPlans.toString(),
+				"controller_output", controllerOutput.toString()));
 		report.put("input_files", inputSnapshots);
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
