@@ -168,22 +168,40 @@ HongKongTaxiRouteContext
 
 Only `route.distance` and `hkTaxiType` are charged in this version.
 
-## Before restoring standard PrepareForSimImpl
+## Standard PrepareForSim lifecycle
 
-The existing smoke runner still performs the custom one-shot
-`HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(...)`. Restoring
-standard PrepareForSim requires a separately reviewed PT preparation change.
+The formal runner no longer invokes the custom one-shot
+`HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(...)`. MATSim 2026.0's
+default `PrepareForSimImpl` performs whole-plan preparation in parallel after
+the source PT Generic routes are cleared.
 
-The following legacy checks also need route-fare-aware updates before the next
-smoke:
+`HongKongTaxiPrepareForSimLifecycleTest` proves the ordering on a synthetic
+scenario:
 
-- `HongKongTaxiSmokeOutputAudit` still reports baseline fare sums and includes
-  the baseline in its Taxi attribute fingerprint;
-- Taxi strict/source fingerprints must continue to verify Taxi mode,
-  routingMode, route, type, classification, and ordinal invariance, but
-  baseline identity must not be interpreted as the runtime fare;
-- the router's six-field trip-attribute copy bridge still requires the
-  comparison baseline because native plans retain it, even though scoring no
-  longer does;
-- the smoke validation text and fare schedule audit must identify fares as
-  selected-plan route calculations, not fixed baseline consumption.
+```text
+default PrepareForSim updates the selected-plan Taxi route
+→ HongKongTaxiScoringFunctionFactory is requested
+→ routeFareScheduleFor(person) reads that prepared route
+→ HongKongTaxiFareCalculator charges its current distance
+```
+
+No delayed schedule refactor was needed. In the MATSim Controler lifecycle,
+default PrepareForSim runs before iteration-start and BeforeMobsim scoring
+functions are created. The full Hong Kong validation independently confirmed
+the same path through the real installed factory: schedule fare matched the
+prepared route, all 37,286 route fares calculated, and the historical
+`hkTaxiFareBaselineHkd` was not used as runtime fare.
+
+The full validation is recorded in:
+
+```text
+data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/
+  taxi_prepare_for_sim_validation.json
+```
+
+It observed 7,696 reasonable Taxi route changes, but no Taxi count, mode,
+routingMode, ordinal, attribute, or selected-plan sequence changes. The next
+technical stage may therefore run the fixed `ASC=-9` two-iteration smoke using
+the native-routing plans and standard PrepareForSim path. That smoke must
+retain the current route-based fare, passenger-only Taxi boundary, capacity,
+PT/Car scoring, and no-replanning settings.

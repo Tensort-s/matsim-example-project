@@ -1,10 +1,108 @@
 # Hong Kong Taxi two-iteration technical smoke test v1
 
-> Historical smoke design and attempt record. Its `routingMode=ride` and
-> `taxi_routing=false` statements describe the superseded v1 input. The next
-> smoke must use the native-routing plans/config and Java module documented in
-> [HONG_KONG_TAXI_NATIVE_ROUTING.md](HONG_KONG_TAXI_NATIVE_ROUTING.md).
-> No remote smoke was run as part of the native-routing implementation stage.
+> The two-iteration material below is a historical smoke design and attempt
+> record. Its `routingMode=ride`, custom startup rebuild, and
+> `taxi_routing=false` statements are superseded by the standard
+> PrepareForSim checkpoint recorded next. No two-iteration QSim was run during
+> the PrepareForSim restoration stage.
+
+## Standard PrepareForSim checkpoint (2026-07-30)
+
+The formal Taxi runner no longer calls
+`HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(...)`. Its current
+startup sequence is:
+
+```text
+load native Taxi plans
+clear the 557,104 source PT Generic routes
+create Controler
+install SwissRailRaptorModule
+install HongKongTaxiRoutingModule
+install route-based HongKongTaxiScoringModule
+run MATSim's bound PrepareForSimImpl
+```
+
+`HongKongTaxiSmokeRuntimeGuard` now verifies that the bound implementation is
+`org.matsim.core.controler.PrepareForSimImpl` and that the process-local
+custom-rebuild invocation counter remains zero. It accepts route changes made
+by default preparation while continuing to require exact Taxi count,
+identity, ordinal, attributes, mode, routing mode, and selected-plan sequence.
+The iteration-0 prepared Taxi snapshot becomes the exact invariant for any
+later iteration.
+
+The dedicated full-scenario validator is:
+
+```text
+org.matsim.project.hongkong.taxi.ValidateHongKongTaxiPrepareForSim
+```
+
+It calls the Controler injector's bound `PrepareForSim` service directly. It
+does not call `Controler.run()`, a Mobsim, or QSim. Its Controler output path is
+an attempt-local fresh directory so loading a production config cannot touch
+or overwrite a historical run.
+
+Formal server result:
+
+```text
+checkpoint:
+  27b7acf2f12fff56ea00971c3a84336dfe45f271
+server directory:
+  /mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/
+    prepare_for_sim_27b7acf_attempt5
+validation:
+  data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/
+    taxi_prepare_for_sim_validation.json
+status = validated
+all_checks_passed = true
+process_exit_code = 0
+```
+
+The seven base-config, native-plans, network, schedule, transit-vehicle,
+facility, and private-vehicle SHA256 gates passed before and after execution.
+The detached checkpoint worktree was clean. Java was Temurin 25.0.3, Maven
+3.9.8, MATSim 2026.0, and the shaded JAR SHA256 was
+`0f2b1e10cf2bdb36e989fe79c96d0456afed6794b07fc863fda1e9b435ccde9c`.
+
+Default `PrepareForSimImpl` used the configured 8 threads. Its measured call
+time was 1,065.5668 s; total external Java wall time, including scenario load
+and audits, was 18:31.54. Peak RSS was 8,793,352 KiB. The custom rebuild
+counter was `0 -> 0`.
+
+PT preparation produced:
+
+| Measure | Count |
+|---|---:|
+| Source PT main legs | 557,104 |
+| Source Generic routes cleared | 557,104 |
+| Prepared PT segments | 1,092,811 |
+| Legal `DefaultTransitPassengerRoute` | 1,092,811 |
+| Null / Generic routes | 0 / 0 |
+| Missing or invalid stop/line/route references | 0 |
+
+The prepared segment count is diagnostic, not a source-leg invariant. Standard
+whole-plan routing can expand one source PT main leg into access, transit,
+transfer, and egress segments.
+
+Taxi preparation produced:
+
+| Measure | Result |
+|---|---:|
+| Taxi before / after | 37,286 / 37,286 |
+| `mode=taxi`, `routingMode=taxi` | 37,286 |
+| Taxi converted to ride | 0 |
+| Null / invalid Taxi routes | 0 / 0 |
+| Taxi route changes | 7,696 |
+| Route-fare calculation failures | 0 |
+| Calculated route fares | 37,286 |
+| Fare sum / mean / median (HKD) | 4,096,449.1 / 109.8656091 / 98.3 |
+| Unresolved Urban fallbacks | 2,533 |
+
+The scoring lifecycle audit built a real
+`HongKongTaxiScoringFunctionFactory` schedule after default preparation and
+confirmed that its fare equals the calculator result for the prepared selected
+plan route. The historical `hkTaxiFareBaselineHkd` remained comparison-only.
+Capacity, QSim main modes, non-Taxi scoring, Taxi passenger-only boundaries,
+and all seven formal inputs remained unchanged.
 
 ## Purpose and boundary
 

@@ -1,0 +1,190 @@
+{
+  "audit": "hong_kong_taxi_default_prepare_for_sim_v1",
+  "status": "validated",
+  "all_checks_passed": true,
+  "started_utc": "2026-07-30T10:26:43.486859556Z",
+  "hostname": "FUSELAB01",
+  "checkpoint_sha": "27b7acf2f12fff56ea00971c3a84336dfe45f271",
+  "java": {
+    "version": "25.0.3",
+    "vendor": "Eclipse Adoptium",
+    "vm_name": "OpenJDK 64-Bit Server VM",
+    "max_heap_bytes": 34359738368,
+    "input_arguments": [
+      "-Xms8g",
+      "-Xmx32g",
+      "-Djava.io.tmpdir=/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/tmp",
+      "-Duser.home=/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/home",
+      "-DhkTaxiPrepare.mavenVersion=3.9.8"
+    ]
+  },
+  "maven_version": "3.9.8",
+  "matsim_version": "2026.0",
+  "paths": {
+    "base_config": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/inputs/config_hong_kong_taxi_native_routing_v1.xml",
+    "taxi_plans": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/inputs/plans_routed_5pct_taxi_native.xml.gz",
+    "controller_output": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/results/controller_output"
+  },
+  "input_files": {
+    "base_config": {
+      "path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/inputs/config_hong_kong_taxi_native_routing_v1.xml",
+      "size_bytes": 11549,
+      "sha256": "f23e999ac5f10ccaf5c8743181268a8d2b9b01ac0021b6b91db0c9357f548369"
+    },
+    "taxi_plans": {
+      "path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/prepare_for_sim_27b7acf_attempt5/inputs/plans_routed_5pct_taxi_native.xml.gz",
+      "size_bytes": 82677486,
+      "sha256": "9100cb58ce268d9f62771039eaa80d4da11bf200ceb8426130ef272c05de8f1f"
+    },
+    "network": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/network.xml.gz",
+      "size_bytes": 2861518,
+      "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    "transit_schedule": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitSchedule_5pct.xml.gz",
+      "size_bytes": 7182822,
+      "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    "transit_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/transitVehicles_10pct.xml.gz",
+      "size_bytes": 455967,
+      "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "facilities": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/facilities_5pct_v2.xml.gz",
+      "size_bytes": 3232921,
+      "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    "private_vehicles": {
+      "path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/privateVehicles_5pct.xml.gz",
+      "size_bytes": 78999,
+      "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    }
+  },
+  "prepare_for_sim": {
+    "binding_class": "org.matsim.core.controler.PrepareForSimImpl",
+    "default_prepare_for_sim_impl": true,
+    "parallel_threads": 8,
+    "wall_time_seconds": 1065.566803348,
+    "custom_rebuild_invocations_before": 0,
+    "custom_rebuild_invocations_after": 0,
+    "custom_rebuild_invocation_delta": 0
+  },
+  "pt_source_clear": {
+    "persons_scanned": 385820,
+    "plans_scanned": 385820,
+    "total_pt_legs": 557104,
+    "pt_routes_null_before": 0,
+    "pt_routes_non_null_before": 557104,
+    "generic_pt_routes_before": 557104,
+    "legal_transit_passenger_routes_before": 0,
+    "pt_routes_cleared": 557104,
+    "pt_routes_null_after_clear": 557104,
+    "non_pt_routes_changed": 0
+  },
+  "prepared_pt": {
+    "total_pt_legs": 1092811,
+    "route_null": 0,
+    "generic_route_impl": 0,
+    "transit_passenger_route": 1092811,
+    "default_transit_passenger_route": 1092811,
+    "other_legal_transit_passenger_route": 0,
+    "access_stop_missing": 0,
+    "egress_stop_missing": 0,
+    "line_id_missing": 0,
+    "transit_route_id_missing": 0,
+    "access_stop_not_in_schedule": 0,
+    "egress_stop_not_in_schedule": 0,
+    "line_not_in_schedule": 0,
+    "route_not_in_schedule": 0,
+    "runtime_class_counts": {
+      "org.matsim.pt.routes.DefaultTransitPassengerRoute": 1092811
+    },
+    "invalid_examples": [],
+    "fingerprint_sha256": "ce959332d36b6e89864034961ad45f6ba58c8d18d704a355a65f4f1e172f930c"
+  },
+  "taxi_prepare_changes": {
+    "taxi_legs_before": 37286,
+    "taxi_legs_after": 37286,
+    "missing": 0,
+    "extra": 0,
+    "duplicate": 0,
+    "taxi_ordinal_changes": 0,
+    "taxi_attribute_changes": 0,
+    "taxi_route_changes": 7696,
+    "taxi_mode_or_routing_mode_changes": 0,
+    "selected_plan_taxi_sequence_changes": 0,
+    "fingerprint_before_sha256": "9951b5ae4c961ff3a7fe40b40358fe557b88c2e5b662f3b593b6db554b540646",
+    "fingerprint_after_sha256": "45bfa44836c426131d900e413df6b4ce6c9d5f421e122ee921e6793facc6a1c6",
+    "identity_exact_allow_route_changes": true,
+    "exact": false
+  },
+  "prepared_taxi_route_and_fare": {
+    "taxi_legs": 37286,
+    "routing_mode_taxi": 37286,
+    "taxi_converted_to_ride": 0,
+    "null_routes": 0,
+    "invalid_routes": 0,
+    "route_fare_calculation_failures": 0,
+    "calculated_route_fares": 37286,
+    "fare_sum_hkd": 4096449.1000001333,
+    "fare_mean_hkd": 109.8656090757961,
+    "fare_median_hkd": 98.3,
+    "taxi_type_counts": {
+      "lantau_taxi": 62,
+      "new_territories_taxi": 3654,
+      "unresolved": 2533,
+      "urban_taxi": 31037
+    },
+    "unresolved_urban_fallbacks": 2533,
+    "failure_examples": []
+  },
+  "scoring_lifecycle": {
+    "representative_person_id": "hk_collective_000024",
+    "representative_taxi_schedule_size": 3,
+    "factory_schedule_matches_prepared_route": true,
+    "scoring_factory_class": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory"
+  },
+  "assigned_explicit_car_vehicles": 24800,
+  "scenario_supply_counts": {
+    "network_links": 117989,
+    "transit_routes": 3613,
+    "private_vehicles": 25427,
+    "transit_vehicles": 159967,
+    "transit_lines": 2434,
+    "activity_facilities": 228220,
+    "network_nodes": 81205,
+    "departures": 159967
+  },
+  "run_flags": {
+    "controler_run": false,
+    "qsim_run": false,
+    "mobsim_run": false,
+    "prepare_for_sim_run": true,
+    "custom_pt_rebuild_run": false,
+    "behavioral_replanning": false,
+    "mode_choice": false,
+    "fleet_or_dvrp": false
+  },
+  "required_checks": {
+    "checkpoint_sha_full": true,
+    "matsim_2026_0": true,
+    "all_input_hashes_exact": true,
+    "default_prepare_for_sim_impl_completed": true,
+    "custom_rebuild_invocation_delta_zero": true,
+    "pt_routes_legal": true,
+    "taxi_identity_preserved_allowing_routes": true,
+    "taxi_count_mode_routing_exact": true,
+    "taxi_routes_legal": true,
+    "route_fares_all_calculated": true,
+    "scoring_factory_reads_prepared_route": true,
+    "capacity_and_main_modes_unchanged": true,
+    "non_taxi_scoring_unchanged": true,
+    "taxi_not_network_or_qsim_mode": true
+  },
+  "failed_checks": [],
+  "finished_utc": "2026-07-30T10:45:14.103976479Z",
+  "peak_resident_set_kib": 8793352,
+  "process_exit_code": 0
+}
