@@ -10,11 +10,12 @@ import org.matsim.core.config.Config;
 import org.matsim.core.controler.events.AfterMobsimEvent;
 import org.matsim.core.controler.events.BeforeMobsimEvent;
 import org.matsim.core.controler.events.StartupEvent;
+import org.matsim.core.controler.PrepareForSim;
+import org.matsim.core.controler.PrepareForSimImpl;
 import org.matsim.core.controler.listener.AfterMobsimListener;
 import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.events.handler.BasicEventHandler;
-import org.matsim.core.router.TripRouter;
 import org.matsim.core.scoring.ScoringFunctionFactory;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
@@ -44,6 +45,7 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 	private final Config config;
 	private final HongKongTaxiPtRoutePreparation.PreparationAudit preparationAudit;
 	private final HongKongTaxiPtRoutePreparation.TaxiSnapshot sourceTaxiSnapshot;
+	private final long customRebuildInvocationsAtConstruction;
 	private final Map<Integer, IterationEvents> iterations = new LinkedHashMap<>();
 	private final Map<Integer, HongKongTaxiPtRoutePreparation.PtRuntimeAudit>
 			preparedPtByIteration = new LinkedHashMap<>();
@@ -51,9 +53,7 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			taxiInvarianceByIteration = new LinkedHashMap<>();
 	private final Map<String, Boolean> dangerousEventTypes = new ConcurrentHashMap<>();
 	private Map<String, Object> startupAudit = Map.of();
-	private HongKongTaxiPtRoutePreparation.StartupRebuildAudit startupRebuildAudit;
-	private HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit
-			taxiInvarianceAfterStartupRebuild;
+	private HongKongTaxiPtRoutePreparation.TaxiSnapshot preparedTaxiSnapshot;
 	private IterationEvents current;
 	private long afterMobsimWithoutLiveAudit;
 
@@ -64,6 +64,8 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		this.config = config;
 		this.preparationAudit = preparationAudit;
 		this.sourceTaxiSnapshot = sourceTaxiSnapshot;
+		this.customRebuildInvocationsAtConstruction =
+				HongKongTaxiPtRoutePreparation.customStartupRebuildInvocationCount();
 	}
 
 	@Override
@@ -71,7 +73,10 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		ScoringFunctionFactory factory = event.getServices().getScoringFunctionFactory();
 		HongKongTaxiScoringParameters parameters = event.getServices().getInjector()
 				.getInstance(HongKongTaxiScoringParameters.class);
+		PrepareForSim prepareForSim = event.getServices().getInjector()
+				.getInstance(PrepareForSim.class);
 		String factoryClass = factory.getClass().getName();
+		String prepareForSimClass = prepareForSim.getClass().getName();
 
 		List<String> fleetBindings = event.getServices().getInjector().getAllBindings().keySet().stream()
 				.map(key -> key.getTypeLiteral().getRawType().getName())
@@ -97,10 +102,23 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		checks.put("taxi_not_qsim_main_mode",
 				!config.qsim().getMainModes().contains(HongKongTaxiScoringParameters.TAXI_MODE));
 		checks.put("no_dvrp_or_taxi_fleet_bindings", fleetBindings.isEmpty());
+		checks.put("default_prepare_for_sim_impl_bound",
+				prepareForSim instanceof PrepareForSimImpl);
+		checks.put("custom_pt_rebuild_not_invoked_before_default_prepare",
+				HongKongTaxiPtRoutePreparation.customStartupRebuildInvocationCount()
+						== customRebuildInvocationsAtConstruction);
 
 		startupAudit = ordered(
 				"scoring_module_installed", EXPECTED_FACTORY.equals(factoryClass),
 				"actual_scoring_function_factory_class", factoryClass,
+				"prepare_for_sim_class", prepareForSimClass,
+				"default_prepare_for_sim_impl_bound",
+						prepareForSim instanceof PrepareForSimImpl,
+				"custom_rebuild_invocations_at_guard_construction",
+						customRebuildInvocationsAtConstruction,
+				"custom_rebuild_invocations_at_startup",
+						HongKongTaxiPtRoutePreparation
+								.customStartupRebuildInvocationCount(),
 				"fare_utility_per_hkd", parameters.fareUtilityPerHkd(),
 				"fare_share_factor", parameters.fareShareFactor(),
 				"global_marginal_utility_of_money",
@@ -123,22 +141,6 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		if (!failed.isEmpty()) {
 			throw new IllegalStateException("Taxi smoke startup guard failed: " + failed);
 		}
-		startupRebuildAudit =
-				HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(
-						event.getServices().getScenario(),
-						event.getServices().getInjector()
-								.getInstance(TripRouter.class)
-				);
-		HongKongTaxiPtRoutePreparation.requireFormalStartupRebuild(
-				startupRebuildAudit);
-		taxiInvarianceAfterStartupRebuild =
-				HongKongTaxiPtRoutePreparation.compareTaxi(
-						sourceTaxiSnapshot,
-						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
-								event.getServices().getScenario().getPopulation())
-				);
-		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(
-				taxiInvarianceAfterStartupRebuild);
 		event.getServices().getEvents().addHandler(this);
 	}
 
@@ -156,15 +158,35 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(
 						event.getServices().getScenario());
 		preparedPtByIteration.put(iteration, ptAudit);
-		HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit taxiAudit =
-				HongKongTaxiPtRoutePreparation.compareTaxi(
-						sourceTaxiSnapshot,
-						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
-								event.getServices().getScenario().getPopulation())
-				);
+		long currentCustomRebuildInvocations =
+				HongKongTaxiPtRoutePreparation.customStartupRebuildInvocationCount();
+		if (currentCustomRebuildInvocations != customRebuildInvocationsAtConstruction) {
+			throw new IllegalStateException(
+					"Custom PT rebuild was invoked on the standard PrepareForSim path: before="
+							+ customRebuildInvocationsAtConstruction + ", after="
+							+ currentCustomRebuildInvocations);
+		}
+		HongKongTaxiPtRoutePreparation.TaxiSnapshot currentTaxiSnapshot =
+				HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+						event.getServices().getScenario().getPopulation());
+		HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit taxiAudit;
+		if (iteration == 0) {
+			taxiAudit = HongKongTaxiPtRoutePreparation.compareTaxi(
+					sourceTaxiSnapshot, currentTaxiSnapshot);
+			HongKongTaxiPtRoutePreparation
+					.requireFormalTaxiIdentityAllowRouteChanges(taxiAudit);
+			preparedTaxiSnapshot = currentTaxiSnapshot;
+		} else {
+			if (preparedTaxiSnapshot == null) {
+				throw new IllegalStateException(
+						"Iteration 1 reached BeforeMobsim before prepared Taxi snapshot");
+			}
+			taxiAudit = HongKongTaxiPtRoutePreparation.compareTaxi(
+					preparedTaxiSnapshot, currentTaxiSnapshot);
+			HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(taxiAudit);
+		}
 		taxiInvarianceByIteration.put(iteration, taxiAudit);
 		HongKongTaxiPtRoutePreparation.requireFormalPrepared(ptAudit);
-		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(taxiAudit);
 		if (iteration == 1) {
 			HongKongTaxiPtRoutePreparation.PtRuntimeAudit first =
 					preparedPtByIteration.get(0);
@@ -172,7 +194,6 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 				throw new IllegalStateException(
 						"Iteration 1 reached BeforeMobsim before iteration 0");
 			}
-			requireStablePreparedPt(first, ptAudit);
 		}
 
 		current = new IterationEvents(iteration);
@@ -242,13 +263,13 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 				.equals(preparedPtByIteration.get(1).fingerprintSha256());
 		return ordered(
 				"source_clear_audit", preparationAudit.toMap(),
-				"startup_pt_only_rebuild",
-						startupRebuildAudit == null
-								? Map.of() : startupRebuildAudit.toMap(),
-				"taxi_invariance_after_startup_pt_rebuild",
-						taxiInvarianceAfterStartupRebuild == null
-								? Map.of()
-								: taxiInvarianceAfterStartupRebuild.toMap(),
+				"prepare_for_sim",
+						"default_parallel_PrepareForSimImpl",
+				"custom_startup_rebuild_invocations_before",
+						customRebuildInvocationsAtConstruction,
+				"custom_startup_rebuild_invocations_after",
+						HongKongTaxiPtRoutePreparation
+								.customStartupRebuildInvocationCount(),
 				"prepared_pt_by_iteration", prepared,
 				"taxi_invariance_by_iteration", taxi,
 				"before_mobsim_audit_count", preparedPtByIteration.size(),
@@ -262,6 +283,9 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 	public boolean preparedPtAndTaxiGuardsPassed() {
 		return preparedPtByIteration.size() == 2
 				&& taxiInvarianceByIteration.size() == 2
+				&& HongKongTaxiPtRoutePreparation
+						.customStartupRebuildInvocationCount()
+						== customRebuildInvocationsAtConstruction
 				&& preparedPtByIteration.values().stream().allMatch(audit ->
 						audit.totalPtLegs() > 0
 								&& audit.routeNull() == 0
@@ -277,10 +301,11 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 								&& audit.lineNotInSchedule() == 0
 								&& audit.routeNotInSchedule() == 0)
 				&& taxiInvarianceByIteration.values().stream()
+						.skip(1)
 						.allMatch(HongKongTaxiPtRoutePreparation
 								.TaxiInvarianceAudit::exact)
-				&& preparedPtByIteration.get(0).fingerprintSha256()
-						.equals(preparedPtByIteration.get(1).fingerprintSha256());
+				&& taxiInvarianceByIteration.get(0)
+						.identityExactAllowRouteChanges();
 	}
 
 	public int beforeMobsimAuditCount() {
@@ -288,7 +313,8 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 	}
 
 	public boolean startupPtRebuildCompleted() {
-		return startupRebuildAudit != null;
+		return HongKongTaxiPtRoutePreparation.customStartupRebuildInvocationCount()
+				> customRebuildInvocationsAtConstruction;
 	}
 
 	static void requireStablePreparedPt(

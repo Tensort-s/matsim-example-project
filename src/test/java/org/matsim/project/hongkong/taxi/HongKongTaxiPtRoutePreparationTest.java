@@ -262,24 +262,35 @@ class HongKongTaxiPtRoutePreparationTest {
 		assertFalse(HongKongTaxiSmokeOutputAudit
 				.sameStructureModesAttributesAndRoutes(sourceAudit, preparedAudit));
 
+		selectedLeg(prepared, "taxi").getRoute().setDistance(4_321.0);
+		HongKongTaxiSmokeOutputAudit.PlanAudit taxiRouteChanged =
+				HongKongTaxiSmokeOutputAudit.auditPopulation(prepared);
+		assertTrue(HongKongTaxiSmokeOutputAudit
+				.sameFixedPlansAllowPreparedPtAndTaxiRoutes(
+						sourceAudit, taxiRouteChanged));
+
 		selectedLeg(prepared, "taxi").getAttributes().putAttribute(
 				HongKongTaxiLegAttributes.FARE_BASELINE_HKD, 99.0);
 		HongKongTaxiSmokeOutputAudit.PlanAudit mutated =
 				HongKongTaxiSmokeOutputAudit.auditPopulation(prepared);
 		assertFalse(HongKongTaxiSmokeOutputAudit.sameFixedPlansAllowPreparedPt(
 				sourceAudit, mutated));
+		assertFalse(HongKongTaxiSmokeOutputAudit
+				.sameFixedPlansAllowPreparedPtAndTaxiRoutes(
+						sourceAudit, mutated));
 	}
 
 	@Test
-	void flagsDeclareOnlyDeterministicPtStartupRouting() {
+	void flagsDeclareOnlyDefaultPrepareForSimRouting() {
 		Map<String, Object> flags =
 				RunHongKongTaxiBehavioralPilot.smokeRunFlags(
-						true, true, true, true, 0);
+						true, true, true, false, 0);
 		assertEquals(true, flags.get("routing_run"));
-		assertEquals("deterministic_pt_startup_rebuild_and_native_taxi",
+		assertEquals("default_prepare_for_sim_pt_and_native_taxi",
 				flags.get("routing_scope"));
-		assertEquals("pt_only_before_iteration_0",
+		assertEquals("default_parallel_prepare_for_sim_after_source_route_clear",
 				flags.get("pt_startup_routing_scope"));
+		assertEquals(false, flags.get("pt_startup_route_rebuild"));
 		assertEquals(false, flags.get("behavioral_replanning"));
 		assertEquals(false, flags.get("mode_choice"));
 		assertEquals(true, flags.get("taxi_routing"));

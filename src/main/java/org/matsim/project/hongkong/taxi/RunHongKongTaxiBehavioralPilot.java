@@ -37,7 +37,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 
 	private static final String EXPECTED_PLANS_SHA =
 			"9100cb58ce268d9f62771039eaa80d4da11bf200ceb8426130ef272c05de8f1f";
-	private static final Map<String, String> EXPECTED_INPUT_HASHES = Map.of(
+	static final Map<String, String> EXPECTED_INPUT_HASHES = Map.of(
 			"base_config", "f23e999ac5f10ccaf5c8743181268a8d2b9b01ac0021b6b91db0c9357f548369",
 			"taxi_plans", EXPECTED_PLANS_SHA,
 			"network", "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
@@ -187,8 +187,10 @@ public final class RunHongKongTaxiBehavioralPilot {
 				"behavioral_replanning", false,
 				"mode_choice", false,
 				"pt_startup_route_clear", true,
-				"pt_startup_route_rebuild", true,
-				"pt_startup_routing_scope", "pt_only_before_iteration_0",
+				"pt_startup_route_rebuild", false,
+				"prepare_for_sim", "default_parallel_PrepareForSimImpl",
+				"pt_startup_routing_scope",
+						"default_prepare_for_sim_after_source_route_clear",
 				"taxi_routing", true,
 				"strategy_settings_count",
 						config.replanning().getStrategySettings().size(),
@@ -331,7 +333,9 @@ public final class RunHongKongTaxiBehavioralPilot {
 				!config.qsim().getMainModes().contains("taxi"));
 		checks.put("behavioral_replanning_and_mode_choice_disabled",
 				config.replanning().getStrategySettings().isEmpty());
-		checks.put("deterministic_pt_startup_routing_declared", true);
+		checks.put("default_parallel_prepare_for_sim_declared", true);
+		checks.put("custom_pt_startup_rebuild_not_invoked",
+				!guard.startupPtRebuildCompleted());
 		checks.put("complete_supply_exact", supplyExact(supply));
 		checks.put("source_plans_exact", plansExact(sourceAudit, false));
 		checks.put("source_pt_clear_exact",
@@ -352,9 +356,10 @@ public final class RunHongKongTaxiBehavioralPilot {
 				guard.allIterationTaxiChecksPassed());
 		checks.put("each_iteration_output_plans_fixed_except_prepared_pt",
 				outputAudits.stream().allMatch(audit ->
-						plansExact(audit, true)
+								plansExact(audit, true)
 								&& HongKongTaxiSmokeOutputAudit
-								.sameFixedPlansAllowPreparedPt(sourceAudit, audit)));
+								.sameFixedPlansAllowPreparedPtAndTaxiRoutes(
+										sourceAudit, audit)));
 		checks.put("iteration_0_and_1_output_plans_identical",
 				outputAudits.size() == 2
 						&& HongKongTaxiSmokeOutputAudit
@@ -363,7 +368,8 @@ public final class RunHongKongTaxiBehavioralPilot {
 		checks.put("final_output_plans_fixed_except_prepared_pt",
 				plansExact(finalAudit, true)
 						&& HongKongTaxiSmokeOutputAudit
-						.sameFixedPlansAllowPreparedPt(sourceAudit, finalAudit));
+						.sameFixedPlansAllowPreparedPtAndTaxiRoutes(
+								sourceAudit, finalAudit));
 		checks.put("runtime_log_has_no_pt_or_taxi_errors",
 				runtimeLogAudit.exact());
 		checks.put("source_taxi_plans_sha_unchanged",
@@ -406,10 +412,11 @@ public final class RunHongKongTaxiBehavioralPilot {
 				"qsim_run", qsimRun,
 				"pt_startup_route_clear", ptClear,
 				"pt_startup_route_rebuild", ptRebuild,
-				"pt_startup_routing_scope", "pt_only_before_iteration_0",
+				"pt_startup_routing_scope",
+						"default_parallel_prepare_for_sim_after_source_route_clear",
 				"routing_run", true,
 				"routing_scope",
-						"deterministic_pt_startup_rebuild_and_native_taxi",
+						"default_prepare_for_sim_pt_and_native_taxi",
 				"behavioral_replanning", false,
 				"strategy_settings_count", strategySettingsCount,
 				"mode_choice", false,
@@ -441,7 +448,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		return result;
 	}
 
-	private static Map<String, Path> configuredInputPaths(
+	static Map<String, Path> configuredInputPaths(
 			Config config, Path baseConfig, Path taxiPlans) {
 		Map<String, Path> paths = new LinkedHashMap<>();
 		paths.put("base_config", baseConfig);
@@ -467,14 +474,14 @@ public final class RunHongKongTaxiBehavioralPilot {
 				.toAbsolutePath().normalize();
 	}
 
-	private static Map<String, Object> snapshotFiles(Map<String, Path> paths) {
+	static Map<String, Object> snapshotFiles(Map<String, Path> paths) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		paths.forEach((name, path) ->
 				result.put(name, HongKongTaxiSmokeOutputAudit.fileSnapshot(path)));
 		return result;
 	}
 
-	private static int assignExplicitCarVehicles(Scenario scenario) {
+	static int assignExplicitCarVehicles(Scenario scenario) {
 		int assigned = 0;
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			Object value = person.getAttributes().getAttribute("assignedVehicleId");
@@ -493,7 +500,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		return assigned;
 	}
 
-	private static Map<String, Long> supplyCounts(Scenario scenario) {
+	static Map<String, Long> supplyCounts(Scenario scenario) {
 		long routes = 0;
 		long departures = 0;
 		for (TransitLine line : scenario.getTransitSchedule()
@@ -566,7 +573,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 				&& modes.equals(EXPECTED_MODE_COUNTS);
 	}
 
-	private static boolean hashesExact(Map<String, Object> snapshots) {
+	static boolean hashesExact(Map<String, Object> snapshots) {
 		for (Map.Entry<String, String> expected : EXPECTED_INPUT_HASHES.entrySet()) {
 			if (!expected.getValue().equals(snapshotSha(snapshots, expected.getKey()))) {
 				return false;

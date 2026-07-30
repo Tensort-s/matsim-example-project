@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.matsim.project.hongkong.taxi.HongKongTaxiSmokeOutputAudit.ordered;
 
@@ -45,6 +46,8 @@ public final class HongKongTaxiPtRoutePreparation {
 	public static final long EXPECTED_PERSONS = 385_820L;
 	public static final long EXPECTED_PT_LEGS = 557_104L;
 	public static final long EXPECTED_TAXI_LEGS = 37_286L;
+	private static final AtomicLong CUSTOM_STARTUP_REBUILD_INVOCATIONS =
+			new AtomicLong();
 
 	private HongKongTaxiPtRoutePreparation() {
 	}
@@ -172,6 +175,7 @@ public final class HongKongTaxiPtRoutePreparation {
 			Population population,
 			org.matsim.facilities.ActivityFacilities facilities,
 			PtTripRouter router) {
+		CUSTOM_STARTUP_REBUILD_INVOCATIONS.incrementAndGet();
 		long persons = population.getPersons().size();
 		long plans = 0;
 		long trips = 0;
@@ -597,6 +601,21 @@ public final class HongKongTaxiPtRoutePreparation {
 		}
 	}
 
+	public static void requireFormalTaxiIdentityAllowRouteChanges(
+			TaxiInvarianceAudit audit) {
+		if (audit.beforeTaxiLegs() != EXPECTED_TAXI_LEGS
+				|| audit.afterTaxiLegs() != EXPECTED_TAXI_LEGS
+				|| !audit.identityExactAllowRouteChanges()) {
+			throw new IllegalStateException(
+					"Taxi identity changed during default PrepareForSim: "
+							+ audit.toMap());
+		}
+	}
+
+	public static long customStartupRebuildInvocationCount() {
+		return CUSTOM_STARTUP_REBUILD_INVOCATIONS.get();
+	}
+
 	private static Map<MainTripIdentity, Integer> ordinalMap(TaxiSnapshot snapshot) {
 		Map<MainTripIdentity, Integer> result = new LinkedHashMap<>();
 		snapshot.records().values().forEach(record -> result.put(
@@ -975,6 +994,17 @@ public final class HongKongTaxiPtRoutePreparation {
 			String afterFingerprintSha256,
 			boolean exact) {
 
+		public boolean identityExactAllowRouteChanges() {
+			return beforeTaxiLegs == afterTaxiLegs
+					&& missing == 0
+					&& extra == 0
+					&& duplicate == 0
+					&& ordinalChanges == 0
+					&& attributeChanges == 0
+					&& modeOrRoutingModeChanges == 0
+					&& selectedPlanSequenceChanges == 0;
+		}
+
 		public Map<String, Object> toMap() {
 			return ordered(
 					"taxi_legs_before", beforeTaxiLegs,
@@ -990,6 +1020,8 @@ public final class HongKongTaxiPtRoutePreparation {
 							selectedPlanSequenceChanges,
 					"fingerprint_before_sha256", beforeFingerprintSha256,
 					"fingerprint_after_sha256", afterFingerprintSha256,
+					"identity_exact_allow_route_changes",
+							identityExactAllowRouteChanges(),
 					"exact", exact
 			);
 		}

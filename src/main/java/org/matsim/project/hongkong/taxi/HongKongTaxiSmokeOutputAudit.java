@@ -54,6 +54,7 @@ public final class HongKongTaxiSmokeOutputAudit {
 		MessageDigest strictTaxiDigest = sha256Digest();
 		MessageDigest mainActivityDigest = sha256Digest();
 		MessageDigest fixedNonPtDigest = sha256Digest();
+		MessageDigest fixedNonPtNonTaxiDigest = sha256Digest();
 		HongKongTaxiScoringParameters parameters = HongKongTaxiScoringParameters.centralV1();
 		List<Double> allScores = new ArrayList<>();
 		List<Double> taxiPersonScores = new ArrayList<>();
@@ -73,6 +74,7 @@ public final class HongKongTaxiSmokeOutputAudit {
 				int taxiOrdinal = 0;
 				int mainActivityOrdinal = 0;
 				int fixedNonPtOrdinal = 0;
+				int fixedNonPtNonTaxiOrdinal = 0;
 				for (PlanElement element : plan.getPlanElements()) {
 					if (element instanceof Activity activity) {
 						audit.activities++;
@@ -90,6 +92,14 @@ public final class HongKongTaxiSmokeOutputAudit {
 							audit.fixedNonPtMainLegs++;
 							update(fixedNonPtDigest, fixedNonPtFingerprint(
 									person, fixedNonPtOrdinal++, leg));
+							if (!"taxi".equals(leg.getMode())) {
+								audit.fixedNonPtNonTaxiMainLegs++;
+								update(fixedNonPtNonTaxiDigest,
+										fixedNonPtFingerprint(
+												person,
+												fixedNonPtNonTaxiOrdinal++,
+												leg));
+							}
 						}
 						Route route = leg.getRoute();
 						if (route != null) {
@@ -121,6 +131,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 		audit.mainActivityFingerprintSha256 = hex(mainActivityDigest.digest());
 		audit.fixedNonPtMainLegFingerprintSha256 =
 				hex(fixedNonPtDigest.digest());
+		audit.fixedNonPtNonTaxiMainLegFingerprintSha256 =
+				hex(fixedNonPtNonTaxiDigest.digest());
 		audit.planRouteFingerprintSha256 = hex(routeDigest.digest());
 		return audit;
 	}
@@ -340,6 +352,34 @@ public final class HongKongTaxiSmokeOutputAudit {
 				&& source.taxiPersons == output.taxiPersons
 				&& source.strictTaxiFingerprintSha256
 						.equals(output.strictTaxiFingerprintSha256)
+				&& source.taxiTypeCounts.equals(output.taxiTypeCounts)
+				&& source.classificationSourceCounts
+						.equals(output.classificationSourceCounts)
+				&& source.taxiRoutingModeCounts.equals(output.taxiRoutingModeCounts)
+				&& source.mainTripIndexSum == output.mainTripIndexSum
+				&& close(source.fareSumHkd, output.fareSumHkd);
+	}
+
+	/**
+	 * Allows default PrepareForSim to replace PT structure and Taxi routes while
+	 * keeping every non-Taxi main leg and all Taxi identity/metadata fixed.
+	 */
+	public static boolean sameFixedPlansAllowPreparedPtAndTaxiRoutes(
+			PlanAudit source,
+			PlanAudit output) {
+		return source.persons == output.persons
+				&& source.plans == output.plans
+				&& source.mainActivities == output.mainActivities
+				&& source.fixedNonPtNonTaxiMainLegs
+						== output.fixedNonPtNonTaxiMainLegs
+				&& source.mainActivityFingerprintSha256
+						.equals(output.mainActivityFingerprintSha256)
+				&& source.fixedNonPtNonTaxiMainLegFingerprintSha256
+						.equals(output.fixedNonPtNonTaxiMainLegFingerprintSha256)
+				&& source.taxiLegs == output.taxiLegs
+				&& source.taxiPersons == output.taxiPersons
+				&& source.taxiAttributeFingerprintSha256
+						.equals(output.taxiAttributeFingerprintSha256)
 				&& source.taxiTypeCounts.equals(output.taxiTypeCounts)
 				&& source.classificationSourceCounts
 						.equals(output.classificationSourceCounts)
@@ -656,6 +696,7 @@ public final class HongKongTaxiSmokeOutputAudit {
 		long mainActivities;
 		long legs;
 		long fixedNonPtMainLegs;
+		long fixedNonPtNonTaxiMainLegs;
 		long routes;
 		long taxiLegs;
 		long taxiPersons;
@@ -673,6 +714,7 @@ public final class HongKongTaxiSmokeOutputAudit {
 		String strictTaxiFingerprintSha256;
 		String mainActivityFingerprintSha256;
 		String fixedNonPtMainLegFingerprintSha256;
+		String fixedNonPtNonTaxiMainLegFingerprintSha256;
 		String planRouteFingerprintSha256;
 		final Map<String, Long> modeCounts = new TreeMap<>();
 		final Map<String, Long> taxiTypeCounts = new TreeMap<>();
@@ -699,6 +741,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 					"main_activities", mainActivities,
 					"legs", legs,
 					"fixed_non_pt_main_legs", fixedNonPtMainLegs,
+					"fixed_non_pt_non_taxi_main_legs",
+							fixedNonPtNonTaxiMainLegs,
 					"routes", routes,
 					"mode_counts", modeCounts,
 					"taxi_legs", taxiLegs,
@@ -720,6 +764,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 							mainActivityFingerprintSha256,
 					"fixed_non_pt_main_leg_fingerprint_sha256",
 							fixedNonPtMainLegFingerprintSha256,
+					"fixed_non_pt_non_taxi_main_leg_fingerprint_sha256",
+							fixedNonPtNonTaxiMainLegFingerprintSha256,
 					"plan_route_fingerprint_sha256", planRouteFingerprintSha256,
 					"missing_selected_plan_scores", missingSelectedPlanScores,
 					"finite_selected_plan_scores", finiteSelectedPlanScores,
