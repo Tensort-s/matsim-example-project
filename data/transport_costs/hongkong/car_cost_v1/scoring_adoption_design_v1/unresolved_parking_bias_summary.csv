@@ -1,0 +1,110 @@
+summary_dimension,group_value,unresolved_count,private_car_leg_denominator,unresolved_rate,notes
+unresolved_reason,unresolved_vehicle_time_overlap,466.0,64789,0.007192578987173749,All remain blocked and null.
+unresolved_reason,unresolved_next_departure_facility_mismatch,269.0,64789,0.004151939372424331,All remain blocked and null.
+unresolved_reason,unresolved_missing_destination_zone,98.0,64789,0.0015126024479464107,All remain blocked and null.
+unresolved_reason,unresolved_missing_next_departure_non_home,2.0,64789,3.086943771319205e-05,All remain blocked and null.
+destination_activity_group,home,468.0,28858,0.016217340079007554,Observed activity stratification; not random.
+destination_activity_group,work,179.0,8784,0.020377959927140255,Observed activity stratification; not random.
+destination_activity_group,leisure,87.0,15652,0.005558395093278814,Observed activity stratification; not random.
+destination_activity_group,education,46.0,278,0.16546762589928057,Observed activity stratification; not random.
+destination_activity_group,shopping,42.0,7946,0.005285678328718852,Observed activity stratification; not random.
+destination_activity_group,medical_personal_business,13.0,3271,0.003974319779883827,Observed activity stratification; not random.
+destination_tcs_zone,missing,103.0,64789,0.0015897760422293908,
+destination_tcs_zone,14.0,70.0,64789,0.001080430319961722,
+destination_tcs_zone,23.0,51.0,64789,0.0007871706616863974,
+destination_tcs_zone,16.0,47.0,64789,0.0007254317862600133,
+destination_tcs_zone,3.0,44.0,64789,0.0006791276296902252,
+destination_tcs_zone,9.0,38.0,64789,0.0005865193165506491,
+destination_tcs_zone,8.0,34.0,64789,0.0005247804411242649,
+destination_tcs_zone,15.0,34.0,64789,0.0005247804411242649,
+destination_tcs_zone,19.0,33.0,64789,0.0005093457222676689,
+destination_tcs_zone,7.0,32.0,64789,0.0004939110034110728,
+destination_tcs_zone,21.0,32.0,64789,0.0004939110034110728,
+destination_tcs_zone,24.0,32.0,64789,0.0004939110034110728,
+destination_tcs_zone,4.0,30.0,64789,0.0004630415656978808,
+destination_tcs_zone,1.0,30.0,64789,0.0004630415656978808,
+destination_tcs_zone,25.0,28.0,64789,0.00043217212798468875,
+destination_tcs_zone,20.0,28.0,64789,0.00043217212798468875,
+destination_tcs_zone,18.0,27.0,64789,0.0004167374091280927,
+destination_tcs_zone,17.0,23.0,64789,0.0003549985337017086,
+destination_tcs_zone,2.0,18.0,64789,0.0002778249394187285,
+destination_tcs_zone,11.0,16.0,64789,0.0002469555017055364,
+destination_tcs_zone,22.0,15.0,64789,0.0002315207828489404,
+destination_tcs_zone,5.0,15.0,64789,0.0002315207828489404,
+destination_tcs_zone,12.0,13.0,64789,0.00020065134513574836,
+destination_tcs_zone,6.0,13.0,64789,0.00020065134513574836,
+destination_tcs_zone,26.0,12.0,64789,0.00018521662627915233,
+destination_tcs_zone,10.0,10.0,64789,0.00015434718856596028,
+destination_tcs_zone,13.0,7.0,64789,0.00010804303199617219,
+origin_tcs_zone,4.0,72.0,64789,0.001111299757674914,
+origin_tcs_zone,3.0,69.0,64789,0.001064995601105126,
+origin_tcs_zone,9.0,58.0,64789,0.0008952136936825696,
+origin_tcs_zone,26.0,51.0,64789,0.0007871706616863974,
+origin_tcs_zone,25.0,51.0,64789,0.0007871706616863974,
+origin_tcs_zone,24.0,48.0,64789,0.0007408665051166093,
+origin_tcs_zone,8.0,46.0,64789,0.0007099970674034172,
+origin_tcs_zone,19.0,42.0,64789,0.0006482581919770331,
+origin_tcs_zone,14.0,38.0,64789,0.0005865193165506491,
+origin_tcs_zone,15.0,34.0,64789,0.0005247804411242649,
+origin_tcs_zone,7.0,33.0,64789,0.0005093457222676689,
+origin_tcs_zone,23.0,32.0,64789,0.0004939110034110728,
+origin_tcs_zone,17.0,32.0,64789,0.0004939110034110728,
+origin_tcs_zone,18.0,28.0,64789,0.00043217212798468875,
+origin_tcs_zone,21.0,21.0,64789,0.00032412909598851655,
+origin_tcs_zone,1.0,21.0,64789,0.00032412909598851655,
+origin_tcs_zone,16.0,20.0,64789,0.00030869437713192056,
+origin_tcs_zone,12.0,17.0,64789,0.00026239022056213246,
+origin_tcs_zone,20.0,17.0,64789,0.00026239022056213246,
+origin_tcs_zone,10.0,17.0,64789,0.00026239022056213246,
+origin_tcs_zone,22.0,17.0,64789,0.00026239022056213246,
+origin_tcs_zone,5.0,16.0,64789,0.0002469555017055364,
+origin_tcs_zone,2.0,15.0,64789,0.0002315207828489404,
+origin_tcs_zone,6.0,14.0,64789,0.00021608606399234437,
+origin_tcs_zone,missing,13.0,64789,0.00020065134513574836,
+origin_tcs_zone,11.0,10.0,64789,0.00015434718856596028,
+origin_tcs_zone,13.0,3.0,64789,4.630415656978808e-05,
+route_distance_band,gt20_to_40km,282.0,15183,0.018573404465520648,Long-distance legs are overrepresented.
+route_distance_band,gt40km,224.0,3105,0.07214170692431562,Long-distance legs are overrepresented.
+route_distance_band,gt10_to_20km,187.0,20835,0.008975281977441804,Long-distance legs are overrepresented.
+route_distance_band,gt5_to_10km,97.0,14024,0.006916714204221335,Long-distance legs are overrepresented.
+route_distance_band,gt0_to_5km,45.0,11609,0.0038763028684641225,Long-distance legs are overrepresented.
+arrival_time_band,pm_peak_16_20,494.0,64789,0.007624751115158437,
+arrival_time_band,am_peak_06_10,211.0,64789,0.003256725678741762,
+arrival_time_band,evening_20_24,99.0,64789,0.0015280371668030066,
+arrival_time_band,midday_10_16,24.0,64789,0.00037043325255830466,
+arrival_time_band,next_model_day_24h_plus,7.0,64789,0.00010804303199617219,
+parking_duration_available,False,737.0,64789,0.011375387797311272,
+parking_duration_available,True,98.0,64789,0.0015126024479464107,
+toll_charge_class,confirmed_no_charge,437.0,64789,0.006744972140332464,
+toll_charge_class,confirmed_charge,398.0,64789,0.006143018104925219,
+unresolved_count_per_person,1,476.0,64789,0.0073469261757397085,
+unresolved_count_per_person,3,107.0,64789,0.001651514917655775,
+unresolved_count_per_person,2,19.0,64789,0.00029325965827532453,
+unresolved_count_per_vehicle,1,476.0,64789,0.0073469261757397085,
+unresolved_count_per_vehicle,3,107.0,64789,0.001651514917655775,
+unresolved_count_per_vehicle,2,19.0,64789,0.00029325965827532453,
+repair_evidence_class,new_model_or_plan_evidence_required,466.0,64789,0.007192578987173749,
+repair_evidence_class,new_evidence_required,234.0,64789,0.0036117242124434706,
+repair_evidence_class,existing_evidence_candidate,98.0,64789,0.0015126024479464107,
+repair_evidence_class,existing_evidence_review_candidate,35.0,64789,0.000540215159980861,
+repair_evidence_class,new_modeling_assumption_required,2.0,64789,3.086943771319205e-05,
+bias_metric,unresolved_count,835.0,64789,,835
+bias_metric,unique_person_count,602.0,64789,,602
+bias_metric,unique_vehicle_count,602.0,64789,,602
+bias_metric,unique_household_count,600.0,64789,,600
+bias_metric,missingness_assessment,,64789,,not_approximately_random
+bias_metric,activity_independence_chi_square_p_value,,64789,5.27671180163077e-148,5.27671180163077e-148
+bias_metric,distance_band_independence_chi_square_p_value,,64789,2.127831132539693e-221,2.127831132539693e-221
+bias_metric,energy_distribution_mann_whitney_p_value,,64789,1.5972496072344843e-109,1.5972496072344843e-109
+bias_metric,unresolved_route_distance_mean_km,,64789,28.64423233293413,28.64423233293413
+bias_metric,complete_route_distance_mean_km,,64789,15.368248983363044,15.368248983363044
+bias_metric,unresolved_to_complete_distance_mean_ratio,,64789,1.863857903652072,1.863857903652072
+bias_metric,unresolved_energy_mean_hkd,,64789,66.62722870766879,66.62722870766879
+bias_metric,complete_energy_mean_hkd,,64789,35.746946468997635,35.746946468997635
+bias_metric,unresolved_to_complete_energy_mean_ratio,,64789,1.8638579036520726,1.8638579036520726
+bias_metric,unresolved_toll_charge_share,,64789,0.47664670658682634,0.47664670658682634
+bias_metric,complete_toll_charge_share,,64789,0.39809863339275103,0.39809863339275103
+bias_metric,complete_case_scoring_bias,,64789,,would_systematically_omit_longer_higher_energy_and_activity_concentrated_private_car_legs
+bias_metric,records_potentially_repairable_with_existing_evidence_review,133.0,64789,,133
+bias_metric,records_requiring_new_evidence_or_modeling_assumption,702.0,64789,,702
+bias_metric,recommended_policy,,64789,,formal_scoring_adoption_blocked_until_835_repaired;complete_case_allowed_only_for_non_mode_choice_technical_replay;fail_fast_at_runtime_for_unresolved_physical_events

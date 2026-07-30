@@ -169,3 +169,56 @@ blockers: []
 handoff_to: "INT-SUPERVISOR session 019fb38e-0963-7f01-9461-ba84c9aa6378"
 next_allowed_action: "INT-SUPERVISOR may record the Stage 1 PASS and decide the formal next-stage action. INT-REVIEWER does not authorize Stage 2; INT-RUNNER remains unauthorized."
 ```
+
+## Entry 5 — Stage 2 exact-SHA review
+
+Faithfully transcribed from the actual INT-REVIEWER handoff:
+
+```yaml
+timestamp: "2026-07-31T00:40:36+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 2 exact-SHA review"
+input_commit_sha: "6902501e956bc9bede52de26e1e8ad9bf2b457d6"
+stage_input_commit_sha: "d54fdd775064ace1c9f2aa2b6cb96db0e9474975"
+merge_parents:
+  first_parent: "d54fdd775064ace1c9f2aa2b6cb96db0e9474975"
+  second_parent: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Verified exact local/tracking/remote identity, merge-parent order, ancestry and locked refs."
+  - "Verified complete 161 PT paths plus exactly six integration paths; 157 PT blobs exact and four documented differences."
+  - "Independently reproduced all five canonical-versus-CRLF hashes and verified all 16 registry hashes."
+  - "Verified five distinct fare semantics, query fixtures, fail-closed unresolved behavior and offline-only boundary."
+  - "Verified generic PT remains 557104/0/557104 with all cost_hkd null."
+  - "Verified no PT Java/runtime/config/plan/supply change, no Car merge and no Runner action."
+  - "Verified append-only worklogs, structured-file evidence, diff cleanliness and absence of conflict markers."
+evidence_paths:
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md"
+  - "docs/HONG_KONG_PT_FARE_MODEL.md"
+  - "data/transport_costs/hongkong/integration_stage2_validation_v1/stage2_pt_merge_validation.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/SHA256SUMS.txt"
+  - "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py"
+  - "docs/agent-worklogs/integration-{supervisor,executor,reviewer}.md"
+  - "target/surefire-reports/ (local ignored corroboration only; not pushed evidence)"
+decisions:
+  - "PASS"
+  - "All Stage 2 hard gates are satisfied."
+  - "The five-hash correction is non-model canonical-Git metadata normalization."
+  - "Historical GMB 21/23 execution is diagnostic and superseded, not a concealed hard failure."
+  - "This finding does not authorize Stage 3 or Runner."
+hard_gate_status: "PASS"
+diagnostic_findings:
+  - "Raw Maven, validator and fixture execution logs are unpushed; pushed attestations and local Surefire reports are internally consistent."
+  - "The canonical validator relies on the outer exact-SHA and clean-index gate to anchor index bytes to HEAD."
+  - "Historical GMB byte guards were line-ending/tool-rewrite sensitive; their audit history remains preserved."
+  - "Bus simulation fallbacks remain isolated offline candidates and are not activated for generic PT or scoring."
+blockers: []
+handoff_to: "INT-SUPERVISOR session 019fb38e-0963-7f01-9461-ba84c9aa6378"
+next_allowed_action: "INT-SUPERVISOR may record the Stage 2 PASS and independently decide the formal next-stage action. INT-REVIEWER does not authorize Stage 3; INT-RUNNER remains unauthorized."
+```

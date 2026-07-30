@@ -1,0 +1,211 @@
+{
+  "audit": "Hong Kong private-car toll rate application by passage event v1",
+  "candidate_output_only": true,
+  "matsim_scoring_modified": false,
+  "publishable_candidate": true,
+  "blocked": false,
+  "input_mapping_identification": {
+    "car_leg_count": 67718,
+    "private_car_leg_count": 64789,
+    "motorcycle_out_of_scope_leg_count": 2929,
+    "status_counts": {
+      "confirmed_no_charge_all_facilities_covered": 38931,
+      "confirmed_charge_facility_identified": 25858,
+      "out_of_scope_motorcycle": 2929
+    },
+    "multiple_distinct_physical_facility_legs": 4786,
+    "legs_different_from_old_car_cost_v1": 27220,
+    "matches_94e02c8_audit_invariants": true
+  },
+  "route_event_construction": {
+    "raw_mapping_match_count": 34263,
+    "feature_match_count": 34263,
+    "canonical_event_count": 30837,
+    "event_identity_key_unique_before_scenario_expansion": true,
+    "event_scenario_key_unique": true,
+    "every_event_has_one_canonical_facility": true,
+    "private_car_charge_leg_count": 25858,
+    "multiple_distinct_facility_leg_count": 4786,
+    "private_car_multiple_distinct_facility_leg_count": 4627,
+    "same_facility_multiple_spatial_cluster_leg_facility_count": 2028,
+    "whc_alias_merged_event_count": 1924,
+    "whc_duplicate_physical_events_after_merge": 0,
+    "complementary_feature_fragmentation_merged_count": 104,
+    "repeated_facility_passage_review_count": 0,
+    "facility_event_counts": {
+      "aberdeen_tunnel": 2235,
+      "cross_harbour_tunnel": 7214,
+      "eastern_harbour_crossing": 3984,
+      "lion_rock_tunnel": 2919,
+      "shing_mun_tunnels": 1759,
+      "tai_lam_tunnel": 3944,
+      "tates_cairn_tunnel": 2832,
+      "tsing_sha_control_area": 1393,
+      "western_harbour_crossing": 4557
+    },
+    "all_route_links_exist": true,
+    "all_routes_topologically_contiguous": true
+  },
+  "passage_time_and_rates": {
+    "passage_time_observed": false,
+    "base_method": "cumulative network free-flow travel-time weighting",
+    "length_weight_sensitivity_calculated": true,
+    "analyst_sensitivity_window_seconds": 600.0,
+    "analyst_sensitivity_window_purpose": "capture possible official time-varying rate boundaries around an estimated, not observed, facility passage time",
+    "day_type_assumption": "official_day_type_A_as_typical_workday; scenario_has_no_calendar_date",
+    "unresolved_physical_event_count": 0,
+    "sensitivity_window_crosses_rate_boundary_event_count": 3266,
+    "base_vs_length_weight_crosses_rate_boundary_event_count": 529,
+    "official_interval_validation": {
+      "aberdeen_tunnel": {
+        "rule_type": "flat",
+        "gap_count": 0,
+        "overlap_count": 0,
+        "rate_hkd": 8.0
+      },
+      "cross_harbour_tunnel": {
+        "rule_type": "time_varying",
+        "A": {
+          "interval_count": 31,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        },
+        "B": {
+          "interval_count": 7,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        }
+      },
+      "eastern_harbour_crossing": {
+        "rule_type": "time_varying",
+        "A": {
+          "interval_count": 31,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        },
+        "B": {
+          "interval_count": 7,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        }
+      },
+      "lion_rock_tunnel": {
+        "rule_type": "flat",
+        "gap_count": 0,
+        "overlap_count": 0,
+        "rate_hkd": 8.0
+      },
+      "shing_mun_tunnels": {
+        "rule_type": "flat",
+        "gap_count": 0,
+        "overlap_count": 0,
+        "rate_hkd": 8.0
+      },
+      "tai_lam_tunnel": {
+        "rule_type": "time_varying",
+        "A": {
+          "interval_count": 45,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        },
+        "B": {
+          "interval_count": 1,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        }
+      },
+      "tates_cairn_tunnel": {
+        "rule_type": "flat",
+        "gap_count": 0,
+        "overlap_count": 0,
+        "rate_hkd": 20.0
+      },
+      "tsing_sha_control_area": {
+        "rule_type": "flat",
+        "gap_count": 0,
+        "overlap_count": 0,
+        "rate_hkd": 8.0
+      },
+      "western_harbour_crossing": {
+        "rule_type": "time_varying",
+        "A": {
+          "interval_count": 71,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        },
+        "B": {
+          "interval_count": 7,
+          "gap_count": 0,
+          "overlap_count": 0,
+          "gaps": [],
+          "overlaps": []
+        }
+      }
+    },
+    "reported_rate_gap_count": 0,
+    "reported_rate_overlap_count": 0
+  },
+  "leg_output": {
+    "row_counts": {
+      "low": 67718,
+      "base": 67718,
+      "high": 67718
+    },
+    "status_counts": {
+      "low": {
+        "confirmed_no_charge": 38931,
+        "confirmed_charge": 25858,
+        "out_of_scope": 2929
+      },
+      "base": {
+        "confirmed_no_charge": 38931,
+        "confirmed_charge": 25858,
+        "out_of_scope": 2929
+      },
+      "high": {
+        "confirmed_no_charge": 38931,
+        "confirmed_charge": 25858,
+        "out_of_scope": 2929
+      }
+    },
+    "event_to_leg_aggregation_max_abs_error_hkd": 0.0,
+    "event_low_le_base_le_high": true,
+    "leg_low_le_base_le_high": true,
+    "zero_only_for_confirmed_no_charge": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "unresolved_and_out_of_scope_cost_null": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "resolved_charge_totals_hkd": {
+      "low": 732821.0,
+      "base": 751760.0,
+      "high": 769064.0
+    }
+  },
+  "protected_inputs": {
+    "locked_audit_sha256_match_94e02c8": true,
+    "locked_audit_inputs_unchanged": true,
+    "all_existing_car_cost_v1_inputs_and_outputs_unchanged": true,
+    "canonical_plans_and_network_unchanged": true,
+    "all_protected_hashes_unchanged": true
+  }
+}

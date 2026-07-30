@@ -1,0 +1,138 @@
+{
+  "manifest": "hong_kong_private_car_cost_canonical_interface_v1",
+  "release_date": "2026-07-29",
+  "canonical_interface_path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/",
+  "canonical_interface_version": "unified_marginal_cost_interface_v1",
+  "canonical_interface_status": "canonical_offline_behavioral_cost_interface_candidate",
+  "source_commit": "ee8187222dff0af1682255d9edb07994761183aa",
+  "canonical_build_input_commit": "f3fa7b6ad510929d087da29df32d5f2be375e5eb",
+  "manifest_generation_parent_commit": "663c19f45cefa344c615804c35c4efc14167e256",
+  "canonical_interface_bundle_sha256": "4644ad03caa110e7510e1598e4696bfbd2230581c6860b333854b986df22b630",
+  "canonical_interface_file_sha256": {
+    "car_leg_marginal_cost_components_base.parquet": "0337469ca99d61650f782f273b7b275cee124449e01037f95e15f978f94e742b",
+    "car_leg_marginal_cost_components_high.parquet": "2d66865bc568143ccd8b62cadaf11803764c24bf5c05a4bf05596da067d673bb",
+    "car_leg_marginal_cost_components_low.parquet": "9cf12b23772a846fbf0cdd4d43e4f03b39bc65030ee5852412133c90ea5ca341",
+    "car_leg_marginal_cost_summary_base.parquet": "46e11a3b15cad8e14a5fe926c61a68f3bbd002d979b368aca64c502a94ebfe71",
+    "car_leg_marginal_cost_summary_high.parquet": "759f402967e2eb0852026e6c019b93d3d11b069af286d741463ff7ce608db880",
+    "car_leg_marginal_cost_summary_low.parquet": "82813b08fab0451f2302613e3b41a8ec575988c9814a89fef5c9e2512e456e45",
+    "fixed_ownership_accounting_sidecar_reference.json": "a7196afede45cdff588c498770d50089528e44eaa318b4ecb726668be2911332",
+    "marginal_cost_component_registry.csv": "ae2fd61342413b586aef1149f5221db0ffa04d994e1b415d6c7bccf077855580",
+    "unified_marginal_cost_input_hashes.json": "fa6563b3e8422557d9a7ab71b79a27a28f7e62de0dbef5df05addfae9d2756bd",
+    "unified_marginal_cost_required_repairs.csv": "6bcc06140efd5d51a420a4c924c17f518b68aecc9e3983d43b78cc7a55c3153d",
+    "unified_marginal_cost_summary.csv": "f10d7f5767bbab987c2c52f3b550425c760de399a57fffba3fa30540775421f6",
+    "unified_marginal_cost_validation.json": "3286ad07cb87cd8e60dea7278428f63f5eec524ab9aae53d46076777fdef6edf"
+  },
+  "bundle_sha256_algorithm": "SHA256 over sorted relative paths encoded as 8-byte-big-endian-length+UTF8-path followed by file bytes",
+  "energy_bundle_sha256": "0335c56a62a9ecae9af3035bce5d183b148ee156f0ca6b41dd04b3c48e7c370c",
+  "toll_mapping_bundle_sha256": "b430c3a776014fcf9843084efb3020be3cbd6e8003813d632099de4d131f8a44",
+  "toll_rate_bundle_sha256": "43d095651bfa8b9ed988ab8fd4c784caf51f2633a22aa4641e103214ea530c19",
+  "parking_bundle_sha256": "15971e677ae47b53e58f5028be9e8e505655f468c4464fcc3af337353632ba70",
+  "fixed_ownership_bundle_sha256": "a3944de62ff52da0f3e49e1f23df3e9e699ef08d667cd239b0480bdc31722115",
+  "canonical_car_leg_count": 67718,
+  "canonical_private_car_leg_count": 64789,
+  "canonical_motorcycle_leg_count": 2929,
+  "canonical_complete_leg_count": 63954,
+  "canonical_incomplete_leg_count": 835,
+  "canonical_toll_charged_leg_count": 25858,
+  "canonical_toll_no_charge_leg_count": 38931,
+  "canonical_toll_physical_passage_event_count": 30837,
+  "fixed_cost_behavioral_inclusion": false,
+  "matsim_scoring_approved": false,
+  "scoring_implementation_approved": false,
+  "runtime_static_leg_lookup_approved": false,
+  "legacy_initial_model": {
+    "source_commit": "797f103e4cb12fbcc83a8cf9669bdbb1feb13b48",
+    "legacy_confirmed_charged_private_car_legs": 1008,
+    "legacy_confirmed_no_charge_private_car_legs": 63781,
+    "legacy_base_toll_total_hkd": 19605.0,
+    "legacy_status": "superseded_offline_prototype"
+  },
+  "superseded_paths": [
+    "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_low.parquet",
+    "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_base.parquet",
+    "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_high.parquet",
+    "data/transport_costs/hongkong/car_cost_v1/car_cost_model_validation.json",
+    "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_component.csv",
+    "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_distance.csv",
+    "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_destination.csv",
+    "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_activity.csv"
+  ],
+  "superseded_path_details": [
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_low.parquet",
+      "sha256": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_base.parquet",
+      "sha256": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_high.parquet",
+      "sha256": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_cost_model_validation.json",
+      "sha256": "28ec941b040d4825022d997d0a94f2c7fd3d3c6bfa04c3480f58c20ae5d9eeb3",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_component.csv",
+      "sha256": "04cf08f8c873d4a5fc60365f7a62ee4923cde2ef8fe96aac22b1d6187e5a918b",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_distance.csv",
+      "sha256": "bd97cebf39e638d31b7bf9371192ae317c0400b0f9f5fc91515cc898f396f9e8",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_destination.csv",
+      "sha256": "6d7832c585c9d22e3eae1d646474d3829390ba7c6d1b5201e2a1829d2fa0b6ea",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    },
+    {
+      "path": "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_activity.csv",
+      "sha256": "dd8342bcf13955b4bd986bfc806bd23c51b842fbcbfb884c901e6efb74400aad",
+      "status": "superseded_offline_prototype",
+      "preserved_in_place": true,
+      "allowed_as_behavioral_scoring_input": false,
+      "replacement": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1"
+    }
+  ],
+  "supersession_reason": "The initial top-level prototype matched only direct numeric toll-feature IDs and reported 1,008 charged legs. Later official facility-to-network topology mapping, alias resolution, ordered physical passage-event reconstruction, and time-dependent rate application produce 25,858 charged legs, 38,931 confirmed no-charge legs, and 30,837 physical passage events. The unified interface also preserves 835 parking-incomplete legs as null.",
+  "consumer_contract": {
+    "future_offline_behavioral_integration_must_read": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/",
+    "legacy_top_level_leg_totals_must_not_be_read": true,
+    "legacy_files_preserved_for_provenance": true,
+    "canonical_components": [
+      "fuel_or_electricity",
+      "toll",
+      "destination_parking"
+    ],
+    "fixed_ownership_role": "accounting_sidecar_only"
+  }
+}

@@ -1,0 +1,487 @@
+{
+  "audit": "Hong Kong private-car unified offline marginal-cost interface and behavioral-boundary audit v1",
+  "source_commit": "f3fa7b6ad510929d087da29df32d5f2be375e5eb",
+  "candidate_build_date": "2026-07-29",
+  "candidate_build_date_semantics": "interface_build_date_not_component_rate_effective_date",
+  "publishable_candidate": true,
+  "blocked": false,
+  "candidate_output_only": true,
+  "matsim_scoring_modified": false,
+  "scoring_adoption_approved": false,
+  "joint_mode_choice_calibration_approved": false,
+  "fixed_vehicle_ownership_behavioral_inclusion": false,
+  "current_model_decision_horizon": "daily_travel_and_mode_choice_under_exogenous_vehicle_ownership",
+  "canonical_identity": {
+    "manifest_car_leg_count": 67718,
+    "feasibility_car_leg_count": 67718,
+    "canonical_key_sets_equal": true,
+    "canonical_vehicle_reference_resolved_count": 67718,
+    "canonical_vehicle_classes_match_private_vehicles": true
+  },
+  "source_candidate_validations": {
+    "energy": {
+      "validation_path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1/energy_application_validation.json",
+      "validation_sha256": "8948ff633f559d43d665d875f2b074646b0462c23e55ac8de70eb68cc827b06c",
+      "publishable_candidate": true,
+      "blocked": false
+    },
+    "toll": {
+      "validation_path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1/toll_rate_application_validation.json",
+      "validation_sha256": "575139c56b8ce5e00f7b06c6d83cef536080e57aedeb99791ca16c66aa279692",
+      "publishable_candidate": true,
+      "blocked": false
+    },
+    "parking": {
+      "validation_path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/parking_event_application_validation.json",
+      "validation_sha256": "82862c33cde7d30391de3d510a1c14834ea099e7a3b75759db595c99dc1c12df",
+      "publishable_candidate": true,
+      "blocked": false
+    },
+    "fixed": {
+      "validation_path": "data/transport_costs/hongkong/car_cost_v1/fixed_ownership_application_v1/fixed_ownership_application_validation.json",
+      "validation_sha256": "aecea2b38ee65be90408bedefb84c7e134a5ac6a845788601e506eb6b65a8e21",
+      "publishable_candidate": true,
+      "blocked": false
+    }
+  },
+  "input_join_diagnostics": {
+    "low": {
+      "fuel_or_electricity": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1/car_leg_energy_cost_estimates_low.parquet",
+        "sha256": "369373298b6c4890509a12b0fd7ba094eca8d3b95f72b579049174a0534f62f2",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "toll": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1/car_leg_toll_cost_estimates_low.parquet",
+        "sha256": "96410624f34dfb7b1da5aa7bdec6171c6dc8a233ca20b29ef52e6d730251f230",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": false,
+        "vehicle_class_field_present": false,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "destination_parking": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/car_leg_parking_cost_estimates_low.parquet",
+        "sha256": "61014b518048f49127f9754b55b81c6d2512c7082f18d90d132c0cd6cb13f15f",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 63954,
+        "unresolved_count": 835,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      }
+    },
+    "base": {
+      "fuel_or_electricity": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1/car_leg_energy_cost_estimates_base.parquet",
+        "sha256": "0e0cc3fdd3440b4be8e51ad98289de590af1b479222c8e29b15845055d82f5da",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "toll": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1/car_leg_toll_cost_estimates_base.parquet",
+        "sha256": "7d70b7144c87805d3b3bce3db0dcaa9b87f20e5e4ee7ae1a5a155c3ff8eb2342",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": false,
+        "vehicle_class_field_present": false,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "destination_parking": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/car_leg_parking_cost_estimates_base.parquet",
+        "sha256": "c2270353c3276691a7a55c77d2576b228ab68ed3c935b64f68419299f438b753",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 63954,
+        "unresolved_count": 835,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      }
+    },
+    "high": {
+      "fuel_or_electricity": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1/car_leg_energy_cost_estimates_high.parquet",
+        "sha256": "d6cb7ab3e46578ba741059f47c64f45410122a04c324934a8edcad1c968b7f85",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "toll": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1/car_leg_toll_cost_estimates_high.parquet",
+        "sha256": "c710fca2e5de80dc9fed8dba383055ae7c7b7d36f3a6b1621048da735e2f2531",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": false,
+        "vehicle_class_field_present": false,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 64789,
+        "unresolved_count": 0,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      },
+      "destination_parking": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/car_leg_parking_cost_estimates_high.parquet",
+        "sha256": "e1ef9a87920438029c8f1bc5a6fcc0bd222e334d0dfbf4c8c56dd0b022215f12",
+        "row_count": 67718,
+        "person_leg_key_unique": true,
+        "keys_match_canonical": true,
+        "mode_matches_canonical": true,
+        "vehicle_ref_id_field_present": true,
+        "vehicle_class_field_present": true,
+        "vehicle_identity_matches_canonical_when_present": true,
+        "resolved_count": 63954,
+        "unresolved_count": 835,
+        "out_of_scope_count": 2929,
+        "unresolved_and_out_of_scope_cost_null": true,
+        "resolved_cost_non_null": true
+      }
+    }
+  },
+  "scenario_outputs": {
+    "low": {
+      "component_row_count": 203154,
+      "component_key_unique": true,
+      "component_counts": {
+        "fuel_or_electricity": 67718,
+        "toll": 67718,
+        "destination_parking": 67718
+      },
+      "leg_summary_row_count": 67718,
+      "leg_summary_key_unique": true,
+      "private_car_legs": 64789,
+      "motorcycle_out_of_scope": 2929,
+      "complete_private_car_legs": 63954,
+      "incomplete_private_car_legs": 835,
+      "parking_unresolved_private_car_legs": 835,
+      "incomplete_behavioral_total_null": true,
+      "motorcycle_all_component_costs_null": true,
+      "motorcycle_behavioral_total_null": true,
+      "unresolved_or_out_of_scope_zero_count": 0,
+      "complete_leg_formula_max_abs_error_hkd": 0.0,
+      "component_resolved_only_totals_hkd": {
+        "fuel_or_electricity": 1659564.3603039081,
+        "toll": 732821.0,
+        "destination_parking": 838964.0
+      },
+      "complete_behavioral_marginal_total_hkd": 3178496.276113128,
+      "complete_behavioral_statistics_hkd": {
+        "mean_hkd": 49.69972599232461,
+        "median_hkd": 44.54051903235287,
+        "p90_hkd": 94.77790885701594
+      },
+      "legal_zero_audit": {
+        "fuel_or_electricity": {
+          "zero_cost_count": 33,
+          "zero_status_counts": {
+            "resolved_zero_distance_energy_zero": 33
+          },
+          "allowed_zero_statuses": [
+            "resolved_zero_distance_energy_zero"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "toll": {
+          "zero_cost_count": 38931,
+          "zero_status_counts": {
+            "confirmed_no_charge": 38931
+          },
+          "allowed_zero_statuses": [
+            "confirmed_no_charge"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "destination_parking": {
+          "zero_cost_count": 36995,
+          "zero_status_counts": {
+            "resolved_home_marginal_zero_fixed_separate": 28390,
+            "resolved_work_subscription_assumed_prepaid": 8605
+          },
+          "allowed_zero_statuses": [
+            "resolved_home_marginal_zero_fixed_separate",
+            "resolved_work_subscription_assumed_prepaid"
+          ],
+          "only_allowed_statuses_have_zero": true
+        }
+      },
+      "fixed_component_rows_in_leg_long_table": 0,
+      "fixed_cost_included_true_count": 0,
+      "fixed_cost_non_null_count": 0,
+      "scoring_adoption_approved_true_count": 0
+    },
+    "base": {
+      "component_row_count": 203154,
+      "component_key_unique": true,
+      "component_counts": {
+        "fuel_or_electricity": 67718,
+        "toll": 67718,
+        "destination_parking": 67718
+      },
+      "leg_summary_row_count": 67718,
+      "leg_summary_key_unique": true,
+      "private_car_legs": 64789,
+      "motorcycle_out_of_scope": 2929,
+      "complete_private_car_legs": 63954,
+      "incomplete_private_car_legs": 835,
+      "parking_unresolved_private_car_legs": 835,
+      "incomplete_behavioral_total_null": true,
+      "motorcycle_all_component_costs_null": true,
+      "motorcycle_behavioral_total_null": true,
+      "unresolved_or_out_of_scope_zero_count": 0,
+      "complete_leg_formula_max_abs_error_hkd": 0.0,
+      "component_resolved_only_totals_hkd": {
+        "fuel_or_electricity": 2341793.9504491785,
+        "toll": 751760.0,
+        "destination_parking": 2624827.0
+      },
+      "complete_behavioral_marginal_total_hkd": 5648792.214478275,
+      "complete_behavioral_statistics_hkd": {
+        "mean_hkd": 88.3258625649416,
+        "median_hkd": 70.36818765142436,
+        "p90_hkd": 188.32856759383736
+      },
+      "legal_zero_audit": {
+        "fuel_or_electricity": {
+          "zero_cost_count": 33,
+          "zero_status_counts": {
+            "resolved_zero_distance_energy_zero": 33
+          },
+          "allowed_zero_statuses": [
+            "resolved_zero_distance_energy_zero"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "toll": {
+          "zero_cost_count": 38931,
+          "zero_status_counts": {
+            "confirmed_no_charge": 38931
+          },
+          "allowed_zero_statuses": [
+            "confirmed_no_charge"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "destination_parking": {
+          "zero_cost_count": 28390,
+          "zero_status_counts": {
+            "resolved_home_marginal_zero_fixed_separate": 28390
+          },
+          "allowed_zero_statuses": [
+            "resolved_home_marginal_zero_fixed_separate",
+            "resolved_work_subscription_assumed_prepaid"
+          ],
+          "only_allowed_statuses_have_zero": true
+        }
+      },
+      "fixed_component_rows_in_leg_long_table": 0,
+      "fixed_cost_included_true_count": 0,
+      "fixed_cost_non_null_count": 0,
+      "scoring_adoption_approved_true_count": 0
+    },
+    "high": {
+      "component_row_count": 203154,
+      "component_key_unique": true,
+      "component_counts": {
+        "fuel_or_electricity": 67718,
+        "toll": 67718,
+        "destination_parking": 67718
+      },
+      "leg_summary_row_count": 67718,
+      "leg_summary_key_unique": true,
+      "private_car_legs": 64789,
+      "motorcycle_out_of_scope": 2929,
+      "complete_private_car_legs": 63954,
+      "incomplete_private_car_legs": 835,
+      "parking_unresolved_private_car_legs": 835,
+      "incomplete_behavioral_total_null": true,
+      "motorcycle_all_component_costs_null": true,
+      "motorcycle_behavioral_total_null": true,
+      "unresolved_or_out_of_scope_zero_count": 0,
+      "complete_leg_formula_max_abs_error_hkd": 0.0,
+      "component_resolved_only_totals_hkd": {
+        "fuel_or_electricity": 3564398.1126762405,
+        "toll": 769064.0,
+        "destination_parking": 3363957.0
+      },
+      "complete_behavioral_marginal_total_hkd": 7598354.10688336,
+      "complete_behavioral_statistics_hkd": {
+        "mean_hkd": 118.80967737566625,
+        "median_hkd": 93.972610270291,
+        "p90_hkd": 267.6499230484641
+      },
+      "legal_zero_audit": {
+        "fuel_or_electricity": {
+          "zero_cost_count": 33,
+          "zero_status_counts": {
+            "resolved_zero_distance_energy_zero": 33
+          },
+          "allowed_zero_statuses": [
+            "resolved_zero_distance_energy_zero"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "toll": {
+          "zero_cost_count": 38931,
+          "zero_status_counts": {
+            "confirmed_no_charge": 38931
+          },
+          "allowed_zero_statuses": [
+            "confirmed_no_charge"
+          ],
+          "only_allowed_statuses_have_zero": true
+        },
+        "destination_parking": {
+          "zero_cost_count": 28390,
+          "zero_status_counts": {
+            "resolved_home_marginal_zero_fixed_separate": 28390
+          },
+          "allowed_zero_statuses": [
+            "resolved_home_marginal_zero_fixed_separate",
+            "resolved_work_subscription_assumed_prepaid"
+          ],
+          "only_allowed_statuses_have_zero": true
+        }
+      },
+      "fixed_component_rows_in_leg_long_table": 0,
+      "fixed_cost_included_true_count": 0,
+      "fixed_cost_non_null_count": 0,
+      "scoring_adoption_approved_true_count": 0
+    }
+  },
+  "all_scenarios_component_row_count": 609462,
+  "fixed_ownership_boundary": {
+    "cost_nature": "fixed_sunk_at_daily_mode_choice_horizon",
+    "incremental_if_car_leg_chosen": false,
+    "behavioral_inclusion_current_model": false,
+    "eligible_for_matsim_scoring": false,
+    "excluded_from_behavioral_marginal_total": true,
+    "allowed_use": "accounting_policy_and_future_long_term_ownership_analysis_only"
+  },
+  "hard_checks": {
+    "low_component_rows_203154": true,
+    "low_summary_rows_67718": true,
+    "low_component_keys_unique": true,
+    "low_summary_keys_unique": true,
+    "low_complete_private_63954": true,
+    "low_incomplete_private_835": true,
+    "low_motorcycles_2929": true,
+    "low_unresolved_not_zero": true,
+    "low_incomplete_total_null": true,
+    "low_motorcycle_components_null": true,
+    "low_motorcycle_total_null": true,
+    "low_formula_exact": true,
+    "low_fixed_absent_from_legs": true,
+    "low_legal_zero_statuses": true,
+    "base_component_rows_203154": true,
+    "base_summary_rows_67718": true,
+    "base_component_keys_unique": true,
+    "base_summary_keys_unique": true,
+    "base_complete_private_63954": true,
+    "base_incomplete_private_835": true,
+    "base_motorcycles_2929": true,
+    "base_unresolved_not_zero": true,
+    "base_incomplete_total_null": true,
+    "base_motorcycle_components_null": true,
+    "base_motorcycle_total_null": true,
+    "base_formula_exact": true,
+    "base_fixed_absent_from_legs": true,
+    "base_legal_zero_statuses": true,
+    "high_component_rows_203154": true,
+    "high_summary_rows_67718": true,
+    "high_component_keys_unique": true,
+    "high_summary_keys_unique": true,
+    "high_complete_private_63954": true,
+    "high_incomplete_private_835": true,
+    "high_motorcycles_2929": true,
+    "high_unresolved_not_zero": true,
+    "high_incomplete_total_null": true,
+    "high_motorcycle_components_null": true,
+    "high_motorcycle_total_null": true,
+    "high_formula_exact": true,
+    "high_fixed_absent_from_legs": true,
+    "high_legal_zero_statuses": true,
+    "all_input_candidate_validations_publishable": true,
+    "canonical_identity_contract_valid": true,
+    "all_component_key_sets_identical": true,
+    "all_vehicle_identity_checks_valid": true,
+    "three_scenarios_component_rows_609462": true,
+    "fixed_registry_behavioral_exclusion_valid": true
+  },
+  "protected_inputs": {
+    "canonical_inputs_unchanged": true,
+    "all_existing_car_cost_files_unchanged": true,
+    "candidate_bundles_unchanged": true,
+    "energy_application_v1_unchanged": true,
+    "toll_network_mapping_v1_unchanged": true,
+    "toll_rate_application_v1_unchanged": true,
+    "parking_event_application_v1_unchanged": true,
+    "fixed_ownership_application_v1_unchanged": true,
+    "old_unified_car_cost_files_unchanged": true,
+    "matsim_plans_config_network_facilities_vehicles_unchanged": true,
+    "pt_core_files_unchanged": true,
+    "taxi_files_read_or_written": false,
+    "all_protected_sha256_unchanged": true
+  },
+  "required_repairs": {
+    "row_count": 4,
+    "blocking_count": 0
+  }
+}

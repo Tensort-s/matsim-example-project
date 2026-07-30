@@ -1,0 +1,857 @@
+{
+  "audit": "Hong Kong private car toll facility-network mapping audit v1",
+  "input_root_role": "canonical_project_read_only",
+  "toll_amounts_calculated": false,
+  "toll_monetary_estimation_not_authorised": true,
+  "official_private_car_pc_source_rows": {
+    "TUN_BRIDGE_TV_TOLL": 278,
+    "TUN_BRIDGE_TOLL": 5
+  },
+  "canonical_facility_count": 9,
+  "official_raw_facility_name_count": 10,
+  "official_feature_count": 19,
+  "mapping_quality_feature_counts": {
+    "A": 0,
+    "B": 19,
+    "C": 0,
+    "U": 0
+  },
+  "feature_mapping_audit": {
+    "1822": {
+      "canonical_facility_id": "shing_mun_tunnels",
+      "official_rd_ids": [
+        56944
+      ],
+      "official_road_names": [
+        "CHEUNG PEI SHAN ROAD"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_56944_0_f"
+      ]
+    },
+    "1824": {
+      "canonical_facility_id": "shing_mun_tunnels",
+      "official_rd_ids": [
+        58272
+      ],
+      "official_road_names": [
+        "CHEUNG PEI SHAN ROAD"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_1824_0_f",
+          "geometry_distance_m": 10674.674832521117,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_58272_0_f"
+      ]
+    },
+    "1884": {
+      "canonical_facility_id": "lion_rock_tunnel",
+      "official_rd_ids": [
+        59208
+      ],
+      "official_road_names": [
+        "LION ROCK TUNNEL ROAD"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_59208_0_f"
+      ]
+    },
+    "1886": {
+      "canonical_facility_id": "lion_rock_tunnel",
+      "official_rd_ids": [
+        261329,
+        285594
+      ],
+      "official_road_names": [
+        "LION ROCK TUNNEL ROAD"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_1886_0_f",
+          "geometry_distance_m": 13076.722743192839,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261329_0_f",
+        "road_285594_0_f"
+      ]
+    },
+    "2040": {
+      "canonical_facility_id": "tsing_sha_control_area",
+      "official_rd_ids": [
+        164140,
+        261294
+      ],
+      "official_road_names": [
+        "TSING SHA HIGHWAY"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_2040_0_f",
+          "geometry_distance_m": 10893.022342412325,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_164140_0_f",
+        "road_261294_0_f"
+      ]
+    },
+    "2684": {
+      "canonical_facility_id": "western_harbour_crossing",
+      "official_rd_ids": [
+        3345
+      ],
+      "official_road_names": [
+        "WESTERN HARBOUR CROSSING"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_2684_0_f",
+          "geometry_distance_m": 10889.179949061932,
+          "accepted_as_A": false
+        },
+        {
+          "link_id": "road_2684_0_r",
+          "geometry_distance_m": 10889.179949061932,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_3345_0_f"
+      ]
+    },
+    "2685": {
+      "canonical_facility_id": "western_harbour_crossing",
+      "official_rd_ids": [
+        105993,
+        285417
+      ],
+      "official_road_names": [
+        "WESTERN HARBOUR CROSSING"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_105993_0_f",
+        "road_285417_0_f"
+      ]
+    },
+    "4288": {
+      "canonical_facility_id": "tai_lam_tunnel",
+      "official_rd_ids": [
+        93566
+      ],
+      "official_road_names": [
+        "TSING LONG HIGHWAY"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_4288_0_f",
+          "geometry_distance_m": 16325.639283714572,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_93566_0_f",
+        "road_93566_0_r"
+      ]
+    },
+    "4289": {
+      "canonical_facility_id": "tai_lam_tunnel",
+      "official_rd_ids": [
+        93567
+      ],
+      "official_road_names": [
+        "TSING LONG HIGHWAY"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_4289_0_f",
+          "geometry_distance_m": 18593.272779650284,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_93567_0_f"
+      ]
+    },
+    "7804": {
+      "canonical_facility_id": "tsing_sha_control_area",
+      "official_rd_ids": [
+        261292,
+        261291
+      ],
+      "official_road_names": [
+        "TSING SHA HIGHWAY"
+      ],
+      "same_numeric_network_links": [
+        {
+          "link_id": "road_7804_0_f",
+          "geometry_distance_m": 3844.830499177716,
+          "accepted_as_A": false
+        },
+        {
+          "link_id": "road_7804_0_r",
+          "geometry_distance_m": 3844.830499177716,
+          "accepted_as_A": false
+        }
+      ],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261292_0_f",
+        "road_261291_0_f"
+      ]
+    },
+    "150338": {
+      "canonical_facility_id": "cross_harbour_tunnel",
+      "official_rd_ids": [
+        261324
+      ],
+      "official_road_names": [
+        "CROSS HARBOUR TUNNEL"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261324_0_f"
+      ]
+    },
+    "150339": {
+      "canonical_facility_id": "cross_harbour_tunnel",
+      "official_rd_ids": [
+        105137
+      ],
+      "official_road_names": [
+        "CROSS HARBOUR TUNNEL"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_105137_0_f"
+      ]
+    },
+    "150340": {
+      "canonical_facility_id": "eastern_harbour_crossing",
+      "official_rd_ids": [
+        261326,
+        295709,
+        295713,
+        295712
+      ],
+      "official_road_names": [
+        "EASTERN HARBOUR CROSSING"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261326_0_f",
+        "road_295709_0_f",
+        "road_295713_0_f",
+        "road_295713_0_r",
+        "road_295712_0_f"
+      ]
+    },
+    "150498": {
+      "canonical_facility_id": "aberdeen_tunnel",
+      "official_rd_ids": [
+        3375
+      ],
+      "official_road_names": [
+        "ABERDEEN TUNNEL"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_3375_0_f"
+      ]
+    },
+    "150499": {
+      "canonical_facility_id": "aberdeen_tunnel",
+      "official_rd_ids": [
+        64427
+      ],
+      "official_road_names": [
+        "ABERDEEN TUNNEL"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_64427_0_f"
+      ]
+    },
+    "151058": {
+      "canonical_facility_id": "tates_cairn_tunnel",
+      "official_rd_ids": [
+        261309,
+        283947
+      ],
+      "official_road_names": [
+        "TATE'S CAIRN HIGHWAY"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261309_0_f",
+        "road_283947_0_f"
+      ]
+    },
+    "151078": {
+      "canonical_facility_id": "tates_cairn_tunnel",
+      "official_rd_ids": [
+        261312,
+        261310
+      ],
+      "official_road_names": [
+        "TATE'S CAIRN HIGHWAY"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261312_0_f",
+        "road_261312_0_r",
+        "road_261310_0_f"
+      ]
+    },
+    "151118": {
+      "canonical_facility_id": "eastern_harbour_crossing",
+      "official_rd_ids": [
+        261327,
+        283967,
+        295708
+      ],
+      "official_road_names": [
+        "EASTERN HARBOUR CROSSING"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_261327_0_f",
+        "road_283967_0_f",
+        "road_283967_0_r",
+        "road_295708_0_f"
+      ]
+    },
+    "151858": {
+      "canonical_facility_id": "western_harbour_crossing",
+      "official_rd_ids": [
+        2485
+      ],
+      "official_road_names": [
+        "WESTERN HARBOUR CROSSING"
+      ],
+      "same_numeric_network_links": [],
+      "mapping_quality": "B",
+      "mapped_links": [
+        "road_2485_0_f"
+      ]
+    }
+  },
+  "same_numeric_feature_route_id_collision_count": 7,
+  "same_numeric_feature_route_id_collisions": [
+    1824,
+    1886,
+    2040,
+    2684,
+    4288,
+    4289,
+    7804
+  ],
+  "original_twelve_unmapped_feature_ids": [
+    1822,
+    1884,
+    2685,
+    150338,
+    150339,
+    150340,
+    150498,
+    150499,
+    151058,
+    151078,
+    151118,
+    151858
+  ],
+  "original_twelve_unmapped_resolution": {
+    "1822": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        56944
+      ],
+      "mapped_links": [
+        "road_56944_0_f"
+      ]
+    },
+    "1884": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        59208
+      ],
+      "mapped_links": [
+        "road_59208_0_f"
+      ]
+    },
+    "2685": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        105993,
+        285417
+      ],
+      "mapped_links": [
+        "road_105993_0_f",
+        "road_285417_0_f"
+      ]
+    },
+    "150338": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        261324
+      ],
+      "mapped_links": [
+        "road_261324_0_f"
+      ]
+    },
+    "150339": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        105137
+      ],
+      "mapped_links": [
+        "road_105137_0_f"
+      ]
+    },
+    "150340": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        261326,
+        295709,
+        295713,
+        295712
+      ],
+      "mapped_links": [
+        "road_261326_0_f",
+        "road_295709_0_f",
+        "road_295713_0_f",
+        "road_295713_0_r",
+        "road_295712_0_f"
+      ]
+    },
+    "150498": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        3375
+      ],
+      "mapped_links": [
+        "road_3375_0_f"
+      ]
+    },
+    "150499": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        64427
+      ],
+      "mapped_links": [
+        "road_64427_0_f"
+      ]
+    },
+    "151058": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        261309,
+        283947
+      ],
+      "mapped_links": [
+        "road_261309_0_f",
+        "road_283947_0_f"
+      ]
+    },
+    "151078": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        261312,
+        261310
+      ],
+      "mapped_links": [
+        "road_261312_0_f",
+        "road_261312_0_r",
+        "road_261310_0_f"
+      ]
+    },
+    "151118": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        261327,
+        283967,
+        295708
+      ],
+      "mapped_links": [
+        "road_261327_0_f",
+        "road_283967_0_f",
+        "road_283967_0_r",
+        "road_295708_0_f"
+      ]
+    },
+    "151858": {
+      "mapping_quality": "B",
+      "official_rd_ids": [
+        2485
+      ],
+      "mapped_links": [
+        "road_2485_0_f"
+      ]
+    }
+  },
+  "alias_resolution": {
+    "canonical_facility_id": "western_harbour_crossing",
+    "primary_official_name": "Western Harbour Crossing",
+    "backup_official_name": "Western Harbour Crossing (Backup Toll Point)",
+    "primary_feature_ids": "2684|2685",
+    "backup_feature_ids": "151858|2684",
+    "shared_feature_ids": "2684",
+    "schedule_rows_primary": 78,
+    "schedule_rows_backup": 78,
+    "schedule_and_rate_equal": true,
+    "effective_date_equal": true,
+    "last_updated_date_equal": true,
+    "remarks_equal": true,
+    "traffic_feature_backup_remark": "WHC(SB) Backup toll point",
+    "official_feature_point_distance_m": 106.6975941714359,
+    "official_road_route_ids": "2485|3345",
+    "official_road_names": "WESTERN HARBOUR CROSSING",
+    "alias_status": "canonical_alias_same_physical_facility",
+    "charge_once_per_route_passage": true,
+    "alias_evidence": "Exact 78-row weekday/weekend schedule, rate, effective-date and update-date equality; shared feature 2684; TRAFFIC_FEATURES remark explicitly identifies 151858 as WHC(SB) Backup toll point; linked official CENTERLINE roads are both Western Harbour Crossing."
+  },
+  "facility_direction_coverage": {
+    "aberdeen_tunnel": {
+      "expected_primary_official_features": [
+        150498,
+        150499
+      ],
+      "mapped_primary_official_features": [
+        150498,
+        150499
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "cross_harbour_tunnel": {
+      "expected_primary_official_features": [
+        150338,
+        150339
+      ],
+      "mapped_primary_official_features": [
+        150338,
+        150339
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "eastern_harbour_crossing": {
+      "expected_primary_official_features": [
+        150340,
+        151118
+      ],
+      "mapped_primary_official_features": [
+        150340,
+        151118
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "lion_rock_tunnel": {
+      "expected_primary_official_features": [
+        1884,
+        1886
+      ],
+      "mapped_primary_official_features": [
+        1884,
+        1886
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "shing_mun_tunnels": {
+      "expected_primary_official_features": [
+        1822,
+        1824
+      ],
+      "mapped_primary_official_features": [
+        1822,
+        1824
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "tai_lam_tunnel": {
+      "expected_primary_official_features": [
+        4288,
+        4289
+      ],
+      "mapped_primary_official_features": [
+        4288,
+        4289
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "tates_cairn_tunnel": {
+      "expected_primary_official_features": [
+        151058,
+        151078
+      ],
+      "mapped_primary_official_features": [
+        151058,
+        151078
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "tsing_sha_control_area": {
+      "expected_primary_official_features": [
+        2040,
+        7804
+      ],
+      "mapped_primary_official_features": [
+        2040,
+        7804
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    },
+    "western_harbour_crossing": {
+      "expected_primary_official_features": [
+        2684,
+        2685
+      ],
+      "mapped_primary_official_features": [
+        2684,
+        2685
+      ],
+      "missing_primary_official_features": [],
+      "direction_coverage_fraction": 1.0,
+      "direction_semantics": "Official feature 1/2 roles covered. MATSim f/r is retained as link orientation and is not relabelled as a compass direction."
+    }
+  },
+  "all_canonical_facility_directions_covered": true,
+  "mapped_links_exist_in_network": true,
+  "mapped_link_direction_suffix_valid": true,
+  "same_network_link_maps_unrelated_facilities": {},
+  "mapped_links_unused_by_any_car_route": [
+    "road_261310_0_f",
+    "road_261312_0_r",
+    "road_283967_0_r",
+    "road_295708_0_f",
+    "road_295713_0_r",
+    "road_93566_0_r"
+  ],
+  "mapped_link_private_car_hit_counts": {
+    "road_105137_0_f": 3179,
+    "road_105993_0_f": 1172,
+    "road_164140_0_f": 877,
+    "road_2485_0_f": 1924,
+    "road_261291_0_f": 10,
+    "road_261292_0_f": 505,
+    "road_261294_0_f": 1,
+    "road_261309_0_f": 456,
+    "road_261312_0_f": 1732,
+    "road_261324_0_f": 4041,
+    "road_261326_0_f": 140,
+    "road_261327_0_f": 2075,
+    "road_261329_0_f": 1692,
+    "road_283947_0_f": 657,
+    "road_283967_0_f": 1,
+    "road_285417_0_f": 752,
+    "road_285594_0_f": 12,
+    "road_295709_0_f": 1777,
+    "road_295712_0_f": 1,
+    "road_295713_0_f": 7,
+    "road_3345_0_f": 2635,
+    "road_3375_0_f": 1178,
+    "road_56944_0_f": 755,
+    "road_58272_0_f": 1012,
+    "road_59208_0_f": 1242,
+    "road_64427_0_f": 1082,
+    "road_93566_0_f": 1912,
+    "road_93567_0_f": 2040
+  },
+  "route_parse": {
+    "routed_car_key_count": 67718,
+    "routed_car_duplicate_key_count": 0
+  },
+  "car_leg_count": 67718,
+  "car_leg_key_unique": true,
+  "car_leg_keys_match_previous_audit": true,
+  "private_car_leg_count": 64789,
+  "motorcycle_leg_count": 2929,
+  "toll_identification_status_counts": {
+    "confirmed_no_charge_all_facilities_covered": 38931,
+    "confirmed_charge_facility_identified": 25858,
+    "out_of_scope_motorcycle": 2929
+  },
+  "canonical_facility_private_car_hit_counts": {
+    "aberdeen_tunnel": 2235,
+    "cross_harbour_tunnel": 7214,
+    "eastern_harbour_crossing": 3984,
+    "lion_rock_tunnel": 2919,
+    "shing_mun_tunnels": 1759,
+    "tai_lam_tunnel": 3944,
+    "tates_cairn_tunnel": 2832,
+    "tsing_sha_control_area": 1393,
+    "western_harbour_crossing": 4557
+  },
+  "official_feature_private_car_hit_counts": {
+    "1822": 755,
+    "1824": 1012,
+    "1884": 1242,
+    "1886": 1704,
+    "2040": 878,
+    "2684": 2635,
+    "2685": 1924,
+    "4288": 1912,
+    "4289": 2040,
+    "7804": 515,
+    "150338": 4041,
+    "150339": 3179,
+    "150340": 1925,
+    "150498": 1178,
+    "150499": 1082,
+    "151058": 1113,
+    "151078": 1732,
+    "151118": 2076,
+    "151858": 1924
+  },
+  "facility_direction_private_car_hit_counts": {
+    "aberdeen_tunnel:f": 2235,
+    "cross_harbour_tunnel:f": 7214,
+    "eastern_harbour_crossing:f": 3984,
+    "lion_rock_tunnel:f": 2919,
+    "shing_mun_tunnels:f": 1759,
+    "tai_lam_tunnel:f": 3944,
+    "tates_cairn_tunnel:f": 2832,
+    "tsing_sha_control_area:f": 1393,
+    "western_harbour_crossing:f": 4557
+  },
+  "start_end_added_facility_hit_legs": 0,
+  "alias_duplicate_candidate_leg_count": 2024,
+  "route_legs_with_multiple_raw_candidates_after_physical_dedup": 2132,
+  "route_legs_with_multiple_physical_facilities": 4786,
+  "duplicate_physical_toll_charge_rows_emitted": 0,
+  "current_vs_new_status_crosstab": {
+    "confirmed_charge": {
+      "confirmed_charge": 759,
+      "confirmed_no_charge": 249,
+      "out_of_scope_motorcycle": 0
+    },
+    "confirmed_no_charge": {
+      "confirmed_charge": 25099,
+      "confirmed_no_charge": 38682,
+      "out_of_scope_motorcycle": 0
+    },
+    "out_of_scope_motorcycle": {
+      "confirmed_charge": 0,
+      "confirmed_no_charge": 0,
+      "out_of_scope_motorcycle": 2929
+    }
+  },
+  "legs_different_from_current_car_cost_v1": 27220,
+  "current_confirmed_no_charge_downgraded_to_unresolved": 0,
+  "protected_hashes_before": {
+    "plans_routed": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+    "previous_feasibility": "20be7f1072096e0776c8e6b4727025459b008b80dc4e94abac0902b114339c7f",
+    "previous_validation": "ece4bf74b4cc73e9ec8006a12442bccbbf7c2bd1d93a7221773cd7d9ac4cd4e4",
+    "toll_rules": "2f61eec886adb8f35f09848b18ea507d8a71b7c7c6021b663228dd95c47dd21c",
+    "source_manifest": "59ec17f178c8b6994fc6199c1c15970f062bff1e825a1e23843f1e1887f398f0",
+    "snapshot_toll_rates": "9f1917206808e9cad68c368e5830c49511d9ebdeafb9c0bab461bfc3ab3a57cc",
+    "snapshot_harbour_tvt": "847c1ee17e41751c63099e349c9839aa2fbaf34d3242d99afeb21ae4328670fe",
+    "snapshot_tai_lam_tvt": "b206ee39c782824e25364d8ca6207f415cde57198fb9b462ee9dd5d0fda714b6",
+    "cost_low": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+    "cost_base": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+    "cost_high": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329",
+    "fixed_link_grid_bundle": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
+  },
+  "protected_hashes_after": {
+    "plans_routed": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+    "previous_feasibility": "20be7f1072096e0776c8e6b4727025459b008b80dc4e94abac0902b114339c7f",
+    "previous_validation": "ece4bf74b4cc73e9ec8006a12442bccbbf7c2bd1d93a7221773cd7d9ac4cd4e4",
+    "toll_rules": "2f61eec886adb8f35f09848b18ea507d8a71b7c7c6021b663228dd95c47dd21c",
+    "source_manifest": "59ec17f178c8b6994fc6199c1c15970f062bff1e825a1e23843f1e1887f398f0",
+    "snapshot_toll_rates": "9f1917206808e9cad68c368e5830c49511d9ebdeafb9c0bab461bfc3ab3a57cc",
+    "snapshot_harbour_tvt": "847c1ee17e41751c63099e349c9839aa2fbaf34d3242d99afeb21ae4328670fe",
+    "snapshot_tai_lam_tvt": "b206ee39c782824e25364d8ca6207f415cde57198fb9b462ee9dd5d0fda714b6",
+    "cost_low": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+    "cost_base": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+    "cost_high": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329",
+    "fixed_link_grid_bundle": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
+  },
+  "protected_inputs_unchanged": true,
+  "existing_low_base_high_parquet_hashes_unchanged": true,
+  "fixed_link_grid_shapefile_bundle": {
+    "combined_sha256": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb",
+    "sidecars": [
+      {
+        "name": "regions.cpg",
+        "size_bytes": 5,
+        "sha256": "3ad3031f5503a4404af825262ee8232cc04d4ea6683d42c5dd0a2f2a27ac9824"
+      },
+      {
+        "name": "regions.dbf",
+        "size_bytes": 276016,
+        "sha256": "f8b3c594627a9d20c4c6cf77f5933ee1e48aa67710199c521362d962f368e9bf"
+      },
+      {
+        "name": "regions.geojson",
+        "size_bytes": 16265514,
+        "sha256": "15e3dc70dab526c537b49baeda8eeb5913fed451aec218854d8d0022738affba"
+      },
+      {
+        "name": "regions.png",
+        "size_bytes": 204279,
+        "sha256": "25ce9ef19fc3c86c58708e3f1221565c442490340be3d56c3495e25b74a7e7f2"
+      },
+      {
+        "name": "regions.prj",
+        "size_bytes": 402,
+        "sha256": "99a5a32f41f7df7e52e869dca1b2df8b2009ba20c28dbf95e61dc9c891dffd38"
+      },
+      {
+        "name": "regions.shp",
+        "size_bytes": 5774392,
+        "sha256": "fdcb7d6fdf3faa88a3b0fb8c014600b5c3f24b12be6bbd798e35c128502fde2f"
+      },
+      {
+        "name": "regions.shx",
+        "size_bytes": 12780,
+        "sha256": "c1fa394989a9a61a3fa11af06efca74e33050bdec07311bbbfc43965a436aa65"
+      }
+    ]
+  },
+  "eligible_for_next_rate_application_and_output_repair_stage": true,
+  "next_stage_condition": "Mapping and alias evidence are complete, but no monetary result is authorised in this audit. A separate repair stage must apply rates and rebuild outputs from this mapping."
+}

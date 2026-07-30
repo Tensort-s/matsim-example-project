@@ -97,6 +97,14 @@ docs/HONG_KONG_TAXI_JAVA_SCORING.md
 docs/HONG_KONG_TAXI_LOAD_TEST.md
 docs/HONG_KONG_TAXI_SMOKE_TEST.md
 docs/HONG_KONG_PT_FARE_MODEL.md
+docs/HONG_KONG_CAR_COST_MODEL.md
+docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
+docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md
+docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
+docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -179,6 +187,62 @@ The subsequent fixed-ASC, iterations 0-1 technical integration gate is
 defined in `docs/HONG_KONG_TAXI_SMOKE_TEST.md`. It freezes replanning and
 routing, keeps Taxi outside QSim main modes, verifies the live custom scoring
 factory, and audits each QSim iteration without introducing a Taxi/DVRP fleet.
+
+The private-car offline cost workspace is under
+`data/transport_costs/hongkong/car_cost_v1/` and documented in
+`docs/HONG_KONG_CAR_COST_MODEL.md`. Its authoritative release pointer is
+`canonical_car_cost_interface_manifest.json`, and the current canonical
+offline behavioral-cost interface is exclusively
+`unified_marginal_cost_interface_v1/`. The original top-level leg estimates,
+validation, and summaries are preserved with their original hashes but marked
+`superseded_offline_prototype`: their 1,008 charged legs predate the current
+facility-network mapping and physical passage-event reconstruction. The
+canonical candidate has 25,858 charged legs, 38,931 confirmed no-charge legs,
+and 30,837 physical passage events. Future integration must not read the old
+top-level leg totals. Neither version approves or modifies active MATSim
+scoring, plans, config, network, facilities, vehicles, or simulation outputs.
+The follow-up toll facility-network audit is documented in
+`docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md`. It rejects cross-domain
+same-number ID collisions, resolves all 19 official toll features through the
+official road topology, and produces non-monetary per-leg toll identification
+for a later output-repair stage.
+The standalone private-car toll candidate built from that mapping is documented
+in `docs/HONG_KONG_PRIVATE_CAR_TOLL_RATE_APPLICATION.md`. It constructs ordered
+physical passage events, estimates non-observed passage times, and applies
+official `PC` flat or typical-workday time-varying rates without changing
+MATSim scoring or the existing unified car-cost outputs.
+The standalone destination-parking candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_PARKING_EVENT_APPLICATION.md`. It reconstructs
+physical parking events from complete private-vehicle daily chains, preserves
+absolute model-day time, and applies low/base/high official-rate-bounded
+zone/activity proxies without changing MATSim scoring, toll candidates, or the
+existing unified car-cost outputs.
+The standalone private-car energy candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md`. It independently
+reconstructs source parameters and route distances, applies one explicitly
+non-individual representative licensed-fleet proxy, and audits zero-distance
+routes without combining energy with tolls, parking, fixed ownership cost, or
+MATSim scoring.
+The standalone fixed-ownership candidate is documented in
+`docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md`. It independently
+rebuilds the 21,020 used-private-car set, audits official licence and monthly
+parking source categories, and writes one partial fixed-cost record per
+vehicle and scenario, never per leg. It does not combine the result with
+energy, tolls, destination parking, unified car costs, or MATSim scoring.
+The unified offline marginal-cost interface is documented in
+`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`. It joins the
+three independently audited trip-conditional components by strict canonical
+leg identity, retains unresolved and out-of-scope costs as null, and publishes
+low/base/high complete-leg totals for audit only. Fixed ownership remains a
+separate accounting sidecar. The interface does not approve or modify MATSim
+scoring or joint mode-choice calibration.
+The subsequent scoring-adoption design and double-counting audit is documented
+in `docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md`. It finds that the
+existing 0.7 currency/km distance term cannot be called HKD or fuel without new
+provenance, rejects static iteration-time leg lookup, and defines future
+experienced-event and baseline-replay contracts. The design is reviewable but
+blocked; it implements no scoring and keeps fixed ownership permanently outside
+the current daily behavioral model.
 
 The final local SimWrapper project for this configuration is:
 

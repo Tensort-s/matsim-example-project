@@ -1,0 +1,331 @@
+{
+  "validation": "hong_kong_car_cost_v1_canonical_release_validation",
+  "release_date": "2026-07-29",
+  "manifest_path": "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json",
+  "manifest_sha256": "515d15df43a269da5f060338fcaf91cf004abfeb98ee4332e4172964f64be31d",
+  "transition_audit_path": "data/transport_costs/hongkong/car_cost_v1/car_cost_version_transition_audit.csv",
+  "transition_audit_sha256": "0d7fda88e1605614ff439ba6867cf15c3be370dcbe0aa0a8f85dbc7e26d7ec78",
+  "canonical_interface_path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/",
+  "canonical_interface_version": "unified_marginal_cost_interface_v1",
+  "canonical_offline_interface_declared": true,
+  "release_validation_passed": true,
+  "blocked": false,
+  "blocked_semantics": "False means canonical offline version transition is valid; it does not approve MATSim scoring.",
+  "matsim_scoring_modified": false,
+  "matsim_scoring_approved": false,
+  "matsim_scoring_blocked": true,
+  "scoring_implementation_approved": false,
+  "car_monetaryDistanceRate_modified": false,
+  "marginalUtilityOfMoney_modified": false,
+  "cost_calculation_method_modified": false,
+  "energy_parameters_modified": false,
+  "toll_parameters_modified": false,
+  "parking_parameters_modified": false,
+  "fixed_cost_behavioral_inclusion": false,
+  "legacy_results_overwritten": false,
+  "legacy_results_moved": false,
+  "legacy_status": "superseded_offline_prototype",
+  "counts": {
+    "canonical_car_leg_count": 67718,
+    "canonical_private_car_leg_count": 64789,
+    "canonical_motorcycle_leg_count": 2929,
+    "canonical_complete_leg_count": 63954,
+    "canonical_incomplete_leg_count": 835,
+    "canonical_parking_incomplete_leg_count": 835,
+    "canonical_toll_charged_leg_count": 25858,
+    "canonical_toll_no_charge_leg_count": 38931,
+    "canonical_toll_physical_passage_event_count": 30837,
+    "scenario_summary_row_counts": {
+      "low": 67718,
+      "base": 67718,
+      "high": 67718
+    },
+    "scenario_component_row_counts": {
+      "low": 203154,
+      "base": 203154,
+      "high": 203154
+    },
+    "unresolved_or_out_of_scope_component_count_base": 9622,
+    "unresolved_or_out_of_scope_numeric_zero_count_base": 0,
+    "incomplete_behavioral_total_null": true,
+    "fixed_component_leg_row_count": 0,
+    "fixed_cost_included_true_count": 0,
+    "fixed_cost_leg_value_non_null_count": 0,
+    "scoring_adoption_approved_true_count": 0
+  },
+  "legacy_counts": {
+    "legacy_confirmed_charged_private_car_legs": 1008,
+    "legacy_confirmed_no_charge_private_car_legs": 63781,
+    "legacy_base_toll_total_hkd": 19605.0,
+    "legacy_status": "superseded_offline_prototype"
+  },
+  "manifest_sha256_checks": {
+    "canonical_interface_bundle_sha256_matches": true,
+    "canonical_interface_file_sha256_all_match": true,
+    "energy_bundle_sha256_matches": true,
+    "toll_mapping_bundle_sha256_matches": true,
+    "toll_rate_bundle_sha256_matches": true,
+    "parking_bundle_sha256_matches": true,
+    "fixed_ownership_bundle_sha256_matches": true,
+    "superseded_file_sha256_all_match": true
+  },
+  "hard_checks": {
+    "canonical_car_leg_count_matches_expected": true,
+    "canonical_private_car_leg_count_matches_expected": true,
+    "canonical_motorcycle_leg_count_matches_expected": true,
+    "canonical_complete_leg_count_matches_expected": true,
+    "canonical_incomplete_leg_count_matches_expected": true,
+    "canonical_parking_incomplete_leg_count_matches_expected": true,
+    "canonical_toll_charged_leg_count_matches_expected": true,
+    "canonical_toll_no_charge_leg_count_matches_expected": true,
+    "canonical_toll_physical_passage_event_count_matches_expected": true,
+    "canonical_interface_bundle_sha256_matches": true,
+    "canonical_interface_file_sha256_all_match": true,
+    "energy_bundle_sha256_matches": true,
+    "toll_mapping_bundle_sha256_matches": true,
+    "toll_rate_bundle_sha256_matches": true,
+    "parking_bundle_sha256_matches": true,
+    "fixed_ownership_bundle_sha256_matches": true,
+    "superseded_file_sha256_all_match": true,
+    "legacy_prototype_charged_leg_count_1008": true,
+    "legacy_files_preserved_in_place": true,
+    "all_legacy_paths_marked_superseded": true,
+    "canonical_interface_is_only_offline_integration_source": true,
+    "no_current_matsim_scoring_input_approved": true,
+    "unresolved_count_nonzero": true,
+    "unresolved_or_out_of_scope_never_numeric_zero": true,
+    "incomplete_behavioral_total_null": true,
+    "fixed_ownership_not_in_leg_components": true,
+    "fixed_ownership_not_in_leg_totals": true,
+    "matsim_scoring_not_approved": true,
+    "all_protected_inputs_unchanged": true,
+    "transition_audit_row_count_18": true
+  },
+  "protected_before": {
+    "canonical_matsim_inputs": {
+      "config": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+        "sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c"
+      },
+      "facilities": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+        "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+      },
+      "network": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+        "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+      },
+      "plans_routed": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+        "sha256": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+      },
+      "plans_unrouted": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+        "sha256": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7"
+      },
+      "private_vehicles": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+        "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+      },
+      "transit_schedule": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+        "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+      },
+      "transit_vehicles": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+        "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+      },
+      "trip_manifest": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/agent_trip_manifest_v2.parquet",
+        "sha256": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f"
+      }
+    },
+    "legacy_top_level_results": {
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_low.parquet": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_base.parquet": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_high.parquet": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_model_validation.json": "28ec941b040d4825022d997d0a94f2c7fd3d3c6bfa04c3480f58c20ae5d9eeb3",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_component.csv": "04cf08f8c873d4a5fc60365f7a62ee4923cde2ef8fe96aac22b1d6187e5a918b",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_distance.csv": "bd97cebf39e638d31b7bf9371192ae317c0400b0f9f5fc91515cc898f396f9e8",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_destination.csv": "6d7832c585c9d22e3eae1d646474d3829390ba7c6d1b5201e2a1829d2fa0b6ea",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_activity.csv": "dd8342bcf13955b4bd986bfc806bd23c51b842fbcbfb884c901e6efb74400aad"
+    },
+    "historical_supporting_assets": {
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_source_manifest.json": "59ec17f178c8b6994fc6199c1c15970f062bff1e825a1e23843f1e1887f398f0",
+      "data/transport_costs/hongkong/car_cost_v1/car_energy_cost_parameters.csv": "f806975dffa3212d9c66c4c819a2946b210c2baf32f8161d3163c67b609f2152",
+      "data/transport_costs/hongkong/car_cost_v1/car_toll_rules.csv": "2f61eec886adb8f35f09848b18ea507d8a71b7c7c6021b663228dd95c47dd21c",
+      "data/transport_costs/hongkong/car_cost_v1/car_parking_cost_rules.csv": "90b45daf993e3d918c6e5d98d33429b4e8fbbf742b63574b2773f1f2734c5bf8"
+    },
+    "canonical_interface": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1",
+      "bundle_sha256": "4644ad03caa110e7510e1598e4696bfbd2230581c6860b333854b986df22b630",
+      "file_sha256": {
+        "car_leg_marginal_cost_components_base.parquet": "0337469ca99d61650f782f273b7b275cee124449e01037f95e15f978f94e742b",
+        "car_leg_marginal_cost_components_high.parquet": "2d66865bc568143ccd8b62cadaf11803764c24bf5c05a4bf05596da067d673bb",
+        "car_leg_marginal_cost_components_low.parquet": "9cf12b23772a846fbf0cdd4d43e4f03b39bc65030ee5852412133c90ea5ca341",
+        "car_leg_marginal_cost_summary_base.parquet": "46e11a3b15cad8e14a5fe926c61a68f3bbd002d979b368aca64c502a94ebfe71",
+        "car_leg_marginal_cost_summary_high.parquet": "759f402967e2eb0852026e6c019b93d3d11b069af286d741463ff7ce608db880",
+        "car_leg_marginal_cost_summary_low.parquet": "82813b08fab0451f2302613e3b41a8ec575988c9814a89fef5c9e2512e456e45",
+        "fixed_ownership_accounting_sidecar_reference.json": "a7196afede45cdff588c498770d50089528e44eaa318b4ecb726668be2911332",
+        "marginal_cost_component_registry.csv": "ae2fd61342413b586aef1149f5221db0ffa04d994e1b415d6c7bccf077855580",
+        "unified_marginal_cost_input_hashes.json": "fa6563b3e8422557d9a7ab71b79a27a28f7e62de0dbef5df05addfae9d2756bd",
+        "unified_marginal_cost_required_repairs.csv": "6bcc06140efd5d51a420a4c924c17f518b68aecc9e3983d43b78cc7a55c3153d",
+        "unified_marginal_cost_summary.csv": "f10d7f5767bbab987c2c52f3b550425c760de399a57fffba3fa30540775421f6",
+        "unified_marginal_cost_validation.json": "3286ad07cb87cd8e60dea7278428f63f5eec524ab9aae53d46076777fdef6edf"
+      }
+    },
+    "component_candidates": {
+      "energy_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1",
+        "bundle_sha256": "0335c56a62a9ecae9af3035bce5d183b148ee156f0ca6b41dd04b3c48e7c370c"
+      },
+      "toll_network_mapping_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_network_mapping_v1",
+        "bundle_sha256": "b430c3a776014fcf9843084efb3020be3cbd6e8003813d632099de4d131f8a44"
+      },
+      "toll_rate_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1",
+        "bundle_sha256": "43d095651bfa8b9ed988ab8fd4c784caf51f2633a22aa4641e103214ea530c19"
+      },
+      "parking_event_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1",
+        "bundle_sha256": "15971e677ae47b53e58f5028be9e8e505655f468c4464fcc3af337353632ba70"
+      },
+      "fixed_ownership_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/fixed_ownership_application_v1",
+        "bundle_sha256": "a3944de62ff52da0f3e49e1f23df3e9e699ef08d667cd239b0480bdc31722115"
+      }
+    },
+    "code_and_build": {
+      "src_main_java": {
+        "path": "src/main/java",
+        "sha256": "6816357c7a343ca681ca39a48f8c52cb93ca5dbc3a928f94fee15260f62c08eb",
+        "hash_type": "directory_bundle_sha256"
+      },
+      "pom_xml": {
+        "path": "pom.xml",
+        "sha256": "68163589de91411022a6768be7fc7f06e748eaacb9266f968725a692d36f2a30",
+        "hash_type": "file_sha256"
+      },
+      "run_hong_kong_entry": {
+        "path": "src/main/java/org/matsim/project/RunHongKong5Pct.java",
+        "sha256": "3664fc816a6dc3a174c8ab79ff323adbdac6eda5d0a8ce3c6b4ef8773423c042",
+        "hash_type": "file_sha256"
+      }
+    }
+  },
+  "protected_after": {
+    "canonical_matsim_inputs": {
+      "config": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+        "sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c"
+      },
+      "facilities": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+        "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+      },
+      "network": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+        "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+      },
+      "plans_routed": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+        "sha256": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+      },
+      "plans_unrouted": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_unrouted_5pct_v2.xml.gz",
+        "sha256": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7"
+      },
+      "private_vehicles": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+        "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+      },
+      "transit_schedule": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+        "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+      },
+      "transit_vehicles": {
+        "path": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+        "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+      },
+      "trip_manifest": {
+        "path": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/agent_trip_manifest_v2.parquet",
+        "sha256": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f"
+      }
+    },
+    "legacy_top_level_results": {
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_low.parquet": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_base.parquet": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+      "data/transport_costs/hongkong/car_cost_v1/car_leg_cost_estimates_high.parquet": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_model_validation.json": "28ec941b040d4825022d997d0a94f2c7fd3d3c6bfa04c3480f58c20ae5d9eeb3",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_component.csv": "04cf08f8c873d4a5fc60365f7a62ee4923cde2ef8fe96aac22b1d6187e5a918b",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_distance.csv": "bd97cebf39e638d31b7bf9371192ae317c0400b0f9f5fc91515cc898f396f9e8",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_destination.csv": "6d7832c585c9d22e3eae1d646474d3829390ba7c6d1b5201e2a1829d2fa0b6ea",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_summary_by_activity.csv": "dd8342bcf13955b4bd986bfc806bd23c51b842fbcbfb884c901e6efb74400aad"
+    },
+    "historical_supporting_assets": {
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_source_manifest.json": "59ec17f178c8b6994fc6199c1c15970f062bff1e825a1e23843f1e1887f398f0",
+      "data/transport_costs/hongkong/car_cost_v1/car_energy_cost_parameters.csv": "f806975dffa3212d9c66c4c819a2946b210c2baf32f8161d3163c67b609f2152",
+      "data/transport_costs/hongkong/car_cost_v1/car_toll_rules.csv": "2f61eec886adb8f35f09848b18ea507d8a71b7c7c6021b663228dd95c47dd21c",
+      "data/transport_costs/hongkong/car_cost_v1/car_parking_cost_rules.csv": "90b45daf993e3d918c6e5d98d33429b4e8fbbf742b63574b2773f1f2734c5bf8"
+    },
+    "canonical_interface": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1",
+      "bundle_sha256": "4644ad03caa110e7510e1598e4696bfbd2230581c6860b333854b986df22b630",
+      "file_sha256": {
+        "car_leg_marginal_cost_components_base.parquet": "0337469ca99d61650f782f273b7b275cee124449e01037f95e15f978f94e742b",
+        "car_leg_marginal_cost_components_high.parquet": "2d66865bc568143ccd8b62cadaf11803764c24bf5c05a4bf05596da067d673bb",
+        "car_leg_marginal_cost_components_low.parquet": "9cf12b23772a846fbf0cdd4d43e4f03b39bc65030ee5852412133c90ea5ca341",
+        "car_leg_marginal_cost_summary_base.parquet": "46e11a3b15cad8e14a5fe926c61a68f3bbd002d979b368aca64c502a94ebfe71",
+        "car_leg_marginal_cost_summary_high.parquet": "759f402967e2eb0852026e6c019b93d3d11b069af286d741463ff7ce608db880",
+        "car_leg_marginal_cost_summary_low.parquet": "82813b08fab0451f2302613e3b41a8ec575988c9814a89fef5c9e2512e456e45",
+        "fixed_ownership_accounting_sidecar_reference.json": "a7196afede45cdff588c498770d50089528e44eaa318b4ecb726668be2911332",
+        "marginal_cost_component_registry.csv": "ae2fd61342413b586aef1149f5221db0ffa04d994e1b415d6c7bccf077855580",
+        "unified_marginal_cost_input_hashes.json": "fa6563b3e8422557d9a7ab71b79a27a28f7e62de0dbef5df05addfae9d2756bd",
+        "unified_marginal_cost_required_repairs.csv": "6bcc06140efd5d51a420a4c924c17f518b68aecc9e3983d43b78cc7a55c3153d",
+        "unified_marginal_cost_summary.csv": "f10d7f5767bbab987c2c52f3b550425c760de399a57fffba3fa30540775421f6",
+        "unified_marginal_cost_validation.json": "3286ad07cb87cd8e60dea7278428f63f5eec524ab9aae53d46076777fdef6edf"
+      }
+    },
+    "component_candidates": {
+      "energy_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1",
+        "bundle_sha256": "0335c56a62a9ecae9af3035bce5d183b148ee156f0ca6b41dd04b3c48e7c370c"
+      },
+      "toll_network_mapping_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_network_mapping_v1",
+        "bundle_sha256": "b430c3a776014fcf9843084efb3020be3cbd6e8003813d632099de4d131f8a44"
+      },
+      "toll_rate_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/toll_rate_application_v1",
+        "bundle_sha256": "43d095651bfa8b9ed988ab8fd4c784caf51f2633a22aa4641e103214ea530c19"
+      },
+      "parking_event_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1",
+        "bundle_sha256": "15971e677ae47b53e58f5028be9e8e505655f468c4464fcc3af337353632ba70"
+      },
+      "fixed_ownership_application_v1": {
+        "path": "data/transport_costs/hongkong/car_cost_v1/fixed_ownership_application_v1",
+        "bundle_sha256": "a3944de62ff52da0f3e49e1f23df3e9e699ef08d667cd239b0480bdc31722115"
+      }
+    },
+    "code_and_build": {
+      "src_main_java": {
+        "path": "src/main/java",
+        "sha256": "6816357c7a343ca681ca39a48f8c52cb93ca5dbc3a928f94fee15260f62c08eb",
+        "hash_type": "directory_bundle_sha256"
+      },
+      "pom_xml": {
+        "path": "pom.xml",
+        "sha256": "68163589de91411022a6768be7fc7f06e748eaacb9266f968725a692d36f2a30",
+        "hash_type": "file_sha256"
+      },
+      "run_hong_kong_entry": {
+        "path": "src/main/java/org/matsim/project/RunHongKong5Pct.java",
+        "sha256": "3664fc816a6dc3a174c8ab79ff323adbdac6eda5d0a8ce3c6b4ef8773423c042",
+        "hash_type": "file_sha256"
+      }
+    }
+  },
+  "all_protected_inputs_unchanged": true
+}

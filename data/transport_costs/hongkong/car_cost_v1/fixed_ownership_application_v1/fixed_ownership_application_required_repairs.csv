@@ -1,0 +1,6 @@
+repair_id,severity,blocking,component,finding,required_change
+FIXED-R01,medium,False,legal_ownership,"Canonical plans identify the unique vehicle user and household assignment, not the observed legal owner.",Keep owner_observed=false unless a separately audited legal-ownership source becomes available.
+FIXED-R02,medium,False,licence_category,"Private vehicles have no engine displacement or rated power, so licence tiers are analyst scenarios.",Do not assign a licence tier to an individual vehicle without sourced engine or rated-power attributes.
+FIXED-R03,medium,False,high_parking_proxy,"The high HKD 4,850 anchor is an official government public-car-park monthly fee, not observed residential parking for each modeled vehicle.",Retain the explicit high-sensitivity proxy label; replace it only with an audited residential distribution.
+FIXED-R04,medium,False,partial_tco,"Depreciation, purchase, finance, insurance, maintenance, tyres, and inspection are intentionally excluded.",Do not call this candidate complete total cost of ownership; add omitted components only in a new audit.
+FIXED-R05,low,False,low_parking_sensitivity,"Low parking is an analyst component exclusion, not evidence that modeled owners receive free parking.",Preserve status residential_parking_component_excluded_in_low_sensitivity in every reuse.

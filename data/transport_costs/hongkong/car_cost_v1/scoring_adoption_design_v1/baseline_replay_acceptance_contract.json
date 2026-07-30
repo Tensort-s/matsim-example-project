@@ -1,0 +1,66 @@
+{
+  "contract": "hong_kong_private_car_baseline_replay_acceptance_v1",
+  "source_commit": "ee8187222dff0af1682255d9edb07994761183aa",
+  "oracle": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1",
+  "oracle_role": "baseline_selected_routed_plan_audit_truth_and_runtime_replay_oracle_only;not_iteration_runtime_static_lookup",
+  "test_mode": {
+    "iteration": 0,
+    "replanning_disabled": true,
+    "selected_routed_plan_frozen": true,
+    "matsim_simulation_run_by_this_audit": false,
+    "future_test_required": true
+  },
+  "expected_counts": {
+    "experienced_private_car_legs": 64789,
+    "energy_aligned_private_car_legs": 64789,
+    "energy_zero_distance_legal_zero_legs": 33,
+    "toll_physical_passage_events_base": 30837,
+    "toll_charged_private_car_legs_base": 25858,
+    "toll_no_charge_private_car_legs_base": 38931,
+    "toll_canonical_facility_count_experienced": 9,
+    "parking_physical_events_private_car": 64789,
+    "parking_complete_private_car_events_base": 63954,
+    "parking_incomplete_private_car_events_base": 835,
+    "motorcycle_private_car_cost_events": 0,
+    "fixed_cost_runtime_events": 0,
+    "fixed_cost_leg_scoring_records": 0,
+    "fixed_cost_person_money_events": 0
+  },
+  "identity_and_structure_acceptance": {
+    "energy_event_key_unique": "vehicle_id+traffic_session",
+    "toll_event_key_unique": "vehicle_id+traffic_session+canonical_facility+passage_cluster",
+    "parking_event_key_unique": "vehicle_id+parking_event_sequence",
+    "toll_facility_multiset_exact_match": true,
+    "whc_alias_duplicate_charge_count": 0,
+    "parking_duplicate_physical_event_charge_count": 0,
+    "complete_incomplete_status_exact_match": true,
+    "legal_zero_status_set_exact_match": true
+  },
+  "numeric_acceptance": {
+    "energy_max_abs_error_hkd": 1e-06,
+    "toll_same_rate_interval_max_abs_error_hkd": 1e-09,
+    "parking_same_billing_bucket_max_abs_error_hkd": 1e-09,
+    "complete_leg_total_same_semantic_inputs_max_abs_error_hkd": 1e-06,
+    "unexplained_component_max_abs_error_hkd": 0.0,
+    "unexplained_leg_total_max_abs_error_hkd": 0.0
+  },
+  "experienced_time_semantic_differences": {
+    "toll": "Actual passage time may cross a rate interval relative to the offline estimated base time. Report raw max error separately; a nonzero difference is acceptable only if exact official rate-boundary evidence explains it.",
+    "parking": "Experienced arrival/departure may cross a billing unit or day/night boundary. Report raw max error separately; accept only exact rule-based differences with unique physical events.",
+    "raw_max_abs_error_must_be_reported": true,
+    "static_base_amount_forced_at_runtime": false
+  },
+  "failure_conditions": [
+    "private_car_leg_count_mismatch",
+    "energy_distance_convention_unreconciled",
+    "toll_facility_set_or_alias_dedup_mismatch",
+    "parking_event_duplicate_or_person_attribution_mismatch",
+    "unexplained_nonzero_component_or_total_error",
+    "any_motorcycle_private_car_cost_event",
+    "any_fixed_ownership_runtime_event_or_utility",
+    "any_unresolved_parking_default_zero"
+  ],
+  "unresolved_policy": "formal_scoring_adoption_blocked_until_835_repaired;complete_case_allowed_only_for_non_mode_choice_technical_replay;fail_fast_at_runtime_for_unresolved_physical_events",
+  "baseline_replay_only": true,
+  "runtime_static_leg_cost_lookup_approved": false
+}

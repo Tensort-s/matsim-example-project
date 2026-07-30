@@ -66,3 +66,8 @@ documentation:
   public_transport: "docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md"
   road_capacity: "docs/HONG_KONG_ROAD_SPEED_CAPACITY.md"
   agents: "docs/HONG_KONG_MATSIM_AGENTS_5PCT.md"
+  car_cost_model: "docs/HONG_KONG_CAR_COST_MODEL.md"
+
+offline_audits:
+  car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"
+  car_cost_status: "read_only_offline_audit_not_active_matsim_scoring"

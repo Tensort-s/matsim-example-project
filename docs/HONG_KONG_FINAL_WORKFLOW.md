@@ -252,7 +252,37 @@ egress expansion.
 
 Details: `docs/HONG_KONG_MATSIM_AGENTS_5PCT.md`.
 
-### 9. Final simulation and visualization
+### 9. Offline private-car cost audit
+
+The read-only private-car cost model v1 estimates low/base/high:
+
+- representative fleet-average fuel or electricity cost;
+- private-car tolls confirmed from complete route link sequences and official
+  GDB toll feature IDs;
+- TCS-zone, activity, arrival-time, and duration-based destination parking;
+- one partial fixed vehicle-day ownership record per used private car.
+
+Production audit directory:
+
+```text
+data/transport_costs/hongkong/car_cost_v1/
+```
+
+This is an auxiliary offline audit. It does not change
+`car monetaryDistanceRate`, global money utility, mode choice, or any
+production MATSim input. The independently rebuilt energy, toll, and parking
+candidates are exposed through a strict, null-preserving unified marginal-cost
+interface; fixed ownership remains an accounting-only sidecar. Neither this
+interface nor the underlying candidates approve MATSim scoring adoption. The
+follow-up event-level scoring design is also blocked: the existing distance
+money term has unverified currency/economic semantics, 835 parking events are
+non-randomly unresolved, and no baseline replay has been approved or run.
+Details: `docs/HONG_KONG_CAR_COST_MODEL.md` and
+`docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md`, plus the
+design-only audit in
+`docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md`.
+
+### 10. Final simulation and visualization
 
 Adopted simulation parameters:
 
@@ -341,6 +371,9 @@ change actually invalidates an upstream stage.
 - Detector and ATC road-flow observations do not cover every road link.
 - `ride` demand does not create a complete taxi, ride-hailing, or school-bus
   operator fleet.
+- Private-car powertrains and destination car parks are not observed at
+  vehicle/facility level; the offline car-cost layer therefore uses an
+  explicit representative fleet and official-rate-bounded parking proxies.
 
 These limitations must remain visible in publications, validation summaries,
 and future model extensions.

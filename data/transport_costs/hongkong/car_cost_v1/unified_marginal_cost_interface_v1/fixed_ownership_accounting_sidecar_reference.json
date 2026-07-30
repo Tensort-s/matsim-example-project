@@ -1,0 +1,35 @@
+{
+  "candidate_path": "data/transport_costs/hongkong/car_cost_v1/fixed_ownership_application_v1",
+  "source_commit": "f3fa7b6ad510929d087da29df32d5f2be375e5eb",
+  "candidate_bundle_sha256": "a3944de62ff52da0f3e49e1f23df3e9e699ef08d667cd239b0480bdc31722115",
+  "candidate_file_sha256": {
+    "fixed_ownership_application_input_hashes.json": "b9ab776342cbfac6be5aa147f227dcae5b45b14bf7ba0ffd616e8961b283ca55",
+    "fixed_ownership_application_required_repairs.csv": "d0357e0bd2f0ec7de78f27c2b77c79f3c71ee7a7ef191d1d236d1126e3cf0c2e",
+    "fixed_ownership_application_summary.csv": "f0207e236fd55a102974dbcc8a0e6cc03b069dfe372fbc0e2bbac50186b2f29b",
+    "fixed_ownership_application_validation.json": "aecea2b38ee65be90408bedefb84c7e134a5ac6a845788601e506eb6b65a8e21",
+    "fixed_ownership_parameters_repository_relative.csv": "5ab541b5e753f44fcd5c11b0e798db8b09214c3112dc0bb2273cfbb0a0ed489c",
+    "vehicle_day_fixed_ownership_costs_base.parquet": "f584caf61b957a0882aef3d6ef732694c398a7702517a14848f40cead124ecb4",
+    "vehicle_day_fixed_ownership_costs_high.parquet": "4957aa450719f54b9314cb07e199cee5b3fc7d14cc36253338815bed5e949be6",
+    "vehicle_day_fixed_ownership_costs_low.parquet": "32f9ff78b6b4213695023c1873adb95af3f9ecb733472d83a6391d1dd51efa65"
+  },
+  "record_scope": "vehicle_day_accounting_proxy",
+  "fixed_cost_proxy_name": "partial_fixed_vehicle_ownership_proxy",
+  "cost_nature": "fixed_sunk_at_daily_mode_choice_horizon",
+  "incremental_if_car_leg_chosen": false,
+  "behavioral_inclusion_current_model": false,
+  "eligible_for_matsim_scoring": false,
+  "excluded_from_behavioral_marginal_total": true,
+  "current_model_decision_horizon": "daily_travel_and_mode_choice",
+  "allowed_use": "accounting_policy_and_future_long_term_ownership_analysis_only",
+  "owner_observed": false,
+  "complete_tco": false,
+  "unused_owned_vehicles_observed": false,
+  "reason": "fixed_cost_paid_regardless_of_daily_mode_choice_under_exogenous_vehicle_ownership",
+  "scenario_accounting_totals_hkd": {
+    "low": 243910.77566921085,
+    "base": 2651066.580595832,
+    "high": 3856274.147651632
+  },
+  "copied_to_leg_component_table": false,
+  "joined_to_first_or_last_vehicle_leg": false
+}

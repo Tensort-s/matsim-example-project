@@ -1,0 +1,6 @@
+repair_id,severity,component,finding,required_change
+TOLLNET-R01,critical,feature_mapping,"The prototype interprets seven same-number toll-feature/network-route IDs as direct matches, but their geometries are separated by kilometres and belong to different ID domains.",Replace same-number matching with the audited official TRAFFIC_FEATURES FEATURE_ID -> RD_ID -> network ROUTE_ID table.
+TOLLNET-R02,critical,toll_output,Existing confirmed-charge and confirmed-no-charge labels were produced from the rejected same-number mapping.,Regenerate toll identification and later monetary outputs from toll_facility_network_mapping.csv.
+TOLLNET-R03,high,alias,Western Harbour Crossing primary and backup feature sets must be retained but deduplicated as one physical facility.,Apply canonical_alias_same_physical_facility and charge no more than once per route passage.
+TOLLNET-R04,high,direction,"MATSim f/r expresses link orientation, not an official compass-direction label.",Retain official feature 1/2 roles and f/r orientation without inventing northbound/southbound labels.
+TOLLNET-R05,high,provenance,Existing toll-rule provenance contains personal absolute paths.,Use repository-relative paths plus input_root_role when the toll monetary output is repaired.

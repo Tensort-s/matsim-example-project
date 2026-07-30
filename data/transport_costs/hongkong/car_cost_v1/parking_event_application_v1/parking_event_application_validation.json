@@ -1,0 +1,244 @@
+{
+  "audit": "Hong Kong private-car destination parking by physical vehicle event v1",
+  "source_commit": "44f15a95a1a00aeaac7c9163a344d15caf787497",
+  "candidate_output_only": true,
+  "parking_price_interpretation": "official_rate_bounded_zone_activity_proxy",
+  "facility_level_parking_price_claimed": false,
+  "matsim_scoring_modified": false,
+  "toll_candidate_modified": false,
+  "publishable_candidate": true,
+  "blocked": false,
+  "input_counts": {
+    "car_legs": 67718,
+    "private_car_legs": 64789,
+    "motorcycle_out_of_scope": 2929,
+    "used_private_cars": 21020
+  },
+  "physical_event_audit_from_raw_arrivals": {
+    "duplicate_parking_event_key_count": 0,
+    "legs_mapped_to_same_parking_event_count": 0,
+    "excess_leg_mappings_to_parking_events": 0,
+    "overlapping_vehicle_parking_event_count": 466,
+    "facility_chain_mismatch_count": 321,
+    "overlap_and_facility_mismatch_intersection_count": 52,
+    "vehicle_chain_issue_union_count": 735,
+    "raw_arrival_record_count": 67718,
+    "raw_private_car_arrival_record_count": 64789,
+    "raw_motorcycle_arrival_record_count": 2929,
+    "physical_private_car_event_count": 64789,
+    "event_identity_key_unique_before_scenario_expansion": true,
+    "event_scenario_key_unique": true,
+    "every_private_arrival_mapped_to_event_or_explicit_unresolved": true
+  },
+  "vehicle_chain_diagnostics": {
+    "time_overlap_count": 466,
+    "facility_mismatch_count": 321,
+    "time_overlap_and_facility_mismatch_intersection": 52,
+    "issue_union_count_non_mutually_exclusive_inputs": 735,
+    "terminal_home_count": 21018,
+    "terminal_non_home_count": 2,
+    "cross_midnight_valid_event_count": 1359,
+    "cross_midnight_events_with_day_night_rate_switch_base": 1007,
+    "time_values_preserve_absolute_model_day_seconds": true,
+    "vehicle_time_overlap_automatically_corrected": false,
+    "facility_mismatch_charged": false
+  },
+  "scenario_outputs": {
+    "row_counts": {
+      "low": 67718,
+      "base": 67718,
+      "high": 67718
+    },
+    "person_leg_key_unique": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "parking_status_counts": {
+      "low": {
+        "resolved_home_marginal_zero_fixed_separate": 28390,
+        "resolved_proxy_charge": 26959,
+        "resolved_work_subscription_assumed_prepaid": 8605,
+        "out_of_scope_motorcycle": 2929,
+        "unresolved_vehicle_time_overlap": 466,
+        "unresolved_next_departure_facility_mismatch": 269,
+        "unresolved_missing_destination_zone": 98,
+        "unresolved_missing_next_departure_non_home": 2
+      },
+      "base": {
+        "resolved_proxy_charge": 35564,
+        "resolved_home_marginal_zero_fixed_separate": 28390,
+        "out_of_scope_motorcycle": 2929,
+        "unresolved_vehicle_time_overlap": 466,
+        "unresolved_next_departure_facility_mismatch": 269,
+        "unresolved_missing_destination_zone": 98,
+        "unresolved_missing_next_departure_non_home": 2
+      },
+      "high": {
+        "resolved_proxy_charge": 35564,
+        "resolved_home_marginal_zero_fixed_separate": 28390,
+        "out_of_scope_motorcycle": 2929,
+        "unresolved_vehicle_time_overlap": 466,
+        "unresolved_next_departure_facility_mismatch": 269,
+        "unresolved_missing_destination_zone": 98,
+        "unresolved_missing_next_departure_non_home": 2
+      }
+    },
+    "resolved_counts": {
+      "low": 63954,
+      "base": 63954,
+      "high": 63954
+    },
+    "unresolved_counts": {
+      "low": 835,
+      "base": 835,
+      "high": 835
+    },
+    "out_of_scope_counts": {
+      "low": 2929,
+      "base": 2929,
+      "high": 2929
+    },
+    "resolved_only_totals_hkd": {
+      "low": 838964.0,
+      "base": 2624827.0,
+      "high": 3363957.0
+    },
+    "event_to_leg_aggregation_max_abs_error_hkd": {
+      "low": 0.0,
+      "base": 0.0,
+      "high": 0.0
+    },
+    "non_null_low_le_base_le_high": true,
+    "zero_status_rule_valid": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "unresolved_and_out_of_scope_cost_null": {
+      "low": true,
+      "base": true,
+      "high": true
+    },
+    "home_resolved_nonzero_count": 0,
+    "work_monthly_rate_attached_to_leg_count": 0,
+    "fixed_residential_parking_in_marginal_total": false
+  },
+  "benchmark_comparison": {
+    "car_legs": {
+      "comparison_baseline": 67718,
+      "rebuilt_actual": 67718,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "private_car_legs": {
+      "comparison_baseline": 64789,
+      "rebuilt_actual": 64789,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "motorcycle": {
+      "comparison_baseline": 2929,
+      "rebuilt_actual": 2929,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "used_private_cars": {
+      "comparison_baseline": 21020,
+      "rebuilt_actual": 21020,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "home_private_car_arrivals": {
+      "comparison_baseline": 28858,
+      "rebuilt_actual": 28858,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "work": {
+      "comparison_baseline": 8784,
+      "rebuilt_actual": 8784,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "education": {
+      "comparison_baseline": 278,
+      "rebuilt_actual": 278,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "shopping": {
+      "comparison_baseline": 7946,
+      "rebuilt_actual": 7946,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "leisure": {
+      "comparison_baseline": 15652,
+      "rebuilt_actual": 15652,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "medical_personal_business": {
+      "comparison_baseline": 3271,
+      "rebuilt_actual": 3271,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "duration_available": {
+      "comparison_baseline": 43034,
+      "rebuilt_actual": 43034,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "non_home_duration_available": {
+      "comparison_baseline": 35662,
+      "rebuilt_actual": 35662,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "zone_available": {
+      "comparison_baseline": 64686,
+      "rebuilt_actual": 64686,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "previous_overlap_diagnostics": {
+      "comparison_baseline": 466,
+      "rebuilt_actual": 466,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "previous_next_departure_facility_mismatch": {
+      "comparison_baseline": 321,
+      "rebuilt_actual": 321,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "previous_unresolved_vehicle_chain": {
+      "comparison_baseline": 267,
+      "rebuilt_actual": 735,
+      "difference": 468,
+      "explanation": "New precedence audits time overlap and facility mismatch before home zero treatment. The prior 267 counted non-home chain failures; the rebuilt union is 735 and exposes 468 additional home-arrival chain failures."
+    },
+    "no_next_departure_vehicle_events": {
+      "comparison_baseline": 21020,
+      "rebuilt_actual": 21020,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    },
+    "cross_midnight_events": {
+      "comparison_baseline": 1359,
+      "rebuilt_actual": 1359,
+      "difference": 0,
+      "explanation": "Exact match to the input comparison benchmark; output was independently rebuilt rather than hard-coded."
+    }
+  },
+  "protected_inputs": {
+    "all_existing_car_cost_files_unchanged": true,
+    "toll_network_mapping_v1_unchanged": true,
+    "toll_rate_application_v1_unchanged": true,
+    "canonical_inputs_unchanged": true,
+    "all_protected_sha256_unchanged": true
+  }
+}

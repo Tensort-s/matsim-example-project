@@ -1,0 +1,146 @@
+{
+  "schema_version": "hong_kong_multimodal_cost_integration_stage3_validation_v1",
+  "stage_id": "Stage 3 - Canonical offline Car marginal-cost interface merge",
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_3_GATE",
+  "branch": "integration/hk-multimodal-cost-v1",
+  "stage_input_commit_sha": "6902501e956bc9bede52de26e1e8ad9bf2b457d6",
+  "car_source_commit_sha": "fc906efd3afb98e027cc6cca44060dec9e32aa46",
+  "taxi_source_commit_sha": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+  "pt_source_commit_sha": "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+  "output_commit_sha": "recorded_in_executor_handoff_after_commit",
+  "merge": {
+    "command": "git merge --no-ff --no-commit fc906efd3afb98e027cc6cca44060dec9e32aa46",
+    "merge_head_verified": true,
+    "conflict_count": 1,
+    "conflicts": [
+      {
+        "path": "docs/PROJECT_ONBOARDING.md",
+        "classification": "ordinary_documentation_list_conflict",
+        "resolution": "Preserved all Stage 0-2, Taxi and PT entries and added every locked Car topic-document entry."
+      }
+    ],
+    "locked_car_source_paths": 118,
+    "exact_car_source_blobs": 117,
+    "documented_combined_resolution_blobs": 1
+  },
+  "canonical_contract": {
+    "path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/",
+    "version": "unified_marginal_cost_interface_v1",
+    "status": "canonical_offline_behavioral_cost_interface_candidate",
+    "canonical_bundle_sha256": "4644ad03caa110e7510e1598e4696bfbd2230581c6860b333854b986df22b630",
+    "canonical_file_hashes_matched": 12,
+    "candidate_bundle_hashes_matched": 5,
+    "components": [
+      "fuel_or_electricity",
+      "toll",
+      "destination_parking"
+    ],
+    "fixed_ownership_role": "accounting_sidecar_only",
+    "matsim_scoring_approved": false,
+    "scoring_implementation_approved": false,
+    "runtime_static_leg_lookup_approved": false
+  },
+  "offline_counts": {
+    "canonical_car_leg_count": 67718,
+    "canonical_private_car_leg_count": 64789,
+    "canonical_motorcycle_leg_count": 2929,
+    "canonical_complete_private_car_leg_count": 63954,
+    "canonical_incomplete_private_car_leg_count": 835,
+    "canonical_parking_unresolved_private_car_leg_count": 835,
+    "canonical_toll_charged_leg_count": 25858,
+    "canonical_toll_no_charge_leg_count": 38931,
+    "canonical_toll_physical_passage_event_count": 30837,
+    "scenario_component_row_count": 203154,
+    "scenario_summary_row_count": 67718,
+    "three_scenario_component_row_count": 609462,
+    "unresolved_or_out_of_scope_numeric_zero_count_each_scenario": 0,
+    "fixed_component_leg_row_count": 0,
+    "fixed_cost_included_true_count": 0,
+    "fixed_cost_leg_value_non_null_count": 0,
+    "scoring_adoption_approved_true_count": 0,
+    "complete_leg_formula_max_abs_error_hkd_each_scenario": 0.0,
+    "incomplete_behavioral_total_null": true,
+    "motorcycle_components_and_totals_null": true
+  },
+  "validation": {
+    "integrated_car_release_validator": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py --repository-root F:\\Matsim\\worktrees\\hk-cost-integration --input-project-root F:\\Matsim\\matsim-example-project",
+      "exit_status": 0,
+      "canonical_file_hashes_matched": 12,
+      "candidate_bundle_hashes_matched": 5,
+      "protected_input_hashes_matched": 9,
+      "json_files_parsed": 22,
+      "csv_files_read": 33,
+      "parquet_files_readable": 26,
+      "car_scripts_compiled": 12
+    },
+    "pt_release_regression": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py --repository-root F:\\Matsim\\worktrees\\hk-cost-integration",
+      "exit_status": 0,
+      "checks_passed": 20,
+      "checks_total": 20,
+      "registered_hashes_matched": 16
+    },
+    "maven_compile": {
+      "command": ".\\mvnw.cmd -DskipTests compile",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS",
+      "maven_duration_seconds": 13.081
+    },
+    "maven_test": {
+      "command": ".\\mvnw.cmd test",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS",
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "maven_duration_seconds": 45.539
+    }
+  },
+  "runtime_boundary": {
+    "car_java_runtime_or_scoring_code_added": false,
+    "car_money_event_or_static_lookup_added": false,
+    "car_monetaryDistanceRate_modified_or_interpreted": false,
+    "marginalUtilityOfMoney_modified": false,
+    "costCalculationMethod_modified": false,
+    "matsim_config_plans_or_supply_mutated": false,
+    "parking_imputation_added": false,
+    "motorcycle_treated_as_private_car": false,
+    "fixed_ownership_added_to_behavioral_cost": false,
+    "taxi_runtime_changed": false,
+    "pt_release_changed": false,
+    "hong_kong_matsim_scenario_run": false,
+    "server_run": false,
+    "runner_action": false
+  },
+  "configuration_disposition": {
+    "cities/hongkong/city.yaml": "locked Car documentation and read-only offline-audit metadata only",
+    "runs/hongkong/run_manifest.json": "unchanged"
+  },
+  "hard_gate_evidence": {
+    "A": "Exact input/source identity, merge topology, ancestry, push identity and protected refs are checked in Git and completed in the Executor handoff.",
+    "B": "All 118 Car source paths are retained; 117 blobs are exact and the sole onboarding difference is the documented combined-list conflict resolution.",
+    "C": "The manifest names unified_marginal_cost_interface_v1 as the only canonical interface and marks legacy paths superseded.",
+    "D": "The read-only validator matches the canonical bundle, all 12 files, five component candidate bundles and all superseded hashes.",
+    "E": "Committed release/unified hard checks and independent row/key/null/fixed/motorcycle/protected/version checks pass.",
+    "F": "Exactly three marginal components occur in leg rows; fixed ownership occurs only in its excluded accounting registry/sidecar role.",
+    "G": "All 835 parking-unresolved private-car legs keep null parking and null incomplete totals.",
+    "H": "All 2929 motorcycle legs and their component/behavioral costs remain out-of-scope/null.",
+    "I": "Toll charged/no-charge/physical-event counts are 25858/38931/30837 and only confirmed no-charge tolls are zero.",
+    "J": "Each scenario has 203154 component rows and 67718 unique summaries; formulas are exact and zero/fixed/scoring flags pass.",
+    "K": "No Car scoring/runtime, money event, static lookup, config mutation, calibration or monetary-rate interpretation is introduced.",
+    "L": "Taxi Java/data paths and PT canonical paths are unchanged; Maven compile and all 61 tests pass; PT release regression is 20/20.",
+    "M": "All 12 Car scripts compile; 22 JSON, 33 CSV and 26 Parquet files parse/read; canonical contents are independently audited.",
+    "N": "Documentation distinguishes canonical, supporting, accounting, design-only and superseded artifacts; worklogs are append-only.",
+    "O": "city.yaml has only locked offline metadata; run_manifest is unchanged.",
+    "P": "Final diff, markers, index/worktree cleanliness and local/tracking/remote equality are completed in the Executor handoff.",
+    "Q": "origin/master and all locked feature refs are verified before merge and after push."
+  },
+  "diagnostics": [
+    "Existing Maven parent.version, Java 25 native-access/Unsafe, Guice ASM and synthetic-fixture warnings remain non-blocking.",
+    "Representative-fleet energy and destination-parking proxies retain their documented source and non-observation limitations.",
+    "The Car scoring-adoption audit remains design-only and blocked; it does not activate scoring.",
+    "No MATSim or behavioral trend evidence is produced or authorized in Stage 3."
+  ]
+}

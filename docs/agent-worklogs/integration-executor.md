@@ -154,3 +154,61 @@ blockers:
 handoff_to: "INT-SUPERVISOR and INT-REVIEWER after the exact Stage 2 merge commit is pushed"
 next_allowed_action: "Complete final release, source-parity, topology, diff, ref, and cleanliness checks; create and push the Stage 2 merge commit; then wait for independent review. No Runner or Stage 3 action."
 ```
+
+## Entry 4 — Stage 3 canonical offline Car marginal-cost interface
+
+```yaml
+timestamp: "2026-07-31T00:56:46+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 3"
+input_commit_sha: "6902501e956bc9bede52de26e1e8ad9bf2b457d6"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Verified the canonical Stage 3 input, clean integration worktree, branch, tracking ref, and all locked remote refs."
+  - "Executed an explicit git merge --no-ff --no-commit of the locked Car SHA."
+  - "Resolved one ordinary docs/PROJECT_ONBOARDING.md conflict by preserving all Stage 0-2, Taxi and PT entries and adding every locked Car topic-document entry."
+  - "Retained all 118 locked Car source paths; 117 index blobs exactly match the locked source and the onboarding combined-resolution blob is the sole documented difference."
+  - "Faithfully appended the Reviewer Stage 2 PASS and Supervisor Stage 2 closure / Stage 3 authorization handoffs."
+  - "Preserved the complete Car source/audit/provenance bundle while adopting only unified_marginal_cost_interface_v1 as the canonical current offline behavioral-cost interface."
+  - "Added a read-only integrated Car release validator; it matched 12 canonical file hashes, the canonical bundle, five candidate bundles, all superseded hashes, and nine protected MATSim input hashes."
+  - "Independently audited all low/base/high component and summary Parquet tables: exact keys/counts/formulas, 835 unresolved parking legs, 2929 motorcycle legs, legal zeros, fixed-cost exclusion, finite values, and null preservation all passed."
+  - "Parsed 22 Car JSON files, read 33 CSV headers, opened 26 Car Parquet files, and compiled all 12 Car scripts without failure."
+  - "Reran the canonical PT release validator: all 20 checks and 16 registered hashes passed."
+  - "Ran Maven compile successfully and the complete Maven suite: 61 tests with zero failures, errors, or skips."
+  - "Did not add Car scoring, money events, static lookup, Java runtime modules, parking imputation, motorcycle-as-car treatment, fixed ownership behavioral inclusion, calibration, or monetary-rate/utility interpretation."
+  - "Did not run a Hong Kong MATSim scenario, start a server task, authorize Runner, or begin Stage 4."
+evidence_paths:
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md"
+  - "docs/HONG_KONG_CAR_COST_MODEL.md"
+  - "docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md"
+  - "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json"
+  - "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json"
+  - "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/unified_marginal_cost_validation.json"
+  - "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/marginal_cost_component_registry.csv"
+  - "data/transport_costs/hongkong/integration_stage3_validation_v1/stage3_car_merge_validation.json"
+  - "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py"
+  - "target/surefire-reports/"
+  - "docs/agent-worklogs/integration-supervisor.md"
+  - "docs/agent-worklogs/integration-executor.md"
+  - "docs/agent-worklogs/integration-reviewer.md"
+decisions:
+  - "Only unified_marginal_cost_interface_v1 is the canonical current Car behavioral-cost interface, and it remains offline/not scoring-approved."
+  - "Fuel/electricity, confirmed toll, and resolved destination parking are the only leg-level marginal components."
+  - "Fixed ownership remains a vehicle-day accounting sidecar and is excluded from every leg component and behavioral total."
+  - "All 835 unresolved parking legs and all 2929 motorcycle legs remain null/out-of-scope; unresolved is never zero."
+  - "Legacy top-level results remain preserved, superseded, and forbidden as behavioral scoring inputs; supporting and design artifacts are not parallel canonical interfaces."
+  - "cities/hongkong/city.yaml adopts only the locked Car documentation/read-only offline-audit metadata; runs/hongkong/run_manifest.json remains unchanged."
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_3_GATE"
+diagnostic_findings:
+  - "Maven reports the previously disclosed parent.version, Java 25 native-access/Unsafe, Guice ASM, MATSim, and synthetic-fixture warnings; compile and all tests pass."
+  - "Representative-fleet energy, parking proxy, source effective-date, and four non-blocking required-repair limitations remain documented offline diagnostics."
+  - "The historical/design-only scoring-adoption risk records remain blocked and do not activate scoring."
+  - "No MATSim or behavioral trend is produced or authorized in Stage 3."
+blockers:
+  - "The exact Stage 3 merge commit must be created, pushed, and independently reviewed before Stage 3 can pass."
+handoff_to: "INT-SUPERVISOR and INT-REVIEWER after the exact Stage 3 merge commit is pushed"
+next_allowed_action: "Complete final source-parity, topology, diff, ref, structured-file and cleanliness checks; create and push the Stage 3 merge commit; then wait for independent review. No Runner or Stage 4 action."
+```

@@ -334,3 +334,105 @@ check.
 Stage 2 retains the same non-blocking Maven, Java 25, MATSim, Guice ASM, and
 synthetic-fixture warnings documented for Stage 1. No simulation trend is
 created; the five-layer counts are an offline release baseline only.
+
+## Stage 3 canonical offline Car marginal-cost boundary
+
+Stage 3 explicitly merges locked Car source
+`fc906efd3afb98e027cc6cca44060dec9e32aa46` into the integration history.
+The complete source, audit, component-candidate, fixed-accounting,
+scoring-design, source-snapshot, and superseded prototype bundle is retained
+for provenance. Exactly one directory is the current behavioral-cost consumer
+interface:
+
+```text
+data/transport_costs/hongkong/car_cost_v1/
+  unified_marginal_cost_interface_v1/
+```
+
+Its release status is
+`canonical_offline_behavioral_cost_interface_candidate`. It is an offline
+candidate, not an adopted MATSim scoring input. The three and only three
+leg-level marginal components are:
+
+| Component | Current role | Null/zero rule |
+|---|---|---|
+| `fuel_or_electricity` | trip-conditional marginal component | motorcycle is null; only resolved zero-distance energy may be zero |
+| `toll` | trip-conditional marginal component | motorcycle is null; confirmed no-charge may be zero |
+| `destination_parking` | trip-conditional marginal component | 835 unresolved private-car legs stay null; only documented resolved marginal-parking statuses may be zero |
+
+`fixed_vehicle_ownership_cost` is fixed/sunk at the current daily mode-choice
+horizon. It remains in a vehicle-day accounting sidecar only and is absent
+from component rows, first/last legs, trip totals, and current behavioral
+marginal totals. The original top-level Car estimates remain in place with
+their original hashes, explicitly classified as
+`superseded_offline_prototype`, and are forbidden as behavioral scoring input.
+Supporting component candidates and the scoring-adoption audit are likewise
+provenance/design inputs, not parallel canonical interfaces.
+
+The canonical offline baseline is:
+
+```text
+all Car-mode legs:                         67,718
+private-car legs:                          64,789
+motorcycle legs (out of scope/null):        2,929
+complete private-car legs:                 63,954
+parking-unresolved/incomplete legs:           835
+toll charged / confirmed no-charge: 25,858 / 38,931
+physical toll passage events:              30,837
+```
+
+Each low/base/high long component table contains 203,154 rows: 67,718
+canonical leg keys for each of the three components. Each corresponding
+summary contains 67,718 unique leg keys. Across the three scenarios there are
+609,462 component rows. Complete-leg component-sum error is exactly zero;
+incomplete totals and every motorcycle component/total are null;
+unresolved/out-of-scope numeric-zero count is zero. All fixed-cost and scoring
+adoption flags remain false.
+
+The Stage 3 read-only validator is:
+
+```text
+scripts/hong_kong_single_city/costs/car/
+  validate_hong_kong_car_cost_release_v1.py
+```
+
+It does not rebuild or rewrite any cost artifact. It verifies the canonical
+bundle and 12 file hashes, five supporting candidate bundle hashes, preserved
+legacy hashes, nine production-input hashes, component registry, Parquet keys
+and formulas, null/legal-zero rules, motorcycle and fixed-cost exclusion,
+structured-file readability, offline-only flags, and Car script compilation.
+The durable integrated record is:
+
+```text
+data/transport_costs/hongkong/integration_stage3_validation_v1/
+  stage3_car_merge_validation.json
+```
+
+The merge had one ordinary shared-document conflict in
+`docs/PROJECT_ONBOARDING.md`. Resolution retained all existing Taxi/PT and
+control-plane entries and added the Car topic-document entries. Of 118 locked
+Car source paths, 117 retain the exact source blob; the onboarding file is the
+single documented combined-resolution blob.
+
+Stage 3 changes `cities/hongkong/city.yaml` only by adopting the locked
+documentation pointer and `read_only_offline_audit_not_active_matsim_scoring`
+metadata. It does not change current-model inputs or simulation parameters.
+`runs/hongkong/run_manifest.json` is unchanged. No Car Java module, money
+event, static leg lookup, MATSim scoring/config/plans/supply mutation,
+calibration, monetary-distance-rate interpretation, scenario run, server run,
+or Runner action is introduced.
+
+Stage 3 deterministic validation results:
+
+| Check | Result |
+|---|---|
+| Integrated Car read-only validator | exit 0; 12 canonical hashes, 5 candidate bundles, 9 protected inputs |
+| Structured Car release files | 22 JSON parsed; 33 CSV headers read; 26 Parquet files readable |
+| Car Python scripts | 12/12 compile, including the integrated read-only validator |
+| Canonical PT release regression | 20/20 checks passed; 16/16 registered hashes |
+| `.\mvnw.cmd -DskipTests compile` | `BUILD SUCCESS`; exit 0; Maven 13.081 s |
+| `.\mvnw.cmd test` | `BUILD SUCCESS`; 61 tests; 0 failures/errors/skips; Maven 45.539 s |
+
+The previously documented Maven `${parent.version}`, Java 25 native-access and
+Unsafe, Guice ASM, MATSim, and synthetic-fixture warnings remain non-blocking.
+No MATSim or behavioral trend is created or authorized in Stage 3.

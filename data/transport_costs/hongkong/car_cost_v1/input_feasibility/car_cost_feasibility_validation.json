@@ -1,0 +1,764 @@
+{
+  "audit": "Hong Kong private car cost input feasibility audit",
+  "costs_computed": false,
+  "cost_parameters_or_outputs_modified": false,
+  "input_root_role": "canonical_project_read_only",
+  "expected_counts_are_comparison_only": {
+    "main_legs": 743614,
+    "car_legs": 67718,
+    "private_car_legs": 64789,
+    "motorcycle_car_mode_legs": 2929,
+    "used_private_cars": 21020
+  },
+  "actual_counts": {
+    "main_legs": 743614,
+    "car_legs": 67718,
+    "private_car_legs": 64789,
+    "motorcycle_car_mode_legs": 2929,
+    "unknown_vehicle_class_legs": 0,
+    "used_private_cars": 21020
+  },
+  "actual_minus_expected": {
+    "main_legs": 0,
+    "car_legs": 0,
+    "private_car_legs": 0,
+    "motorcycle_car_mode_legs": 0,
+    "used_private_cars": 0
+  },
+  "manifest_person_leg_key_duplicate_count": 0,
+  "car_manifest_person_leg_key_unique": true,
+  "routed_person_leg_key_duplicate_count": 0,
+  "unrouted_person_leg_key_duplicate_count": 0,
+  "manifest_car_keys_missing_from_routed": 0,
+  "routed_car_keys_missing_from_manifest_car": 0,
+  "manifest_car_keys_missing_from_unrouted": 0,
+  "unrouted_car_keys_missing_from_manifest_car": 0,
+  "vehicle_ref_id_missing": 0,
+  "vehicle_ref_id_unresolved_in_private_vehicles": 0,
+  "vehicle_use": {
+    "used_private_cars": 21020,
+    "vehicles_used_by_multiple_people": 0,
+    "vehicles_linked_to_multiple_households": 0,
+    "vehicle_leg_count_min": 2,
+    "vehicle_leg_count_median": 3.0,
+    "vehicle_leg_count_p90": 5.0,
+    "vehicle_leg_count_max": 5,
+    "cross_person_next_leg_events": 0,
+    "vehicle_time_overlap_events": 466,
+    "next_departure_different_facility_events": 321,
+    "no_next_departure_events": 21020,
+    "negative_duration_events": 0,
+    "cross_midnight_events": 1359,
+    "duration_over_24h_events": 0,
+    "duplicate_parking_event_key_count": 0,
+    "legs_in_duplicate_parking_event_keys": 0,
+    "excess_leg_mappings_to_parking_events": 0
+  },
+  "route": {
+    "private_car_routes": 64789,
+    "start_link_present": 64789,
+    "end_link_present": 64789,
+    "all_links_exist": 64789,
+    "all_links_exist_fraction": 1.0,
+    "topology_contiguous": 64789,
+    "topology_contiguous_fraction": 1.0,
+    "unknown_network_link_routes": 0,
+    "non_contiguous_routes": 0,
+    "repeated_link_routes": 0,
+    "immediate_repeated_link_routes": 0,
+    "departure_time_available": 64789,
+    "travel_time_available": 64789,
+    "passage_time_estimable": 64745,
+    "route_text_includes_start_link": 64789,
+    "route_text_includes_end_link": 64789
+  },
+  "route_distance": {
+    "unit": "m",
+    "unit_basis": "MATSim route distance and network link lengths use the scenario coordinate/network metre convention (EPSG:32650).",
+    "present": 64789,
+    "nan": 0,
+    "negative": 0,
+    "zero": 33,
+    "min": 0.0,
+    "median": 12408.222000000003,
+    "p90": 32861.89120000001,
+    "max": 80574.91100000002
+  },
+  "energy_readiness_counts": {
+    "out_of_scope_motorcycle": 2929,
+    "ready_distance_only": 64789,
+    "unresolved_route_distance": 0,
+    "unresolved_vehicle_class": 0
+  },
+  "vehicle_powertrain": {
+    "individual_powertrain_available": false,
+    "individual_powertrain_identifiable_legs": 0,
+    "individual_powertrain_identifiable_fraction": 0.0,
+    "vehicle_xml_attribute_names": [
+      "capacity.seats",
+      "capacity.standingRoomInPersons",
+      "id",
+      "length.meter",
+      "networkMode.networkMode",
+      "passengerCarEquivalents.pce",
+      "type",
+      "width.meter"
+    ],
+    "vehicle_type_child_elements": [
+      "capacity",
+      "length",
+      "networkMode",
+      "passengerCarEquivalents",
+      "width"
+    ],
+    "vehicle_type_definitions": {
+      "private_car": {
+        "id": "private_car",
+        "capacity": {
+          "seats": "5",
+          "standingRoomInPersons": "0"
+        },
+        "length": {
+          "meter": "4.5"
+        },
+        "width": {
+          "meter": "1.8"
+        },
+        "passengerCarEquivalents": {
+          "pce": "1.0"
+        },
+        "networkMode": {
+          "networkMode": "car"
+        }
+      },
+      "motorcycle": {
+        "id": "motorcycle",
+        "capacity": {
+          "seats": "2",
+          "standingRoomInPersons": "0"
+        },
+        "length": {
+          "meter": "4.5"
+        },
+        "width": {
+          "meter": "1.8"
+        },
+        "passengerCarEquivalents": {
+          "pce": "0.25"
+        },
+        "networkMode": {
+          "networkMode": "car"
+        }
+      }
+    },
+    "unavailable_fields": [
+      "powertrain",
+      "fuel_type",
+      "engine_size",
+      "vehicle_age"
+    ],
+    "conclusion": "individual powertrain unavailable",
+    "future_proxy_option": "A representative fleet average may be evaluated later, but no energy cost is computed in this audit."
+  },
+  "toll_readiness_counts": {
+    "ambiguous_incomplete_route": 0,
+    "out_of_scope_vehicle_class": 2929,
+    "route_ready_for_toll_matching": 64745,
+    "unresolved_non_contiguous_route": 0,
+    "unresolved_toll_feature_mapping": 44,
+    "unresolved_unknown_network_link": 0
+  },
+  "toll_geodatabase": {
+    "actual_layers": [
+      "VEHICLE_RESTRICTION",
+      "TRAFFIC_FEATURES",
+      "SPEED_LIMIT",
+      "RUN_IN_OUT",
+      "ROUNDABOUT",
+      "PROHIBITION",
+      "PERMIT",
+      "PEDESTRIAN_ZONE",
+      "NSR",
+      "BUS_ONLY_LANE",
+      "CENTERLINE",
+      "TURN",
+      "INTERSECTION",
+      "TUN_BRIDGE_TOLL",
+      "ONSTREETPARK",
+      "GISP_ON_STREET_PARKING",
+      "TUN_BRIDGE_TV_TOLL"
+    ],
+    "toll_layers": [
+      "TUN_BRIDGE_TOLL",
+      "TUN_BRIDGE_TV_TOLL"
+    ],
+    "layer_fields": {
+      "TUN_BRIDGE_TOLL": [
+        "TUNNEL_BRIDGE_NAME",
+        "TUNNEL_BRIDGE_CHINESE_NAME",
+        "FEATURE_ID_1",
+        "FEATURE_ID_2",
+        "EFFECTIVE_DATE",
+        "GAZETTED_TOLL",
+        "CONCESSION_TOLL",
+        "VEHICLE_CLASS_DESCRIPTION",
+        "REMARKS",
+        "LAST_UPDATED_DATE"
+      ],
+      "TUN_BRIDGE_TV_TOLL": [
+        "TUNNEL_BRIDGE_NAME",
+        "TUNNEL_BRIDGE_CHINESE_NAME",
+        "FEATURE_ID_1",
+        "FEATURE_ID_2",
+        "EFFECTIVE_DATE",
+        "DAY_OF_WEEK",
+        "START_TIME",
+        "END_TIME",
+        "GAZETTED_TOLL",
+        "VEHICLE_CLASS_DESCRIPTION",
+        "REMARKS",
+        "LAST_UPDATED_DATE"
+      ]
+    },
+    "private_car_rows": {
+      "TUN_BRIDGE_TOLL": 5,
+      "TUN_BRIDGE_TV_TOLL": 278
+    },
+    "private_car_effective_dates": {
+      "TUN_BRIDGE_TOLL": [
+        "1999-04-01 00:00:00+00:00",
+        "2008-03-21 00:00:00+00:00",
+        "2016-01-01 00:00:00+00:00",
+        "2025-09-21 00:00:00+00:00"
+      ],
+      "TUN_BRIDGE_TV_TOLL": [
+        "2026-07-17 00:00:00+00:00"
+      ]
+    },
+    "direction_field_present": false,
+    "direction_encoding": "No explicit direction field; FEATURE_ID_1 and FEATURE_ID_2 provide the two official road-feature identifiers.",
+    "feature_id_conflicts": {
+      "2684": [
+        "Western Harbour Crossing",
+        "Western Harbour Crossing (Backup Toll Point)"
+      ]
+    },
+    "facility_feature_ids": {
+      "Aberdeen Tunnel": [
+        "150498",
+        "150499"
+      ],
+      "Lion Rock Tunnel": [
+        "1884",
+        "1886"
+      ],
+      "Shing Mun Tunnels": [
+        "1822",
+        "1824"
+      ],
+      "Tate's Cairn Tunnel": [
+        "151058",
+        "151078"
+      ],
+      "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": [
+        "2040",
+        "7804"
+      ],
+      "Cross Harbour Tunnel": [
+        "150338",
+        "150339"
+      ],
+      "Eastern Harbour Crossing": [
+        "150340",
+        "151118"
+      ],
+      "Tai Lam Tunnel": [
+        "4288",
+        "4289"
+      ],
+      "Western Harbour Crossing (Backup Toll Point)": [
+        "2684",
+        "151858"
+      ],
+      "Western Harbour Crossing": [
+        "2684",
+        "2685"
+      ]
+    },
+    "official_feature_id_count": 19,
+    "official_feature_ids_mapped_to_network_count": 7,
+    "official_feature_id_network_mapping_coverage": 0.3684210526315789,
+    "unmapped_official_feature_ids": [
+      "150338",
+      "150339",
+      "150340",
+      "150498",
+      "150499",
+      "151058",
+      "151078",
+      "151118",
+      "151858",
+      "1822",
+      "1884",
+      "2685"
+    ],
+    "official_features_with_multiple_network_links": {
+      "2684": [
+        "road_2684_0_f",
+        "road_2684_0_r"
+      ],
+      "7804": [
+        "road_7804_0_f",
+        "road_7804_0_r"
+      ]
+    }
+  },
+  "toll_facility_hits_full_route": {
+    "Lion Rock Tunnel": 72,
+    "Shing Mun Tunnels": 412,
+    "Tai Lam Tunnel": 422,
+    "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": 59,
+    "Western Harbour Crossing": 44,
+    "Western Harbour Crossing (Backup Toll Point)": 44
+  },
+  "toll_facility_hits_full_route_all_official_facilities": {
+    "Aberdeen Tunnel": 0,
+    "Cross Harbour Tunnel": 0,
+    "Eastern Harbour Crossing": 0,
+    "Lion Rock Tunnel": 72,
+    "Shing Mun Tunnels": 412,
+    "Tai Lam Tunnel": 422,
+    "Tate's Cairn Tunnel": 0,
+    "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": 59,
+    "Western Harbour Crossing": 44,
+    "Western Harbour Crossing (Backup Toll Point)": 44
+  },
+  "toll_facility_hits_route_text_only": {
+    "Lion Rock Tunnel": 72,
+    "Shing Mun Tunnels": 412,
+    "Tai Lam Tunnel": 422,
+    "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": 59,
+    "Western Harbour Crossing": 44,
+    "Western Harbour Crossing (Backup Toll Point)": 44
+  },
+  "toll_facility_hits_added_by_start_end": {},
+  "toll_facility_hit_comparison_with_current_car_cost_v1": {
+    "Aberdeen Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Cross Harbour Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Eastern Harbour Crossing": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Lion Rock Tunnel": {
+      "audited_full_route_private_car_legs": 72,
+      "current_car_cost_v1_private_car_legs": 72,
+      "audited_minus_current": 0
+    },
+    "Shing Mun Tunnels": {
+      "audited_full_route_private_car_legs": 412,
+      "current_car_cost_v1_private_car_legs": 412,
+      "audited_minus_current": 0
+    },
+    "Tai Lam Tunnel": {
+      "audited_full_route_private_car_legs": 422,
+      "current_car_cost_v1_private_car_legs": 422,
+      "audited_minus_current": 0
+    },
+    "Tate's Cairn Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": {
+      "audited_full_route_private_car_legs": 59,
+      "current_car_cost_v1_private_car_legs": 59,
+      "audited_minus_current": 0
+    },
+    "Western Harbour Crossing": {
+      "audited_full_route_private_car_legs": 44,
+      "current_car_cost_v1_private_car_legs": 44,
+      "audited_minus_current": 0
+    },
+    "Western Harbour Crossing (Backup Toll Point)": {
+      "audited_full_route_private_car_legs": 44,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 44
+    }
+  },
+  "requested_toll_facility_diagnostics": {
+    "Cross Harbour Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Eastern Harbour Crossing": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Western Harbour Crossing": {
+      "audited_full_route_private_car_legs": 44,
+      "current_car_cost_v1_private_car_legs": 44,
+      "audited_minus_current": 0
+    },
+    "Tate's Cairn Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Aberdeen Tunnel": {
+      "audited_full_route_private_car_legs": 0,
+      "current_car_cost_v1_private_car_legs": 0,
+      "audited_minus_current": 0
+    },
+    "Tai Lam Tunnel": {
+      "audited_full_route_private_car_legs": 422,
+      "current_car_cost_v1_private_car_legs": 422,
+      "audited_minus_current": 0
+    }
+  },
+  "start_end_toll_link_omission_found": false,
+  "parking_readiness_counts": {
+    "out_of_scope_vehicle_class": 2929,
+    "ready_duration_and_proxy_zone": 35564,
+    "ready_home_fixed_parking_separate": 28858,
+    "unresolved_activity_type": 0,
+    "unresolved_destination_zone": 98,
+    "unresolved_duration": 2,
+    "unresolved_vehicle_chain": 267
+  },
+  "parking_activity_group_counts_private_car": {
+    "home": 28858,
+    "work": 8784,
+    "education": 278,
+    "shopping": 7946,
+    "leisure": 15652,
+    "medical_personal_business": 3271,
+    "border": 0,
+    "visitor_accommodation": 0,
+    "other": 0,
+    "unresolved_blank_activity_type": 0
+  },
+  "parking_duration_available_private_car": 43034,
+  "parking_duration_coverage_private_car": 0.6642176912747534,
+  "parking_duration_available_non_home_private_car": 35662,
+  "parking_duration_coverage_non_home_private_car": 0.9925134285157663,
+  "parking_zone_available_private_car": 64686,
+  "parking_zone_coverage_private_car": 0.9984102239577706,
+  "parking_activity_available_private_car": 64789,
+  "parking_activity_coverage_private_car": 1.0,
+  "parking_event_audit": {
+    "used_private_cars": 21020,
+    "vehicles_used_by_multiple_people": 0,
+    "vehicles_linked_to_multiple_households": 0,
+    "vehicle_leg_count_min": 2,
+    "vehicle_leg_count_median": 3.0,
+    "vehicle_leg_count_p90": 5.0,
+    "vehicle_leg_count_max": 5,
+    "cross_person_next_leg_events": 0,
+    "vehicle_time_overlap_events": 466,
+    "next_departure_different_facility_events": 321,
+    "no_next_departure_events": 21020,
+    "negative_duration_events": 0,
+    "cross_midnight_events": 1359,
+    "duration_over_24h_events": 0,
+    "duplicate_parking_event_key_count": 0,
+    "legs_in_duplicate_parking_event_keys": 0,
+    "excess_leg_mappings_to_parking_events": 0
+  },
+  "fixed_vehicle_ownership_boundary": {
+    "record_scope_required": [
+      "vehicle_day",
+      "household_day"
+    ],
+    "normal_leg_attachment_allowed": false,
+    "include_in_leg_marginal_total": false,
+    "used_private_vehicle_count": 21020,
+    "person_household_vehicle_mapping": {
+      "route_vehicle_ref_available": 64789,
+      "assigned_vehicle_id_available": 64789,
+      "assigned_vehicle_matches_route_ref": 64789,
+      "household_id_available": 64789
+    },
+    "observed_vehicle_owner_field_available": false,
+    "unavailable_fields": [
+      "vehicle_owner",
+      "engine",
+      "purchase_price",
+      "vehicle_age",
+      "insurance",
+      "maintenance",
+      "financing"
+    ],
+    "proxy_only_future_components": [
+      "depreciation",
+      "insurance",
+      "maintenance",
+      "financing"
+    ],
+    "work_monthly_parking_boundary": "If treated as already paid, work monthly parking belongs in a vehicle_day or household_day fixed-cost record, never a normal leg."
+  },
+  "model_day": {
+    "modules": [
+      "global",
+      "network",
+      "plans",
+      "facilities",
+      "vehicles",
+      "transit",
+      "qsim",
+      "routing",
+      "controller",
+      "replanning",
+      "subtourModeChoice",
+      "timeAllocationMutator",
+      "scoring"
+    ],
+    "input_file_parameters": {
+      "network.inputNetworkFile": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+      "plans.inputPlansFile": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+      "facilities.inputFacilitiesFile": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+      "vehicles.vehiclesFile": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+      "transit.transitScheduleFile": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+      "transit.vehiclesFile": "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+      "controller.overwriteFiles": "failIfDirectoryExists"
+    },
+    "model_day_designation": "typical_weekday",
+    "exact_calendar_date_available": false,
+    "weekday_toll_interpretation": "The scenario is explicitly a typical weekday, but no exact calendar date is encoded; this audit only marks passage time as estimable."
+  },
+  "prototype_read_only_review": {
+    "scenario_parquets": {
+      "low": {
+        "columns": [
+          "person_id",
+          "leg_sequence",
+          "mode",
+          "route_distance_m",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "destination_activity_type",
+          "arrival_time_s",
+          "parking_duration_s",
+          "scenario",
+          "record_scope",
+          "vehicle_ref_id",
+          "vehicle_class",
+          "vehicle_powertrain",
+          "origin_facility_id",
+          "origin_tcs_zone",
+          "destination_activity_group",
+          "parking_session_id",
+          "toll_facilities",
+          "toll_link_ids",
+          "toll_status",
+          "unresolved_reason",
+          "cost_component",
+          "cost_hkd",
+          "cost_source",
+          "cost_effective_date",
+          "cost_quality"
+        ],
+        "required_columns_present": [
+          "arrival_time_s",
+          "cost_component",
+          "cost_effective_date",
+          "cost_hkd",
+          "cost_quality",
+          "cost_source",
+          "destination_activity_type",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "leg_sequence",
+          "mode",
+          "parking_duration_s",
+          "person_id",
+          "route_distance_m",
+          "scenario"
+        ],
+        "required_columns_missing": [],
+        "unresolved_rows": 3196,
+        "unresolved_rows_cost_hkd_zero": 3196,
+        "unresolved_rows_cost_hkd_null": 0,
+        "fixed_rows_attached_to_normal_leg": 0
+      },
+      "base": {
+        "columns": [
+          "person_id",
+          "leg_sequence",
+          "mode",
+          "route_distance_m",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "destination_activity_type",
+          "arrival_time_s",
+          "parking_duration_s",
+          "scenario",
+          "record_scope",
+          "vehicle_ref_id",
+          "vehicle_class",
+          "vehicle_powertrain",
+          "origin_facility_id",
+          "origin_tcs_zone",
+          "destination_activity_group",
+          "parking_session_id",
+          "toll_facilities",
+          "toll_link_ids",
+          "toll_status",
+          "unresolved_reason",
+          "cost_component",
+          "cost_hkd",
+          "cost_source",
+          "cost_effective_date",
+          "cost_quality"
+        ],
+        "required_columns_present": [
+          "arrival_time_s",
+          "cost_component",
+          "cost_effective_date",
+          "cost_hkd",
+          "cost_quality",
+          "cost_source",
+          "destination_activity_type",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "leg_sequence",
+          "mode",
+          "parking_duration_s",
+          "person_id",
+          "route_distance_m",
+          "scenario"
+        ],
+        "required_columns_missing": [],
+        "unresolved_rows": 3196,
+        "unresolved_rows_cost_hkd_zero": 3196,
+        "unresolved_rows_cost_hkd_null": 0,
+        "fixed_rows_attached_to_normal_leg": 0
+      },
+      "high": {
+        "columns": [
+          "person_id",
+          "leg_sequence",
+          "mode",
+          "route_distance_m",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "destination_activity_type",
+          "arrival_time_s",
+          "parking_duration_s",
+          "scenario",
+          "record_scope",
+          "vehicle_ref_id",
+          "vehicle_class",
+          "vehicle_powertrain",
+          "origin_facility_id",
+          "origin_tcs_zone",
+          "destination_activity_group",
+          "parking_session_id",
+          "toll_facilities",
+          "toll_link_ids",
+          "toll_status",
+          "unresolved_reason",
+          "cost_component",
+          "cost_hkd",
+          "cost_source",
+          "cost_effective_date",
+          "cost_quality"
+        ],
+        "required_columns_present": [
+          "arrival_time_s",
+          "cost_component",
+          "cost_effective_date",
+          "cost_hkd",
+          "cost_quality",
+          "cost_source",
+          "destination_activity_type",
+          "destination_facility_id",
+          "destination_tcs_zone",
+          "leg_sequence",
+          "mode",
+          "parking_duration_s",
+          "person_id",
+          "route_distance_m",
+          "scenario"
+        ],
+        "required_columns_missing": [],
+        "unresolved_rows": 3196,
+        "unresolved_rows_cost_hkd_zero": 3196,
+        "unresolved_rows_cost_hkd_null": 0,
+        "fixed_rows_attached_to_normal_leg": 0
+      }
+    },
+    "incomplete_private_car_marginal_rows_recomputed": 411,
+    "grouped_summary_filters_marginal_cost_complete": false,
+    "incomplete_rows_enter_current_grouped_means_quantiles_totals": true,
+    "parking_duplicate_charge_count_is_data_derived": false,
+    "parking_duplicate_charge_count_evidence": "The estimator assigns parking_session_id as vehicle/person/leg and writes parking_duplicate_charge_count as the literal value 0.",
+    "estimator_reconstructs_full_route_from_start_intermediate_end": false,
+    "estimator_has_complete_link_sequence_checks_network_and_topology": false,
+    "start_end_toll_matches_added_by_correct_reconstruction": 0,
+    "files_containing_windows_absolute_paths": [
+      "scripts/hong_kong_single_city/costs/car/estimate_hong_kong_car_leg_costs.py",
+      "data/transport_costs/hongkong/car_cost_v1/car_cost_source_manifest.json",
+      "data/transport_costs/hongkong/car_cost_v1/car_toll_rules.csv"
+    ],
+    "current_car_cost_v1_toll_facility_hits": {
+      "Aberdeen Tunnel": 0,
+      "Cross Harbour Tunnel": 0,
+      "Eastern Harbour Crossing": 0,
+      "Lion Rock Tunnel": 72,
+      "Shing Mun Tunnels": 412,
+      "Tai Lam Tunnel": 422,
+      "Tate's Cairn Tunnel": 0,
+      "Tsing Sha Control Area (Eagle's Nest Tunnel and Sha Tin Heights Tunnel)": 59,
+      "Western Harbour Crossing": 44,
+      "Western Harbour Crossing (Backup Toll Point)": 0
+    }
+  },
+  "required_repairs_count": 7,
+  "input_hashes_before": {
+    "plans_routed": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "facilities": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "private_vehicles": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "trip_manifest": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+    "config": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+    "synthetic_households": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
+    "fixed_link_grid": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
+  },
+  "input_hashes_after": {
+    "plans_routed": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "plans_unrouted": "5b463376f89bf607c0980d2e84e096f6424c76b6dc5697669aa1f9880de6a0f7",
+    "facilities": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "private_vehicles": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "trip_manifest": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+    "config": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "network": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "road_gdb": "2b01ceaa2fc1d9683162142940802e278318a2bda9a2bb40660649ef6f0ca943",
+    "synthetic_households": "95f9f618bef3e806ae3a513b5764effa6ef8384e09f6ec781c8cf704b0bb2a81",
+    "fixed_link_grid": "b816d1ab0666a2851bdd7359afe07437a80672c81ba6c72b85924537793738cb"
+  },
+  "protected_input_hashes_unchanged": true,
+  "prototype_cost_parquet_hashes_before": {
+    "low": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+    "base": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+    "high": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329"
+  },
+  "prototype_cost_parquet_hashes_after": {
+    "low": "d8565da49f0701adba8427ca7d7c11ffab3da62750d775acbbc78cf997ff72e5",
+    "base": "d55cc3cd7cd545c4809985b2dd58d48cd45bba1afec3d686227009337cda51c9",
+    "high": "83f2157ceea3af0d293f2ce89d4f59d983ed1e72f9d86a741b0328329044c329"
+  },
+  "prototype_cost_parquet_hashes_unchanged": true
+}

@@ -172,3 +172,56 @@ blockers: []
 handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 2 push"
 next_allowed_action: "INT-EXECUTOR executes only the formal Stage 2 Brief, pushes the exact result, and returns evidence for independent review; no Runner or Stage 3 action."
 ```
+
+## Entry 5 — Stage 2 gate closure and Stage 3 authorization
+
+Faithfully transcribed from the actual INT-SUPERVISOR handoff:
+
+```yaml
+timestamp: "2026-07-31T00:42:52+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 2 gate closure / Stage 3 authorization"
+input_commit_sha: "6902501e956bc9bede52de26e1e8ad9bf2b457d6"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Completed the Supervisor read-only audit of the Stage 2 exact pushed SHA, topology, PT scope, canonical hashes, validator design, fare semantics, configuration disposition, and clean refs."
+  - "Independently proved the five old PT hashes equal CRLF bytes and the five replacements equal canonical Git bytes."
+  - "Received INT-REVIEWER PASS with all Stage 2 hard gates satisfied and no blockers."
+  - "Accepted the historical GMB 21/23 result as diagnostic/superseded rather than a hidden semantic failure."
+  - "Closed Stage 2 as PASS."
+  - "Read the locked Car canonical manifest, unified marginal-cost validation, release validation, component registry, fixed-ownership sidecar, city metadata changes, and workflow documentation."
+  - "Determined Stage 3 follows the adopted offline Car contract and requires no user model-policy escalation."
+  - "Issued the formal Stage 3 Brief to INT-EXECUTOR."
+  - "Did not modify repository, worktree, refs, or run directories."
+  - "Did not authorize Runner, Car scoring, monetary-rate changes, parking imputation, or fixed ownership behavioral inclusion."
+evidence_paths:
+  - "data/transport_costs/hongkong/integration_stage2_validation_v1/stage2_pt_merge_validation.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json"
+  - "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py"
+  - "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json (locked Car source)"
+  - "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json (locked Car source)"
+  - "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/unified_marginal_cost_validation.json (locked Car source)"
+  - "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/marginal_cost_component_registry.csv (locked Car source)"
+  - "docs/agent-worklogs/integration-{supervisor,executor,reviewer}.md"
+decisions:
+  - "Stage 2: PASS."
+  - "Stage 3 is formally authorized for INT-EXECUTOR only."
+  - "Stage 3 canonical input is 6902501e956bc9bede52de26e1e8ad9bf2b457d6."
+  - "Stage 3 Car source is locked to fc906efd3afb98e027cc6cca44060dec9e32aa46."
+  - "Only unified_marginal_cost_interface_v1 is the canonical current Car behavioral-cost interface."
+  - "Fixed ownership is excluded from leg-level/current behavioral totals."
+  - "Car scoring/runtime, monetary-rate interpretation, parking imputation, motorcycle-as-car treatment, Runner, and Stage 4 remain unauthorized."
+hard_gate_status: "STAGE_2_PASS__STAGE_3_AUTHORIZED"
+diagnostic_findings:
+  - "Stage 2 raw execution logs remain unpushed; pushed attestations and local corroboration were internally consistent."
+  - "The Stage 2 validator depends on the external exact-SHA/clean-index gate to anchor index bytes to HEAD."
+  - "Bus simulation fallbacks remain isolated offline candidates."
+blockers: []
+handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 3 push"
+next_allowed_action: "INT-EXECUTOR executes only the formal Stage 3 Brief, pushes the exact result, and returns evidence for independent review; no Runner or Stage 4 action."
+```

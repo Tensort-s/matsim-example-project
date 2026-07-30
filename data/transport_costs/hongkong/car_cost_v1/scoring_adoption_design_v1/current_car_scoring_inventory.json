@@ -1,0 +1,229 @@
+{
+  "audit": "hong_kong_private_car_current_scoring_inventory_v1",
+  "source_commit": "ee8187222dff0af1682255d9edb07994761183aa",
+  "audit_date": "2026-07-29",
+  "production_config_role": "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+  "production_config_sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+  "matsim_version": "2026.0",
+  "matsim_version_source": "pom.xml parent version",
+  "matsim_core_artifact_evidence": {
+    "artifact_role": "local_maven_cache:org.matsim:matsim:2026.0;absolute_path_omitted",
+    "artifact_sha256": "a556236f38b1faac0e6b828387451fc078a21951a168713132f8abe9c404c0c9",
+    "audited_classes": [
+      "ScoringConfigGroup$ScoringParameterSet",
+      "CharyparNagelLegScoring",
+      "CharyparNagelMoneyScoring",
+      "ExperiencedPlansServiceImpl",
+      "VehicleEntersTrafficEvent",
+      "VehicleLeavesTrafficEvent",
+      "LinkEnterEvent",
+      "PersonMoneyEvent"
+    ]
+  },
+  "effective_scoring_parameters": {
+    "car_constant_util_per_trip": -0.5,
+    "car_marginal_utility_of_traveling_util_per_hour": -6.0,
+    "car_monetary_distance_rate_currency_per_m": -0.0007,
+    "global_marginal_utility_of_money_util_per_currency": 1.0,
+    "performing_utility_util_per_hour": 6.0,
+    "ordinary_waiting_utility_util_per_hour": -0.0,
+    "pt_waiting_utility_util_per_hour": -6.0,
+    "late_arrival_utility_util_per_hour": -18.0,
+    "early_departure_utility_util_per_hour": -0.0,
+    "utility_of_line_switch": -1.0
+  },
+  "parameter_source_semantics": {
+    "car_parameters": "explicit_in_production_config",
+    "global_marginal_utility_of_money": "MATSim_2026.0_ScoringConfigGroup_default_not_explicit_config",
+    "performing_waiting_and_schedule_delay": "MATSim_2026.0_ScoringConfigGroup_defaults_not_explicit_config",
+    "pt_waiting": "MATSim_default_fallback_to_pt_marginalUtilityOfTraveling"
+  },
+  "currency_semantics": {
+    "status": "currency_semantics_unverified",
+    "config_declares_hkd": false,
+    "economic_meaning_of_distance_rate_verified": false,
+    "may_call_existing_rate_hkd_per_km": false,
+    "existing_distance_money_currency_per_km": 0.7,
+    "existing_distance_money_hkd_per_km": null,
+    "reason": "The config contains no currency declaration or provenance showing that monetaryDistanceRate represents fuel in HKD."
+  },
+  "distance_money_utility": {
+    "formula": "route.distance_m * monetaryDistanceRate_currency_per_m * marginalUtilityOfMoney_util_per_currency",
+    "utility_per_km": -0.7,
+    "cost_currency_per_km": 0.7,
+    "private_car_leg_count": 64789,
+    "cost_currency_per_leg": {
+      "count": 64789,
+      "mean": 10.877544809087961,
+      "median": 8.685755400000001,
+      "p90": 23.003323840000007,
+      "minimum": 0.0,
+      "maximum": 56.402437700000014,
+      "total": 704745.250636
+    },
+    "utility_per_leg": {
+      "count": 64789,
+      "mean": -10.877544809087961,
+      "median": -8.685755400000001,
+      "p90": -2.1391616399999998,
+      "minimum": -56.402437700000014,
+      "maximum": -0.0,
+      "total": -704745.250636
+    }
+  },
+  "distance_scoring_implementation": {
+    "class": "org.matsim.core.scoring.functions.CharyparNagelLegScoring",
+    "method": "calcTravelDistScore",
+    "distance_source": "experienced_leg.getRoute().getDistance()",
+    "nan_distance_behavior": "fail_fast_RuntimeException",
+    "money_event_used_for_distance_term": false
+  },
+  "car_motorcycle_mode_semantics": {
+    "motorcycle_leg_count": 2929,
+    "motorcycle_mode_is_car": true,
+    "shares_car_mode_scoring_parameters": true,
+    "future_private_car_event_filter_required": true
+  },
+  "money_event_inventory": {
+    "custom_java_term_hits": {
+      "PersonMoneyEvent": 0,
+      "LinkEnterEvent": 0,
+      "parking": 0,
+      "toll": 0,
+      "RoadPricingModule": 0
+    },
+    "active_roadpricing_parking_or_toll_config_module": false,
+    "roadpricing_dependency_present_but_not_activated": true,
+    "run_entry_overriding_modules": [
+      "SwissRailRaptorModule",
+      "no-op Mobsim only when --simulate is absent"
+    ],
+    "person_money_event_emitter_configured_or_custom": false,
+    "vehicle_toll_event_emitter_configured_or_custom": false,
+    "parking_money_event_emitter_configured_or_custom": false,
+    "empirical_production_event_log_available": false,
+    "empirical_event_type_confirmation": "not_available_no_production_event_log_at_config_output_path"
+  },
+  "qsim": {
+    "startTime": "00:00:00",
+    "endTime": "30:00:00",
+    "flowCapacityFactor": "0.1",
+    "storageCapacityFactor": "0.1",
+    "mainMode": "car",
+    "vehiclesSource": "fromVehiclesData",
+    "numberOfThreads": "8",
+    "stuckTime": "600",
+    "removeStuckVehicles": "true"
+  },
+  "routing": {
+    "networkModes": "car",
+    "accessEgressType": "accessEgressModeToLink",
+    "networkRouteConsistencyCheck": "disable"
+  },
+  "controller": {
+    "firstIteration": "0",
+    "lastIteration": "50",
+    "overwriteFiles": "failIfDirectoryExists",
+    "writeEventsInterval": "10",
+    "writePlansInterval": "10",
+    "writeSnapshotsInterval": "0"
+  },
+  "replanning_strategies": [
+    {
+      "strategyName": "ChangeExpBeta",
+      "weight": "0.7",
+      "subpopulation": "resident"
+    },
+    {
+      "strategyName": "ReRoute",
+      "weight": "0.1",
+      "subpopulation": "resident",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "SubtourModeChoice",
+      "weight": "0.15",
+      "subpopulation": "resident",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "TimeAllocationMutator",
+      "weight": "0.05",
+      "subpopulation": "resident",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "ChangeExpBeta",
+      "weight": "0.75",
+      "subpopulation": "visitor"
+    },
+    {
+      "strategyName": "ReRoute",
+      "weight": "0.1",
+      "subpopulation": "visitor",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "SubtourModeChoice",
+      "weight": "0.1",
+      "subpopulation": "visitor",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "TimeAllocationMutator",
+      "weight": "0.05",
+      "subpopulation": "visitor",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "ChangeExpBeta",
+      "weight": "0.75",
+      "subpopulation": "mainland_hk_resident"
+    },
+    {
+      "strategyName": "ReRoute",
+      "weight": "0.1",
+      "subpopulation": "mainland_hk_resident",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "SubtourModeChoice",
+      "weight": "0.1",
+      "subpopulation": "mainland_hk_resident",
+      "disableAfterIteration": "40"
+    },
+    {
+      "strategyName": "TimeAllocationMutator",
+      "weight": "0.05",
+      "subpopulation": "mainland_hk_resident",
+      "disableAfterIteration": "40"
+    }
+  ],
+  "subtour_mode_choice": {
+    "modes": "car,pt,walk,ride",
+    "chainBasedModes": "car",
+    "considerCarAvailability": "true",
+    "behavior": "fromSpecifiedModesToSpecifiedModes",
+    "probaForRandomSingleTripMode": "0.0"
+  },
+  "time_allocation_mutator": {
+    "mutationRange": "1800",
+    "mutationAffectsDuration": "true",
+    "latestActivityEndTime": "30:00:00",
+    "mutateAroundInitialEndTimeOnly": "true"
+  },
+  "selected_and_experienced_plan_semantics": {
+    "write_experienced_plans_effective_default": true,
+    "scoring_input": "experienced legs/activities reconstructed from events",
+    "selected_plan_role": "plan chosen for execution; can be copied, mutated, rerouted, or replaced by ChangeExpBeta selection",
+    "person_leg_sequence_persistent_identifier": false
+  },
+  "code_audit": {
+    "run_entry_path": "src/main/java/org/matsim/project/RunHongKong5Pct.java",
+    "run_entry_sha256": "3664fc816a6dc3a174c8ab79ff323adbdac6eda5d0a8ce3c6b4ef8773423c042",
+    "explicit_private_car_cost_scoring_module_found": false,
+    "person_money_event_reference_found": false,
+    "run_entry_loads_config_without_scoring_override": true,
+    "explicit_vehicle_assignment_inserted_for_car": true
+  }
+}
