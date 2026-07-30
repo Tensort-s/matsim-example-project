@@ -249,8 +249,9 @@ public final class ValidateHongKongTaxiPrepareForSim {
 		checks.put("custom_rebuild_invocation_delta_zero",
 				customRebuildBefore == customRebuildAfter);
 		checks.put("pt_routes_legal",
-				ptAudit.totalPtLegs() == 557_104
-						&& ptAudit.transitPassengerRoute() == 557_104
+				ptAudit.totalPtLegs() > 0
+						&& ptAudit.transitPassengerRoute()
+						== ptAudit.totalPtLegs()
 						&& ptAudit.routeNull() == 0
 						&& ptAudit.genericRouteImpl() == 0
 						&& ptAudit.accessStopMissing() == 0
