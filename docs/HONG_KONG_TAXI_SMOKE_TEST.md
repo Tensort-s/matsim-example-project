@@ -178,7 +178,7 @@ ASCs, and must not use the unchanged count of 37,286 Taxi legs as evidence
 that the ASC is behaviourally appropriate.
 
 Taxi remains a passenger/teleported behavioural mode with
-`mode=taxi` and `routingMode=ride`. It is not added to QSim main modes. No
+`mode=taxi` and `routingMode=taxi`. It is not added to QSim main modes. No
 Taxi contrib, DVRP fleet, request, dispatch, pickup, or drop-off model is
 installed.
 
