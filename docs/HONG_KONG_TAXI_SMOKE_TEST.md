@@ -1,5 +1,11 @@
 # Hong Kong Taxi two-iteration technical smoke test v1
 
+> Historical smoke design and attempt record. Its `routingMode=ride` and
+> `taxi_routing=false` statements describe the superseded v1 input. The next
+> smoke must use the native-routing plans/config and Java module documented in
+> [HONG_KONG_TAXI_NATIVE_ROUTING.md](HONG_KONG_TAXI_NATIVE_ROUTING.md).
+> No remote smoke was run as part of the native-routing implementation stage.
+
 ## Purpose and boundary
 
 This gate runs the real Hong Kong Taxi base plans for exactly MATSim

@@ -46,7 +46,7 @@ class HongKongTaxiScenarioLoadAuditTest {
 		assertEquals(Map.of("taxi", 1L, "walk", 1L), audit.modeCounts);
 		assertEquals(1, audit.taxiLegs);
 		assertEquals(1, audit.taxiPersons);
-		assertEquals(Map.of("ride", 1L), audit.taxiRoutingModeCounts);
+		assertEquals(Map.of("taxi", 1L), audit.taxiRoutingModeCounts);
 		assertEquals(98.3, audit.fareSumHkd);
 		assertEquals(-4.915, audit.fareOnlyScoreSum, 1.0e-12);
 		assertEquals(0, audit.missingTaxiAttributeValues);
@@ -130,7 +130,7 @@ class HongKongTaxiScenarioLoadAuditTest {
 				"resident_discretionary_ride_assignment",
 				0
 		);
-		leg.setRoutingMode("ride");
+		leg.setRoutingMode("taxi");
 		Route route = RouteUtils.createGenericRouteImpl(
 				Id.createLinkId("from"),
 				Id.createLinkId("to")

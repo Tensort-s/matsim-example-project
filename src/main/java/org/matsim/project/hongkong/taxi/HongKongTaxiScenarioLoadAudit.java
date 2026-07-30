@@ -50,7 +50,7 @@ import java.util.TreeMap;
 public final class HongKongTaxiScenarioLoadAudit {
 
 	private static final String EXPECTED_TAXI_PLANS_SHA256 =
-			"f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27";
+			"9100cb58ce268d9f62771039eaa80d4da11bf200ceb8426130ef272c05de8f1f";
 	private static final String EXPECTED_MATSIM_VERSION = "2026.0";
 	private static final double TAXI_ASC = -9.0;
 	private static final double TAXI_TRAVEL_UTILITY_PER_HOUR = -6.0;
@@ -495,8 +495,8 @@ public final class HongKongTaxiScenarioLoadAudit {
 						&& audit.taxiRouteInvalidDistance == 0
 						&& audit.taxiRouteUndefinedTravelTime == 0
 						&& audit.taxiRouteInvalidTravelTime == 0);
-		checks.put("taxi_routing_mode_is_ride_only",
-				Map.of("ride", 37_286L).equals(audit.taxiRoutingModeCounts));
+		checks.put("taxi_routing_mode_is_taxi_only",
+				Map.of("taxi", 37_286L).equals(audit.taxiRoutingModeCounts));
 		checks.put("fare_statistics_exact", fareStatisticsExact(audit.fareStatistics));
 		checks.put("fare_only_scorer_visited_every_taxi_leg",
 				audit.fareOnlyScorerTaxiLegs == audit.taxiLegs);

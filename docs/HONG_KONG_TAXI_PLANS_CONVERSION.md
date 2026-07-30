@@ -1,5 +1,10 @@
 # Hong Kong taxi base plans conversion v1
 
+> Historical base conversion. This v1 artifact intentionally retained
+> `routingMode=ride`. The adopted next-stage derivative and independent Taxi
+> router are documented in
+> [HONG_KONG_TAXI_NATIVE_ROUTING.md](HONG_KONG_TAXI_NATIVE_ROUTING.md).
+
 ## Scope
 
 This stage creates a new, non-overwriting routed plans derivative for the Hong
@@ -62,7 +67,9 @@ For every accepted target:
 mode: ride -> taxi
 ```
 
-The existing leg attributes, including `routingMode=ride`, remain unchanged.
+The existing leg attributes, including `routingMode=ride`, remain unchanged
+in this historical v1 artifact. This is not the current native-routing
+contract.
 The following typed attributes are appended:
 
 | Name | Java class | Value |

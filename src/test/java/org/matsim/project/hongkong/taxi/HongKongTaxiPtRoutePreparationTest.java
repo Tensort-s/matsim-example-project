@@ -276,13 +276,13 @@ class HongKongTaxiPtRoutePreparationTest {
 				RunHongKongTaxiBehavioralPilot.smokeRunFlags(
 						true, true, true, true, 0);
 		assertEquals(true, flags.get("routing_run"));
-		assertEquals("deterministic_pt_startup_rebuild_only",
+		assertEquals("deterministic_pt_startup_rebuild_and_native_taxi",
 				flags.get("routing_scope"));
 		assertEquals("pt_only_before_iteration_0",
 				flags.get("pt_startup_routing_scope"));
 		assertEquals(false, flags.get("behavioral_replanning"));
 		assertEquals(false, flags.get("mode_choice"));
-		assertEquals(false, flags.get("taxi_routing"));
+		assertEquals(true, flags.get("taxi_routing"));
 		assertEquals(false, flags.get("taxi_mode_conversion"));
 		assertEquals(false, flags.get("asc_calibration"));
 		assertEquals(false, flags.get("fleet_model"));

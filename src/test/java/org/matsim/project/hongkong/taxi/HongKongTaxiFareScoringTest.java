@@ -136,7 +136,7 @@ class HongKongTaxiFareScoringTest {
 				() -> scoring.handleLeg(experiencedTaxiLeg())
 		);
 
-		assertMismatchContext(error, 1, 1, 1, "taxi", "ride");
+		assertMismatchContext(error, 1, 1, 1, "taxi", "taxi");
 	}
 
 	@Test
@@ -161,21 +161,21 @@ class HongKongTaxiFareScoringTest {
 				() -> scoring.handleLeg(experiencedTaxiLeg())
 		);
 
-		assertMismatchContext(error, 0, 0, 0, "taxi", "ride");
+		assertMismatchContext(error, 0, 0, 0, "taxi", "taxi");
 	}
 
 	@Test
 	void wrongExperiencedRoutingModeFailsWithFullContextAndDoesNotConsume() {
 		HongKongTaxiFareScoring scoring = scoringFor(HongKongTaxiTestFixtures.taxiLeg(100.0));
 		Leg wrongRoutingMode = PopulationUtils.createLeg("taxi");
-		wrongRoutingMode.setRoutingMode("taxi");
+		wrongRoutingMode.setRoutingMode("ride");
 
 		IllegalStateException error = assertThrows(
 				IllegalStateException.class,
 				() -> scoring.handleLeg(wrongRoutingMode)
 		);
 
-		assertMismatchContext(error, 0, 1, 0, "taxi", "taxi");
+		assertMismatchContext(error, 0, 1, 0, "taxi", "ride");
 		scoring.handleLeg(experiencedTaxiLeg());
 		scoring.finish();
 		assertEquals(-5.0, scoring.getScore(), TOLERANCE);
@@ -437,7 +437,7 @@ class HongKongTaxiFareScoringTest {
 
 	private static Leg experiencedTaxiLeg() {
 		Leg leg = PopulationUtils.createLeg(HongKongTaxiScoringParameters.TAXI_MODE);
-		leg.setRoutingMode("ride");
+		leg.setRoutingMode("taxi");
 		return leg;
 	}
 

@@ -5,6 +5,7 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 
+import java.util.List;
 import java.util.Objects;
 
 /** Strict typed interface to the six taxi attributes embedded in each taxi leg. */
@@ -16,6 +17,14 @@ public final class HongKongTaxiLegAttributes {
 	public static final String FARE_MODEL_VERSION = "hkTaxiFareModelVersion";
 	public static final String CLASSIFICATION_SOURCE = "hkTaxiClassificationSource";
 	public static final String MAIN_TRIP_INDEX = "hkTaxiMainTripIndex";
+	public static final List<String> NAMES = List.of(
+			FARE_BASELINE_HKD,
+			TAXI_TYPE,
+			FARE_SCOPE,
+			FARE_MODEL_VERSION,
+			CLASSIFICATION_SOURCE,
+			MAIN_TRIP_INDEX
+	);
 
 	private HongKongTaxiLegAttributes() {
 	}

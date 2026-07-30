@@ -60,10 +60,11 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 					"experienced taxi leg received after scoring was finished"
 			);
 		}
-		if (!"ride".equals(leg.getRoutingMode())) {
+		if (!HongKongTaxiScoringParameters.TAXI_MODE.equals(
+				leg.getRoutingMode())) {
 			throw mismatch(
 					leg,
-					"experienced taxi leg must have routingMode=ride"
+					"experienced taxi leg must have routingMode=taxi"
 			);
 		}
 		if (consumedTaxiLegs >= fareSchedule.size()) {

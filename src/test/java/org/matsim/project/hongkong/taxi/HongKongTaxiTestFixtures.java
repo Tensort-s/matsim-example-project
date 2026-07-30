@@ -36,6 +36,7 @@ final class HongKongTaxiTestFixtures {
 			Object classificationSource,
 			Object mainTripIndex) {
 		Leg leg = PopulationUtils.createLeg(HongKongTaxiScoringParameters.TAXI_MODE);
+		leg.setRoutingMode(HongKongTaxiScoringParameters.TAXI_MODE);
 		leg.getAttributes().putAttribute(HongKongTaxiLegAttributes.FARE_BASELINE_HKD, fare);
 		leg.getAttributes().putAttribute(HongKongTaxiLegAttributes.TAXI_TYPE, taxiType);
 		leg.getAttributes().putAttribute(HongKongTaxiLegAttributes.FARE_SCOPE, fareScope);

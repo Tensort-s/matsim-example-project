@@ -227,7 +227,7 @@ class HongKongTaxiScoringFunctionTest {
 
 	private static Leg experiencedTaxiLeg() {
 		Leg leg = PopulationUtils.createLeg(HongKongTaxiScoringParameters.TAXI_MODE);
-		leg.setRoutingMode("ride");
+		leg.setRoutingMode("taxi");
 		return leg;
 	}
 

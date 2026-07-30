@@ -141,8 +141,8 @@ public final class HongKongTaxiPtRoutePreparation {
 	/**
 	 * Rebuilds only trips whose routing mode is {@code pt}. MATSim's default
 	 * {@code PersonPrepareForSim} reroutes an entire plan when any route is
-	 * null; with Taxi legs carrying {@code routingMode=ride}, that would
-	 * silently replace every Taxi trip in the same plan with a ride trip.
+	 * null. Taxi now has its own {@code routingMode=taxi}; keeping this pass
+	 * explicitly PT-only also protects Taxi routing and fare attributes.
 	 *
 	 * <p>This startup pass uses MATSim trip/stage utilities and the live
 	 * SwissRailRaptor-backed {@link TripRouter}. Once all PT routes are

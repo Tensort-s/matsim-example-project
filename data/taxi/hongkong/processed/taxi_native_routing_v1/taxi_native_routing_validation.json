@@ -1,0 +1,65 @@
+{
+  "audit": "hong_kong_taxi_native_routing_v1",
+  "status": "validated",
+  "all_checks_passed": true,
+  "checks": {
+    "taxi_count_exact": true,
+    "taxi_od_unchanged": true,
+    "output_mode_taxi_exact": true,
+    "output_routing_mode_taxi_exact": true,
+    "taxi_trip_attributes_complete": true,
+    "taxi_not_qsim_main_mode": true,
+    "taxi_not_network_mode": true,
+    "no_dvrp_or_fleet_config": true,
+    "runtime_plans_path_exact": true
+  },
+  "input_plans": {
+    "path": "F:/Matsim/derived/hongkong/taxi_behavioral_pilot_v1/plans_routed_5pct_taxi_base.xml.gz",
+    "sha256": "f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27"
+  },
+  "output_plans": {
+    "path": "F:/Matsim/derived/hongkong/taxi_behavioral_pilot_native_routing_v1/plans_routed_5pct_taxi_native.xml.gz",
+    "sha256": "9100cb58ce268d9f62771039eaa80d4da11bf200ceb8426130ef272c05de8f1f"
+  },
+  "base_config": {
+    "path": "F:/Matsim/backups/matsim-worktree-8b6c-heavy-20260727-151408/.server_bundles/hk_ptfix_parallel_20260724_0122/staging/hk_matsim_5pct_ptfixed_ferry_activity_v1/config/config_formal_50it.xml",
+    "sha256": "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4"
+  },
+  "output_config": {
+    "path": "F:/Matsim/derived/hongkong/taxi_behavioral_pilot_native_routing_v1/config_hong_kong_taxi_native_routing_v1.xml",
+    "sha256": "f23e999ac5f10ccaf5c8743181268a8d2b9b01ac0021b6b91db0c9357f548369"
+  },
+  "transformation": {
+    "taxi_count": 37286,
+    "taxi_routing_mode_counts_before": {
+      "ride": 37286
+    },
+    "taxi_od_fingerprint_sha256": "d51118fb5e30a9027144ffe4a61a2f1c1388efcf84a32815737915c0cc5335b8"
+  },
+  "output_audit": {
+    "taxi_count": 37286,
+    "mode_counts": {
+      "car": 67718,
+      "pt": 557104,
+      "ride": 19074,
+      "taxi": 37286,
+      "walk": 197868
+    },
+    "taxi_routing_mode_counts": {
+      "taxi": 37286
+    },
+    "taxi_trip_attribute_sets": 37286,
+    "taxi_od_fingerprint_sha256": "d51118fb5e30a9027144ffe4a61a2f1c1388efcf84a32815737915c0cc5335b8"
+  },
+  "config_audit": {
+    "old_plans_path": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/input/plans_routed_5pct_v2.xml.gz",
+    "new_plans_path": "/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/native_routing_v1/input/plans_routed_5pct_taxi_native.xml.gz",
+    "qsim_main_modes": [
+      "car"
+    ],
+    "routing_network_modes": [
+      "car"
+    ],
+    "forbidden_modules": []
+  }
+}

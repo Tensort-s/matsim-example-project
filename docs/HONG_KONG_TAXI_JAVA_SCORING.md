@@ -53,7 +53,7 @@ Values are not parsed or converted through `Number.doubleValue()`.
 
 Each new scoring function receives a fresh zero-based consumption cursor.
 When an experienced `mode=taxi` leg arrives, the fare scorer validates the
-current `routingMode=ride` contract and consumes the next schedule record. It
+current `routingMode=taxi` contract and consumes the next schedule record. It
 does not read any custom attribute from the experienced leg. Non-Taxi legs do
 not consume the schedule.
 
@@ -74,13 +74,18 @@ current technical scenario:
 
 - selected plans are fixed;
 - no strategy or replanning is enabled;
-- no rerouting is enabled;
+- no behavioural replanning or Taxi mode creation is enabled;
 - Taxi leg count and order do not change.
 
 This interface is not suitable for future mode-choice calibration that
 creates new Taxi alternatives. Before enabling replanning, fare metadata must
 instead be stored with, or deterministically rebuilt for, each generated plan
 alternative.
+
+The native passenger routing bridge is documented in
+[HONG_KONG_TAXI_NATIVE_ROUTING.md](HONG_KONG_TAXI_NATIVE_ROUTING.md). It
+preserves the six source attributes through standard whole-plan routing but
+does not change the ordinal fare schedule or fare coefficient.
 
 ## Fare formula
 

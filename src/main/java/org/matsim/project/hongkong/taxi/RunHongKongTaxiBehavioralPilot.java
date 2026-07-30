@@ -36,9 +36,9 @@ import static org.matsim.project.hongkong.taxi.HongKongTaxiSmokeOutputAudit.orde
 public final class RunHongKongTaxiBehavioralPilot {
 
 	private static final String EXPECTED_PLANS_SHA =
-			"f4631ab00c6f5027160314f7357e32d969b7588192008c17ac79bf0b3208ce27";
+			"9100cb58ce268d9f62771039eaa80d4da11bf200ceb8426130ef272c05de8f1f";
 	private static final Map<String, String> EXPECTED_INPUT_HASHES = Map.of(
-			"base_config", "662268c6aa81042d40096326d75736fe86f9594404f040180d185de84224a7b4",
+			"base_config", "f23e999ac5f10ccaf5c8743181268a8d2b9b01ac0021b6b91db0c9357f548369",
 			"taxi_plans", EXPECTED_PLANS_SHA,
 			"network", "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
 			"transit_schedule", "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
@@ -168,6 +168,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		config.replanning().clearStrategySettings();
 		config.scoring().setMemorizingExperiencedPlans(false);
 		configureTaxiScoring(config);
+		HongKongTaxiRoutingModule.configure(config);
 
 		Map<String, Map<String, Double>> scoringAfter = snapshotScoring(config);
 		Map<String, Path> inputPaths = configuredInputPaths(config, baseConfig, taxiPlans);
@@ -188,7 +189,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 				"pt_startup_route_clear", true,
 				"pt_startup_route_rebuild", true,
 				"pt_startup_routing_scope", "pt_only_before_iteration_0",
-				"taxi_routing", false,
+				"taxi_routing", true,
 				"strategy_settings_count",
 						config.replanning().getStrategySettings().size(),
 				"overwrite_policy",
@@ -247,6 +248,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 				);
 		Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new SwissRailRaptorModule());
+		controler.addOverridingModule(new HongKongTaxiRoutingModule());
 		controler.addOverridingModule(new HongKongTaxiScoringModule(
 				HongKongTaxiScoringParameters.centralV1()));
 		controler.addControllerListener(guard);
@@ -369,7 +371,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		checks.put("controler_and_qsim_ran",
 				guard.completedExactlyTwoIterations());
 		checks.put("asc_is_fixed_minus_9", true);
-		checks.put("no_asc_calibration_behavioral_replanning_taxi_routing_or_fleet",
+		checks.put("no_asc_calibration_behavioral_replanning_or_fleet",
 				true);
 
 		List<String> failed = checks.entrySet().stream()
@@ -406,11 +408,12 @@ public final class RunHongKongTaxiBehavioralPilot {
 				"pt_startup_route_rebuild", ptRebuild,
 				"pt_startup_routing_scope", "pt_only_before_iteration_0",
 				"routing_run", true,
-				"routing_scope", "deterministic_pt_startup_rebuild_only",
+				"routing_scope",
+						"deterministic_pt_startup_rebuild_and_native_taxi",
 				"behavioral_replanning", false,
 				"strategy_settings_count", strategySettingsCount,
 				"mode_choice", false,
-				"taxi_routing", false,
+				"taxi_routing", true,
 				"taxi_mode_conversion", false,
 				"asc_value", -9.0,
 				"asc_calibration", false,
@@ -547,7 +550,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 				&& ((Number) map.get("invalid_taxi_attributes")).longValue() == 0L
 				&& ((Number) map.get("invalid_route_distances")).longValue() == 0L
 				&& ((Number) map.get("invalid_route_travel_times")).longValue() == 0L
-				&& Map.of("ride", 37_286L)
+				&& Map.of("taxi", 37_286L)
 						.equals(map.get("taxi_routing_mode_counts"))
 				&& (!scoresMustBeFinite || audit.allSelectedScoresFinite());
 		if (!shared) {
