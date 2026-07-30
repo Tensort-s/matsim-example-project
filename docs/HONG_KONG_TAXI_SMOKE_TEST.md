@@ -1,10 +1,75 @@
 # Hong Kong Taxi two-iteration technical smoke test v1
 
-> The two-iteration material below is a historical smoke design and attempt
-> record. Its `routingMode=ride`, custom startup rebuild, and
-> `taxi_routing=false` statements are superseded by the standard
-> PrepareForSim checkpoint recorded next. No two-iteration QSim was run during
-> the PrepareForSim restoration stage.
+> The current outcome is a conditional pass: Taxi technical integration
+> passed, while overall iterations 0-1 completion did not pass because
+> upstream PT execution prevented later Taxi legs from running. Older
+> `routingMode=ride`, custom startup rebuild, and `taxi_routing=false`
+> statements below are retained only as historical provenance.
+
+## Conditional two-iteration smoke result (2026-07-30)
+
+The fixed `ASC=-9` smoke used checkpoint
+`531dba35477b052a4336c091b797a0ceb4497fc0` in the append-only server
+directory:
+
+```text
+/mnt/DiskM/by/hk_taxi_behavioral_pilot_v1/
+  two_iteration_smoke_531dba3_attempt1
+```
+
+Its formal stage classification is:
+
+```text
+Taxi technical integration: PASS
+Overall two-iteration completion: NOT PASSED
+Stage status: CONDITIONAL PASS — upstream PT execution limitation
+```
+
+The compact record is:
+
+```text
+data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/
+  taxi_two_iteration_smoke_conditional_validation.json
+```
+
+Iteration 0 produced:
+
+| Measure | Count |
+|---|---:|
+| Planned Taxi legs | 37,286 |
+| Taxi departures | 35,088 |
+| Taxi arrivals | 35,087 |
+| Unmatched Taxi departures | 1 |
+| Taxi stuck | 1 |
+| Upstream-blocked Taxi legs | 2,198 |
+
+Iteration 1 did not start. At iteration-0 scoring, the route-based fare
+component correctly rejected 2,198 unconsumed selected-plan fare entries
+whose Taxi legs had not executed.
+
+A streaming person-level attribution found that the 2,198 missing Taxi legs
+affected 924 people. Their last observed stuck mode accounted for 2,156 PT,
+32 walk, and 1 Taxi legs; another 9 missing Taxi legs had no person-stuck
+event. None of the missing Taxi legs had an original planned departure at or
+after the 30:00 QSim end time. The dominant cause was therefore preceding PT
+or walk execution becoming stuck and preventing later Taxi legs, rather than
+Taxi routing, Taxi-to-ride conversion, or route-fare calculation failure.
+The single actual Taxi stuck remains part of the failed overall-completion
+record.
+
+The technical integration checks themselves passed: native Taxi routing,
+MATSim's standard `PrepareForSimImpl`, and route-based Taxi fare were
+installed; all prepared Taxi legs retained `mode=taxi` and
+`routingMode=taxi`; Taxi-to-ride conversion was zero; Taxi network-vehicle,
+DVRP/fleet/request/pickup/dispatch, Taxi `PersonMoneyEvent`, and duplicate
+fare-charge counts were zero. Fatal PT route, stop, line, and unknown-mode
+errors were also zero. All seven input SHA256 gates passed before and after
+the attempt.
+
+This classification is not a claim that the two-iteration smoke completed,
+and it is not an ASC or mode-share calibration result. No model parameter,
+guard, input, or supply change was made to record it, and the scenario was not
+rerun for this documentation step.
 
 ## Standard PrepareForSim checkpoint (2026-07-30)
 
