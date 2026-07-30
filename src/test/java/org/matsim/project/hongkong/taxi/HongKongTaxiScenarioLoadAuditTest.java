@@ -48,7 +48,8 @@ class HongKongTaxiScenarioLoadAuditTest {
 		assertEquals(1, audit.taxiPersons);
 		assertEquals(Map.of("taxi", 1L), audit.taxiRoutingModeCounts);
 		assertEquals(98.3, audit.fareSumHkd);
-		assertEquals(-4.915, audit.fareOnlyScoreSum, 1.0e-12);
+		assertEquals(92.0, audit.routeFareSumHkd);
+		assertEquals(-4.6, audit.fareOnlyScoreSum, 1.0e-12);
 		assertEquals(0, audit.missingTaxiAttributeValues);
 		assertEquals(0, audit.invalidTaxiAttributeRuntimeTypes);
 		assertEquals(0, audit.invalidTaxiAttributeValues);
@@ -138,6 +139,8 @@ class HongKongTaxiScenarioLoadAuditTest {
 		route.setDistance(8_000.0);
 		route.setTravelTime(600.0);
 		leg.setRoute(route);
+		leg.setDepartureTime(3_600.0);
+		leg.setTravelTime(600.0);
 		return leg;
 	}
 }

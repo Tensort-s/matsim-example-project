@@ -6,10 +6,12 @@ import org.matsim.api.core.v01.population.Route;
 import java.util.Objects;
 
 /**
- * Route-derived inputs reserved for a later fare implementation.
+ * Route-derived inputs for current distance-only fare calculation and future
+ * time-aware extensions.
  *
- * <p>This class performs no fare calculation and does not alter the current
- * ordinal fixed-fare scoring schedule.</p>
+ * <p>Fare v1 consumes only {@link #distanceMeters()} and {@link #taxiType()}.
+ * Travel time, departure time, and classification source are captured but are
+ * deliberately not charged.</p>
  */
 public record HongKongTaxiRouteContext(
 		double distanceMeters,

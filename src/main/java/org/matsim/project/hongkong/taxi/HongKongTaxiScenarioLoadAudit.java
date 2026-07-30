@@ -310,11 +310,13 @@ public final class HongKongTaxiScenarioLoadAudit {
 		audit.taxiTypeCounts.merge(metadata.taxiType(), 1L, Long::sum);
 		audit.classificationSourceCounts.merge(metadata.classificationSource(), 1L, Long::sum);
 
-		HongKongTaxiFareScoring fareScoring =
-				new HongKongTaxiFareScoring(person.getId(), parameters);
-		fareScoring.handleLeg(leg);
+		HongKongTaxiRouteContext routeContext = HongKongTaxiRouteContext.from(leg);
+		HongKongTaxiFareCalculator.FareResult calculatedFare =
+				new HongKongTaxiFareCalculator().calculate(
+						routeContext.distanceMeters(), routeContext.taxiType());
 		audit.fareOnlyScorerTaxiLegs++;
-		audit.fareOnlyScoreSum += fareScoring.getScore();
+		audit.routeFareSumHkd += calculatedFare.fareHkd();
+		audit.fareOnlyScoreSum += parameters.fareScore(calculatedFare.fareHkd());
 
 		Route route = leg.getRoute();
 		if (route == null) {
@@ -422,7 +424,8 @@ public final class HongKongTaxiScenarioLoadAudit {
 					.findFirst()
 					.orElseThrow();
 			HongKongTaxiScoringFunctionFactory factory =
-					new HongKongTaxiScoringFunctionFactory(scenario, parameters);
+					new HongKongTaxiScoringFunctionFactory(
+							scenario, parameters, new HongKongTaxiFareCalculator());
 			ScoringFunction taxiFunction = factory.createNewScoringFunction(taxiPerson);
 			ScoringFunction nonTaxiFunction = factory.createNewScoringFunction(nonTaxiPerson);
 			result.put("passed", true);
@@ -501,7 +504,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 		checks.put("fare_only_scorer_visited_every_taxi_leg",
 				audit.fareOnlyScorerTaxiLegs == audit.taxiLegs);
 		checks.put("fare_score_sum_matches_formula",
-				close(audit.fareOnlyScoreSum, -0.05 * audit.fareSumHkd));
+				close(audit.fareOnlyScoreSum, -0.05 * audit.routeFareSumHkd));
 		checks.put("scoring_factory_created_for_taxi_and_non_taxi",
 				Boolean.TRUE.equals(factoryAudit.get("passed")));
 		checks.put("complete_scenario_supply_loaded", completeSupplyLoaded(report));
@@ -981,6 +984,7 @@ public final class HongKongTaxiScenarioLoadAudit {
 		long taxiRouteInvalidTravelTime;
 		long fareOnlyScorerTaxiLegs;
 		double fareSumHkd;
+		double routeFareSumHkd;
 		double fareOnlyScoreSum;
 		String representativeTaxiPersonId;
 		String representativeNonTaxiPersonId;
@@ -1026,9 +1030,10 @@ public final class HongKongTaxiScenarioLoadAudit {
 					"taxi_routing_mode_counts", taxiRoutingModeCounts,
 					"fare_statistics_hkd", fareStatistics,
 					"fare_sum_hkd", fareSumHkd,
+					"route_fare_sum_hkd", routeFareSumHkd,
 					"fare_only_score_sum", fareOnlyScoreSum,
 					"fare_only_scorer_taxi_legs", fareOnlyScorerTaxiLegs,
-					"expected_fare_only_score_sum", -0.05 * fareSumHkd,
+					"expected_fare_only_score_sum", -0.05 * routeFareSumHkd,
 					"representative_taxi_person_id", representativeTaxiPersonId,
 					"representative_non_taxi_person_id", representativeNonTaxiPersonId
 			);

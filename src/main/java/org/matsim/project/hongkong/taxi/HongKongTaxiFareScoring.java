@@ -13,7 +13,6 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 	private final Id<Person> personId;
 	private final HongKongTaxiPersonFareSchedule fareSchedule;
 	private final HongKongTaxiScoringParameters parameters;
-	private final boolean sourcePlanAuditOnly;
 	private double score;
 	private int consumedTaxiLegs;
 	private boolean finished;
@@ -24,34 +23,12 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 		this.fareSchedule = Objects.requireNonNull(fareSchedule, "fareSchedule");
 		this.personId = fareSchedule.personId();
 		this.parameters = Objects.requireNonNull(parameters, "parameters");
-		this.sourcePlanAuditOnly = false;
-	}
-
-	/**
-	 * Compatibility entry point used only by the pre-existing source-plan load
-	 * audit. Runtime scoring must use the fare-schedule constructor.
-	 */
-	@Deprecated(forRemoval = false)
-	public HongKongTaxiFareScoring(
-			Id<Person> personId,
-			HongKongTaxiScoringParameters parameters) {
-		this.personId = Objects.requireNonNull(personId, "personId");
-		this.parameters = Objects.requireNonNull(parameters, "parameters");
-		this.fareSchedule = null;
-		this.sourcePlanAuditOnly = true;
 	}
 
 	@Override
 	public void handleLeg(Leg leg) {
 		Objects.requireNonNull(leg, "leg");
 		if (!HongKongTaxiScoringParameters.TAXI_MODE.equals(leg.getMode())) {
-			return;
-		}
-		if (sourcePlanAuditOnly) {
-			HongKongTaxiLegAttributes.Metadata metadata =
-					HongKongTaxiLegAttributes.readAndValidate(leg, personId, parameters);
-			score += parameters.fareScore(metadata.fareBaselineHkd());
-			consumedTaxiLegs++;
 			return;
 		}
 		if (finished) {
@@ -74,18 +51,14 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 			);
 		}
 
-		HongKongTaxiLegAttributes.Metadata metadata =
+		HongKongTaxiPersonFareSchedule.RouteFare routeFare =
 				fareSchedule.fareAt(consumedTaxiLegs);
-		score += parameters.fareScore(metadata.fareBaselineHkd());
+		score += parameters.fareScore(routeFare.calculation().fareHkd());
 		consumedTaxiLegs++;
 	}
 
 	@Override
 	public void finish() {
-		if (sourcePlanAuditOnly) {
-			finished = true;
-			return;
-		}
 		if (consumedTaxiLegs != fareSchedule.size()) {
 			throw mismatch(
 					null,
@@ -107,7 +80,7 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 				.append(",consumedTaxiLegs=")
 				.append(consumedTaxiLegs)
 				.append(",expectedTaxiLegs=")
-				.append(sourcePlanAuditOnly ? "<source-plan-audit>" : fareSchedule.size())
+				.append(fareSchedule.size())
 				.append(",fareUtilityPerHkd=")
 				.append(parameters.fareUtilityPerHkd())
 				.append(",fareShareFactor=")

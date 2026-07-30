@@ -1,280 +1,189 @@
-# Hong Kong Java custom taxi fare scoring v1
+# Hong Kong Java Taxi route-fare scoring v1
 
 ## Scope and status
 
-This component adds the fare-only utility contribution for the Hong Kong Taxi
-behavioural pilot. This correction changes only the scoring data interface;
-it does not alter the existing pilot runner, module binding, or config.
+The passenger/teleported Taxi scoring component now calculates the distance
+fare from each Taxi leg in the person's current selected plan. Runtime scoring
+no longer uses `hkTaxiFareBaselineHkd` to decide the fare.
 
-The implementation targets:
+This stage did not run a Hong Kong scenario, a remote PT rebuild, a Controler,
+QSim, or the two-iteration smoke. It did not change the PrepareForSim flow,
+ASC, fare coefficient, PT/Car scoring, capacity, Taxi allocation, supply, or
+fleet/DVRP boundary.
 
-```text
-Java:   25
-MATSim: 2026.0
-JUnit:  6.0.3
-```
+## Runtime data path
 
-The MATSim scoring, factory, config, and module signatures were checked from
-the locally resolved `matsim-2026.0.jar` before implementation. No dependency
-or `pom.xml` change was required.
+Whenever `HongKongTaxiScoringFunctionFactory` creates a scoring function, it:
 
-## Plans-to-experienced-leg data interface
+1. visits that person's current selected plan in plan-element order;
+2. calls `HongKongTaxiRouteContext.from(leg)` for every `mode=taxi` leg;
+3. calculates a fare from `route.distance` and `hkTaxiType`;
+4. stores an immutable `HongKongTaxiPersonFareSchedule` in zero-based Taxi
+   ordinal order.
 
-MATSim 2026.0 `EventsToLegs` reconstructs a new experienced leg from events.
-That leg does not inherit custom attributes from its source-plan leg.
-`ScoringFunctionsForPopulation` then passes the reconstructed leg to
-`ScoringFunction.handleLeg`. Consequently, runtime fare scoring must not
-expect `hkTaxiFareBaselineHkd` or the other Taxi metadata on the experienced
-leg.
+MATSim reconstructs experienced legs from events without guaranteeing custom
+source-plan attributes. Therefore the experienced Taxi leg is used only to
+verify `mode=taxi`, `routingMode=taxi`, and consume the next schedule entry. It
+does not need a route or any custom Taxi attribute.
 
-Whenever `HongKongTaxiScoringFunctionFactory` creates a scoring function, it
-reads only that person's selected source plan. It visits the plan elements in
-their actual order and validates every `mode=taxi` source leg through
-`HongKongTaxiLegAttributes.readAndValidate(...)`. The validated values are
-copied into a person-local immutable `HongKongTaxiPersonFareSchedule`:
+An extra experienced Taxi leg fails immediately. `finish()` fails when any
+selected-plan Taxi fare remains unconsumed.
 
-| Attribute | Runtime type | Validation |
-|---|---|---|
-| `hkTaxiFareBaselineHkd` | `java.lang.Double` | finite and non-negative |
-| `hkTaxiType` | `java.lang.String` | non-blank; `unresolved` is accepted |
-| `hkTaxiFareScope` | `java.lang.String` | exactly `distance_only_v1` |
-| `hkTaxiFareModelVersion` | `java.lang.String` | exactly `hong_kong_taxi_fare_model_v1` |
-| `hkTaxiClassificationSource` | `java.lang.String` | non-blank |
-| `hkTaxiMainTripIndex` | `java.lang.Integer` | non-negative |
+`hkTaxiFareBaselineHkd` remains in the versioned native-routing plans as a
+historical comparison field. It is not read by the scoring factory, schedule,
+or fare scorer. A legal routed Taxi leg can be scored when that baseline field
+is absent.
 
-All six fields are retained in each immutable schedule record. All names are
-defined once in `HongKongTaxiLegAttributes`. MATSim exposes source-leg
-attributes as a map, so one runtime name has at most one value. Every required
-name must be present; an explicit null is also rejected.
+## Distance fare formula
 
-The fare type contract is exact: `Integer`, `Long`, `Float`, `BigDecimal`,
-`String`, and every other non-`Double` runtime type are interface errors.
-Values are not parsed or converted through `Number.doubleValue()`.
-
-Each new scoring function receives a fresh zero-based consumption cursor.
-When an experienced `mode=taxi` leg arrives, the fare scorer validates the
-current `routingMode=taxi` contract and consumes the next schedule record. It
-does not read any custom attribute from the experienced leg. Non-Taxi legs do
-not consume the schedule.
-
-An extra experienced Taxi leg fails immediately. `finish()` requires the
-consumed experienced-Taxi count to equal the selected-plan Taxi count, so a
-missing experienced Taxi leg also fails. No CSV or Parquet fare lookup is
-performed at runtime. A missing fare is not treated as zero, and route
-distance is never used to reconstruct a fare.
-
-The existing scenario-load audit has a clearly separated source-plan-only
-compatibility constructor. That offline path validates the source leg
-directly; the runtime scoring factory never uses it.
-
-### Applicability boundary
-
-Matching by `(person, zero-based Taxi ordinal)` is deterministic only for the
-current technical scenario:
-
-- selected plans are fixed;
-- no strategy or replanning is enabled;
-- no behavioural replanning or Taxi mode creation is enabled;
-- Taxi leg count and order do not change.
-
-This interface is not suitable for future mode-choice calibration that
-creates new Taxi alternatives. Before enabling replanning, fare metadata must
-instead be stored with, or deterministically rebuilt for, each generated plan
-alternative.
-
-The native passenger routing bridge is documented in
-[HONG_KONG_TAXI_NATIVE_ROUTING.md](HONG_KONG_TAXI_NATIVE_ROUTING.md). It
-preserves the six source attributes through standard whole-plan routing but
-does not change the ordinal fare schedule or fare coefficient.
-
-## Fare formula
-
-Central v1 parameters:
+`HongKongTaxiFareCalculator` is a pure calculation component. For distance
+`d` in metres:
 
 ```text
-fare_utility_per_hkd = 0.05 util/HKD
-fare_share_factor    = 1.0
+if d <= 2000:
+    fare = flagfall
+else:
+    first_count =
+      ceil(max(min(d, first_tier_end_m) - 2000, 0) / 200)
+    second_count =
+      ceil(max(d - first_tier_end_m, 0) / 200)
+    fare =
+      flagfall
+      + first_count * first_increment_hkd
+      + second_count * second_increment_hkd
 ```
 
-For a leg whose actual mode is `taxi`:
+The runtime values are:
+
+| Requested type | Flagfall | First tier end | First increment | Second increment |
+|---|---:|---:|---:|---:|
+| `urban_taxi` | 29.0 HKD | 9,000 m / 102.5 HKD | 2.1 HKD / 200 m | 1.4 HKD / 200 m |
+| `new_territories_taxi` | 25.5 HKD | 8,000 m / 82.5 HKD | 1.9 HKD / 200 m | 1.4 HKD / 200 m |
+| `lantau_taxi` | 24.0 HKD | 20,000 m / 195.0 HKD | 1.9 HKD / 200 m | 1.6 HKD / 200 m |
+
+Each 200 m or part thereof is charged by ceiling. Fare arithmetic is performed
+as integer tenths of HKD, so the result is retained to 0.1 HKD without binary
+floating-point accumulation drift.
+
+`unresolved` keeps its requested classification but applies the Urban Taxi
+rule. The calculation result records both requested and applied Taxi type plus
+an explicit `unresolvedUrbanFallback=true` flag.
+
+Negative, NaN, or infinite distance is rejected. Waiting time, congestion,
+tunnels, booking, baggage, dynamic pricing, travel time, departure time, and
+classification source do not enter fare v1.
+
+## Rule provenance and drift guard
+
+The runtime rules represent:
 
 ```text
-fare_score =
-  -fare_utility_per_hkd
-  * hkTaxiFareBaselineHkd
-  * fare_share_factor
-
-fare_score = -0.05 * fare_hkd
+data/taxi/hongkong/processed/taxi_fare_model_v1/taxi_fare_rules.csv
 ```
 
-There is no intermediate rounding:
-
-| Fare | Contribution |
-|---:|---:|
-| 24.0 HKD | -1.2 util |
-| 98.3 HKD | -4.915 util |
-| 100.0 HKD | -5.0 util |
-| 491.7 HKD | -24.585 util |
-
-The component does not multiply by global `marginalUtilityOfMoney`. The
-coefficient is already in `util/HKD`; sending the fare through
-`PersonMoneyEvent` or standard `MoneyScoring` would risk applying the global
-money coefficient a second time. The custom scorer therefore creates no
-money event and forwards existing standard money calls only to the standard
-delegate.
-
-## Responsibility boundary
-
-`HongKongTaxiFareScoring` implements the MATSim 2026.0
-`SumScoringFunction.LegScoring` interface. Its runtime path consumes the
-person-local fare schedule and accumulates only fare disutility. It does not
-score:
-
-- taxi ASC or constant;
-- travel time or route distance;
-- the legacy `ride` constant or distance rate;
-- waiting, tunnel, booking, or dynamic-pricing costs;
-- fleet supply, pickup delay, or operator behaviour.
-
-`HongKongTaxiScoringFunction` wraps the complete standard scoring function.
-Activity, leg, trip, money, arbitrary score, stuck, event, finish, and score
-explanation calls are forwarded to the delegate. A taxi leg is also sent once
-to the independent fare component:
+Tracked CSV SHA256:
 
 ```text
-total score =
-  standard MATSim score
-  + custom taxi fare score
+1bf1527702ba5ea2b8f471e78bcfe7a852dc46602b454a3d0115c03f38c6dd7e
 ```
 
-The standard taxi mode scoring is responsible for the finite ASC/constant and
-travel-time utility. When this custom module is installed, the taxi mode must
-have:
+`HongKongTaxiFareCalculator.requireMatchesRuleCsv(...)` verifies both this
+identity and every runtime-relevant CSV field. The unit test and full parity
+audit call that guard, preventing an unreviewed Python-table/Java-rule split.
+
+## Utility and double-charge boundary
+
+The custom contribution is:
 
 ```text
-marginalUtilityOfDistance = 0
-monetaryDistanceRate      = 0
+fare utility = -0.05 util/HKD * calculated_route_fare_hkd * 1.0
 ```
 
-The factory rejects a missing taxi mode, nonzero distance term, or non-finite
-related scoring value. A finite taxi constant is intentionally unrestricted
-so later ASC tests can vary it without changing this component.
-
-## Mode and routing mode
-
-Fare eligibility is based on the experienced leg's actual mode:
-
-```java
-"taxi".equals(leg.getMode())
-```
-
-For every experienced Taxi leg, `routingMode` is read and must be exactly
-`ride`; it is never changed. A non-Taxi leg receives zero custom fare score
-and does not advance the cursor, regardless of its routing mode.
-
-This verifies the scoring data interface only. A successful runtime smoke is
-still required for technical integration validation.
-
-## Error handling
-
-Every invalid source-plan Taxi attribute throws while the scoring function's
-schedule is created. The exception includes:
+The following remain fixed:
 
 ```text
-person_id
-leg_mode
-attribute name
-actual value
-actual runtime type
-expected value/type
+ASC                              = -9
+fareShareFactor                  = 1.0
+Taxi monetaryDistanceRate        = 0
+Taxi marginalUtilityOfDistance   = 0
 ```
 
-The reader does not default, coerce string fares, relabel `unresolved`, or
-silently repair metadata. Non-taxi legs need no taxi attributes and return
-zero custom contribution.
+The scorer emits no `PersonMoneyEvent`. Money events, arbitrary events, and
+standard money calls are forwarded only to the standard delegate; they do not
+invoke the custom ordinal fare scorer. Config validation rejects nonzero Taxi
+distance-money or distance-utility terms.
 
-Schedule mismatches also fail closed. Their error context includes:
+## Full native-plans parity audit
+
+`HongKongTaxiRouteFareParityAudit` streamed the population from:
 
 ```text
-person_id
-zero-based taxi_ordinal
-expected_count
-consumed_count
-actual_mode
-actual_routingMode
+F:\Matsim\derived\hongkong\taxi_behavioral_pilot_native_routing_v1\
+  plans_routed_5pct_taxi_native.xml.gz
 ```
 
-An exhausted schedule fails in `handleLeg`; an unconsumed tail fails in
-`finish()`.
+It read no network, schedule, vehicles, or facilities and created no
+Controler/QSim.
 
-## Java structure
+Compact outputs:
 
 ```text
-src/main/java/org/matsim/project/hongkong/taxi/
-  HongKongTaxiScoringParameters.java
-  HongKongTaxiLegAttributes.java
-  HongKongTaxiPersonFareSchedule.java
-  HongKongTaxiFareScoring.java
-  HongKongTaxiScoringFunction.java
-  HongKongTaxiScoringFunctionFactory.java
-  HongKongTaxiScoringModule.java
+data/taxi/hongkong/processed/taxi_route_fare_scoring_v1/
+  taxi_route_fare_parity_by_type.csv
+  taxi_route_fare_parity_validation.json
 ```
 
-The factory uses MATSim 2026.0
-`CharyparNagelScoringFunctionFactory(Scenario)` as its standard delegate and
-creates a fresh immutable schedule and fare-consumption cursor for each
-person and each scoring-function creation.
+Results:
 
-## Unit tests
+| Requested type | Count | Baseline/calculated mean | Baseline/calculated median | Max abs difference |
+|---|---:|---:|---:|---:|
+| `urban_taxi` | 31,037 | 104.4621741792 | 96.2 | 0.0 |
+| `new_territories_taxi` | 3,654 | 100.2772030651 | 80.6 | 0.0 |
+| `lantau_taxi` | 62 | 34.6951612903 | 29.7 | 0.0 |
+| `unresolved` → Urban fallback | 2,533 | 191.7459928938 | 213.1 | 0.0 |
 
-Tests use only small synthetic persons, legs, plans, events, trips, delegates,
-and configs:
+All 37,286 fares were bitwise exact and equivalent at `1e-9` HKD; mismatch
+count and maximum absolute difference were both zero. Route-context failures
+and invalid comparison baselines were also zero.
+
+## Lightweight verification
+
+Synthetic tests cover all three flagfalls, the 2,000 m boundary, partial
+increments, every first-tier end, second-tier charging, unresolved fallback,
+invalid distances, monotonicity, route-change sensitivity, missing/incorrect
+comparison baseline, attribute-free experienced legs, ordinal mismatch
+guards, no distance-money/PersonMoneyEvent duplication, factory isolation,
+config guards, and native whole-plan routing.
+
+The current runtime route input boundary is:
 
 ```text
-src/test/java/org/matsim/project/hongkong/taxi/
-  HongKongTaxiFareScoringTest.java
-  HongKongTaxiScoringFunctionTest.java
-  HongKongTaxiScoringConfigGuardTest.java
+HongKongTaxiRouteContext
+  route.distance
+  route.travelTime
+  leg.departureTime
+  hkTaxiType
+  hkTaxiClassificationSource
 ```
 
-Coverage includes:
+Only `route.distance` and `hkTaxiType` are charged in this version.
 
-- attributed source Taxi legs paired with attribute-free experienced Taxi
-  legs, including ordered multi-leg consumption;
-- non-Taxi exclusion, accepted `unresolved`, immediate extra-leg failure,
-  finish-time missing-leg failure, wrong routing mode, and zero-source failure;
-- each missing source attribute; wrong runtime types; negative/non-finite
-  fares; wrong scope/version; invalid indices; and blank metadata;
-- person isolation and a fresh cursor after scoring-function recreation;
-- standard activity, leg, trip, money, score, stuck, event, finish, and
-  explanation forwarding, with no fare duplication through other interfaces;
-- all four known fare results, exact delegate-plus-fare total, and
-  independence from global `marginalUtilityOfMoney`;
-- safe config acceptance, missing taxi mode rejection, finite arbitrary ASC,
-  nonzero taxi distance-term rejection, and non-finite parameter rejection.
+## Before restoring standard PrepareForSimImpl
 
-Validation commands:
+The existing smoke runner still performs the custom one-shot
+`HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(...)`. Restoring
+standard PrepareForSim requires a separately reviewed PT preparation change.
 
-```powershell
-mvn -DskipTests compile
+The following legacy checks also need route-fare-aware updates before the next
+smoke:
 
-mvn `
-  "-Dtest=HongKongTaxiFareScoringTest,HongKongTaxiScoringFunctionTest,HongKongTaxiScoringConfigGuardTest,HongKongTaxiScenarioLoadAuditTest,HongKongTaxiSmokeIntegrationTest" `
-  test
-```
-
-The final local run used only synthetic JUnit fixtures and reported:
-
-```text
-HongKongTaxiFareScoringTest:       22 / 0 / 0 / 0
-HongKongTaxiScoringFunctionTest:    7 / 0 / 0 / 0
-HongKongTaxiScoringConfigGuardTest: 8 / 0 / 0 / 0
-HongKongTaxiScenarioLoadAuditTest:  3 / 0 / 0 / 0
-HongKongTaxiSmokeIntegrationTest:   3 / 0 / 0 / 0
-Total tests/failures/errors/skipped: 43 / 0 / 0 / 0
-```
-
-No 82 MB plans file is loaded by these interface tests. This correction did
-not run a MATSim Controler, QSim, routing, scenario load, remote smoke, ASC
-experiment, or fleet simulation. No config, runner, plans, fare audit,
-network, facility, vehicle, fleet, or `pom.xml` file was modified.
+- `HongKongTaxiSmokeOutputAudit` still reports baseline fare sums and includes
+  the baseline in its Taxi attribute fingerprint;
+- Taxi strict/source fingerprints must continue to verify Taxi mode,
+  routingMode, route, type, classification, and ordinal invariance, but
+  baseline identity must not be interpreted as the runtime fare;
+- the router's six-field trip-attribute copy bridge still requires the
+  comparison baseline because native plans retain it, even though scoring no
+  longer does;
+- the smoke validation text and fare schedule audit must identify fares as
+  selected-plan route calculations, not fixed baseline consumption.

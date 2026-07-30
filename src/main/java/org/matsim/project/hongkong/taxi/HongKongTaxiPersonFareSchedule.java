@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Immutable, selected-plan-ordered fare metadata for one person's taxi legs.
+ * Immutable, selected-plan-ordered route fares for one person's taxi legs.
  *
  * <p>The schedule is built before events are scored because MATSim reconstructs
  * experienced legs from events without copying custom source-plan attributes.
@@ -19,20 +19,20 @@ import java.util.Objects;
 public final class HongKongTaxiPersonFareSchedule {
 
 	private final Id<Person> personId;
-	private final List<HongKongTaxiLegAttributes.Metadata> fares;
+	private final List<RouteFare> fares;
 
 	private HongKongTaxiPersonFareSchedule(
 			Id<Person> personId,
-			List<HongKongTaxiLegAttributes.Metadata> fares) {
+			List<RouteFare> fares) {
 		this.personId = Objects.requireNonNull(personId, "personId");
 		this.fares = List.copyOf(fares);
 	}
 
 	public static HongKongTaxiPersonFareSchedule fromSelectedPlan(
 			Person person,
-			HongKongTaxiScoringParameters parameters) {
+			HongKongTaxiFareCalculator calculator) {
 		Objects.requireNonNull(person, "person");
-		Objects.requireNonNull(parameters, "parameters");
+		Objects.requireNonNull(calculator, "calculator");
 
 		Plan selectedPlan = person.getSelectedPlan();
 		if (selectedPlan == null) {
@@ -42,15 +42,14 @@ public final class HongKongTaxiPersonFareSchedule {
 			);
 		}
 
-		List<HongKongTaxiLegAttributes.Metadata> fares = new ArrayList<>();
+		List<RouteFare> fares = new ArrayList<>();
 		for (PlanElement element : selectedPlan.getPlanElements()) {
 			if (element instanceof Leg leg
 					&& HongKongTaxiScoringParameters.TAXI_MODE.equals(leg.getMode())) {
-				fares.add(HongKongTaxiLegAttributes.readAndValidate(
-						leg,
-						person.getId(),
-						parameters
-				));
+				HongKongTaxiRouteContext context = HongKongTaxiRouteContext.from(leg);
+				fares.add(new RouteFare(
+						context,
+						calculator.calculate(context.distanceMeters(), context.taxiType())));
 			}
 		}
 		return new HongKongTaxiPersonFareSchedule(person.getId(), fares);
@@ -64,7 +63,12 @@ public final class HongKongTaxiPersonFareSchedule {
 		return fares.size();
 	}
 
-	HongKongTaxiLegAttributes.Metadata fareAt(int zeroBasedTaxiOrdinal) {
+	RouteFare fareAt(int zeroBasedTaxiOrdinal) {
 		return fares.get(zeroBasedTaxiOrdinal);
+	}
+
+	record RouteFare(
+			HongKongTaxiRouteContext routeContext,
+			HongKongTaxiFareCalculator.FareResult calculation) {
 	}
 }

@@ -24,6 +24,8 @@ public final class HongKongTaxiScoringModule extends AbstractModule {
 	@Override
 	public void install() {
 		bind(HongKongTaxiScoringParameters.class).toInstance(parameters);
+		bind(HongKongTaxiFareCalculator.class).toInstance(
+				new HongKongTaxiFareCalculator());
 		bindScoringFunctionFactory().to(HongKongTaxiScoringFunctionFactory.class);
 	}
 }

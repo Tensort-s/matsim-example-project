@@ -3,10 +3,12 @@ package org.matsim.project.hongkong.taxi;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ScoringConfigGroup;
 import org.matsim.core.population.PopulationUtils;
+import org.matsim.core.population.routes.RouteUtils;
 
 final class HongKongTaxiTestFixtures {
 
@@ -26,6 +28,28 @@ final class HongKongTaxiTestFixtures {
 				"test_classification",
 				0
 		);
+	}
+
+	static Leg taxiLegForRoute(
+			double distanceMeters,
+			String taxiType,
+			Object comparisonBaselineFareHkd) {
+		Leg leg = taxiLegWithValues(
+				comparisonBaselineFareHkd,
+				taxiType,
+				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE,
+				HongKongTaxiScoringParameters.FARE_MODEL_VERSION,
+				"test_classification",
+				0);
+		Route route = RouteUtils.createGenericRouteImpl(
+				Id.createLinkId("taxi-from"),
+				Id.createLinkId("taxi-to"));
+		route.setDistance(distanceMeters);
+		route.setTravelTime(600.0);
+		leg.setRoute(route);
+		leg.setDepartureTime(3_600.0);
+		leg.setTravelTime(600.0);
+		return leg;
 	}
 
 	static Leg taxiLegWithValues(

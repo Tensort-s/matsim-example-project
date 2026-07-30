@@ -58,10 +58,10 @@ hkTaxiClassificationSource
 hkTaxiMainTripIndex
 ```
 
-`HongKongTaxiRouting` accepts those six trip attributes and copies only those
-six back to the newly routed Taxi leg. This allows standard whole-plan
+`HongKongTaxiRouting` currently accepts those six trip attributes and copies
+only those six back to the newly routed Taxi leg. This allows standard whole-plan
 `PlanRouter` and `PersonPrepareForSim` processing—including a plan that also
-contains a null PT route—to preserve Taxi mode, routing mode, and fixed-fare
+contains a null PT route—to preserve Taxi mode, routing mode, and comparison
 metadata.
 
 ## Versioned conversion
@@ -123,20 +123,17 @@ The conversion validated:
 - Taxi absent from QSim main modes and network routing modes;
 - no DVRP or fleet config.
 
-## Current fare scoring and future route-based fare
+## Current route-based fare scoring
 
-The fixed ordinal fare schedule and coefficient remain unchanged:
+Fare scoring now builds an immutable ordinal schedule from each selected-plan
+Taxi leg's current route:
 
 ```text
-fare utility = -0.05 * fare_baseline_hkd
+fare utility = -0.05 * calculated_route_fare_hkd
 ASC = -9
 ```
 
-Experienced Taxi legs now require `routingMode=taxi`. This is only a routing
-contract correction; it does not replace the fixed fare schedule.
-
-`HongKongTaxiRouteContext.from(leg)` is the reserved route-based fare input
-boundary for a later stage. It exposes:
+`HongKongTaxiRouteContext.from(leg)` exposes:
 
 - `route.distance` in metres;
 - `route.travelTime` in seconds;
@@ -144,7 +141,11 @@ boundary for a later stage. It exposes:
 - `hkTaxiType`;
 - `hkTaxiClassificationSource`.
 
-It performs validation only and computes no fare.
+`HongKongTaxiFareCalculator` uses only distance and Taxi type in fare v1.
+Travel time, departure time, and classification source remain available for a
+later reviewed fare extension. `hkTaxiFareBaselineHkd` is retained only for
+parity comparison and is not read by runtime scoring. See
+[HONG_KONG_TAXI_JAVA_SCORING.md](HONG_KONG_TAXI_JAVA_SCORING.md).
 
 ## Lightweight verification
 
