@@ -1,0 +1,5 @@
+route_franchise_scope_status,route_count,required_forward_pair_count,unique_candidate_pair_count,duplicate_identical_pair_count,conflicting_amounts_pair_count,missing_pair_count,all_od_unique_route_count,route_count_with_duplicate_pairs,route_count_with_conflicting_pairs,route_count_not_fully_ready_due_duplicate_or_conflict
+confirmed_franchised_route,2246,758563,754133,1827,2603,0,1881,165,251,365
+franchise_route_scope_unresolved,9,2108,2074,34,0,0,8,1,0,1
+other_bus_service,103,10995,10836,139,20,0,86,13,4,17
+operator_scope_unresolved,5,0,0,0,0,0,0,0,0,0

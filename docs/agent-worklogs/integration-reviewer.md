@@ -108,3 +108,64 @@ blockers: []
 handoff_to: "INT-SUPERVISOR session 019fb38e-0963-7f01-9461-ba84c9aa6378"
 next_allowed_action: "INT-SUPERVISOR may record the Reviewer PASS and independently decide the formal next-stage action; INT-REVIEWER issues no Stage 1 authorization."
 ```
+
+## Entry 4 — Stage 1 exact-SHA review
+
+Faithfully transcribed from the actual INT-REVIEWER handoff:
+
+```yaml
+timestamp: "2026-07-30T23:49:29+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 1 exact-SHA review"
+input_commit_sha: "d54fdd775064ace1c9f2aa2b6cb96db0e9474975"
+stage_input_commit_sha: "476f25254a99e4b9c47d5b439a6e7b658a412f80"
+merge_parents:
+  first_parent: "476f25254a99e4b9c47d5b439a6e7b658a412f80"
+  second_parent: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Verified local, tracking, and remote integration refs at the exact pushed SHA."
+  - "Verified exact merge-parent order, Taxi ancestry, and absence of PT/Car ancestry."
+  - "Verified 72 Taxi paths without omission plus exactly five authorized integration files."
+  - "Verified 71 exact Taxi blobs and one expected merged onboarding blob."
+  - "Verified Stage 0 control-plane preservation and append-only worklog changes."
+  - "Reviewed native Taxi routing, standard PrepareForSimImpl lifecycle, Guice modules, scoring factory, ordinal fare schedule, and fail-closed mismatch behavior."
+  - "Verified current Taxi code emits no fare PersonMoneyEvent and forces standard Taxi distance monetary/utility terms to zero."
+  - "Verified Java test source contains 60 implementation-level Taxi tests across ten classes."
+  - "Corroborated the reported aggregate with 11 local untracked Surefire XML reports totaling 61 tests and zero failures, errors, or skips."
+  - "Verified two Python native-routing test functions and four real CLI parser entry points."
+  - "Parsed all ten changed JSON files with zero failures."
+  - "Verified native, PrepareForSim, fare-parity, and historical counts against their committed validation records."
+  - "Verified no PT/Car cost implementation, fleet, calibration, demand/capacity, fare-policy, or Hong Kong formal-run change."
+  - "Verified city.yaml and run_manifest remain unchanged, diff check passes, conflict markers are absent, refs remain locked, and the worktree is clean."
+evidence_paths:
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md"
+  - "data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/stage1_taxi_merge_validation.json"
+  - "data/taxi/hongkong/processed/taxi_native_routing_v1/taxi_native_routing_validation.json"
+  - "data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/taxi_prepare_for_sim_validation.json"
+  - "data/taxi/hongkong/processed/taxi_route_fare_scoring_v1/taxi_route_fare_parity_validation.json"
+  - "data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/taxi_two_iteration_smoke_conditional_validation.json"
+  - "src/main/java/org/matsim/project/hongkong/taxi/"
+  - "src/test/java/org/matsim/project/hongkong/taxi/"
+  - "docs/agent-worklogs/integration-supervisor.md"
+  - "docs/agent-worklogs/integration-executor.md"
+  - "docs/agent-worklogs/integration-reviewer.md"
+  - "target/surefire-reports/ (local ignored corroboration; not pushed evidence)"
+decisions:
+  - "PASS"
+  - "All Stage 1 hard gates are satisfied."
+  - "The locked Taxi runtime is integrated without unexplained semantic change."
+  - "This Reviewer finding does not authorize Stage 2 or any Runner action."
+hard_gate_status: "PASS"
+diagnostic_findings:
+  - "Compile and Python execution results are durable pushed attestations, while their raw console logs are not committed."
+  - "Maven, MATSim, Java 25, Guice ASM, and synthetic-fixture warnings are non-blocking."
+  - "The integration document's broad no-local-MATSim wording is narrowed later by its explicit generic Maven fixture disclosure."
+  - "HongKongTaxiScoringModule contains stale non-functional Javadoc about runner installation."
+blockers: []
+handoff_to: "INT-SUPERVISOR session 019fb38e-0963-7f01-9461-ba84c9aa6378"
+next_allowed_action: "INT-SUPERVISOR may record the Stage 1 PASS and decide the formal next-stage action. INT-REVIEWER does not authorize Stage 2; INT-RUNNER remains unauthorized."
+```

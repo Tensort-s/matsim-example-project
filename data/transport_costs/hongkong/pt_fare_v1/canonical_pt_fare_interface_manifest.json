@@ -1,0 +1,140 @@
+{
+  "schema_version": "hong_kong_canonical_pt_fare_interface_manifest_v1",
+  "release_name": "Hong Kong PT fare v1 canonical interface",
+  "release_status": "offline_interfaces_validated_not_integrated_with_scoring",
+  "canonical_registry_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv",
+  "release_validation_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json",
+  "top_level_catalog_status": {
+    "path": "data/transport_costs/hongkong/pt_fare_v1/official_fares_normalized.parquet",
+    "role": "historical_normalized_source_catalog_and_crosscheck_only",
+    "canonical_quote_interface": false,
+    "global_adult_octopus_semantics": false,
+    "reason": "MTR and Light Rail are adult Octopus, while GMB, Ferry, and Bus GTFS amounts do not encode a common passenger or payment basis"
+  },
+  "schedule_inventory": {
+    "transit_route_count": 3613,
+    "routes_by_mode": {
+      "bus": 2363,
+      "ferry": 39,
+      "gmb": 1161,
+      "light_rail": 20,
+      "train": 30
+    }
+  },
+  "canonical_interfaces": {
+    "mtr": {
+      "layer": "mtr_station_od_v1",
+      "strict_official_rule_path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_fare_rules.parquet",
+      "quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_mtr_station_od_fares.py",
+      "passenger_type": "adult",
+      "payment_medium": "Octopus",
+      "domestic_mtr_available_ordered_OD": 9216,
+      "airport_express_available_ordered_OD": 14,
+      "airport_express_unresolved_ordered_OD": 6,
+      "network_scope_policy": "domestic_mtr_station_od_and_airport_express_station_od_are_strictly_separate"
+    },
+    "light_rail": {
+      "layer": "light_rail_station_od_v1",
+      "strict_official_rule_path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_fare_rules.parquet",
+      "quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_light_rail_station_od_fares.py",
+      "passenger_type": "adult",
+      "payment_medium": "Octopus",
+      "available_ordered_OD": 4624
+    },
+    "gmb": {
+      "layer": "gmb_fare_v1",
+      "strict_official_rule_path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_rules.parquet",
+      "quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_gmb_fares.py",
+      "fare_amount_role": "published_amount_passenger_and_payment_basis_unspecified",
+      "required_forward_pairs": 97521,
+      "available_rules": 96866,
+      "unresolved_rules": 655,
+      "unresolved_policy": "361 conflicts and 294 identical duplicates remain unresolved; no silent selection"
+    },
+    "ferry": {
+      "layer": "ferry_fare_v1",
+      "strict_official_rule_path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_rules.parquet",
+      "quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_ferry_fares.py",
+      "fare_amount_role": "published_amount_passenger_payment_class_vessel_day_and_effective_period_unspecified",
+      "required_forward_pairs": 60,
+      "available_rules": 60
+    },
+    "bus": {
+      "source_audit_layer": "bus_scope_direction_audit_v1",
+      "strict_official_layer": "bus_fare_v1",
+      "strict_official_rule_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_rules.parquet",
+      "strict_quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_bus_fares.py",
+      "strict_active_rules": 754133,
+      "all_bus_forward_OD_count": 771666,
+      "strict_all_bus_forward_OD_coverage": 0.9772790300466783,
+      "simulation_candidate_layer": "bus_fare_simulation_v1",
+      "simulation_candidate_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_simulation_v1/bus_simulation_fare_rules.parquet",
+      "simulation_quote_interface_path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_bus_simulation_fares.py",
+      "simulation_rules": 771666,
+      "simulation_coverage": 1.0,
+      "simulation_quality_counts": {
+        "B": 764969,
+        "C": 4074,
+        "D": 2623
+      },
+      "simulation_assumption_OD_count": 18170,
+      "simulation_anomaly_table_count_including_route_fallbacks": 20533,
+      "simulation_anomaly_path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_simulation_v1/bus_simulation_fare_anomalies.parquet",
+      "proxy_route_fallbacks": [
+        {
+          "matsim_route_id": "bus_1000004_1",
+          "model_fare_hkd": 21.3,
+          "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+          "cost_quality": "D"
+        },
+        {
+          "matsim_route_id": "bus_1000004_2",
+          "model_fare_hkd": 16.5,
+          "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+          "cost_quality": "D"
+        },
+        {
+          "matsim_route_id": "bus_1000611_1",
+          "model_fare_hkd": 21.3,
+          "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+          "cost_quality": "D"
+        },
+        {
+          "matsim_route_id": "bus_8780_1",
+          "model_fare_hkd": 35.0,
+          "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+          "cost_quality": "D"
+        },
+        {
+          "matsim_route_id": "bus_8780_2",
+          "model_fare_hkd": 35.0,
+          "fare_resolution_method": "all_bus_distance_stop_cohort_median_nearest_existing",
+          "cost_quality": "D"
+        }
+      ],
+      "layer_separation_policy": "Bus simulation values are coverage-first candidates with B/C/D quality and anomaly provenance; they are not all unique official fares and never overwrite Bus Core"
+    }
+  },
+  "production_pt_leg_boundary": {
+    "production_pt_leg_count": 557104,
+    "priced_production_pt_leg_count": 0,
+    "unresolved_production_pt_leg_count": 557104,
+    "unresolved_reason": "generic PT legs lack actual mode, line, route, boarding stop, alighting stop, and transfer chain",
+    "required_future_input": "runtime or post-routing explicit PT itinerary",
+    "prohibited_substitutions": [
+      "distance_median",
+      "cross_mode_aggregation",
+      "nearest_neighbor",
+      "route_fullFare_substitution"
+    ]
+  },
+  "approval_boundary": {
+    "matsim_scoring_approved": false,
+    "joint_mode_choice_calibration_approved": false,
+    "money_events_approved": false,
+    "marginal_utility_of_money_change_approved": false,
+    "pt_ASC_change_approved": false
+  },
+  "transfer_concession_status": "unmodelled_for_all_modes",
+  "integration_target": "integration/hk-multimodal-cost-v1"
+}

@@ -1,0 +1,20 @@
+{
+  "input_pt_passenger_trips": 557104,
+  "serialized_pt_legs": 557104,
+  "serialized_leg_modes": {
+    "pt": 557104
+  },
+  "serialized_route_types": {
+    "generic": 557104
+  },
+  "serialized_route_attribute_sets": {
+    "distance;end_link;start_link;trav_time;type": 557104
+  },
+  "serialized_routes_with_text": 0,
+  "actual_transport_mode_non_null": 0,
+  "actual_line_id_non_null": 0,
+  "actual_route_id_non_null": 0,
+  "boarding_stop_id_non_null": 0,
+  "alighting_stop_id_non_null": 0,
+  "transfer_chain_non_null": 0
+}

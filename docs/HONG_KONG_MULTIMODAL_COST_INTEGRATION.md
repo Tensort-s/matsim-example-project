@@ -22,12 +22,25 @@ Taxi second parent:
   aa0d4794fa3af8458c906db1614fd418893e4bd4
 ```
 
-The Stage 1 result remains pending independent exact-SHA review and Supervisor
-gating. The locked PT and Car sources are not part of Stage 1:
+Stage 1 passed independent exact-SHA review at:
 
 ```text
-PT:
+d54fdd775064ace1c9f2aa2b6cb96db0e9474975
+```
+
+Stage 2 explicitly merges the locked offline PT fare source:
+
+```text
+integration first parent:
+  d54fdd775064ace1c9f2aa2b6cb96db0e9474975
+PT second parent:
   0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103
+```
+
+Stage 2 remains pending independent exact-SHA review and Supervisor gating.
+The locked Car source is not part of Stage 2:
+
+```text
 Car:
   fc906efd3afb98e027cc6cca44060dec9e32aa46
 ```
@@ -43,7 +56,7 @@ Stage 1 does not:
 
 - merge or cherry-pick PT or Car;
 - add PT or Car scoring;
-- run MATSim locally or remotely;
+- launch a Hong Kong MATSim scenario locally or remotely;
 - rerun the historical standalone Taxi smoke;
 - calibrate Taxi ASC or mode share;
 - change demand, capacity, monetary utility, or fare policy;
@@ -53,6 +66,90 @@ Stage 1 does not:
 `cities/hongkong/city.yaml` and `runs/hongkong/run_manifest.json` remain
 unchanged because Stage 1 does not adopt a new production input, config,
 output, or final run.
+
+## Stage 2 scope
+
+Stage 2 imports the canonical PT fare manifest, five-row interface registry,
+mode-specific rule and audit layers, query interfaces, release evidence,
+scripts, and PT fare documentation through a real non-fast-forward Git merge.
+It remains an offline source/query/release layer:
+
+```text
+release_status =
+  offline_interfaces_validated_not_integrated_with_scoring
+matsim_scoring_approved = false
+```
+
+No PT fare is connected to Java scoring, a money event, a runner, a MATSim
+config, a plan rewrite, or a supply mutation. The production population's
+557,104 generic PT legs still lack the actual mode, line, route, direction,
+boarding/alighting stops, and transfer chain needed for a fare quote:
+
+```text
+total generic PT legs: 557,104
+priced:                       0
+unresolved:             557,104
+cost_hkd:                  null
+```
+
+Unresolved is not zero. Distance medians, nearest-neighbour values,
+cross-mode aggregation, reverse-direction substitution, path summation, and
+route `fullFare` substitution remain prohibited for these generic legs.
+Transfer concessions remain unmodelled.
+
+`cities/hongkong/city.yaml` and `runs/hongkong/run_manifest.json` remain
+unchanged because Stage 2 adopts no runtime input, configuration, output, or
+run. No MATSim scenario or server task is authorized.
+
+## Canonical offline PT fare contract
+
+The registry contains exactly one row for each of the five distinct mode
+interfaces:
+
+| Mode | Canonical semantics and release count |
+|---|---|
+| MTR | Explicit ordered station OD; adult Octopus; domestic and Airport Express scopes remain separate. Domestic available: 9,216; Airport Express available/unresolved: 14/6. |
+| Light Rail | Explicit ordered station OD; adult Octopus base fare before unmodelled concessions; available: 4,624. |
+| GMB | Published amount with passenger/payment basis unspecified; required/available/unresolved: 97,521/96,866/655, including 361 conflicts and 294 identical duplicates. |
+| Ferry | Published amount with passenger/payment/class/vessel/day/effective-period applicability unspecified; required/available: 60/60. |
+| Bus | Bus Core strict rules: 754,133 and coverage 0.9772790300466783; separate simulation candidates: 771,666 with B/C/D counts 764,969/4,074/2,623. |
+
+The bus simulation layer retains 18,170 assumption ODs and 20,533 anomaly
+rows including route fallbacks. It is a coverage-first candidate layer, never
+overwrites Bus Core, and is not described as universally official
+adult-Octopus fare evidence. The top-level normalized catalog remains a
+historical normalization/cross-check, not a global quote interface.
+
+### Release-hash integration correction
+
+The locked PT source's five validation-JSON registry hashes were calculated
+from pre-commit Windows CRLF bytes, while its Parquet and Python hashes used
+canonical source bytes. Git subsequently normalized the JSON to LF, so a
+fresh checkout could not satisfy all 16 registered hashes even though the
+fare data and semantics were unchanged.
+
+Stage 2 corrects only those five expected/actual JSON hashes to the exact
+canonical Git bytes already present in the locked PT commit, updates the
+corresponding top-level checksum entries, and adds a read-only cross-platform
+release validator:
+
+```text
+scripts/hong_kong_single_city/costs/
+  validate_hong_kong_pt_fare_release_v1.py
+```
+
+The validator requires registered worktree paths to be clean against the Git
+index and hashes the canonical index bytes. It independently rereads all
+Parquet/CSV/JSON evidence, compiles the 23 locked PT scripts, checks the eight
+protected inputs, verifies withdrawn-output absence, and reproduces the
+20-check release contract. It does not rebuild or mutate a fare layer.
+
+The older sequential mode validators remain useful historical validators, but
+some byte-identical/prior-mode guards hash raw checkout line endings and can
+therefore report false failures after another validator rewrites generated
+text on Windows. Those historical guards do not control the canonical Stage 2
+release; the new validator supplies the equivalent cross-platform integrity
+protection without changing fare semantics.
 
 ## Canonical Taxi runtime contract
 
@@ -146,11 +243,13 @@ a calibration result. `ASC=-9` remains a technical placeholder only.
 
 ## Stage 1 verification boundary
 
-Stage 1 verification is local and deterministic. It compiles the canonical
-Maven project and runs the existing test suite, including the Taxi routing,
+Stage 1 verification was local and deterministic. It compiled the canonical
+Maven project and ran the existing test suite, including the Taxi routing,
 PrepareForSim lifecycle, Guice/scoring, fare parity, duplicate-charge, finite
 value, configuration-guard, smoke-contract, and Python native-routing tests.
-It performs no QSim, Controler run, or server run.
+It launched no Hong Kong QSim, Hong Kong Controler run, or server run. The
+mandatory suite did include the small generic repository regression described
+below.
 
 Verification results:
 
@@ -199,3 +298,39 @@ warnings, Guice line-number inspection using an ASM version that does not
 understand class-file major version 69, and synthetic-fixture configuration
 warnings. Guice injection and all tests still pass; none of these diagnostics
 changes the Taxi runtime contract.
+
+## Stage 2 verification boundary
+
+Stage 2 validation is offline and deterministic. It does not launch a Hong
+Kong MATSim scenario:
+
+| Check | Result |
+|---|---|
+| Canonical PT release validator | 20/20 checks passed; exit 0 |
+| Locked PT Python scripts | 23/23 compiled |
+| Canonical query fixtures | 6/6 normalized outputs match |
+| Structured release files | 25 JSON parsed; 78 CSV headers read; 16 Parquet readable |
+| Registered canonical hashes | 16/16 match |
+| Protected MATSim inputs | 8/8 unchanged |
+| `.\mvnw.cmd -DskipTests compile` | `BUILD SUCCESS`; exit 0; 31.158 s |
+| `.\mvnw.cmd test` | `BUILD SUCCESS`; 61 tests; 0 failures/errors/skips; 44.662 s |
+
+The compact Stage 2 validation record is:
+
+```text
+data/transport_costs/hongkong/integration_stage2_validation_v1/
+  stage2_pt_merge_validation.json
+```
+
+For diagnostic traceability, the historical GMB validator was also invoked
+after the earlier historical validators. It passed 21/23 checks but its two
+raw-byte guards reported prior-directory/rebuild differences caused by
+Windows checkout line endings and validator-generated text rewrites. No
+output from that failed attempt is retained. This diagnostic led to the
+cross-platform canonical release validator and does not alter or waive any
+fare-content, registry, protected-input, unresolved/null, or query-fixture
+check.
+
+Stage 2 retains the same non-blocking Maven, Java 25, MATSim, Guice ASM, and
+synthetic-fixture warnings documented for Stage 1. No simulation trend is
+created; the five-layer counts are an offline release baseline only.

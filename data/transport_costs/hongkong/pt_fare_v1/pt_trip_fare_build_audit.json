@@ -1,0 +1,20 @@
+{
+  "model": "Hong Kong offline public transport fare model v1",
+  "model_role": "trip_chargeability_audit",
+  "input_pt_passenger_trips": 557104,
+  "output_audit_rows": 557104,
+  "unique_persons": 238008,
+  "duplicate_person_leg_keys": 0,
+  "non_null_cost_hkd_rows": 0,
+  "unresolved_rows": 557104,
+  "unresolved_reason_counts": {
+    "generic_pt_leg_missing_actual_mode_line_route_boarding_alighting_transfer_chain": 557104
+  },
+  "cross_mode_fare_aggregation_present": false,
+  "distance_endpoint_clipping_present": false,
+  "transfer_concession_non_null_rows": 0,
+  "input_sha256": {
+    "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/agent_trip_manifest_v2.parquet": "944fe88b0c0b8a4e2e981782805cdb292d903f113a4cf4588155a66315ca525f",
+    "data/matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+  }
+}

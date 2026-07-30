@@ -1,0 +1,17 @@
+quote_id,actual_transport_mode,fare_network_scope,boarding_station_id,alighting_station_id,passenger_type,payment_medium,travel_date,cost_component,cost_hkd,cost_source,cost_effective_date,cost_quality,mapping_status,source_record_id,unresolved_reason,transfer_concession_hkd,transfer_concession_status
+domestic_available,train,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,public_transport_fare,4.9,mtr_domestic_fares,2024-06-30,B,exact,mtr_domestic_fares:csv_line_000003,,,not_modelled
+airport_express_available,train,airport_express_station_od,44,47,adult,Octopus,2026-07-28,public_transport_fare,120.0,mtr_airport_express_fares,2025-06-22,B,exact,mtr_airport_express_fares:csv_line_000002,,,not_modelled
+domestic_reverse_ordered,train,domestic_mtr_station_od,2,1,adult,Octopus,2026-07-28,public_transport_fare,4.9,mtr_domestic_fares,2024-06-30,B,exact,mtr_domestic_fares:csv_line_000097,,,not_modelled
+unknown_boarding,train,domestic_mtr_station_od,9999,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,unknown_boarding_station_id,,not_modelled
+unknown_alighting,train,domestic_mtr_station_od,1,9999,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,unknown_alighting_station_id,,not_modelled
+missing_scope,train,,1,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,missing_fare_network_scope,,not_modelled
+domestic_ids_in_airport_scope,train,airport_express_station_od,1,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,boarding_station_not_in_requested_fare_scope,,not_modelled
+airport_express_known_missing_pair,train,airport_express_station_od,44,45,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,official_airport_express_ordered_od_record_missing,,not_modelled
+unsupported_child,train,domestic_mtr_station_od,1,2,child,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,unsupported_passenger_type,,not_modelled
+unsupported_payment,train,domestic_mtr_station_od,1,2,adult,SingleJourneyTicket,2026-07-28,public_transport_fare,,,,U,unresolved,,unsupported_payment_medium,,not_modelled
+generic_pt_mode,pt,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,unsupported_actual_transport_mode,,not_modelled
+missing_actual_mode,,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,missing_actual_transport_mode,,not_modelled
+airport_same_station_without_record,train,airport_express_station_od,44,44,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,official_ordered_od_record_missing,,not_modelled
+missing_boarding,train,domestic_mtr_station_od,,2,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,missing_boarding_station_id,,not_modelled
+missing_alighting,train,domestic_mtr_station_od,1,,adult,Octopus,2026-07-28,public_transport_fare,,,,U,unresolved,,missing_alighting_station_id,,not_modelled
+transfer_concession_requested,train,domestic_mtr_station_od,1,2,adult,Octopus,2026-07-28,public_transport_fare,4.9,mtr_domestic_fares,2024-06-30,B,exact,mtr_domestic_fares:csv_line_000003,,,not_modelled

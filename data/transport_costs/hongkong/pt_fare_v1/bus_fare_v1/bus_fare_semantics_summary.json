@@ -1,0 +1,25 @@
+{
+  "cost_applicability_status": "published_amount_only_passenger_payment_service_class_and_effective_period_unspecified",
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "day_type": "unspecified_in_source",
+  "fare_amount_role": "published_fare_passenger_and_payment_basis_unspecified_before_unmodelled_concessions",
+  "fare_scope": "confirmed_franchised_route_exact_direction_ordered_stop_od",
+  "passenger_type": "unspecified_in_source",
+  "payment_medium": "unspecified_in_source",
+  "production_integration": "not_performed",
+  "schema_version": "hong_kong_bus_fare_core_v1_semantics",
+  "service_class": "unspecified_in_source",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "source_sha256": {
+    "bus_json": "2346a30a74bf0cc5644e9e711c23d7bd300c5baba4cb767dfc9dc38a7308e064",
+    "franchised_bus_geometry": "16fb3f75a7fbe8dbe32788365b5b48ab76ce65dfda561f344dc2106ec7c7b417",
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06",
+    "protected_bus_scope_audit_SHA256SUMS": "dbf198c344711366f93b48f0a42b54200fd89c4f22ea3d4131619658b8f13f9c",
+    "revision": "384aa01d454d033f472a0a69b746f8e5a3b43f8ee6e8785e685b0fb9d42d35a5",
+    "schedule": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+  },
+  "time_period": "unspecified_in_source",
+  "transfer_concession_status": "not_modelled"
+}

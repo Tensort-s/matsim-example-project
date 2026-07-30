@@ -97,3 +97,60 @@ blockers:
 handoff_to: "INT-SUPERVISOR and INT-REVIEWER after the exact Stage 1 merge commit is pushed"
 next_allowed_action: "Complete final scope, structure, diff, and merge-topology checks; create and push the Stage 1 merge commit; then wait for independent review. No Runner action."
 ```
+
+## Entry 3 — Stage 2 canonical offline PT fare layer
+
+```yaml
+timestamp: "2026-07-31T00:15:58+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 2"
+input_commit_sha: "d54fdd775064ace1c9f2aa2b6cb96db0e9474975"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Verified the canonical Stage 2 input, clean integration worktree, branch, tracking ref, and all locked remote refs."
+  - "Executed an explicit git merge --no-ff --no-commit of the locked PT SHA."
+  - "Resolved one ordinary docs/PROJECT_ONBOARDING.md conflict by preserving the Stage 0/1 integration and Taxi entries and adding the PT fare-model entry."
+  - "Preserved the Stage 1 Taxi implementation, tests, data, runtime contract, and historical evidence without modification."
+  - "Faithfully appended the Reviewer Stage 1 PASS and Supervisor Stage 1 closure / Stage 2 authorization handoffs."
+  - "Imported the five distinct offline PT fare interfaces without adding PT scoring, money events, plan mutation, supply mutation, calibration, or transfer concessions."
+  - "Found that five locked-source registry JSON hashes used pre-commit Windows CRLF bytes and could not match canonical Git bytes in a fresh checkout."
+  - "Corrected only those five release-metadata hashes to the exact locked-source Git bytes and synchronized the release record and top-level checksums; no fare artifact content or semantic value changed."
+  - "Added a read-only cross-platform canonical release validator that requires clean registered paths and validates canonical Git bytes."
+  - "The canonical validator passed all 20 release checks, five registry rows, 16 registered hashes, eight protected inputs, 23 locked PT scripts, and the 557104/0/557104 production boundary."
+  - "Recomputed six mode-specific query fixtures; all normalized contents matched the locked fixture outputs."
+  - "Parsed 25 JSON files, read 78 CSV headers, and opened all 16 Parquet files with zero failures."
+  - "Ran Maven compile successfully and the complete Maven suite: 61 tests with zero failures, errors, or skips."
+  - "Did not merge Car, run a Hong Kong MATSim scenario, start a server task, or authorize Runner."
+evidence_paths:
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md"
+  - "docs/HONG_KONG_PT_FARE_MODEL.md"
+  - "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json"
+  - "data/transport_costs/hongkong/integration_stage2_validation_v1/stage2_pt_merge_validation.json"
+  - "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py"
+  - "target/surefire-reports/"
+  - "docs/agent-worklogs/integration-supervisor.md"
+  - "docs/agent-worklogs/integration-executor.md"
+  - "docs/agent-worklogs/integration-reviewer.md"
+decisions:
+  - "The canonical PT layer remains offline_interfaces_validated_not_integrated_with_scoring."
+  - "Generic production PT remains entirely unresolved/null; unresolved values are not zero or silently selected candidates."
+  - "MTR, Light Rail, GMB, Ferry, Bus Core, and Bus simulation semantics and provenance boundaries remain distinct."
+  - "The cross-platform release-hash correction is a non-model metadata repair and does not change a fare, fare policy, passenger/payment assumption, or runtime behavior."
+  - "Historical raw-byte validators remain evidence but do not override the new canonical release contract when their Windows line-ending guards give a reproducible false positive."
+  - "cities/hongkong/city.yaml and runs/hongkong/run_manifest.json remain unchanged because Stage 2 adopts no runtime input, configuration, output, or run."
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_2_GATE"
+diagnostic_findings:
+  - "The historical GMB validator passed 21/23 checks but its prior-directory and byte-identical rebuild guards failed because raw checkout bytes changed with CRLF conversion and earlier validator-generated text rewrites; none of its failed-attempt output is retained."
+  - "Maven reports the previously disclosed parent.version, Java 25 native-access/Unsafe, Guice ASM, MATSim, and synthetic-fixture warnings; compile and all tests pass."
+  - "MTR and Light Rail historical validators passed before the cross-validator Windows line-ending issue was isolated."
+  - "No MATSim behavioral trend is produced or authorized in Stage 2."
+blockers:
+  - "The exact Stage 2 merge commit must be created, pushed, and independently reviewed before Stage 2 can pass."
+handoff_to: "INT-SUPERVISOR and INT-REVIEWER after the exact Stage 2 merge commit is pushed"
+next_allowed_action: "Complete final release, source-parity, topology, diff, ref, and cleanliness checks; create and push the Stage 2 merge commit; then wait for independent review. No Runner or Stage 3 action."
+```

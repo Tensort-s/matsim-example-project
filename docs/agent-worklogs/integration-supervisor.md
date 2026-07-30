@@ -122,3 +122,53 @@ blockers: []
 handoff_to: "INT-EXECUTOR; Bootstrap Coordinator; later INT-REVIEWER after Executor pushes Stage 1"
 next_allowed_action: "INT-EXECUTOR may execute only the formal Stage 1 Brief, commit and push the exact result, then return evidence for independent Reviewer review; no Runner action."
 ```
+
+## Entry 4 — Stage 1 gate closure and Stage 2 authorization
+
+Faithfully transcribed from the actual INT-SUPERVISOR handoff:
+
+```yaml
+timestamp: "2026-07-30T23:51:39+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 1 gate closure / Stage 2 authorization"
+input_commit_sha: "d54fdd775064ace1c9f2aa2b6cb96db0e9474975"
+source_branch_shas:
+  taxi: "aa0d4794fa3af8458c906db1614fd418893e4bd4"
+  pt: "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103"
+  car: "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+actions_or_observations:
+  - "Completed a read-only Supervisor audit of Stage 1 exact pushed SHA, topology, refs, Taxi source scope, structured evidence, test reports, configuration disposition, and worktree cleanliness."
+  - "Received INT-REVIEWER PASS for Stage 1 with all hard gates satisfied and no blockers."
+  - "Recorded non-blocking diagnostics concerning raw console-log durability, dependency warnings, broad no-local-run wording, and stale non-functional Taxi module Javadoc."
+  - "Closed Stage 1 as PASS."
+  - "Read the locked PT canonical manifest, documentation, and release validation before defining Stage 2."
+  - "Determined that Stage 2 follows the already-adopted offline PT semantics and requires no user model-policy escalation."
+  - "Issued the formal Stage 2 Brief to INT-EXECUTOR."
+  - "Did not modify repository, worktree, refs, or run directories."
+  - "Did not authorize INT-RUNNER, PT scoring, or any MATSim scenario run."
+evidence_paths:
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md"
+  - "data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/stage1_taxi_merge_validation.json"
+  - "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json (locked PT source)"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv (locked PT source)"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json (locked PT source)"
+  - "docs/HONG_KONG_PT_FARE_MODEL.md (locked PT source)"
+  - "docs/agent-worklogs/integration-supervisor.md"
+  - "docs/agent-worklogs/integration-executor.md"
+  - "docs/agent-worklogs/integration-reviewer.md"
+decisions:
+  - "Stage 1: PASS."
+  - "Stage 2 is formally authorized for INT-EXECUTOR only."
+  - "Stage 2 canonical input is d54fdd775064ace1c9f2aa2b6cb96db0e9474975."
+  - "Stage 2 PT source is locked to 0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103."
+  - "The five canonical PT fare semantics are locked and remain offline."
+  - "PT scoring, transfer concessions, generic-leg pricing, Car merge, and Runner action remain unauthorized."
+hard_gate_status: "STAGE_1_PASS__STAGE_2_AUTHORIZED"
+diagnostic_findings:
+  - "Stage 1 raw compile/Python logs were unpushed attestations, corroborated where available by local Surefire XML and pushed records."
+  - "Stage 1 dependency/runtime warnings remain non-blocking."
+  - "Broad no-local-MATSim wording and stale Taxi Javadoc may be clarified during later documentation maintenance without altering runtime."
+blockers: []
+handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 2 push"
+next_allowed_action: "INT-EXECUTOR executes only the formal Stage 2 Brief, pushes the exact result, and returns evidence for independent review; no Runner or Stage 3 action."
+```

@@ -1,0 +1,198 @@
+{
+  "schema_version": "hong_kong_multimodal_cost_integration_stage2_validation_v1",
+  "stage_id": "Stage 2 - Canonical offline PT fare layer merge and release validation",
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_2_GATE",
+  "branch": "integration/hk-multimodal-cost-v1",
+  "stage_input_commit_sha": "d54fdd775064ace1c9f2aa2b6cb96db0e9474975",
+  "pt_source_commit_sha": "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+  "taxi_source_commit_sha": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+  "locked_unmerged_car_commit_sha": "fc906efd3afb98e027cc6cca44060dec9e32aa46",
+  "output_commit_sha": "recorded_in_executor_handoff_after_commit",
+  "merge": {
+    "command": "git merge --no-ff --no-commit 0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+    "merge_head_verified": true,
+    "conflict_count": 1,
+    "conflicts": [
+      {
+        "path": "docs/PROJECT_ONBOARDING.md",
+        "classification": "ordinary_documentation_list_conflict",
+        "resolution": "Preserved all Stage 0/1 integration and Taxi entries and added the PT fare-model entry."
+      }
+    ]
+  },
+  "release_contract": {
+    "release_status": "offline_interfaces_validated_not_integrated_with_scoring",
+    "registry_mode_rows": 5,
+    "registered_path_hashes_matched": 16,
+    "registered_path_hashes_checked": 16,
+    "committed_release_checks_passed": 20,
+    "committed_release_checks_total": 20,
+    "generic_pt_legs_total": 557104,
+    "generic_pt_legs_priced": 0,
+    "generic_pt_legs_unresolved": 557104,
+    "generic_pt_cost_hkd_all_null": true,
+    "transfer_concessions_modelled": false,
+    "matsim_scoring_approved": false,
+    "money_events_approved": false,
+    "joint_mode_choice_calibration_approved": false,
+    "protected_matsim_inputs_checked": 8,
+    "protected_matsim_inputs_unchanged": 8,
+    "withdrawn_distance_median_outputs_present": 0
+  },
+  "fare_layers": {
+    "mtr": {
+      "domestic_available_ordered_od": 9216,
+      "airport_express_available_ordered_od": 14,
+      "airport_express_unresolved_ordered_od": 6,
+      "direction_and_scope_fallbacks_enabled": false
+    },
+    "light_rail": {
+      "available_ordered_od": 4624,
+      "transfer_concessions_modelled": false,
+      "mtr_or_path_sum_fallback_enabled": false
+    },
+    "gmb": {
+      "required_forward_pairs": 97521,
+      "available_rules": 96866,
+      "unresolved_rules": 655,
+      "conflicts": 361,
+      "identical_duplicates": 294,
+      "silent_candidate_selection_enabled": false
+    },
+    "ferry": {
+      "required_forward_pairs": 60,
+      "available_rules": 60,
+      "full_fare_fallback_enabled": false
+    },
+    "bus": {
+      "strict_active_rules": 754133,
+      "strict_all_bus_forward_od_coverage": 0.9772790300466783,
+      "simulation_candidate_rules": 771666,
+      "simulation_quality_counts": {
+        "B": 764969,
+        "C": 4074,
+        "D": 2623
+      },
+      "simulation_assumption_od_count": 18170,
+      "simulation_anomaly_rows_including_route_fallbacks": 20533,
+      "simulation_overwrites_bus_core": false
+    }
+  },
+  "release_hash_correction": {
+    "classification": "non_model_cross_platform_release_metadata_defect",
+    "locked_source_problem": "Five validation-JSON registry hashes used pre-commit Windows CRLF bytes while Parquet and Python hashes used canonical source bytes, so no clean checkout could satisfy all 16 hashes.",
+    "corrected_paths": [
+      "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_validation.json",
+      "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_validation.json",
+      "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_validation.json",
+      "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_validation.json",
+      "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_scope_direction_validation.json"
+    ],
+    "fare_artifact_content_changed": false,
+    "fare_semantics_changed": false,
+    "canonical_hash_basis": "Git index bytes with clean-worktree requirement",
+    "validator": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py"
+  },
+  "validation": {
+    "canonical_release_validator": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe .\\scripts\\hong_kong_single_city\\costs\\validate_hong_kong_pt_fare_release_v1.py --repository-root .",
+      "exit_status": 0,
+      "checks_passed": 20,
+      "checks_total": 20
+    },
+    "locked_pt_scripts_compile": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe -m compileall -q .\\scripts\\hong_kong_single_city\\costs\\pt",
+      "exit_status": 0,
+      "script_count": 23,
+      "failed_count": 0
+    },
+    "canonical_query_fixtures": {
+      "interfaces_checked": 6,
+      "normalized_outputs_matching_locked_fixtures": 6,
+      "mtr": {
+        "rows": 16,
+        "priced": 4,
+        "unresolved": 12
+      },
+      "light_rail": {
+        "rows": 19,
+        "priced": 7,
+        "unresolved": 12
+      },
+      "gmb_rows": 24,
+      "ferry_rows": 22,
+      "bus_core_rows": 26,
+      "bus_simulation_rows": 20
+    },
+    "structured_data": {
+      "json_files_parsed": 25,
+      "csv_headers_read": 78,
+      "parquet_files_readable": 16,
+      "parquet_metadata_total_rows": 3912764,
+      "failures": 0
+    },
+    "maven_compile": {
+      "command": ".\\mvnw.cmd -DskipTests compile",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS",
+      "duration_seconds": 31.158
+    },
+    "maven_test": {
+      "command": ".\\mvnw.cmd test",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS",
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 44.662
+    }
+  },
+  "historical_validator_diagnostic": {
+    "command": "validate_hong_kong_gmb_fares.py --source-project-root F:\\Matsim\\matsim-example-project",
+    "exit_status": 1,
+    "checks_passed": 21,
+    "checks_total": 23,
+    "failed_checks": [
+      "19_prior_mode_directories_unchanged",
+      "23_independent_complete_rebuild_byte_identical"
+    ],
+    "reason": "Raw checkout-byte guards are sensitive to Git CRLF conversion and to another historical validator rewriting generated text. Tool-produced changes were discarded; the canonical read-only release validator supplies cross-platform equivalent protection.",
+    "hard_gate_failure": false
+  },
+  "runtime_boundary": {
+    "pt_java_scoring_code_added": false,
+    "pt_money_event_code_added": false,
+    "pt_plan_or_supply_mutation_added": false,
+    "hong_kong_matsim_scenario_run": false,
+    "server_run": false,
+    "runner_action": false,
+    "taxi_runtime_changed": false,
+    "car_merged": false
+  },
+  "configuration_disposition": {
+    "cities/hongkong/city.yaml": "unchanged",
+    "runs/hongkong/run_manifest.json": "unchanged"
+  },
+  "hard_gate_evidence": {
+    "A": "Exact input/source/merge topology and push identity are checked in Git and completed in the Executor handoff.",
+    "B": "All PT source paths are retained; only the onboarding merge and documented release-hash metadata correction differ, plus integration-only evidence files.",
+    "C": "Canonical cross-platform read-only release validator exits 0.",
+    "D": "All 20 committed and independently recomputed release checks pass.",
+    "E": "Five registry rows, 16 canonical hashes, 25 JSON, 78 CSV and 16 Parquet files validate.",
+    "F": "Six query interfaces reproduce their locked fixture contents and preserve null/unresolved semantics.",
+    "G": "Generic production PT remains 557104 total, 0 priced, 557104 unresolved with null cost_hkd.",
+    "H": "Bus strict and simulation layers remain separate with B/C/D, assumption and anomaly provenance.",
+    "I": "No PT runtime scoring, money event, runner, plan, config, supply, calibration or transfer-concession change.",
+    "J": "Maven compile and 61-test suite pass; Taxi implementation and tests are unchanged.",
+    "K": "Documentation/worklogs are append-only and Stage 2 remains offline/not scoring-approved.",
+    "L": "Final diff/conflict-marker/clean/ref checks are completed in the Executor handoff.",
+    "M": "Protected and source remote refs are verified before merge and after push."
+  },
+  "diagnostics": [
+    "Expected Maven parent.version, Java 25 native-access/Unsafe, Guice ASM and synthetic-fixture warnings remain non-blocking.",
+    "The historical GMB validator has Windows raw-byte guard false positives; no fare output from that failed attempt was retained.",
+    "MTR and Light Rail historical validators passed before the GMB diagnostic exposed the cross-validator line-ending issue.",
+    "No behavioral trend or MATSim scenario evidence is produced or authorized in Stage 2."
+  ]
+}

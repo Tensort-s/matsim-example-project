@@ -1,0 +1,35 @@
+{
+  "answers": {
+    "bus_json_operator_routeId_routeSeq_stopSeq_stopId_fullFare": "encoded",
+    "bus_json_per_stop_or_sectional_fare": "unspecified_in_source",
+    "fare_rules_direction_route_sequence_day_time": "unspecified_in_source",
+    "fare_rules_route_and_ordered_od": "encoded",
+    "fullFare_unconditional_flat_fare": "unspecified_in_source",
+    "gtfs_price_passenger_payment_ticket_scope": "unspecified_in_source",
+    "joint_operation_expression": "plus_delimited_complete_operator_code_retained",
+    "official_operator_code_dictionary": "GTFS_agency_plus_bus_JSON_companyCode",
+    "operator_level_franchised_scope_evidence": "operator_code_occurs_in_official_CSDI_franchised_bus_geometry",
+    "route_level_franchised_scope_evidence": "exact_companyCode_ROUTE_ID_ROUTE_SEQ_key_occurs_in_official_CSDI_franchised_bus_geometry",
+    "route_specific_fare_effective_date": "unspecified_in_source"
+  },
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "production_cost_created": false,
+  "schema_version": "hong_kong_bus_fare_readiness_semantics_v1",
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "source_sha256": {
+    "bus_json": "2346a30a74bf0cc5644e9e711c23d7bd300c5baba4cb767dfc9dc38a7308e064",
+    "franchised_bus_geometry": "16fb3f75a7fbe8dbe32788365b5b48ab76ce65dfda561f344dc2106ec7c7b417",
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06",
+    "revision": "384aa01d454d033f472a0a69b746f8e5a3b43f8ee6e8785e685b0fb9d42d35a5",
+    "schedule": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+  },
+  "source_urls": {
+    "bus_json": "https://static.data.gov.hk/td/routes-fares-geojson/JSON_BUS.json",
+    "franchised_bus_geometry": "https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1638844988873_41214/FeatureServer/0/query",
+    "gtfs": "https://static.data.gov.hk/td/pt-headway-en/gtfs.zip",
+    "revision": "https://static.data.gov.hk/td/routes-fares-geojson/DATA_LAST_UPDATED_DATE.csv"
+  },
+  "travel_date_eligibility": "not_performed"
+}

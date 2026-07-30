@@ -1,0 +1,48 @@
+{
+  "model": "Hong Kong MTR adult Octopus station-OD fare rules v1",
+  "model_role": "offline_explicit_station_od_quote_rules",
+  "fare_network_scopes": {
+    "airport_express_station_od": {
+      "total_records": 20,
+      "available_records": 14,
+      "conflicting_records": 0,
+      "missing_records": 6,
+      "official_zero_fare_records": 0
+    },
+    "domestic_mtr_station_od": {
+      "total_records": 9216,
+      "available_records": 9216,
+      "conflicting_records": 0,
+      "missing_records": 0,
+      "official_zero_fare_records": 100
+    }
+  },
+  "raw_to_normalized_crosscheck_available_records": {
+    "domestic_mtr_station_od": 9216,
+    "airport_express_station_od": 14
+  },
+  "station_crosswalk": {
+    "exact": 100,
+    "unresolved": 1
+  },
+  "train_route_mapping_status": {
+    "exact": 22,
+    "partial": 6,
+    "one_to_many_explicit": 2
+  },
+  "train_route_fare_readiness": {
+    "ready": 28,
+    "partial_missing_official_od": 2
+  },
+  "airport_express_missing_ordered_od_pairs": 6,
+  "fixture_quotes": {
+    "total": 16,
+    "priced": 4,
+    "unresolved": 12
+  },
+  "supported_passenger_type": "adult",
+  "supported_payment_medium": "Octopus",
+  "transfer_concessions": "not_modelled",
+  "production_passenger_trip_pricing": "not_performed",
+  "prohibited_inference_methods_present": false
+}

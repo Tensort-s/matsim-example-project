@@ -1,0 +1,16 @@
+transport_mode,operator,transit_lines,transit_routes,departures,stop_occurrences
+bus,,3,5,355,10
+bus,CTB,481,672,16569,17558
+bus,DB,12,18,469,249
+bus,KMB,783,1152,37624,26109
+bus,KMB+CTB,126,187,5058,4940
+bus,LRTFeeder,32,45,2384,789
+bus,LWB,89,149,2590,3562
+bus,LWB+CTB,3,3,167,22
+bus,NLB,60,92,2459,2591
+bus,PI,9,13,711,91
+bus,XB,16,27,1203,145
+ferry,FERRY,21,39,1836,87
+gmb,GMB,778,1161,81081,13100
+light_rail,MTR,11,20,2091,377
+train,MTR,10,30,5370,324

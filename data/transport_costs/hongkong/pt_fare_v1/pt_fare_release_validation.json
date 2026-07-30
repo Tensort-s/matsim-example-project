@@ -1,0 +1,257 @@
+{
+  "schema_version": "hong_kong_pt_fare_release_validation_v1",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "01_schedule_routes_equal_3613",
+      "passed": true
+    },
+    {
+      "name": "02_bus_routes_equal_2363",
+      "passed": true
+    },
+    {
+      "name": "03_gmb_routes_equal_1161",
+      "passed": true
+    },
+    {
+      "name": "04_train_routes_equal_30",
+      "passed": true
+    },
+    {
+      "name": "05_light_rail_routes_equal_20",
+      "passed": true
+    },
+    {
+      "name": "06_ferry_routes_equal_39",
+      "passed": true
+    },
+    {
+      "name": "07_mtr_domestic_available_OD_equal_9216",
+      "passed": true
+    },
+    {
+      "name": "08_light_rail_available_OD_equal_4624",
+      "passed": true
+    },
+    {
+      "name": "09_gmb_required_forward_pairs_equal_97521",
+      "passed": true
+    },
+    {
+      "name": "10_ferry_required_forward_pairs_equal_60",
+      "passed": true
+    },
+    {
+      "name": "11_bus_core_active_rules_equal_754133",
+      "passed": true
+    },
+    {
+      "name": "12_bus_simulation_rules_equal_771666",
+      "passed": true
+    },
+    {
+      "name": "13_production_PT_total_priced_unresolved_equal_557104_0_557104",
+      "passed": true
+    },
+    {
+      "name": "14_transfer_concessions_remain_unmodelled",
+      "passed": true
+    },
+    {
+      "name": "15_eight_protected_MATSim_inputs_unchanged",
+      "passed": true
+    },
+    {
+      "name": "16_withdrawn_distance_median_outputs_absent",
+      "passed": true
+    },
+    {
+      "name": "17_all_registry_SHA256_values_match",
+      "passed": true
+    },
+    {
+      "name": "18_global_adult_octopus_semantic_removed",
+      "passed": true
+    },
+    {
+      "name": "19_all_23_PT_fare_Python_scripts_compile",
+      "passed": true
+    },
+    {
+      "name": "20_git_diff_check_passes",
+      "passed": true
+    }
+  ],
+  "independent_counts": {
+    "schedule_routes": 3613,
+    "routes_by_mode": {
+      "bus": 2363,
+      "ferry": 39,
+      "gmb": 1161,
+      "light_rail": 20,
+      "train": 30
+    },
+    "mtr_domestic_available_OD": 9216,
+    "light_rail_available_OD": 4624,
+    "gmb_required_forward_pairs": 97521,
+    "ferry_required_forward_pairs": 60,
+    "bus_core_active_rules": 754133,
+    "bus_simulation_rules": 771666,
+    "bus_simulation_quality_counts": {
+      "B": 764969,
+      "C": 4074,
+      "D": 2623
+    },
+    "production_pt_leg_count": 557104,
+    "priced_production_pt_leg_count": 0,
+    "unresolved_production_pt_leg_count": 557104
+  },
+  "registry_validation": {
+    "registry_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv",
+    "registry_row_count": 5,
+    "path_hash_check_count": 16,
+    "all_matched": true,
+    "path_hash_results": [
+      {
+        "transport_mode": "mtr",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_fare_rules.parquet",
+        "expected_sha256": "0829574983542c8178a562463d1711f93fe8381dfda7a7ad88bb7a8c7c2701fa",
+        "actual_sha256": "0829574983542c8178a562463d1711f93fe8381dfda7a7ad88bb7a8c7c2701fa",
+        "matched": true
+      },
+      {
+        "transport_mode": "mtr",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/mtr_station_od_v1/mtr_station_od_validation.json",
+        "expected_sha256": "5a6a57324e1a56e5b52716f85aa1734ce40fc2211ae51fc65f3fd6a8c6d41247",
+        "actual_sha256": "5a6a57324e1a56e5b52716f85aa1734ce40fc2211ae51fc65f3fd6a8c6d41247",
+        "matched": true
+      },
+      {
+        "transport_mode": "mtr",
+        "path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_mtr_station_od_fares.py",
+        "expected_sha256": "9df7bc6eef29a5006d06172009421f13e9096755126f698efa335388c0d8f5b8",
+        "actual_sha256": "9df7bc6eef29a5006d06172009421f13e9096755126f698efa335388c0d8f5b8",
+        "matched": true
+      },
+      {
+        "transport_mode": "light_rail",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_fare_rules.parquet",
+        "expected_sha256": "92596e56342eeffe5374aa4ed7dba9a5b57986ab3257623e64e04cb837a64004",
+        "actual_sha256": "92596e56342eeffe5374aa4ed7dba9a5b57986ab3257623e64e04cb837a64004",
+        "matched": true
+      },
+      {
+        "transport_mode": "light_rail",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/light_rail_station_od_v1/light_rail_station_od_validation.json",
+        "expected_sha256": "91790b2d2ff6c91797794647e84f261db64170a14d82358fb180b11fb1836b75",
+        "actual_sha256": "91790b2d2ff6c91797794647e84f261db64170a14d82358fb180b11fb1836b75",
+        "matched": true
+      },
+      {
+        "transport_mode": "light_rail",
+        "path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_light_rail_station_od_fares.py",
+        "expected_sha256": "cdeb1bc86574d82b7d6252445a89279ec291b6ed5665cc1e4d111f67d530395c",
+        "actual_sha256": "cdeb1bc86574d82b7d6252445a89279ec291b6ed5665cc1e4d111f67d530395c",
+        "matched": true
+      },
+      {
+        "transport_mode": "gmb",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_rules.parquet",
+        "expected_sha256": "edc794e0940985b64056041e1449d26a8bc3d3331f37df3475d04726c86e14f7",
+        "actual_sha256": "edc794e0940985b64056041e1449d26a8bc3d3331f37df3475d04726c86e14f7",
+        "matched": true
+      },
+      {
+        "transport_mode": "gmb",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/gmb_fare_v1/gmb_fare_validation.json",
+        "expected_sha256": "ef38b3ba5b937400b0568c673222a735f621622f1228e8601162a144e2f5e3c0",
+        "actual_sha256": "ef38b3ba5b937400b0568c673222a735f621622f1228e8601162a144e2f5e3c0",
+        "matched": true
+      },
+      {
+        "transport_mode": "gmb",
+        "path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_gmb_fares.py",
+        "expected_sha256": "921c7794233cdb94dc71fa811a8071e458e8c0ee6c9c71417f72449d584d85a0",
+        "actual_sha256": "921c7794233cdb94dc71fa811a8071e458e8c0ee6c9c71417f72449d584d85a0",
+        "matched": true
+      },
+      {
+        "transport_mode": "ferry",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_rules.parquet",
+        "expected_sha256": "8d79774373f9de9b086382fce611a13750e63c664444fe7eb15555e44c6d189d",
+        "actual_sha256": "8d79774373f9de9b086382fce611a13750e63c664444fe7eb15555e44c6d189d",
+        "matched": true
+      },
+      {
+        "transport_mode": "ferry",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/ferry_fare_v1/ferry_fare_validation.json",
+        "expected_sha256": "f8e2c0bfc8b083a79c43040a581485eae2c15a925d2386924f9bce9f55d9d19e",
+        "actual_sha256": "f8e2c0bfc8b083a79c43040a581485eae2c15a925d2386924f9bce9f55d9d19e",
+        "matched": true
+      },
+      {
+        "transport_mode": "ferry",
+        "path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_ferry_fares.py",
+        "expected_sha256": "58bda28b631959cf22847db27cd0f28c1691548d51e0060f65d9f5e82dec2c8c",
+        "actual_sha256": "58bda28b631959cf22847db27cd0f28c1691548d51e0060f65d9f5e82dec2c8c",
+        "matched": true
+      },
+      {
+        "transport_mode": "bus",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/bus_scope_direction_audit_v1/bus_scope_direction_validation.json",
+        "expected_sha256": "34e5cee771330ed78036b2be4f9e8c2f51edbe001735c42cd3e9624e54f71648",
+        "actual_sha256": "34e5cee771330ed78036b2be4f9e8c2f51edbe001735c42cd3e9624e54f71648",
+        "matched": true
+      },
+      {
+        "transport_mode": "bus",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_v1/bus_fare_rules.parquet",
+        "expected_sha256": "6a67270cc996dfc9217380e17cb1ed662daccd3f4c74fb52e766f321646237b4",
+        "actual_sha256": "6a67270cc996dfc9217380e17cb1ed662daccd3f4c74fb52e766f321646237b4",
+        "matched": true
+      },
+      {
+        "transport_mode": "bus",
+        "path": "data/transport_costs/hongkong/pt_fare_v1/bus_fare_simulation_v1/bus_simulation_fare_rules.parquet",
+        "expected_sha256": "86d63b9702337f3d59ec3525d91bbfd7ebf9b77740e08a6e812dfac72407cece",
+        "actual_sha256": "86d63b9702337f3d59ec3525d91bbfd7ebf9b77740e08a6e812dfac72407cece",
+        "matched": true
+      },
+      {
+        "transport_mode": "bus",
+        "path": "scripts/hong_kong_single_city/costs/pt/quote_hong_kong_bus_simulation_fares.py",
+        "expected_sha256": "feddc9f33290ad96149dd032cef080d7054d1cb63586ce1a71985bc7c29edfb0",
+        "actual_sha256": "feddc9f33290ad96149dd032cef080d7054d1cb63586ce1a71985bc7c29edfb0",
+        "matched": true
+      }
+    ]
+  },
+  "protected_input_validation": {
+    "baseline_path": "data/transport_costs/hongkong/pt_fare_v1/protected_input_hashes_baseline.csv",
+    "files_checked": 8,
+    "all_unchanged": true
+  },
+  "withdrawn_outputs": {
+    "expected_absent": [
+      "official_fare_distance_curve.csv",
+      "pt_passenger_trip_fare_estimates.parquet",
+      "pt_passenger_trip_fare_estimates_sample.csv",
+      "pt_trip_fare_validation.json"
+    ],
+    "present": []
+  },
+  "semantic_validation": {
+    "global_passenger_fare_basis_present": false,
+    "mode_specific_semantics_present": true,
+    "transfer_concessions_modelled": false,
+    "matsim_scoring_approved": false,
+    "joint_mode_choice_calibration_approved": false
+  },
+  "code_validation": {
+    "python_script_directory": "scripts/hong_kong_single_city/costs/pt",
+    "py_compile_file_count": 23,
+    "py_compile_failed_count": 0,
+    "git_diff_check_passed": true
+  }
+}

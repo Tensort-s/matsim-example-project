@@ -96,6 +96,7 @@ docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_TAXI_JAVA_SCORING.md
 docs/HONG_KONG_TAXI_LOAD_TEST.md
 docs/HONG_KONG_TAXI_SMOKE_TEST.md
+docs/HONG_KONG_PT_FARE_MODEL.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -389,3 +390,34 @@ Ferry Core v1 cap010 supply instead. Representative vehicle
 types, inferred rail consists, and one-vehicle-per-departure assumptions should
 still be replaced when route-specific fleet allocation and vehicle blocks are
 available.
+
+The separate offline public-transport fare audit is documented in
+`docs/HONG_KONG_PT_FARE_MODEL.md` and stored under
+`data/transport_costs/hongkong/pt_fare_v1/`. It inventories all 3,613 active
+transit routes, preserves official TD and MTR sources under mode-specific fare
+semantics, matches official route/station identifiers to MATSim, and audits
+whether every generic PT passenger main leg is chargeable. The canonical
+machine-readable entry points are
+`canonical_pt_fare_interface_manifest.json`, `pt_fare_layer_registry.csv`, and
+`pt_fare_release_validation.json`. There is no global adult-Octopus basis:
+MTR and Light Rail are adult Octopus, whereas GMB, Ferry, and strict Bus
+amounts have source-specific published-amount semantics with passenger/payment
+basis unspecified. Bus Core and the B/C/D coverage-first Bus simulation
+candidate remain separate layers.
+
+The former cross-mode distance-median trip estimate from commit `c7be4a` is
+withdrawn. Current generic PT legs lack actual mode, line, route, direction,
+boarding/alighting stop, and transfer evidence, so all 557,104 `cost_hkd`
+values remain null with quality `U`; unresolved is not a zero fare. A future
+integration requires a runtime or post-routing explicit PT itinerary and is
+not approved for MATSim scoring or joint mode-choice calibration. The audit
+does not modify the adopted MATSim plans, config, scoring, network, schedule,
+vehicles, or runner. Transfer concessions remain explicit null fields. The separate
+`mtr_station_od_v1/` layer provides auditable adult Octopus quotes only for
+future inputs with explicit `train` mode, domestic-versus-Airport-Express
+scope, and ordered boarding/alighting station IDs. It does not price the
+current generic PT legs; six Airport Express station pairs remain unresolved.
+The sibling `light_rail_station_od_v1/` layer supplies adult Octopus base
+fares only for explicit ordered Light Rail stop IDs. Its complete 68 by 68
+official matrix is kept separate from both MTR scopes; loop and short-turn
+route states remain explicit, and transfer concessions are not modelled.

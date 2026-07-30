@@ -1,0 +1,165 @@
+{
+  "candidate_status_counts": {
+    "conflicting_amounts": 2623,
+    "duplicate_identical": 2000,
+    "unique_candidate": 767043
+  },
+  "cost_effective_date": "",
+  "cost_effective_date_status": "not_encoded_in_source_revision_cutoff_only",
+  "csdi_exact_route_key_match": {
+    "confirmed_franchised_operator_route_count": 2255,
+    "match_rate_within_confirmed_franchised_operator": 0.9960088691796009,
+    "matched_route_count": 2246
+  },
+  "direction_status_counts": {
+    "exact": 2358,
+    "unresolved": 5
+  },
+  "explicit_raw_zero_candidate_record_count": 647,
+  "fare_readiness_counts": {
+    "franchise_route_scope_unresolved": 9,
+    "operator_scope_unresolved": 5,
+    "other_bus_service_not_in_franchised_core": 103,
+    "partial_conflicting_amounts": 251,
+    "partial_duplicate_records": 114,
+    "ready_all_pairs_unique": 1881
+  },
+  "full_fare_comparison_counts": {
+    "comparable_gtfs_candidate_record_count": 776455,
+    "different_full_fare_count": 280104,
+    "equal_full_fare_count": 496351
+  },
+  "full_fare_reference_count": 2358,
+  "full_fare_reference_in_candidate_selection": false,
+  "known_unmatched_routes": [
+    "bus_1000004_1",
+    "bus_1000004_2",
+    "bus_1000611_1",
+    "bus_8780_1",
+    "bus_8780_2"
+  ],
+  "matsim_scoring_integration": "not_performed",
+  "operator_route_counts": {
+    "": 5,
+    "CTB": 672,
+    "DB": 18,
+    "KMB": 1152,
+    "KMB+CTB": 187,
+    "LRTFeeder": 45,
+    "LWB": 149,
+    "LWB+CTB": 3,
+    "NLB": 92,
+    "PI": 13,
+    "XB": 27
+  },
+  "operator_scope_status_counts": {
+    "confirmed_franchised_operator": 2255,
+    "operator_scope_unresolved": 5,
+    "other_bus_operator": 103
+  },
+  "production_pricing_performed": false,
+  "prohibited_methods_used": {
+    "adjacent_or_path_sum": false,
+    "candidate_aggregation_or_first": false,
+    "cross_operator_or_route": false,
+    "distance_or_nearest": false,
+    "fare_id_text_recovery": false,
+    "full_fare_fallback": false,
+    "missing_zero_fill": false,
+    "reverse_od_substitution": false
+  },
+  "query_interface_created": false,
+  "required_forward_pair_count": 771666,
+  "route_franchise_scope_status_counts": {
+    "confirmed_franchised_route": 2246,
+    "franchise_route_scope_unresolved": 9,
+    "operator_scope_unresolved": 5,
+    "other_bus_service": 103
+  },
+  "route_mapping_quality_counts": {
+    "A": 2349,
+    "B": 9,
+    "U": 5
+  },
+  "route_mapping_status_counts": {
+    "exact": 2349,
+    "partial": 9,
+    "unresolved": 5
+  },
+  "schedule": {
+    "departure_count": 69589,
+    "distinct_facility_count": 56066,
+    "distinct_official_stop_id_count": 4479,
+    "line_count": 1614,
+    "route_count": 2363,
+    "stop_occurrence_count": 56066
+  },
+  "schema_version": "hong_kong_bus_scope_direction_audit_v1",
+  "scope_candidate_rows": [
+    {
+      "all_od_unique_route_count": 1881,
+      "conflicting_amounts_pair_count": 2603,
+      "duplicate_identical_pair_count": 1827,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 758563,
+      "route_count": 2246,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 365,
+      "route_count_with_conflicting_pairs": 251,
+      "route_count_with_duplicate_pairs": 165,
+      "route_franchise_scope_status": "confirmed_franchised_route",
+      "unique_candidate_pair_count": 754133
+    },
+    {
+      "all_od_unique_route_count": 8,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 34,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 2108,
+      "route_count": 9,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 1,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 1,
+      "route_franchise_scope_status": "franchise_route_scope_unresolved",
+      "unique_candidate_pair_count": 2074
+    },
+    {
+      "all_od_unique_route_count": 86,
+      "conflicting_amounts_pair_count": 20,
+      "duplicate_identical_pair_count": 139,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 10995,
+      "route_count": 103,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 17,
+      "route_count_with_conflicting_pairs": 4,
+      "route_count_with_duplicate_pairs": 13,
+      "route_franchise_scope_status": "other_bus_service",
+      "unique_candidate_pair_count": 10836
+    },
+    {
+      "all_od_unique_route_count": 0,
+      "conflicting_amounts_pair_count": 0,
+      "duplicate_identical_pair_count": 0,
+      "missing_pair_count": 0,
+      "required_forward_pair_count": 0,
+      "route_count": 5,
+      "route_count_not_fully_ready_due_duplicate_or_conflict": 0,
+      "route_count_with_conflicting_pairs": 0,
+      "route_count_with_duplicate_pairs": 0,
+      "route_franchise_scope_status": "operator_scope_unresolved",
+      "unique_candidate_pair_count": 0
+    }
+  ],
+  "source_download_date": "2026-07-20",
+  "source_revision_cutoff_date": "2026-07-14",
+  "source_sha256": {
+    "bus_json": "2346a30a74bf0cc5644e9e711c23d7bd300c5baba4cb767dfc9dc38a7308e064",
+    "franchised_bus_geometry": "16fb3f75a7fbe8dbe32788365b5b48ab76ce65dfda561f344dc2106ec7c7b417",
+    "gtfs": "e5ad020b79d0020625a4e8eb5428c2253a07705b71bfb809d8a3fa178032ce06",
+    "revision": "384aa01d454d033f472a0a69b746f8e5a3b43f8ee6e8785e685b0fb9d42d35a5",
+    "schedule": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+  },
+  "stop_crosswalk_status_counts": {
+    "exact": 56056,
+    "unresolved": 10
+  }
+}
