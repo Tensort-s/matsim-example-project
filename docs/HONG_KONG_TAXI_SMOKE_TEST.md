@@ -49,7 +49,9 @@ startup contract as the adopted Hong Kong baseline:
 scan every person / every plan / every plan element
 clear route only where mode=pt and route != null
 install SwissRailRaptorModule
-allow PrepareForSim / SwissRailRaptor to rebuild PT routes
+at Controler startup, use the live SwissRailRaptor-backed TripRouter
+rebuild only complete trips whose routingMode=pt
+allow the later default PrepareForSim scan to verify the prepared plans
 ```
 
 The run identity records this operation explicitly:
@@ -71,9 +73,14 @@ fleet_model = false
 
 PT startup route preparation is not behavioural replanning. Persons,
 selected main activities, Taxi legs, car/ride/other non-PT main legs, and
-behavioural choices remain fixed. Only PT routes and the necessary PT stage
-routing structure may be prepared before iteration 0. No strategy reroutes
-PT between iterations.
+behavioural choices remain fixed. Only complete `routingMode=pt` trips are
+passed to the live PT router, using MATSim `TripStructureUtils` trip/stage
+boundaries rather than fixed plan-element indexes. This is necessary because
+MATSim 2026.0 `PersonPrepareForSim` otherwise reroutes an entire plan whenever
+any leg route is null; that whole-plan path would replace a Taxi trip carrying
+`routingMode=ride` with a ride trip. Once the PT-only startup pass has supplied
+all PT routes, the default prepare-for-sim scan has no reason to reroute the
+plan. No strategy reroutes PT between iterations.
 
 Existing non-Taxi scoring modes, QSim main modes, road capacity factors, PT
 inputs, facilities, and private vehicles are snapshotted and must remain
@@ -93,13 +100,16 @@ It also verifies the installed central fare parameters, zero Taxi distance
 terms, absence of Taxi from QSim main modes, empty replanning strategies, and
 absence of MATSim Taxi/DVRP bindings.
 
-Before QSim in iteration 0, the guard requires exactly 557,104 selected-plan
-PT legs, all represented by schedule-backed `TransitPassengerRoute`
-instances. Null routes, `GenericRouteImpl`, missing access/egress stops,
-missing line/route IDs, and references absent from the loaded schedule are
-fatal. The same audit is repeated before iteration 1; its complete PT route
-fingerprint must equal iteration 0, proving that the one-shot startup rebuild
-was not repeated or changed between iterations.
+The source/clear audit continues to require exactly 557,104 source PT legs and
+557,104 cleared `GenericRouteImpl` routes. The prepared raw PT-segment count is
+an observed output, not a source-count invariant: one source main PT leg can
+expand into multiple access, transit, transfer, and egress elements. Before
+QSim in iteration 0, every actual `mode=pt` segment must have a non-null,
+non-`GenericRouteImpl`, schedule-backed `TransitPassengerRoute`. Missing
+access/egress stops, line/route IDs, or schedule references are fatal. The
+same audit is repeated before iteration 1; its raw segment count and complete
+PT route fingerprint must equal iteration 0, proving that the one-shot startup
+rebuild was not repeated or changed between iterations.
 
 Before PT clearing, all 37,286 selected-plan Taxi legs receive a strict
 fingerprint containing person ID, Taxi ordinal, main-trip index, mode,
@@ -109,11 +119,23 @@ iterations. Any missing, extra, duplicate, reordered, retyped, rerouted, or
 otherwise changed Taxi leg stops the run before it can be accepted.
 
 During each QSim iteration the guard independently pairs Taxi departures and
-arrivals by person and trip order. It rejects any unmatched event, invalid
-Taxi travel time, Taxi or whole-model stuck event, Taxi network-vehicle
-traffic event, Taxi/DVRP request/pickup/drop-off/fleet event, or Taxi-fare
-`PersonMoneyEvent`. A violation throws at the end of the current iteration
-and prevents continuation.
+arrivals by person and trip order. Incomplete or unmatched Taxi events,
+invalid Taxi travel time, stuck events, Taxi network-vehicle traffic events,
+Taxi/DVRP request/pickup/drop-off/fleet events, and Taxi-fare
+`PersonMoneyEvent` are recorded in that iteration's audit. They do not throw
+at the end of iteration 0, so iteration 1 can provide a complete diagnostic;
+the unified validation after both iterations still fails unless all mandatory
+Taxi conditions pass. Non-Taxi stuck events are observations and fail this
+Taxi gate only when they prevent Taxi execution or make the two-iteration
+scenario incomplete or uninterpretable.
+
+Startup configuration/scoring failures, malformed Taxi attributes, invalid
+prepared PT references, and any pre-QSim Taxi fingerprint change remain
+immediate hard stops. BeforeMobsim stores both the PT and Taxi audit before
+applying those hard checks. If a hard check prevents creation of the live
+iteration event audit, AfterMobsim records that fact without throwing a
+secondary `Missing live event audit` exception, so the first causal error is
+retained in the runner validation.
 
 After `Controler.run()`, `HongKongTaxiSmokeOutputAudit` reads iteration 0,
 iteration 1, and final output plans. It permits the verified PT route/stage
@@ -123,7 +145,8 @@ fare sum, main-trip-index sum, and `routingMode=ride`. Iteration 0 and 1
 outputs must be identical to one another. Every selected-plan score,
 including every Taxi person score, must be finite. The runtime log must
 contain zero `pt-leg has no TransitRoute`, unknown transit-stop, fare schedule
-mismatch, and Taxi attribute-validation errors.
+mismatch, Taxi attribute-validation, unknown-mode, and Taxi route-execution
+errors.
 
 ## Earlier failure and current validation status
 
@@ -152,6 +175,25 @@ remains a technical-smoke placeholder, not a calibration result. Taxi fare,
 time, distance, and ASC terms; PT/car costs; QSim capacity factors; input
 plans and supply files remain unchanged.
 
+The next PT-prepared attempt reached iteration 0 BeforeMobsim and established
+the actual prepared structure before stopping:
+
+```text
+source PT legs / cleared routes:          557,104 / 557,104
+prepared raw PT segments:                         1,092,811
+prepared default TransitPassengerRoute:           1,092,811
+null / Generic / missing or invalid references:           0
+```
+
+The old guard compared both prepared counts to 557,104, so it rejected a
+fully legal expanded PT structure. The same attempt also exposed why a
+PT-only startup pass is required: default whole-plan routing preserved only
+29,590 of 37,286 Taxi legs, while 7,696 Taxi identities in plans that also
+needed PT preparation were replaced by `ride` legs and lost their Taxi
+attributes. The revised checkpoint keeps the 557,104 equality only for the
+source/clear audit, routes only `routingMode=pt` trips at startup, and retains
+the strict 37,286-leg Taxi fingerprint as a hard pre-QSim gate.
+
 The checkpoint implementation must pass local compile, the applicable Taxi
 tests, and `git diff --check`, then be pushed before a new server run. The
 server must use a new directory below:
@@ -164,8 +206,13 @@ The formal scenario and the validated load-test directory remain read-only.
 All seven input SHA256 values must match
 `taxi_scenario_load_validation.json` before the Controler starts.
 
-At the code-checkpoint stage the PT-prepared smoke has not yet been rerun.
-The next formal action is exactly one fresh, detached-checkpoint,
-two-iteration run on FUSELAB01. Failure is fail-closed and must not trigger an
-automatic rerun; compact validation outputs are committed only if every
-startup, PT, Taxi, event, score, input-integrity, and runtime-log check passes.
+At this revised code-checkpoint stage the PT-only startup implementation has
+passed `mvn -DskipTests compile`,
+`HongKongTaxiPtRoutePreparationTest`,
+`HongKongTaxiSmokeIntegrationTest`, and the added direct regression checks.
+It has not yet been exercised in a fresh formal two-iteration run. The next
+formal action is a detached-checkpoint run in a new append-only directory on
+FUSELAB01. Up to three new Controler attempts are permitted for non-model
+implementation defects; every attempt retains its own output. Compact
+validation outputs are committed only if every startup, PT, Taxi, event,
+score, input-integrity, and runtime-log check passes.

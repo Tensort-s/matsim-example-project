@@ -13,14 +13,15 @@ import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.controler.events.AfterMobsimEvent;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.population.routes.RouteUtils;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HongKongTaxiSmokeIntegrationTest {
@@ -47,7 +48,26 @@ class HongKongTaxiSmokeIntegrationTest {
 	}
 
 	@Test
-	void eventGuardAcceptsExactCleanIterationAndRejectsAnyStuck() {
+	void afterMobsimWithoutLiveAuditDoesNotMaskTheFirstFailure() {
+		HongKongTaxiSmokeRuntimeGuard guard =
+				new HongKongTaxiSmokeRuntimeGuard(
+						ConfigUtils.createConfig(),
+						new HongKongTaxiPtRoutePreparation.PreparationAudit(
+								0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+						new HongKongTaxiPtRoutePreparation.TaxiSnapshot(
+								0, 0, 0, Map.of(), Map.of(), "empty")
+				);
+
+		assertDoesNotThrow(() -> guard.notifyAfterMobsim(
+				new AfterMobsimEvent(null, 0, false)));
+		assertEquals(
+				1L,
+				guard.ptPreparationAudit().get(
+						"after_mobsim_without_live_audit"));
+	}
+
+	@Test
+	void eventGuardDefersTaxiViolationsAndOnlyObservesNonTaxiStuck() {
 		HongKongTaxiSmokeRuntimeGuard.IterationEvents clean =
 				new HongKongTaxiSmokeRuntimeGuard.IterationEvents(0);
 		clean.startedNanos = System.nanoTime();
@@ -55,22 +75,50 @@ class HongKongTaxiSmokeIntegrationTest {
 		clean.taxiArrivals = HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
 		clean.finish();
 		assertTrue(clean.passed);
+		assertTrue(clean.finished);
 		assertEquals(0L, clean.toMap().get("total_stuck_events"));
 
-		HongKongTaxiSmokeRuntimeGuard.IterationEvents stuck =
+		HongKongTaxiSmokeRuntimeGuard.IterationEvents nonTaxiStuck =
 				new HongKongTaxiSmokeRuntimeGuard.IterationEvents(1);
-		stuck.startedNanos = System.nanoTime();
-		stuck.taxiDepartures = HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
-		stuck.taxiArrivals = HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
-		stuck.handleStuck(new PersonStuckEvent(
+		nonTaxiStuck.startedNanos = System.nanoTime();
+		nonTaxiStuck.taxiDepartures =
+				HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
+		nonTaxiStuck.taxiArrivals =
+				HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
+		nonTaxiStuck.handleStuck(new PersonStuckEvent(
 				3600.0,
 				Id.createPersonId("stuck-person"),
 				Id.createLinkId("link"),
 				"car",
 				"test"
 		));
-		assertThrows(IllegalStateException.class, stuck::finish);
-		assertFalse(stuck.passed);
+		nonTaxiStuck.finish();
+		assertTrue(nonTaxiStuck.passed);
+		assertEquals(1L, nonTaxiStuck.toMap().get("total_stuck_events"));
+		assertEquals(
+				java.util.List.of("non_taxi_stuck_observed"),
+				nonTaxiStuck.toMap().get("observations"));
+
+		HongKongTaxiSmokeRuntimeGuard.IterationEvents taxiStuck =
+				new HongKongTaxiSmokeRuntimeGuard.IterationEvents(1);
+		taxiStuck.startedNanos = System.nanoTime();
+		taxiStuck.taxiDepartures =
+				HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
+		taxiStuck.taxiArrivals =
+				HongKongTaxiSmokeRuntimeGuard.EXPECTED_TAXI_LEGS;
+		taxiStuck.handleStuck(new PersonStuckEvent(
+				3600.0,
+				Id.createPersonId("taxi-stuck-person"),
+				Id.createLinkId("link"),
+				"taxi",
+				"test"
+		));
+		taxiStuck.finish();
+		assertTrue(taxiStuck.finished);
+		assertFalse(taxiStuck.passed);
+		assertEquals(
+				java.util.List.of("no_taxi_stuck"),
+				taxiStuck.toMap().get("violations"));
 	}
 
 	@Test

@@ -94,7 +94,7 @@ class HongKongTaxiPtRoutePreparationTest {
 		pt.setRoute(passengerRoute(ids));
 		HongKongTaxiPtRoutePreparation.PtRuntimeAudit valid =
 				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(scenario);
-		HongKongTaxiPtRoutePreparation.requirePrepared(valid, 1);
+		HongKongTaxiPtRoutePreparation.requirePrepared(valid);
 		assertEquals(1, valid.transitPassengerRoute());
 		HongKongTaxiSmokeRuntimeGuard.requireStablePreparedPt(valid, valid);
 		pt.getRoute().setDistance(321.0);
@@ -151,6 +151,74 @@ class HongKongTaxiPtRoutePreparationTest {
 		HongKongTaxiPtRoutePreparation.PtRuntimeAudit unknownRoute =
 				assertRejected(scenario, "unknown_route");
 		assertEquals(1, unknownRoute.routeNotInSchedule());
+	}
+
+	@Test
+	void preparedAuditAcceptsExpandedRawPtSegmentsWithoutSourceCountEquality() {
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Person person = HongKongTaxiTestFixtures.person("expanded-pt-person");
+		Leg first = PopulationUtils.createLeg("pt");
+		Leg second = PopulationUtils.createLeg("pt");
+		Plan plan = plan(person, first, second);
+		person.addPlan(plan);
+		person.setSelectedPlan(plan);
+		scenario.getPopulation().addPerson(person);
+		TransitIds ids = installSchedule(scenario);
+		first.setRoute(passengerRoute(ids));
+		second.setRoute(passengerRoute(ids));
+
+		HongKongTaxiPtRoutePreparation.PtRuntimeAudit audit =
+				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(scenario);
+
+		assertEquals(2, audit.totalPtLegs());
+		assertEquals(2, audit.transitPassengerRoute());
+		HongKongTaxiPtRoutePreparation.requirePrepared(audit);
+	}
+
+	@Test
+	void startupRebuildRoutesOnlyPtTripsAndPreservesTaxiFingerprint() {
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Person person = HongKongTaxiTestFixtures.person("mixed-person");
+		Leg pt = legWithGenericRoute("pt", "origin", "destination");
+		pt.setRoutingMode("pt");
+		pt.setDepartureTime(100.0);
+		Leg taxi = taxiLeg();
+		Plan plan = plan(person, pt, taxi);
+		person.addPlan(plan);
+		person.setSelectedPlan(plan);
+		scenario.getPopulation().addPerson(person);
+		TransitIds ids = installSchedule(scenario);
+		HongKongTaxiPtRoutePreparation.TaxiSnapshot before =
+				HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+						scenario.getPopulation());
+		HongKongTaxiPtRoutePreparation.clearPtRoutes(scenario);
+
+		HongKongTaxiPtRoutePreparation.StartupRebuildAudit rebuild =
+				HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(
+						scenario.getPopulation(),
+						scenario.getActivityFacilities(),
+						(mode, from, to, departureTime, routedPerson, attributes) -> {
+							Leg routed = PopulationUtils.createLeg(mode);
+							routed.setRoutingMode("pt");
+							routed.setDepartureTime(departureTime);
+							DefaultTransitPassengerRoute route = passengerRoute(ids);
+							route.setDistance(1_000.0);
+							route.setTravelTime(300.0);
+							routed.setRoute(route);
+							return List.of(routed);
+						}
+				);
+
+		assertEquals(1, rebuild.ptMainTripsRebuilt());
+		assertEquals(1, rebuild.sourcePtLegsReplaced());
+		assertEquals(1, rebuild.insertedRawPtSegments());
+		assertEquals(0, rebuild.insertedPtStageActivities());
+		assertTrue(HongKongTaxiPtRoutePreparation.compareTaxi(
+				before,
+				HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+						scenario.getPopulation())).exact());
+		HongKongTaxiPtRoutePreparation.requirePrepared(
+				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(scenario));
 	}
 
 	@Test
@@ -236,7 +304,9 @@ class HongKongTaxiPtRoutePreparationTest {
 				"pt-leg has no TransitRoute\n"
 						+ "pt-agent doesn't know to what transit stop to go\n"
 						+ "Hong Kong taxi fare schedule mismatch\n"
-						+ "Invalid Hong Kong taxi leg attribute\n");
+						+ "Invalid Hong Kong taxi leg attribute\n"
+						+ "unknown mode taxi\n"
+						+ "taxi-leg has no route\n");
 		HongKongTaxiSmokeOutputAudit.RuntimeLogAudit audit =
 				HongKongTaxiSmokeOutputAudit.auditRuntimeLog(invalid);
 		assertFalse(audit.exact());
@@ -244,6 +314,8 @@ class HongKongTaxiPtRoutePreparationTest {
 		assertEquals(1, audit.ptAgentUnknownTransitStop());
 		assertEquals(1, audit.taxiFareScheduleMismatch());
 		assertEquals(1, audit.invalidTaxiLegAttribute());
+		assertEquals(1, audit.unknownMode());
+		assertEquals(1, audit.taxiRouteExecutionError());
 
 		Path fresh = temp.resolve("fresh-output");
 		RunHongKongTaxiBehavioralPilot.requireNewOutputDirectory(fresh);
@@ -258,7 +330,7 @@ class HongKongTaxiPtRoutePreparationTest {
 		HongKongTaxiPtRoutePreparation.PtRuntimeAudit audit =
 				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(scenario);
 		assertThrows(IllegalStateException.class,
-				() -> HongKongTaxiPtRoutePreparation.requirePrepared(audit, 1),
+				() -> HongKongTaxiPtRoutePreparation.requirePrepared(audit),
 				label);
 		return audit;
 	}

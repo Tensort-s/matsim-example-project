@@ -354,10 +354,13 @@ public final class HongKongTaxiSmokeOutputAudit {
 		long ptUnknownStop = 0;
 		long taxiFareMismatch = 0;
 		long invalidTaxiAttribute = 0;
+		long unknownMode = 0;
+		long taxiRouteExecutionError = 0;
 		try (BufferedReader reader = Files.newBufferedReader(
 				logFile, StandardCharsets.UTF_8)) {
 			String line;
 			while ((line = reader.readLine()) != null) {
+				String lower = line.toLowerCase(Locale.ROOT);
 				ptMissingTransitRoute += bool(
 						line.contains("pt-leg has no TransitRoute"));
 				ptUnknownStop += bool(line.contains(
@@ -366,6 +369,11 @@ public final class HongKongTaxiSmokeOutputAudit {
 						"Hong Kong taxi fare schedule mismatch"));
 				invalidTaxiAttribute += bool(line.contains(
 						"Invalid Hong Kong taxi leg attribute"));
+				unknownMode += bool(lower.contains("unknown mode")
+						|| lower.contains("no routing module found for mode"));
+				taxiRouteExecutionError += bool(
+						lower.contains("taxi-leg has no route")
+								|| lower.contains("taxi route execution error"));
 			}
 		} catch (IOException error) {
 			throw new IllegalStateException("Cannot audit runtime log " + logFile,
@@ -375,7 +383,9 @@ public final class HongKongTaxiSmokeOutputAudit {
 				ptMissingTransitRoute,
 				ptUnknownStop,
 				taxiFareMismatch,
-				invalidTaxiAttribute
+				invalidTaxiAttribute,
+				unknownMode,
+				taxiRouteExecutionError
 		);
 	}
 
@@ -613,13 +623,17 @@ public final class HongKongTaxiSmokeOutputAudit {
 			long ptLegHasNoTransitRoute,
 			long ptAgentUnknownTransitStop,
 			long taxiFareScheduleMismatch,
-			long invalidTaxiLegAttribute) {
+			long invalidTaxiLegAttribute,
+			long unknownMode,
+			long taxiRouteExecutionError) {
 
 		public boolean exact() {
 			return ptLegHasNoTransitRoute == 0
 					&& ptAgentUnknownTransitStop == 0
 					&& taxiFareScheduleMismatch == 0
-					&& invalidTaxiLegAttribute == 0;
+					&& invalidTaxiLegAttribute == 0
+					&& unknownMode == 0
+					&& taxiRouteExecutionError == 0;
 		}
 
 		public Map<String, Object> toMap() {
@@ -628,6 +642,8 @@ public final class HongKongTaxiSmokeOutputAudit {
 					"pt_agent_unknown_transit_stop", ptAgentUnknownTransitStop,
 					"taxi_fare_schedule_mismatch", taxiFareScheduleMismatch,
 					"invalid_taxi_leg_attribute", invalidTaxiLegAttribute,
+					"unknown_mode", unknownMode,
+					"taxi_route_execution_error", taxiRouteExecutionError,
 					"exact", exact()
 			);
 		}

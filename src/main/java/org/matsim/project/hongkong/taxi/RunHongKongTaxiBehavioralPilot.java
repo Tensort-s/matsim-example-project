@@ -267,7 +267,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 			Map<String, Object> flags = (Map<String, Object>) report.get("run_flags");
 			flags.put("qsim_run", !guard.iterationAudits().isEmpty());
 			flags.put("pt_startup_route_rebuild",
-					guard.beforeMobsimAuditCount() > 0);
+					guard.startupPtRebuildCompleted());
 		}
 
 		Map<String, Object> iterationPlans = new LinkedHashMap<>();
@@ -346,6 +346,8 @@ public final class RunHongKongTaxiBehavioralPilot {
 				guard.preparedPtAndTaxiGuardsPassed());
 		checks.put("iterations_0_and_1_completed",
 				guard.completedExactlyTwoIterations());
+		checks.put("each_iteration_taxi_event_guard_passed",
+				guard.allIterationTaxiChecksPassed());
 		checks.put("each_iteration_output_plans_fixed_except_prepared_pt",
 				outputAudits.stream().allMatch(audit ->
 						plansExact(audit, true)
@@ -364,7 +366,8 @@ public final class RunHongKongTaxiBehavioralPilot {
 				runtimeLogAudit.exact());
 		checks.put("source_taxi_plans_sha_unchanged",
 				EXPECTED_PLANS_SHA.equals(snapshotSha(inputAfter, "taxi_plans")));
-		checks.put("controler_and_qsim_ran", true);
+		checks.put("controler_and_qsim_ran",
+				guard.completedExactlyTwoIterations());
 		checks.put("asc_is_fixed_minus_9", true);
 		checks.put("no_asc_calibration_behavioral_replanning_taxi_routing_or_fleet",
 				true);
@@ -552,7 +555,7 @@ public final class RunHongKongTaxiBehavioralPilot {
 		}
 		if (scoresMustBeFinite) {
 			return modes.getOrDefault("taxi", 0L) == 37_286L
-					&& modes.getOrDefault("pt", 0L) == 557_104L;
+					&& modes.getOrDefault("pt", 0L) > 0L;
 		}
 		return ((Number) map.get("activities")).longValue() == 1_264_870L
 				&& ((Number) map.get("legs")).longValue() == 879_050L

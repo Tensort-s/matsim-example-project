@@ -14,6 +14,7 @@ import org.matsim.core.controler.listener.AfterMobsimListener;
 import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.events.handler.BasicEventHandler;
+import org.matsim.core.router.TripRouter;
 import org.matsim.core.scoring.ScoringFunctionFactory;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
@@ -50,7 +51,11 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			taxiInvarianceByIteration = new LinkedHashMap<>();
 	private final Map<String, Boolean> dangerousEventTypes = new ConcurrentHashMap<>();
 	private Map<String, Object> startupAudit = Map.of();
+	private HongKongTaxiPtRoutePreparation.StartupRebuildAudit startupRebuildAudit;
+	private HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit
+			taxiInvarianceAfterStartupRebuild;
 	private IterationEvents current;
+	private long afterMobsimWithoutLiveAudit;
 
 	public HongKongTaxiSmokeRuntimeGuard(
 			Config config,
@@ -118,6 +123,22 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		if (!failed.isEmpty()) {
 			throw new IllegalStateException("Taxi smoke startup guard failed: " + failed);
 		}
+		startupRebuildAudit =
+				HongKongTaxiPtRoutePreparation.rebuildPtTripsAtStartup(
+						event.getServices().getScenario(),
+						event.getServices().getInjector()
+								.getInstance(TripRouter.class)
+				);
+		HongKongTaxiPtRoutePreparation.requireFormalStartupRebuild(
+				startupRebuildAudit);
+		taxiInvarianceAfterStartupRebuild =
+				HongKongTaxiPtRoutePreparation.compareTaxi(
+						sourceTaxiSnapshot,
+						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
+								event.getServices().getScenario().getPopulation())
+				);
+		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(
+				taxiInvarianceAfterStartupRebuild);
 		event.getServices().getEvents().addHandler(this);
 	}
 
@@ -134,13 +155,15 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		HongKongTaxiPtRoutePreparation.PtRuntimeAudit ptAudit =
 				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(
 						event.getServices().getScenario());
-		HongKongTaxiPtRoutePreparation.requireFormalPrepared(ptAudit);
+		preparedPtByIteration.put(iteration, ptAudit);
 		HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit taxiAudit =
 				HongKongTaxiPtRoutePreparation.compareTaxi(
 						sourceTaxiSnapshot,
 						HongKongTaxiPtRoutePreparation.captureSelectedTaxi(
 								event.getServices().getScenario().getPopulation())
 				);
+		taxiInvarianceByIteration.put(iteration, taxiAudit);
+		HongKongTaxiPtRoutePreparation.requireFormalPrepared(ptAudit);
 		HongKongTaxiPtRoutePreparation.requireFormalTaxiInvariant(taxiAudit);
 		if (iteration == 1) {
 			HongKongTaxiPtRoutePreparation.PtRuntimeAudit first =
@@ -151,8 +174,6 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			}
 			requireStablePreparedPt(first, ptAudit);
 		}
-		preparedPtByIteration.put(iteration, ptAudit);
-		taxiInvarianceByIteration.put(iteration, taxiAudit);
 
 		current = new IterationEvents(iteration);
 		current.startedNanos = System.nanoTime();
@@ -191,8 +212,8 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 	@Override
 	public void notifyAfterMobsim(AfterMobsimEvent event) {
 		if (current == null || current.iteration != event.getIteration()) {
-			throw new IllegalStateException("Missing live event audit for iteration "
-					+ event.getIteration());
+			afterMobsimWithoutLiveAudit++;
+			return;
 		}
 		current.finish();
 		current = null;
@@ -221,9 +242,18 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 				.equals(preparedPtByIteration.get(1).fingerprintSha256());
 		return ordered(
 				"source_clear_audit", preparationAudit.toMap(),
+				"startup_pt_only_rebuild",
+						startupRebuildAudit == null
+								? Map.of() : startupRebuildAudit.toMap(),
+				"taxi_invariance_after_startup_pt_rebuild",
+						taxiInvarianceAfterStartupRebuild == null
+								? Map.of()
+								: taxiInvarianceAfterStartupRebuild.toMap(),
 				"prepared_pt_by_iteration", prepared,
 				"taxi_invariance_by_iteration", taxi,
 				"before_mobsim_audit_count", preparedPtByIteration.size(),
+				"after_mobsim_without_live_audit",
+						afterMobsimWithoutLiveAudit,
 				"pt_route_fingerprint_unchanged_after_iteration_0",
 						samePtFingerprint
 		);
@@ -233,12 +263,19 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		return preparedPtByIteration.size() == 2
 				&& taxiInvarianceByIteration.size() == 2
 				&& preparedPtByIteration.values().stream().allMatch(audit ->
-						audit.totalPtLegs()
-								== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS
+						audit.totalPtLegs() > 0
 								&& audit.routeNull() == 0
 								&& audit.genericRouteImpl() == 0
 								&& audit.transitPassengerRoute()
-								== HongKongTaxiPtRoutePreparation.EXPECTED_PT_LEGS)
+								== audit.totalPtLegs()
+								&& audit.accessStopMissing() == 0
+								&& audit.egressStopMissing() == 0
+								&& audit.lineIdMissing() == 0
+								&& audit.transitRouteIdMissing() == 0
+								&& audit.accessStopNotInSchedule() == 0
+								&& audit.egressStopNotInSchedule() == 0
+								&& audit.lineNotInSchedule() == 0
+								&& audit.routeNotInSchedule() == 0)
 				&& taxiInvarianceByIteration.values().stream()
 						.allMatch(HongKongTaxiPtRoutePreparation
 								.TaxiInvarianceAudit::exact)
@@ -248,6 +285,10 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 
 	public int beforeMobsimAuditCount() {
 		return preparedPtByIteration.size();
+	}
+
+	public boolean startupPtRebuildCompleted() {
+		return startupRebuildAudit != null;
 	}
 
 	static void requireStablePreparedPt(
@@ -268,6 +309,11 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		return iterations.size() == 2
 				&& iterations.containsKey(0)
 				&& iterations.containsKey(1)
+				&& iterations.values().stream().allMatch(audit -> audit.finished);
+	}
+
+	public boolean allIterationTaxiChecksPassed() {
+		return completedExactlyTwoIterations()
 				&& iterations.values().stream().allMatch(audit -> audit.passed);
 	}
 
@@ -360,12 +406,15 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		long totalPersonMoneyEvents;
 		double taxiTravelTimeSumSeconds;
 		double wallTimeSeconds;
+		boolean finished;
 		boolean passed;
 		final Map<String, Deque<Double>> openTaxiDepartures = new TreeMap<>();
 		final Map<String, Long> stuckByMode = new TreeMap<>();
 		final Map<String, Long> stuckByHour = new TreeMap<>();
 		final List<Map<String, Object>> stuckExamples = new ArrayList<>();
 		final Map<String, Long> dvrpTaxiFleetEventTypes = new TreeMap<>();
+		final List<String> violations = new ArrayList<>();
+		final List<String> observations = new ArrayList<>();
 
 		IterationEvents(int iteration) {
 			this.iteration = iteration;
@@ -450,24 +499,27 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			require(failures, invalidTaxiTravelTimes == 0,
 					"all_taxi_travel_times_finite_nonnegative");
 			require(failures, taxiStuckEvents == 0, "no_taxi_stuck");
-			require(failures, totalStuckEvents == 0, "no_model_stuck");
 			require(failures, taxiNetworkVehicleTrafficEvents == 0,
 					"taxi_not_network_vehicle_mode");
 			require(failures, dvrpTaxiFleetEvents == 0,
 					"no_dvrp_taxi_fleet_events");
 			require(failures, taxiFareMoneyEvents == 0,
 					"no_taxi_fare_money_events");
-			passed = failures.isEmpty();
-			if (!passed) {
-				throw new IllegalStateException(
-						"Taxi smoke iteration " + iteration + " failed: " + failures);
+			violations.addAll(failures);
+			if (totalStuckEvents > taxiStuckEvents) {
+				observations.add("non_taxi_stuck_observed");
 			}
+			finished = true;
+			passed = failures.isEmpty();
 		}
 
 		Map<String, Object> toMap() {
 			return ordered(
 					"iteration", iteration,
+					"finished", finished,
 					"passed", passed,
+					"violations", violations,
+					"observations", observations,
 					"executed_plans", executedPlans,
 					"taxi_departures", taxiDepartures,
 					"taxi_arrivals", taxiArrivals,

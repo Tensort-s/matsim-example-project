@@ -8,13 +8,18 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.population.routes.GenericRouteImpl;
+import org.matsim.core.router.TripRouter;
+import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.utils.misc.OptionalTime;
+import org.matsim.facilities.FacilitiesUtils;
+import org.matsim.facilities.Facility;
 import org.matsim.pt.routes.DefaultTransitPassengerRoute;
 import org.matsim.pt.routes.TransitPassengerRoute;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
+import org.matsim.utils.objectattributes.attributable.Attributes;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -131,6 +136,154 @@ public final class HongKongTaxiPtRoutePreparation {
 				audit.ptRoutesNullAfterClear() == EXPECTED_PT_LEGS);
 		checks.put("non_pt_routes_unchanged", audit.nonPtRoutesChanged() == 0);
 		requireChecks("Taxi PT source preparation", checks);
+	}
+
+	/**
+	 * Rebuilds only trips whose routing mode is {@code pt}. MATSim's default
+	 * {@code PersonPrepareForSim} reroutes an entire plan when any route is
+	 * null; with Taxi legs carrying {@code routingMode=ride}, that would
+	 * silently replace every Taxi trip in the same plan with a ride trip.
+	 *
+	 * <p>This startup pass uses MATSim trip/stage utilities and the live
+	 * SwissRailRaptor-backed {@link TripRouter}. Once all PT routes are
+	 * populated, the later default prepare-for-sim scan has no reason to
+	 * reroute the complete plan.</p>
+	 */
+	public static StartupRebuildAudit rebuildPtTripsAtStartup(
+			Scenario scenario,
+			TripRouter tripRouter) {
+		Objects.requireNonNull(scenario, "scenario");
+		Objects.requireNonNull(tripRouter, "tripRouter");
+		return rebuildPtTripsAtStartup(
+				scenario.getPopulation(),
+				scenario.getActivityFacilities(),
+				(mode, from, to, departureTime, person, attributes) ->
+						tripRouter.calcRoute(
+								mode,
+								from,
+								to,
+								departureTime,
+								person,
+								attributes)
+		);
+	}
+
+	static StartupRebuildAudit rebuildPtTripsAtStartup(
+			Population population,
+			org.matsim.facilities.ActivityFacilities facilities,
+			PtTripRouter router) {
+		long persons = population.getPersons().size();
+		long plans = 0;
+		long trips = 0;
+		long ptTrips = 0;
+		long sourcePtLegs = 0;
+		long insertedPtLegs = 0;
+		long insertedPtStageActivities = 0;
+
+		for (Person person : population.getPersons().values()) {
+			for (Plan plan : person.getPlans()) {
+				plans++;
+				List<TripStructureUtils.Trip> planTrips =
+						List.copyOf(TripStructureUtils.getTrips(plan));
+				trips += planTrips.size();
+				for (TripStructureUtils.Trip trip : planTrips) {
+					String routingMode = requireConsistentRoutingMode(
+							person, trip);
+					if (!"pt".equals(routingMode)) {
+						continue;
+					}
+					ptTrips++;
+					sourcePtLegs += trip.getLegsOnly().stream()
+							.filter(leg -> "pt".equals(leg.getMode()))
+							.count();
+					OptionalTime departure =
+							TripStructureUtils.getDepartureTime(trip);
+					if (departure.isUndefined()) {
+						throw new IllegalStateException(
+								"Undefined PT trip departure time for person "
+										+ person.getId());
+					}
+					List<? extends PlanElement> routed = router.route(
+							"pt",
+							FacilitiesUtils.toFacility(
+									trip.getOriginActivity(), facilities),
+							FacilitiesUtils.toFacility(
+									trip.getDestinationActivity(), facilities),
+							departure.seconds(),
+							person,
+							trip.getTripAttributes()
+					);
+					if (routed == null || routed.isEmpty()) {
+						throw new IllegalStateException(
+								"PT startup router returned no plan elements for person "
+										+ person.getId());
+					}
+					insertedPtLegs += routed.stream()
+							.filter(element -> element instanceof Leg leg
+									&& "pt".equals(leg.getMode()))
+							.count();
+					insertedPtStageActivities += routed.stream()
+							.filter(element -> element
+									instanceof org.matsim.api.core.v01.population.Activity activity
+									&& TripStructureUtils.isStageActivityType(
+									activity.getType()))
+							.count();
+					TripRouter.insertTrip(
+							plan,
+							trip.getOriginActivity(),
+							routed,
+							trip.getDestinationActivity()
+					);
+				}
+			}
+		}
+		return new StartupRebuildAudit(
+				persons,
+				plans,
+				trips,
+				ptTrips,
+				sourcePtLegs,
+				insertedPtLegs,
+				insertedPtStageActivities
+		);
+	}
+
+	private static String requireConsistentRoutingMode(
+			Person person,
+			TripStructureUtils.Trip trip) {
+		String result = null;
+		for (Leg leg : trip.getLegsOnly()) {
+			String mode = TripStructureUtils.getRoutingMode(leg);
+			if (mode == null) {
+				throw new IllegalStateException(
+						"Missing routing mode in trip for person " + person.getId());
+			}
+			if (result == null) {
+				result = mode;
+			} else if (!result.equals(mode)) {
+				throw new IllegalStateException(
+						"Inconsistent routing modes in trip for person "
+								+ person.getId() + ": " + result + " versus " + mode);
+			}
+		}
+		if (result == null) {
+			throw new IllegalStateException(
+					"Trip contains no legs for person " + person.getId());
+		}
+		return result;
+	}
+
+	public static void requireFormalStartupRebuild(StartupRebuildAudit audit) {
+		Map<String, Boolean> checks = new LinkedHashMap<>();
+		checks.put("persons_exact", audit.personsScanned() == EXPECTED_PERSONS);
+		checks.put("plans_exact", audit.plansScanned() == EXPECTED_PERSONS);
+		checks.put("pt_main_trips_rebuilt_positive",
+				audit.ptMainTripsRebuilt() > 0);
+		checks.put("all_cleared_source_pt_legs_replaced",
+				audit.sourcePtLegsReplaced() == EXPECTED_PT_LEGS);
+		checks.put("raw_pt_segments_inserted_positive",
+				audit.insertedRawPtSegments() > 0);
+		requireChecks("Taxi PT-only startup rebuild", checks);
 	}
 
 	/** Audits the actual selected-plan route objects visible to QSim. */
@@ -299,16 +452,16 @@ public final class HongKongTaxiPtRoutePreparation {
 	}
 
 	public static void requireFormalPrepared(PtRuntimeAudit audit) {
-		requirePrepared(audit, EXPECTED_PT_LEGS);
+		requirePrepared(audit);
 	}
 
-	static void requirePrepared(PtRuntimeAudit audit, long expectedPtLegs) {
+	static void requirePrepared(PtRuntimeAudit audit) {
 		Map<String, Boolean> checks = new LinkedHashMap<>();
-		checks.put("total_pt_legs_exact", audit.totalPtLegs() == expectedPtLegs);
+		checks.put("prepared_pt_segments_present", audit.totalPtLegs() > 0);
 		checks.put("route_null_zero", audit.routeNull() == 0);
 		checks.put("generic_route_zero", audit.genericRouteImpl() == 0);
 		checks.put("all_routes_legal_transit_passenger",
-				audit.transitPassengerRoute() == expectedPtLegs);
+				audit.transitPassengerRoute() == audit.totalPtLegs());
 		checks.put("access_stop_missing_zero", audit.accessStopMissing() == 0);
 		checks.put("egress_stop_missing_zero", audit.egressStopMissing() == 0);
 		checks.put("line_id_missing_zero", audit.lineIdMissing() == 0);
@@ -618,6 +771,39 @@ public final class HongKongTaxiPtRoutePreparation {
 					"non_pt_routes_changed", nonPtRoutesChanged
 			);
 		}
+	}
+
+	public record StartupRebuildAudit(
+			long personsScanned,
+			long plansScanned,
+			long tripsScanned,
+			long ptMainTripsRebuilt,
+			long sourcePtLegsReplaced,
+			long insertedRawPtSegments,
+			long insertedPtStageActivities) {
+
+		public Map<String, Object> toMap() {
+			return ordered(
+					"persons_scanned", personsScanned,
+					"plans_scanned", plansScanned,
+					"trips_scanned", tripsScanned,
+					"pt_main_trips_rebuilt", ptMainTripsRebuilt,
+					"source_pt_legs_replaced", sourcePtLegsReplaced,
+					"inserted_raw_pt_segments", insertedRawPtSegments,
+					"inserted_pt_stage_activities", insertedPtStageActivities
+			);
+		}
+	}
+
+	@FunctionalInterface
+	interface PtTripRouter {
+		List<? extends PlanElement> route(
+				String mode,
+				Facility from,
+				Facility to,
+				double departureTime,
+				Person person,
+				Attributes tripAttributes);
 	}
 
 	public record PtRuntimeAudit(
