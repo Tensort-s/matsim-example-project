@@ -220,6 +220,10 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
   build-bundle `
   --source-commit-sha <exact-pushed-sha> `
+  --data-root-mode external_locked_input_pack `
+  --data-root <verified-new-locked-input-pack-root> `
+  --locked-input-pack-manifest <verified-locked-input-pack-manifest.json> `
+  --locked-input-pack-manifest-sha256 <recorded-manifest-sha256> `
   --fat-jar .\matsim-example-project-0.0.1-SNAPSHOT.jar `
   --jdk-archive <approved-existing-Temurin-JDK-25-Linux-x64.tar.gz> `
   --release-root /mnt/DiskM/by/<new-exact-sha-release> `
@@ -240,6 +244,25 @@ runtime classes. A release root must be supplied explicitly below
 `/mnt/DiskM/by/`; it is never inferred from an older deployment. The generated
 launchers create new run directories only and use `failIfDirectoryExists`.
 Preparing a bundle does not authorize upload or execution.
+
+The seven large v2/Ferry Core inputs are not part of the Git source snapshot.
+Generate their separately transferred exact-byte pack and sidecar with:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
+  create-locked-input-pack `
+  --source-commit-sha <supervisor-authorized-exact-source-sha> `
+  --source-data-root F:\Matsim\matsim-example-project\data `
+  --pack-root <new-local-pack-root> `
+  --pack-manifest <new-local-pack-manifest.json>
+```
+
+A later authorized Runner records the sidecar SHA256, transfers both items to
+new server paths and runs `verify-locked-input-pack` with the same exact source
+SHA, server pack root, manifest and recorded manifest SHA before
+`build-bundle`. The verifier requires exactly seven locked relative paths and
+rejects missing, extra, symlinked, stale-v1/pre-Ferry or hash-mismatched files.
 
 Create the Git-metadata-free source artifact from the exact SHA named by the
 formal Supervisor/Runner command without changing the current worktree, index

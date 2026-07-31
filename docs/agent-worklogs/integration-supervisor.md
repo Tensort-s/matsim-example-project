@@ -714,3 +714,28 @@ hard_gate_status: "STAGE_8D_EVIDENCE_REWORK_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Commit and push one exact evidence-completeness result from cb408458, report only to Supervisor, and wait."
 ```
+
+## Entry 24 — Stage 8D external locked-input-pack authorization
+
+```yaml
+timestamp: "2026-07-31T23:38:50+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8D external locked-input-pack rework"
+input_sha: "7cb827453c7327d0b3636a7f594091523309309f"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_ONLY"
+decision: "Authorize a bounded deployment-contract extension for a separately transferred manifest-bound data root containing exactly the seven locked v2/Ferry Core inputs."
+findings:
+  - "Runner verified the dynamic source snapshot and completed the Linux JDK 25 fat-JAR build."
+  - "build-bundle stopped because the seven large production inputs are ignored/untracked and absent from the source snapshot."
+  - "An old input root or repeat of the same failed data-root identity is prohibited."
+  - "The external pack must bind formal source SHA, exact seven paths/hashes, manifest SHA and actual verification root before bundle staging."
+  - "No Executor server access, production pack transfer, build, Runner contact or Stage 9 action is authorized."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#external_locked_input_pack_validation"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#external-locked-input-pack"
+blockers: []
+hard_gate_status: "STAGE_8D_EXTERNAL_LOCKED_INPUT_PACK_REWORK_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused external-pack contract result from 7cb82745, report only to Supervisor, and wait."
+```

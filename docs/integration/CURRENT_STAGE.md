@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Full-tree snapshot evidence completeness rework` |
+| task_id | `Stage 8D - External locked-input-pack rework` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `cb40845886fd1447489ad9d8af52592c704de918` |
+| exact_input_sha | `7cb827453c7327d0b3636a7f594091523309309f` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -20,10 +20,10 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Commit the complete, reproducible full-tree snapshot evidence that was
-previously present only in the Executor handoff. The dynamic identity
-implementation remains unchanged: commit object, tree, blob inventory,
-archive and manifest must verify as one exact identity.
+Support a separately transferred external data root containing exactly the
+seven locked v2/Ferry Core inputs. Its source SHA, sidecar manifest SHA,
+relative paths and file hashes must verify before bundle staging while source
+snapshot and exact-clean-Git contracts remain unchanged.
 
 ## Authorized delta
 
@@ -32,6 +32,8 @@ archive and manifest must verify as one exact identity.
 - exact clean Git checkout or dynamic exact-SHA snapshot source identity;
 - Git commit-object hash and commit-tree reconstruction;
 - snapshot archive/manifest/file integrity and tamper rejection;
+- external locked-input-pack creation/verification and fail-closed manifest;
+- exact seven-path inventory with missing/extra/stale/hash rejection;
 - unchanged Taxi/PT/Car fat-JAR inventory checks;
 - external deployment manifest and Linux JDK 25 build interface;
 - deployment documentation, evidence and append-only worklogs.
@@ -41,7 +43,8 @@ archive and manifest must verify as one exact identity.
 Java/model logic, fare or cost semantics, economic parameters, MATSim input
 configuration, plans, network, schedule, vehicles, facilities, demand,
 supply, capacity, city metadata or run manifest; JDK download/fabrication;
-server access/build/upload/run or source transfer; Runner; Stage 9 retry;
+server access/build/upload/run or production source/input transfer; Runner;
+Stage 9 retry;
 master or protected feature changes; Git metadata creation on the server.
 
 ## Evidence references

@@ -39,6 +39,8 @@ CONFIG_NAME = "config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
 SERVER_BUILD_COMMAND = "./mvnw -DskipTests package"
 MATSIM_VERSION = "2026.0"
 SOURCE_SNAPSHOT_SCHEMA = "hong_kong_exact_git_tree_source_snapshot_v1"
+LOCKED_INPUT_PACK_SCHEMA = "hong_kong_external_locked_input_pack_v1"
+EXTERNAL_LOCKED_INPUT_PACK_MODE = "external_locked_input_pack"
 EXPECTED_INPUT_SHA256 = {
     "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml":
         "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
@@ -682,6 +684,231 @@ def verify_current_inputs(sources: dict[str, Path]) -> dict[str, str]:
     return actual
 
 
+def locked_input_pack_sources(pack_root: Path) -> dict[str, Path]:
+    return {
+        relative: pack_root / Path(relative)
+        for relative in EXPECTED_INPUT_SHA256
+    }
+
+
+def create_locked_input_pack(
+    source_commit_sha: str,
+    source_data_root: Path,
+    pack_root: Path,
+    pack_manifest: Path,
+) -> dict[str, Any]:
+    validate_full_sha(source_commit_sha, "Source commit")
+    pack_root = pack_root.resolve()
+    pack_manifest = pack_manifest.resolve()
+    require_outside_repository_output(pack_root)
+    require_outside_repository_output(pack_manifest)
+    assert_new_path(pack_root)
+    assert_new_path(pack_manifest)
+    if pack_manifest.is_relative_to(pack_root):
+        raise ValueError("Locked input pack manifest must be a sidecar")
+    sources = current_input_sources(source_data_root)
+    source_hashes = verify_current_inputs(sources)
+    pack_root.mkdir(parents=True)
+    for relative, source in sources.items():
+        copy_new(source, pack_root / Path(relative))
+    packed_sources = locked_input_pack_sources(pack_root)
+    packed_hashes = verify_current_inputs(packed_sources)
+    if packed_hashes != source_hashes:
+        raise ValueError("Locked input pack bytes differ from their sources")
+    entries = [
+        {
+            "relative_path": relative,
+            "expected_sha256": EXPECTED_INPUT_SHA256[relative],
+            "sha256": packed_hashes[relative],
+            "size_bytes": packed_sources[relative].stat().st_size,
+            "source_path": str(sources[relative].resolve()),
+        }
+        for relative in sorted(packed_sources)
+    ]
+    manifest = {
+        "schema_version": LOCKED_INPUT_PACK_SCHEMA,
+        "data_root_mode": EXTERNAL_LOCKED_INPUT_PACK_MODE,
+        "source_commit_sha": source_commit_sha,
+        "source_data_root": str(source_data_root.resolve()),
+        "pack_root_name": pack_root.name,
+        "root_path_recording":
+            "verification summary and deployment metadata record the actual root",
+        "locked_input_count": len(entries),
+        "entries": entries,
+        "create_command": shlex.join([sys.executable, *sys.argv]),
+        "server_transfer_performed": False,
+        "input_bytes_modified": False,
+    }
+    write_new_text(
+        pack_manifest,
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+    )
+    return {
+        "data_root_mode": EXTERNAL_LOCKED_INPUT_PACK_MODE,
+        "source_commit_sha": source_commit_sha,
+        "pack_root": str(pack_root),
+        "pack_manifest": str(pack_manifest),
+        "pack_manifest_sha256": sha256_file(pack_manifest),
+        "locked_input_count": len(entries),
+        "locked_input_sha256": packed_hashes,
+        "server_transfer_performed": False,
+    }
+
+
+def verify_locked_input_pack(
+    source_commit_sha: str,
+    pack_root: Path,
+    pack_manifest: Path,
+    pack_manifest_sha256: str,
+) -> tuple[dict[str, Path], dict[str, Any]]:
+    validate_full_sha(source_commit_sha, "Source commit")
+    validate_sha256(pack_manifest_sha256, "Locked input pack manifest SHA256")
+    if sha256_file(pack_manifest) != pack_manifest_sha256:
+        raise ValueError("Locked input pack manifest SHA256 mismatch")
+    manifest = json.loads(pack_manifest.read_text(encoding="utf-8"))
+    required_manifest_fields = {
+        "schema_version",
+        "data_root_mode",
+        "source_commit_sha",
+        "source_data_root",
+        "pack_root_name",
+        "root_path_recording",
+        "locked_input_count",
+        "entries",
+        "create_command",
+        "server_transfer_performed",
+        "input_bytes_modified",
+    }
+    if not isinstance(manifest, dict) or set(manifest) != required_manifest_fields:
+        raise ValueError("Locked input pack manifest schema mismatch")
+    if manifest.get("schema_version") != LOCKED_INPUT_PACK_SCHEMA:
+        raise ValueError("Unsupported locked input pack manifest schema")
+    if manifest.get("data_root_mode") != EXTERNAL_LOCKED_INPUT_PACK_MODE:
+        raise ValueError("Locked input pack data-root mode mismatch")
+    if manifest.get("source_commit_sha") != source_commit_sha:
+        raise ValueError("Locked input pack source commit mismatch")
+    if manifest.get("input_bytes_modified") is not False:
+        raise ValueError("Locked input pack must preserve exact input bytes")
+    if manifest.get("server_transfer_performed") is not False:
+        raise ValueError("Pack creation manifest cannot claim a server transfer")
+    if not isinstance(manifest.get("create_command"), str):
+        raise ValueError("Locked input pack creation command is missing")
+    source_data_root = manifest.get("source_data_root")
+    if not isinstance(source_data_root, str) or not source_data_root:
+        raise ValueError("Locked input pack source data root is missing")
+    if any(
+        fragment in source_data_root
+        for fragment in STALE_ACTIVE_INPUT_FRAGMENTS
+    ):
+        raise ValueError("Locked input pack provenance names a stale data root")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("Locked input pack entries are missing")
+    if manifest.get("locked_input_count") != len(entries):
+        raise ValueError("Locked input pack count mismatch")
+    required_fields = {
+        "relative_path",
+        "expected_sha256",
+        "sha256",
+        "size_bytes",
+        "source_path",
+    }
+    by_relative: dict[str, dict[str, Any]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != required_fields:
+            raise ValueError("Locked input pack entry schema mismatch")
+        relative = validate_snapshot_path(entry["relative_path"])
+        if relative in by_relative:
+            raise ValueError(f"Duplicate locked input pack path: {relative}")
+        if entry["expected_sha256"] != EXPECTED_INPUT_SHA256.get(relative):
+            raise ValueError(f"Unexpected locked input expectation: {relative}")
+        if entry["sha256"] != entry["expected_sha256"]:
+            raise ValueError(f"Locked input manifest hash mismatch: {relative}")
+        if not isinstance(entry["size_bytes"], int) or entry["size_bytes"] < 0:
+            raise ValueError(f"Locked input size is invalid: {relative}")
+        if not isinstance(entry["source_path"], str) or not entry["source_path"]:
+            raise ValueError(f"Locked input source path is invalid: {relative}")
+        if any(
+            fragment in entry["source_path"]
+            for fragment in STALE_ACTIVE_INPUT_FRAGMENTS
+        ):
+            raise ValueError(f"Locked input source path is stale: {relative}")
+        by_relative[relative] = entry
+    if set(by_relative) != set(EXPECTED_INPUT_SHA256):
+        raise ValueError("Locked input pack inventory differs from the lock")
+    if pack_root.is_symlink():
+        raise ValueError("Locked input pack root must not be a symbolic link")
+    pack_root = pack_root.resolve()
+    if not pack_root.is_dir():
+        raise FileNotFoundError(pack_root)
+    if manifest.get("pack_root_name") != pack_root.name:
+        raise ValueError("Locked input pack root name differs from its manifest")
+    if any(path.is_symlink() for path in pack_root.rglob("*")):
+        raise ValueError("Locked input pack must not contain symbolic links")
+    sources = locked_input_pack_sources(pack_root)
+    observed_files = {
+        path.relative_to(pack_root).as_posix()
+        for path in pack_root.rglob("*")
+        if path.is_file()
+    }
+    if observed_files != set(EXPECTED_INPUT_SHA256):
+        raise ValueError("Locked input pack contains missing or extra files")
+    input_hashes = verify_current_inputs(sources)
+    for relative, source in sources.items():
+        entry = by_relative[relative]
+        if source.stat().st_size != entry["size_bytes"]:
+            raise ValueError(f"Locked input size mismatch: {relative}")
+        if input_hashes[relative] != entry["sha256"]:
+            raise ValueError(f"Locked input byte mismatch: {relative}")
+    summary = {
+        "data_root_mode": EXTERNAL_LOCKED_INPUT_PACK_MODE,
+        "source_commit_sha": source_commit_sha,
+        "pack_root": str(pack_root),
+        "pack_manifest": str(pack_manifest.resolve()),
+        "pack_manifest_sha256": pack_manifest_sha256,
+        "locked_input_count": len(sources),
+        "locked_input_sha256": input_hashes,
+        "verification_result": "passed",
+        "verification_command": shlex.join([sys.executable, *sys.argv]),
+    }
+    return sources, summary
+
+
+def resolve_input_contract(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Path], dict[str, Any]]:
+    if args.data_root_mode == "canonical_project_data_root":
+        if (
+            args.locked_input_pack_manifest is not None
+            or args.locked_input_pack_manifest_sha256 is not None
+        ):
+            raise ValueError(
+                "Locked input pack arguments require external pack mode"
+            )
+        sources = current_input_sources(args.data_root)
+        hashes = verify_current_inputs(sources)
+        return sources, {
+            "data_root_mode": "canonical_project_data_root",
+            "data_root": str(args.data_root.resolve()),
+            "locked_input_sha256": hashes,
+            "verification_result": "passed",
+        }
+    if args.data_root_mode != EXTERNAL_LOCKED_INPUT_PACK_MODE:
+        raise ValueError(f"Unsupported data-root mode: {args.data_root_mode}")
+    if args.locked_input_pack_manifest is None:
+        raise ValueError("External locked input pack manifest is required")
+    if args.locked_input_pack_manifest_sha256 is None:
+        raise ValueError("External pack manifest SHA256 is required")
+    if args.data_root.resolve().is_relative_to(args.source_root.resolve()):
+        raise ValueError("External locked input pack must be outside source root")
+    return verify_locked_input_pack(
+        args.source_commit_sha,
+        args.data_root,
+        args.locked_input_pack_manifest,
+        args.locked_input_pack_manifest_sha256,
+    )
+
+
 def verify_fat_jar(path: Path) -> tuple[str, list[str]]:
     if not path.is_file():
         raise FileNotFoundError(path)
@@ -951,8 +1178,8 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
     jdk_hash = sha256_file(args.jdk_archive)
     if jdk_hash != args.jdk_sha256:
         raise ValueError(f"JDK checksum mismatch: {jdk_hash}")
-    current_sources = current_input_sources(args.data_root)
-    input_hashes = verify_current_inputs(current_sources)
+    current_sources, input_contract = resolve_input_contract(args)
+    input_hashes = input_contract["locked_input_sha256"]
     args.staging_dir.mkdir(parents=True)
     for relative in (
         "app",
@@ -969,7 +1196,15 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
     ):
         (args.staging_dir / relative).mkdir(parents=True, exist_ok=False)
 
-    scenario = args.data_root / SCENARIO_RELATIVE
+    if args.data_root_mode == EXTERNAL_LOCKED_INPUT_PACK_MODE:
+        copy_new(
+            args.locked_input_pack_manifest,
+            args.staging_dir / "manifests/LOCKED_INPUT_PACK_MANIFEST.json",
+        )
+
+    config_source = current_sources[
+        "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
+    ]
     sources = {
         "app/matsim-example-project-0.0.1-SNAPSHOT.jar": args.fat_jar,
         "archives/OpenJDK25U-jdk_x64_linux_hotspot_25.0.3_9.tar.gz": args.jdk_archive,
@@ -990,7 +1225,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         selected,
     )
     write_server_config(
-        scenario / CONFIG_NAME,
+        config_source,
         args.staging_dir / "config/config_smoke_qsim.xml",
         release_root,
         "plans_smoke_0p1.xml.gz",
@@ -998,7 +1233,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         0,
     )
     write_server_config(
-        scenario / CONFIG_NAME,
+        config_source,
         args.staging_dir / "config/config_formal_50it.xml",
         release_root,
         "plans_routed_5pct_v2.xml.gz",
@@ -1061,6 +1296,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "maven_version": args.maven_version,
         "matsim_version": args.matsim_version,
         "locked_input_sha256": input_hashes,
+        "locked_input_contract": input_contract,
         "locked_config_template": str(
             current_sources[
                 "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
@@ -1142,6 +1378,16 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
 
 def add_bundle_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    parser.add_argument(
+        "--data-root-mode",
+        choices=(
+            "canonical_project_data_root",
+            EXTERNAL_LOCKED_INPUT_PACK_MODE,
+        ),
+        default="canonical_project_data_root",
+    )
+    parser.add_argument("--locked-input-pack-manifest", type=Path)
+    parser.add_argument("--locked-input-pack-manifest-sha256")
     parser.add_argument("--source-commit-sha", required=True)
     parser.add_argument(
         "--source-identity-mode",
@@ -1190,6 +1436,29 @@ def parse_args() -> argparse.Namespace:
         "--source-snapshot-manifest-sha256",
         required=True,
     )
+    input_pack = commands.add_parser(
+        "create-locked-input-pack",
+        help="Create a new seven-file v2/Ferry Core locked-input pack",
+    )
+    input_pack.add_argument("--source-commit-sha", required=True)
+    input_pack.add_argument(
+        "--source-data-root",
+        type=Path,
+        default=DEFAULT_DATA_ROOT,
+    )
+    input_pack.add_argument("--pack-root", type=Path, required=True)
+    input_pack.add_argument("--pack-manifest", type=Path, required=True)
+    input_verifier = commands.add_parser(
+        "verify-locked-input-pack",
+        help="Verify a seven-file external locked-input pack fail closed",
+    )
+    input_verifier.add_argument("--source-commit-sha", required=True)
+    input_verifier.add_argument("--pack-root", type=Path, required=True)
+    input_verifier.add_argument("--pack-manifest", type=Path, required=True)
+    input_verifier.add_argument(
+        "--pack-manifest-sha256",
+        required=True,
+    )
     bundle = commands.add_parser(
         "build-bundle",
         help="Build the deployment bundle after exact source identity validation",
@@ -1222,6 +1491,20 @@ def main() -> None:
                 args.source_snapshot_manifest,
                 args.source_snapshot_manifest_sha256,
             )
+    elif args.command == "create-locked-input-pack":
+        result = create_locked_input_pack(
+            args.source_commit_sha,
+            args.source_data_root,
+            args.pack_root,
+            args.pack_manifest,
+        )
+    elif args.command == "verify-locked-input-pack":
+        _, result = verify_locked_input_pack(
+            args.source_commit_sha,
+            args.pack_root,
+            args.pack_manifest,
+            args.pack_manifest_sha256,
+        )
     else:
         result = build_bundle(args)
     if args.command != "build-bundle":

@@ -13,7 +13,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
-from types import ModuleType
+from types import ModuleType, SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -24,6 +24,7 @@ DATA_ROOT = Path(r"F:\Matsim\matsim-example-project\data")
 RELEASE_ROOT = "/mnt/DiskM/by/stage8d_contract_validation_not_deployed"
 EXACT_INPUT_COMMIT_SHA = "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6"
 PRIOR_CONTROL_COMMIT_SHA = "6ce087af803da1a4b21717c1e0073ce4a04c608a"
+PACK_CONTRACT_INPUT_SHA = "7cb827453c7327d0b3636a7f594091523309309f"
 
 
 def load_preparer() -> ModuleType:
@@ -57,7 +58,7 @@ def expect_rejection(action: object, label: str) -> bool:
         action()
     except (FileNotFoundError, KeyError, OSError, ValueError):
         return True
-    raise AssertionError(f"Invalid snapshot was accepted: {label}")
+    raise AssertionError(f"Invalid contract was accepted: {label}")
 
 
 def create_fixture_snapshot(
@@ -159,6 +160,16 @@ def main() -> None:
     )
     sources = preparer.current_input_sources(DATA_ROOT)
     hashes = preparer.verify_current_inputs(sources)
+    canonical_sources, canonical_contract = preparer.resolve_input_contract(
+        SimpleNamespace(
+            data_root=DATA_ROOT,
+            data_root_mode="canonical_project_data_root",
+            locked_input_pack_manifest=None,
+            locked_input_pack_manifest_sha256=None,
+            source_commit_sha=PACK_CONTRACT_INPUT_SHA,
+            source_root=REPO_ROOT,
+        )
+    )
     config_source = sources[
         "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
     ]
@@ -325,6 +336,164 @@ def main() -> None:
             ),
             "tampered Git commit object",
         )
+        pack_root = temporary / "external-locked-input-pack"
+        pack_manifest = temporary / "external-locked-input-pack.json"
+        pack_created = preparer.create_locked_input_pack(
+            PACK_CONTRACT_INPUT_SHA,
+            DATA_ROOT,
+            pack_root,
+            pack_manifest,
+        )
+        pack_manifest_inside_root_rejected = expect_rejection(
+            lambda: preparer.create_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                DATA_ROOT,
+                temporary / "prohibited-nested-pack",
+                temporary / "prohibited-nested-pack/manifest.json",
+            ),
+            "locked-input-pack manifest inside pack root",
+        )
+        pack_manifest_sha256 = preparer.sha256_file(pack_manifest)
+        valid_pack_sources, valid_pack = preparer.verify_locked_input_pack(
+            PACK_CONTRACT_INPUT_SHA,
+            pack_root,
+            pack_manifest,
+            pack_manifest_sha256,
+        )
+        resolved_pack_sources, resolved_pack = preparer.resolve_input_contract(
+            SimpleNamespace(
+                data_root=pack_root,
+                data_root_mode=preparer.EXTERNAL_LOCKED_INPUT_PACK_MODE,
+                locked_input_pack_manifest=pack_manifest,
+                locked_input_pack_manifest_sha256=pack_manifest_sha256,
+                source_commit_sha=PACK_CONTRACT_INPUT_SHA,
+                source_root=REPO_ROOT,
+            )
+        )
+        missing_pack_manifest_rejected = expect_rejection(
+            lambda: preparer.resolve_input_contract(
+                SimpleNamespace(
+                    data_root=pack_root,
+                    data_root_mode=preparer.EXTERNAL_LOCKED_INPUT_PACK_MODE,
+                    locked_input_pack_manifest=None,
+                    locked_input_pack_manifest_sha256=None,
+                    source_commit_sha=PACK_CONTRACT_INPUT_SHA,
+                    source_root=REPO_ROOT,
+                )
+            ),
+            "missing locked-input-pack manifest",
+        )
+        pack_inside_source_root_rejected = expect_rejection(
+            lambda: preparer.resolve_input_contract(
+                SimpleNamespace(
+                    data_root=REPO_ROOT / "prohibited-input-pack",
+                    data_root_mode=preparer.EXTERNAL_LOCKED_INPUT_PACK_MODE,
+                    locked_input_pack_manifest=pack_manifest,
+                    locked_input_pack_manifest_sha256=pack_manifest_sha256,
+                    source_commit_sha=PACK_CONTRACT_INPUT_SHA,
+                    source_root=REPO_ROOT,
+                )
+            ),
+            "locked-input pack inside source root",
+        )
+        wrong_pack_manifest_hash_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                pack_manifest,
+                "0" * 64,
+            ),
+            "wrong locked-input-pack manifest hash",
+        )
+        wrong_pack_source_sha_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                "f" * 40,
+                pack_root,
+                pack_manifest,
+                pack_manifest_sha256,
+            ),
+            "wrong locked-input-pack source SHA",
+        )
+        mutation_relative = "input/privateVehicles_5pct.xml.gz"
+        mutation_path = pack_root / mutation_relative
+        held_path = temporary / "held-privateVehicles_5pct.xml.gz"
+        shutil.move(mutation_path, held_path)
+        missing_pack_file_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                pack_manifest,
+                pack_manifest_sha256,
+            ),
+            "missing locked input",
+        )
+        shutil.move(held_path, mutation_path)
+        with mutation_path.open("ab") as handle:
+            handle.write(b"tampering")
+        mismatched_pack_file_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                pack_manifest,
+                pack_manifest_sha256,
+            ),
+            "mismatched locked input hash",
+        )
+        shutil.copy2(sources[mutation_relative], mutation_path)
+        extra_path = pack_root / "input/old-v1-input.xml.gz"
+        extra_path.write_bytes(b"prohibited")
+        extra_pack_file_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                pack_manifest,
+                pack_manifest_sha256,
+            ),
+            "extra old locked input",
+        )
+        extra_path.unlink()
+        wrong_entry_manifest = temporary / "wrong-pack-entry.json"
+        wrong_entry = json.loads(pack_manifest.read_text(encoding="utf-8"))
+        wrong_entry["entries"][0]["expected_sha256"] = "0" * 64
+        wrong_entry_manifest.write_text(
+            json.dumps(wrong_entry, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        mismatched_manifest_entry_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                wrong_entry_manifest,
+                preparer.sha256_file(wrong_entry_manifest),
+            ),
+            "mismatched expected locked-input hash",
+        )
+        stale_entry_manifest = temporary / "stale-pack-entry.json"
+        stale_entry = json.loads(pack_manifest.read_text(encoding="utf-8"))
+        stale_entry["entries"][0]["relative_path"] = (
+            "input/plans_routed_5pct_v1.xml.gz"
+        )
+        stale_entry_manifest.write_text(
+            json.dumps(stale_entry, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        stale_pack_entry_rejected = expect_rejection(
+            lambda: preparer.verify_locked_input_pack(
+                PACK_CONTRACT_INPUT_SHA,
+                pack_root,
+                stale_entry_manifest,
+                preparer.sha256_file(stale_entry_manifest),
+            ),
+            "stale v1 locked-input-pack entry",
+        )
+        final_pack_sources, final_pack = preparer.verify_locked_input_pack(
+            PACK_CONTRACT_INPUT_SHA,
+            pack_root,
+            pack_manifest,
+            pack_manifest_sha256,
+        )
     if not incomplete_jar_rejected:
         raise AssertionError("An old/incomplete server JAR was accepted")
     if formal_differences != path_keys:
@@ -407,6 +576,44 @@ def main() -> None:
         "prior_snapshot_source_sha_rejected": prior_snapshot_sha_rejected,
         "commit_object_tampering_rejected":
             commit_object_tampering_rejected,
+        "external_locked_input_pack_fixture": {
+            "source_commit_sha": PACK_CONTRACT_INPUT_SHA,
+            "data_root_mode": preparer.EXTERNAL_LOCKED_INPUT_PACK_MODE,
+            "manifest_sha256": pack_manifest_sha256,
+            "locked_input_count": len(valid_pack_sources),
+            "locked_input_sha256": valid_pack["locked_input_sha256"],
+            "created": bool(pack_created),
+            "verified": bool(final_pack),
+            "build_bundle_input_resolution_verified": (
+                set(resolved_pack_sources) == set(preparer.EXPECTED_INPUT_SHA256)
+                and resolved_pack["verification_result"] == "passed"
+                and set(final_pack_sources) == set(preparer.EXPECTED_INPUT_SHA256)
+            ),
+        },
+        "canonical_project_data_root_mode_preserved": (
+            set(canonical_sources) == set(preparer.EXPECTED_INPUT_SHA256)
+            and canonical_contract["verification_result"] == "passed"
+        ),
+        "missing_locked_input_pack_manifest_rejected":
+            missing_pack_manifest_rejected,
+        "locked_input_pack_manifest_inside_root_rejected":
+            pack_manifest_inside_root_rejected,
+        "locked_input_pack_inside_source_root_rejected":
+            pack_inside_source_root_rejected,
+        "wrong_locked_input_pack_manifest_hash_rejected":
+            wrong_pack_manifest_hash_rejected,
+        "wrong_locked_input_pack_source_sha_rejected":
+            wrong_pack_source_sha_rejected,
+        "missing_locked_input_pack_file_rejected":
+            missing_pack_file_rejected,
+        "mismatched_locked_input_pack_file_rejected":
+            mismatched_pack_file_rejected,
+        "extra_locked_input_pack_file_rejected":
+            extra_pack_file_rejected,
+        "mismatched_locked_input_manifest_entry_rejected":
+            mismatched_manifest_entry_rejected,
+        "stale_v1_locked_input_pack_entry_rejected":
+            stale_pack_entry_rejected,
         "server_access_performed": False,
         "bundle_built": False,
     }

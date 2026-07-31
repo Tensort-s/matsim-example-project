@@ -1,8 +1,8 @@
 {
   "schema_version": "hong_kong_stage8d_bundle_preparation_rework_validation_v1",
   "status": "pending_independent_review_and_supervisor_stage_8d_gate",
-  "stage_id": "Stage 8D - Dynamic exact-SHA snapshot evidence completeness rework",
-  "input_commit_sha": "cb40845886fd1447489ad9d8af52592c704de918",
+  "stage_id": "Stage 8D - External locked-input-pack rework",
+  "input_commit_sha": "7cb827453c7327d0b3636a7f594091523309309f",
   "snapshot_source_commit_sha": "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6",
   "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
   "integration_branch": "integration/hk-multimodal-cost-v1",
@@ -15,6 +15,8 @@
     "server_build_or_upload_performed": false,
     "source_snapshot_created_locally_for_validation": true,
     "source_snapshot_transferred": false,
+    "external_locked_input_pack_fixture_created_and_verified": true,
+    "production_locked_input_pack_created_or_transferred": false,
     "matsim_run_performed": false,
     "runner_authorized": false,
     "stage_9_retry_performed": false
@@ -49,6 +51,16 @@
     "all_local_output_paths_must_be_new": true,
     "stale_v1_or_pre_ferry_input_allowed": false,
     "old_or_incomplete_server_jar_allowed": false,
+    "accepted_data_root_modes": [
+      "canonical_project_data_root",
+      "external_locked_input_pack"
+    ],
+    "external_locked_input_pack_manifest_schema": "hong_kong_external_locked_input_pack_v1",
+    "external_locked_input_pack_manifest_sha256_required": true,
+    "external_locked_input_pack_must_be_outside_source_root": true,
+    "external_locked_input_pack_exact_file_count": 7,
+    "external_locked_input_pack_extra_or_symlink_allowed": false,
+    "external_locked_input_pack_manifest_copied_into_bundle": true,
     "deployment_manifest_required": true
   },
   "locked_inputs": {
@@ -77,6 +89,13 @@
         "reconstruct the commit object's tree from every manifest/archive blob and require exact equality",
         "extract to a new Git-metadata-free source root",
         "verify every extracted tracked file; allow only generated target/ build output"
+      ],
+      "external_locked_input_pack": [
+        "require data_root_mode=external_locked_input_pack",
+        "require the formal source SHA to equal the pack manifest source_commit_sha",
+        "verify the out-of-band pack manifest SHA256 before reading entries",
+        "require exactly the seven locked config/input relative paths with their expected SHA256 values",
+        "reject missing, extra, stale-v1, symlinked or byte-mismatched files before bundle staging"
       ]
     },
     "java_preflight": "\"$JAVA_HOME/bin/java\" -version",
@@ -128,6 +147,13 @@
     "maven_version",
     "matsim_version",
     "locked_input_sha256",
+    "locked_input_contract.data_root_mode",
+    "locked_input_contract.source_commit_sha",
+    "locked_input_contract.pack_root",
+    "locked_input_contract.pack_manifest",
+    "locked_input_contract.pack_manifest_sha256",
+    "locked_input_contract.verification_command",
+    "locked_input_contract.verification_result",
     "jdk_sha256",
     "release_root",
     "staging_dir",
@@ -153,7 +179,7 @@
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
       "exit_status": 0,
-      "result": "7/7 inputs and config boundary pass; Git-backed exact-input fixture c9fc241 links commit object to 7620-file tree 3114228 and inventory e4f95f6; valid dynamic archive/extracted fixture accepted; prior 6ce087a under the current exact identity, wrong SHA/tree/manifest/commit object, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
+      "result": "7/7 inputs and config boundary pass; source snapshot guards pass; external_locked_input_pack fixture created and verified with manifest SHA256 80a763efd0f056fbb155a97cbb68b6a371fbb25cf3c9cf5a7a9017b27e47d3af; build-bundle input resolution passed; wrong source/manifest, missing, mismatched, extra and stale-v1 pack cases rejected"
     },
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py create-source-snapshot --source-commit-sha c9fc2410fd329c9aceef16b3b7ce627bb74dedb6 --snapshot-path C:\\Users\\Yu Boyang\\AppData\\Local\\Temp\\hk-stage8d-dynamic-c9fc-blobbytes-20260731\\source-c9fc.tar --snapshot-manifest C:\\Users\\Yu Boyang\\AppData\\Local\\Temp\\hk-stage8d-dynamic-c9fc-blobbytes-20260731\\source-c9fc.manifest.json",
@@ -202,13 +228,54 @@
     "prior_6ce087_commit_object_rejected_under_current_exact_sha": true,
     "stale_v1_input_rejected": true
   },
+  "external_locked_input_pack_validation": {
+    "status": "passed",
+    "data_root_mode": "external_locked_input_pack",
+    "fixture_source_commit_sha": "7cb827453c7327d0b3636a7f594091523309309f",
+    "fixture_root_path": "<system-temporary-directory>/external-locked-input-pack",
+    "fixture_manifest_path": "<system-temporary-directory>/external-locked-input-pack.json",
+    "fixture_manifest_sha256": "80a763efd0f056fbb155a97cbb68b6a371fbb25cf3c9cf5a7a9017b27e47d3af",
+    "fixture_manifest_sha256_reproducible_across_two_runs": true,
+    "locked_input_count": 7,
+    "relative_paths_and_expected_sha256": {
+      "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "input/plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "input/facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "input/privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "input/network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "input/transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+      "input/transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "create_interface": "prepare_hong_kong_matsim_server_bundle.py create-locked-input-pack --source-commit-sha <exact-reviewed-sha> --source-data-root <canonical-data-root> --pack-root <new-pack-root> --pack-manifest <new-sidecar-manifest>",
+    "verify_interface": "prepare_hong_kong_matsim_server_bundle.py verify-locked-input-pack --source-commit-sha <same-exact-reviewed-sha> --pack-root <new-server-pack-root> --pack-manifest <transferred-sidecar-manifest> --pack-manifest-sha256 <recorded-sha256>",
+    "build_bundle_interface": "build-bundle --data-root-mode external_locked_input_pack --data-root <verified-server-pack-root> --locked-input-pack-manifest <verified-sidecar-manifest> --locked-input-pack-manifest-sha256 <recorded-sha256>",
+    "build_bundle_input_resolution_verified": true,
+    "canonical_project_data_root_mode_preserved": true,
+    "valid_fixture_accepted": true,
+    "missing_manifest_rejected": true,
+    "manifest_inside_pack_root_rejected": true,
+    "pack_inside_source_root_rejected": true,
+    "wrong_manifest_sha256_rejected": true,
+    "wrong_source_commit_sha_rejected": true,
+    "missing_file_rejected": true,
+    "mismatched_file_sha256_rejected": true,
+    "mismatched_manifest_expected_sha256_rejected": true,
+    "extra_file_rejected": true,
+    "stale_v1_path_rejected": true,
+    "symlink_policy": "prohibited",
+    "server_access_performed": false,
+    "production_pack_created_or_transferred": false
+  },
   "artifact_status": {
     "source_snapshot_built_locally_for_validation": true,
     "source_snapshot_transferred_or_deployed": false,
+    "external_locked_input_pack_fixture_created": true,
+    "external_locked_input_pack_fixture_retained": false,
+    "external_locked_input_pack_transferred_or_deployed": false,
     "fat_jar_built_in_rework": false,
     "bundle_built_in_rework": false,
     "deployment_manifest_built_in_rework": false,
-    "reason": "The full c9fc source snapshot was created and verified only in a local temporary evidence directory. It was not transferred or deployed; Linux JDK 25 build and bundle creation require a later exact-SHA Runner authorization after independent review."
+    "reason": "The full c9fc source snapshot remains local evidence, and the seven-file external pack was exercised only as a temporary validator fixture. No production pack was retained, transferred or deployed; server build/bundle continuation requires a later exact-SHA Runner authorization after independent review."
   },
   "blockers": [],
   "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"

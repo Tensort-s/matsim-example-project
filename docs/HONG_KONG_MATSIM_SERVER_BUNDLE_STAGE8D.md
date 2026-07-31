@@ -98,6 +98,49 @@ replanning, scoring, QSim, demand and capacity values are preserved. The
 derived smoke config may change only the plans path, output path, iteration
 limit and output intervals needed for that separately authorized smoke run.
 
+## External locked-input pack
+
+The seven production inputs are intentionally outside the tracked source
+snapshot. A later Supervisor-authorized Runner must transfer them as a
+separate new pack; an existing server data root, v1/pre-Ferry path or older
+bundle is never a fallback. The compact pack layout is exactly the seven
+`config/` and `input/` relative paths in the table above.
+
+Create the pack and sidecar manifest locally from the canonical data root:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py `
+  create-locked-input-pack `
+  --source-commit-sha <supervisor-authorized-exact-source-sha> `
+  --source-data-root F:\Matsim\matsim-example-project\data `
+  --pack-root <new-local-locked-input-pack-root> `
+  --pack-manifest <new-local-locked-input-pack-manifest.json>
+Get-FileHash -Algorithm SHA256 `
+  -LiteralPath <new-local-locked-input-pack-manifest.json>
+```
+
+The manifest records the formal source SHA, seven relative paths, expected
+and observed SHA256, sizes, original source paths, creation command and the
+fact that input bytes were not modified. Transfer the pack directory and
+manifest only into new server paths below `/mnt/DiskM/by/`, record the
+manifest SHA256 out of band, preserve the manifest-bound pack-root basename,
+then verify before invoking `build-bundle`:
+
+```bash
+python3 <reviewed-external-control-script> verify-locked-input-pack \
+  --source-commit-sha <same-supervisor-authorized-exact-source-sha> \
+  --pack-root /mnt/DiskM/by/<new-locked-input-pack-root> \
+  --pack-manifest /mnt/DiskM/by/<new-locked-input-pack-manifest.json> \
+  --pack-manifest-sha256 <recorded-pack-manifest-sha256>
+```
+
+Verification rejects a wrong formal SHA or manifest hash; any missing, extra,
+symlinked, stale-v1, pre-Ferry or byte-mismatched file; and any inventory
+other than the exact seven locked paths. The actual verified root, manifest
+path and manifest SHA are carried into deployment metadata, and the sidecar
+is copied into the prepared bundle for provenance.
+
 ## Linux JDK 25 build interface
 
 A later Runner instruction must identify an already-approved Linux JDK 25 and
@@ -179,6 +222,10 @@ python3 <reviewed-external-control-script> build-bundle \
   --source-snapshot <transferred-source-snapshot.tar> \
   --source-snapshot-manifest <transferred-source-manifest.json> \
   --source-snapshot-manifest-sha256 <recorded-manifest-sha256> \
+  --data-root-mode external_locked_input_pack \
+  --data-root /mnt/DiskM/by/<new-locked-input-pack-root> \
+  --locked-input-pack-manifest /mnt/DiskM/by/<new-locked-input-pack-manifest.json> \
+  --locked-input-pack-manifest-sha256 <recorded-pack-manifest-sha256> \
   <remaining-JAR-JDK-input-and-new-output-arguments>
 ```
 
@@ -199,6 +246,9 @@ is complete. It records:
 - build and prepare commands plus Java, Maven and MATSim versions;
 - shaded-JAR SHA256 and required runtime-class inventory;
 - all seven locked input hashes and source config path;
+- data-root mode, verified external pack root, source SHA, sidecar path and
+  sidecar SHA256, exact verification command/result, plus a bundled copy of
+  the locked-input manifest;
 - approved JDK archive SHA256;
 - release root, staging path, bundle path, bundle SHA256, size and file count;
 - timestamps and explicit `server_upload_performed=false` /

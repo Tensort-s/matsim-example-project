@@ -1,8 +1,8 @@
-# Stage 8D — Full-tree snapshot evidence completeness rework
+# Stage 8D — External locked-input-pack rework
 
 | Field | Value |
 |---|---|
-| Exact input | `cb40845886fd1447489ad9d8af52592c704de918` |
+| Exact input | `7cb827453c7327d0b3636a7f594091523309309f` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | not authorized |
@@ -10,11 +10,11 @@
 
 ## Objective
 
-Close the bounded evidence gate after the dynamic snapshot implementation was
-accepted as sound but its full-tree archive and manifest hashes existed only
-in the Executor handoff. Reproduce those values from the retained local
-`c9fc241…` snapshot and commit the exact commands, hashes and verification
-result without changing production logic or deployment state.
+Add a separate, manifest-bound external data root for the seven ignored large
+v2/Ferry Core inputs after the exact source snapshot and Linux JDK 25 JAR build
+succeeded but the tracked snapshot correctly lacked those input bytes. The
+pack must verify before bundle staging without changing any input or runtime
+semantic.
 
 ## Authorized result
 
@@ -34,6 +34,14 @@ result without changing production logic or deployment state.
   provenance;
 - Linux JDK 25 build interface without downloading or fabricating a JDK;
 - documentation, validation evidence and append-only worklogs.
+- `data_root_mode=external_locked_input_pack` beside the preserved canonical
+  local data-root mode;
+- pack create/verify interfaces with exact source SHA and out-of-band sidecar
+  SHA256;
+- exact seven-path/hash inventory and rejection of missing, mismatched, extra,
+  symlinked or stale-v1/pre-Ferry files;
+- verified pack root/manifest/command/result recorded in deployment metadata
+  and a manifest copy retained in the bundle.
 
 ## Boundaries
 
@@ -42,6 +50,15 @@ upload, deployment, Runner, MATSim run, Stage 9 retry, Git metadata creation,
 master or feature-ref change.
 
 ## Evidence
+
+The deterministic pack fixture uses source
+`7cb827453c7327d0b3636a7f594091523309309f`, all seven locked files and
+sidecar SHA256
+`80a763efd0f056fbb155a97cbb68b6a371fbb25cf3c9cf5a7a9017b27e47d3af`.
+Two runs reproduced that manifest hash. The valid pack and `build-bundle`
+input resolution pass; wrong source/manifest, missing, mismatched, extra and
+stale-v1 cases fail closed. The fixture is temporary and no production pack
+or server path was created.
 
 The committed validation JSON records the independently reproduced full-tree
 snapshot evidence for source `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6`:
@@ -61,6 +78,6 @@ deployed.
 
 ## Next action
 
-Executor pushes one focused evidence-completeness result and reports only to
+Executor pushes one focused external-pack contract result and reports only to
 Supervisor. Supervisor verifies and dispatches Reviewer. Runner and Stage 9
 remain unauthorized.

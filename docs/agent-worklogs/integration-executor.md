@@ -677,3 +677,31 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 21 — Stage 8D external locked-input pack
+
+```yaml
+timestamp: "2026-07-31T23:38:50+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D external locked-input-pack rework"
+input_sha: "7cb827453c7327d0b3636a7f594091523309309f"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Add a fail-closed external_locked_input_pack data-root contract beside the preserved canonical local data-root mode."
+findings:
+  - "Pack creation copies exactly the seven locked v2/Ferry Core inputs into compact config/input paths without changing bytes and writes a source-SHA-bound sidecar."
+  - "Pack verification requires the out-of-band manifest SHA, exact seven paths/hashes/sizes, no symlinks or extras and a root outside the source tree before build staging."
+  - "build-bundle records actual pack root, manifest path/SHA, verification command/result and input hashes, and retains a manifest copy in the bundle."
+  - "A valid seven-file fixture and build-bundle input resolution pass; wrong source/manifest, missing, mismatched, extra and stale-v1 cases fail closed."
+  - "Source identity, JDK/JAR/stale/config guards and runtime/model/input bytes remain unchanged; no server, transfer, build, Runner or Stage 9 action occurred."
+diagnostics:
+  - "The 94,504,184-byte valid fixture uses real locked inputs only inside a temporary validator directory and is not retained or transferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#external_locked_input_pack_validation"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#external-locked-input-pack"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```
