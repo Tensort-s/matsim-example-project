@@ -705,3 +705,30 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 22 — Stage 8D Runner evidence submission
+
+```yaml
+timestamp: "2026-08-01T00:34:47+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D Runner server-bundle evidence submission"
+input_sha: "674a60258d8433bd04f868a8a447525561bd3907"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Persist the Supervisor-transferred Runner PASS facts as one compact tracked JSON plus evidence references and append-only audit entries."
+findings:
+  - "The evidence records source snapshot/tree, external pack, seven inputs, JDK/Maven/MATSim, build/JAR, bundle/deployment, release inventory and upload hashes."
+  - "Known bundle and release server paths are recorded; artifact paths absent from the handoff remain explicit null and are not inferred."
+  - "Prepared deployment metadata false/false flags are distinguished from independent server_upload_performed=true evidence."
+  - "No server log, JAR, source snapshot, input pack or bundle was copied into Git."
+  - "Executor performed no SSH, rebuild, upload, MATSim/QSim/Stage 9 run or Reviewer/Runner contact."
+diagnostics:
+  - "Runner build duration and peak RSS are retained as diagnostics, not simulation trend evidence."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#runner-server-bundle-result-for-source-674a6025"
+  - "docs/integration/stage-briefs/STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md#evidence"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed evidence SHA and dispatches Reviewer; Executor waits and does not begin Stage 9."
+```

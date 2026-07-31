@@ -112,3 +112,35 @@ hard_gate_status: "NOT_EVALUATED — no run authorized"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Wait for an exact Supervisor run authorization; CONTROL-PROTOCOL-01 and Stage 6 require no Runner action."
 ```
+
+## Entry 4 — Stage 8D exact-SHA server bundle PASS
+
+Compact archival transfer of the Runner facts received through Supervisor:
+
+```yaml
+timestamp: "2026-08-01T00:34:47+08:00"
+session_id: "019fb38e-919f-7d92-a376-af88b49d5900"
+stage_id: "Stage 8D exact-SHA server bundle"
+input_sha: "674a60258d8433bd04f868a8a447525561bd3907"
+output_sha_or_status: "RUNNER_PASS__BUNDLE_UPLOADED__NO_RUN"
+decision: "Report PASS for exact-source verification, external input pack, isolated Linux JDK 25 build, bundle preparation, release inventory and upload evidence only."
+findings:
+  - "SSH to by@100.103.8.34/FUSELAB01 succeeded; the source snapshot and its 7620-entry tree verified."
+  - "The external input pack contained exactly seven locked files and all hashes passed."
+  - "The isolated Maven build exited 0; the fat JAR contains required Taxi/PT/Car/multimodal classes and the immutable source root stayed unchanged."
+  - "The 21-file release passed sha256sum and stale/pre-Ferry scans; bundle, deployment-manifest and upload-evidence hashes are recorded in compact evidence."
+  - "No MATSim/QSim/Stage 9 run, iterations, events, costs or scores occurred."
+diagnostics:
+  - "Build elapsed 1:19.48 with peak RSS 1036196 KB."
+  - "Original Runner timestamp and some server artifact paths were not supplied in the transferred facts; they are not inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#source_snapshot"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#external_locked_input_pack"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#isolated_build"
+  - "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/bundle_corrected.tar"
+  - "/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2"
+blockers: []
+hard_gate_status: "RUNNER_PASS__PENDING_INDEPENDENT_GIT_EVIDENCE_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Wait; no additional Runner, MATSim, Stage 9 or server action is authorized by this archival entry."
+```

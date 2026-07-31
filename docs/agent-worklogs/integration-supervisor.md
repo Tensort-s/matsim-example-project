@@ -739,3 +739,28 @@ hard_gate_status: "STAGE_8D_EXTERNAL_LOCKED_INPUT_PACK_REWORK_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused external-pack contract result from 7cb82745, report only to Supervisor, and wait."
 ```
+
+## Entry 25 — Stage 8D Runner evidence submission authorization
+
+```yaml
+timestamp: "2026-08-01T00:34:47+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8D Runner server-bundle evidence submission"
+input_sha: "674a60258d8433bd04f868a8a447525561bd3907"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_EVIDENCE_ONLY"
+decision: "Authorize one compact evidence-only commit persisting the completed Runner PASS facts without any rerun or server action."
+findings:
+  - "Runner SSH, exact source snapshot, external seven-file pack, Linux JDK 25 build, JAR class inventory, bundle, release inventory and upload evidence passed."
+  - "Prepared deployment metadata remains non-uploading/non-running; independent upload evidence records the actual upload."
+  - "No MATSim/QSim/Stage 9 run, iterations, events, costs or scores occurred."
+  - "Full server logs and large artifacts must remain outside Git and be referenced by path/hash."
+  - "Executor may update only compact evidence, deployment/status docs and append-only worklogs."
+diagnostics:
+  - "The formal authorization supplied Runner facts but no original Runner timestamp; this archival-transfer timestamp is used."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json"
+blockers: []
+hard_gate_status: "STAGE_8D_RUNNER_EVIDENCE_SUBMISSION_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused evidence result from 674a6025, report only to Supervisor, and wait for exact-SHA review."
+```

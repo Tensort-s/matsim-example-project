@@ -1,0 +1,100 @@
+{
+  "schema_version": "hong_kong_stage8d_server_bundle_evidence_v1",
+  "stage_id": "Stage 8D exact-SHA server bundle",
+  "source_commit_sha": "674a60258d8433bd04f868a8a447525561bd3907",
+  "source_parent_sha": "7cb827453c7327d0b3636a7f594091523309309f",
+  "runner_result": "PASS",
+  "hard_gate_status": "pending_independent_review_and_supervisor_stage_8d_gate",
+  "evidence_capture": {
+    "authority": "INT-SUPERVISOR transferred INT-RUNNER PASS facts",
+    "persisted_at": "2026-08-01T00:34:47.7802235+08:00",
+    "executor_server_access_performed": false,
+    "executor_rerun_performed": false,
+    "logs_or_bundle_copied_into_git": false
+  },
+  "server_identity": {
+    "ssh_target": "by@100.103.8.34",
+    "hostname": "FUSELAB01",
+    "ssh_success": true
+  },
+  "source_snapshot": {
+    "archive_sha256": "e2c000f5676389ff18b9d8c4aad3bc71af9f1f8e0f1ef70d88c21032e8f34ef7",
+    "manifest_sha256": "1162d2d2579cc1fdceeeab25de051fa12bce079c5057acb125bd8b03acf552dd",
+    "git_tree_sha": "59f213bdadf02b754a89097ae11a702e34fdddb8",
+    "tracked_entry_count": 7620,
+    "verification_result": "passed",
+    "immutable_source_root_changed": false,
+    "server_archive_path": null,
+    "server_archive_path_note": "Not supplied in the Supervisor-transferred Runner facts."
+  },
+  "external_locked_input_pack": {
+    "data_root_mode": "external_locked_input_pack",
+    "manifest_sha256": "b79f399401ae6a7ba2ee3d93f87e7b79c0d19f7dc1a1e7bbc5b8b1bf1c6ef7bb",
+    "locked_file_count": 7,
+    "verification_result": "passed",
+    "locked_input_sha256": {
+      "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "input/plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "input/facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "input/privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "input/network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "input/transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+      "input/transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "server_pack_root": null,
+    "server_pack_root_note": "Not supplied in the Supervisor-transferred Runner facts."
+  },
+  "toolchain": {
+    "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "java_version": "25.0.3",
+    "maven_version": "3.9.8",
+    "matsim_version": "2026.0"
+  },
+  "isolated_build": {
+    "command": "./mvnw -DskipTests package",
+    "exit_status": 0,
+    "elapsed": "1:19.48",
+    "elapsed_seconds": 79.48,
+    "peak_rss_kb": 1036196,
+    "fat_jar_sha256": "b9afb03342184bf7b1cf2165b9bbde6a616932974f69c02c85c7cf7bbad00ece",
+    "required_runtime_classes_present": true,
+    "runtime_class_groups": [
+      "Taxi",
+      "PT",
+      "Car",
+      "multimodal scoring factory"
+    ],
+    "immutable_source_root_changed": false
+  },
+  "bundle": {
+    "path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/bundle_corrected.tar",
+    "sha256": "ee821d339e873a7033edaba3ab6b91773242e947f50bc139d1b913062d8d0d0c",
+    "deployment_manifest_sha256": "ad3bc6d7a7628f2a3191167c08f84718b8807af9d40e6ff55f1d6a777555bd06",
+    "deployment_manifest_path": null,
+    "deployment_manifest_path_note": "Not supplied in the Supervisor-transferred Runner facts.",
+    "prepared_manifest_server_upload_performed": false,
+    "prepared_manifest_server_run_performed": false
+  },
+  "release": {
+    "root": "/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2",
+    "remote_file_count": 21,
+    "sha256sum_check_result": "passed",
+    "stale_v1_or_pre_ferry_scan_matches": 0
+  },
+  "upload": {
+    "evidence_filename": "upload_evidence.json",
+    "evidence_sha256": "987d0992d9f3b70e13be5fe96fb834751a1dc87920c098fba68bd0169e2ea2c5",
+    "server_upload_performed": true,
+    "prepared_deployment_manifest_remains_non_uploading": true,
+    "prepared_deployment_manifest_remains_non_running": true
+  },
+  "run_boundary": {
+    "matsim_or_qsim_run_performed": false,
+    "stage_9_run_performed": false,
+    "iterations_produced": false,
+    "events_produced": false,
+    "costs_produced": false,
+    "scores_produced": false
+  },
+  "blockers": []
+}
