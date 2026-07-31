@@ -1,8 +1,8 @@
-# Stage 8D — Runner server-bundle evidence submission
+# Stage 8D — Runner evidence path correction
 
 | Field | Value |
 |---|---|
-| Exact input | `674a60258d8433bd04f868a8a447525561bd3907` |
+| Exact input | `9b1ea88680423694d6f09bccc7473acc1452b373` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | completed PASS; no new action authorized |
@@ -10,15 +10,15 @@
 
 ## Objective
 
-Persist the Supervisor-transferred Runner PASS facts for exact source
-`674a6025…`: source snapshot, external seven-file pack, Linux JDK 25 build,
-shaded JAR, bundle, release inventory and upload evidence. Do not rerun or copy
-large artifacts into Git, and preserve the explicit no-MATSim/QSim/Stage 9
-boundary.
+Correct the Reviewer-blocking null artifact paths using only the exact
+read-only path discovery transferred from Runner through Supervisor. Preserve
+all existing hashes, the prepared-manifest false/false versus independent
+upload true distinction, and the no-MATSim/QSim/Stage 9 boundary.
 
 ## Authorized result
 
-- one compact tracked JSON containing every transferred Runner fact;
+- exact non-null source archive/manifest/root/script, pack root/manifest,
+  build root/JAR, deployment-manifest and upload-evidence paths;
 - evidence-by-reference updates in the deployment document, current-stage
   record and this brief;
 - append-only Supervisor, Runner and Executor audit entries;
@@ -36,9 +36,9 @@ The authoritative compact server result is
 [`stage8d_server_bundle_evidence.json`](../../../data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json).
 It records every Supervisor-transferred Runner hash and result by field,
 including source tree/entry count, seven input hashes, toolchain, build
-duration/RSS, JAR/bundle/deployment/upload hashes, release paths and the no-run
-boundary. Server paths not supplied in the handoff remain explicit `null`
-rather than inferred.
+duration/RSS, JAR/bundle/deployment/upload hashes, exact verified server paths,
+release paths and the no-run boundary. Runner performed only read-only path
+discovery for this correction; Executor made no server access.
 
 The deterministic pack fixture uses source
 `7cb827453c7327d0b3636a7f594091523309309f`, all seven locked files and

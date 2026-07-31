@@ -764,3 +764,27 @@ hard_gate_status: "STAGE_8D_RUNNER_EVIDENCE_SUBMISSION_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused evidence result from 674a6025, report only to Supervisor, and wait for exact-SHA review."
 ```
+
+## Entry 26 — Stage 8D evidence path correction authorization
+
+```yaml
+timestamp: "2026-08-01T00:51:53+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8D evidence path correction"
+input_sha: "9b1ea88680423694d6f09bccc7473acc1452b373"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_EVIDENCE_PATH_CORRECTION_ONLY"
+decision: "Authorize one focused correction replacing null evidence paths with exact Runner-discovered paths without changing any reviewed hash or run boundary."
+findings:
+  - "Reviewer BLOCKED only because the pushed compact JSON retained null artifact paths."
+  - "Runner performed read-only discovery under the permitted server root and verified exact source, pack, build, JAR, bundle, deployment-manifest, release and upload-evidence paths."
+  - "All supplied path-associated hashes match the previously recorded evidence."
+  - "Prepared-manifest upload/run false/false remains distinct from independent upload evidence true."
+  - "No new server action, rerun, upload, Stage 9 work or model/config/input change is authorized."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json"
+blockers: []
+hard_gate_status: "STAGE_8D_EVIDENCE_PATH_CORRECTION_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused path-correction result from 9b1ea886, report only to Supervisor, and wait for exact-SHA review."
+```

@@ -8,6 +8,7 @@
   "evidence_capture": {
     "authority": "INT-SUPERVISOR transferred INT-RUNNER PASS facts",
     "persisted_at": "2026-08-01T00:34:47.7802235+08:00",
+    "path_discovery_authority": "INT-SUPERVISOR transferred INT-RUNNER read-only path discovery",
     "executor_server_access_performed": false,
     "executor_rerun_performed": false,
     "logs_or_bundle_copied_into_git": false
@@ -24,8 +25,15 @@
     "tracked_entry_count": 7620,
     "verification_result": "passed",
     "immutable_source_root_changed": false,
-    "server_archive_path": null,
-    "server_archive_path_note": "Not supplied in the Supervisor-transferred Runner facts."
+    "server_archive_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/source/source_snapshot.tar",
+    "server_manifest_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/source/source_snapshot_manifest.json",
+    "verified_extracted_source_root": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/source/source_root",
+    "verified_extracted_source_root_excluded_paths": [
+      ".git",
+      "target",
+      "dependency-reduced-pom"
+    ],
+    "reviewed_preparation_script_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/source/prepare_hong_kong_matsim_server_bundle.py"
   },
   "external_locked_input_pack": {
     "data_root_mode": "external_locked_input_pack",
@@ -41,8 +49,8 @@
       "input/transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
       "input/transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
     },
-    "server_pack_root": null,
-    "server_pack_root_note": "Not supplied in the Supervisor-transferred Runner facts."
+    "server_pack_root": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/input_pack/locked_input_pack_674a6025",
+    "server_pack_manifest_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/input_pack/locked_input_pack_manifest.json"
   },
   "toolchain": {
     "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
@@ -51,11 +59,13 @@
     "matsim_version": "2026.0"
   },
   "isolated_build": {
+    "root": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/build_root",
     "command": "./mvnw -DskipTests package",
     "exit_status": 0,
     "elapsed": "1:19.48",
     "elapsed_seconds": 79.48,
     "peak_rss_kb": 1036196,
+    "fat_jar_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/build_root/target/matsim-example-project-0.0.1-SNAPSHOT.jar",
     "fat_jar_sha256": "b9afb03342184bf7b1cf2165b9bbde6a616932974f69c02c85c7cf7bbad00ece",
     "required_runtime_classes_present": true,
     "runtime_class_groups": [
@@ -70,8 +80,7 @@
     "path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/bundle_corrected.tar",
     "sha256": "ee821d339e873a7033edaba3ab6b91773242e947f50bc139d1b913062d8d0d0c",
     "deployment_manifest_sha256": "ad3bc6d7a7628f2a3191167c08f84718b8807af9d40e6ff55f1d6a777555bd06",
-    "deployment_manifest_path": null,
-    "deployment_manifest_path_note": "Not supplied in the Supervisor-transferred Runner facts.",
+    "deployment_manifest_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/evidence/deployment_manifest_corrected.json",
     "prepared_manifest_server_upload_performed": false,
     "prepared_manifest_server_run_performed": false
   },
@@ -83,6 +92,7 @@
   },
   "upload": {
     "evidence_filename": "upload_evidence.json",
+    "evidence_path": "/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/evidence/upload_evidence.json",
     "evidence_sha256": "987d0992d9f3b70e13be5fe96fb834751a1dc87920c098fba68bd0169e2ea2c5",
     "server_upload_performed": true,
     "prepared_deployment_manifest_remains_non_uploading": true,

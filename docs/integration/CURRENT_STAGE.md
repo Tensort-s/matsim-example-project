@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Runner server-bundle evidence submission` |
+| task_id | `Stage 8D - Runner evidence path correction` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `674a60258d8433bd04f868a8a447525561bd3907` |
+| exact_input_sha | `9b1ea88680423694d6f09bccc7473acc1452b373` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -22,14 +22,14 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Persist the completed Runner evidence for the exact source snapshot, external
-seven-file input pack, Linux JDK 25 build, shaded JAR, bundle, release
-inventory and upload record. Preserve the explicit no-MATSim/QSim/Stage 9 run
-boundary and submit one evidence-only commit for independent review.
+Replace the three previously null artifact-location fields and add the exact
+read-only-discovered source, pack, build, JAR, deployment-manifest and upload
+evidence paths supplied by Runner through Supervisor. Preserve every reviewed
+hash and the explicit no-MATSim/QSim/Stage 9 run boundary.
 
 ## Authorized delta
 
-- one compact tracked Stage 8D server-bundle evidence JSON;
+- path-only corrections to the compact Stage 8D server-bundle evidence JSON;
 - deployment-document/current-stage/brief evidence references;
 - faithful append-only Supervisor, Runner and Executor worklog entries;
 - no copied server logs, JAR, source snapshot, input pack or bundle.

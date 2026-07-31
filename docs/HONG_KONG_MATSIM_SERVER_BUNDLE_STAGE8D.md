@@ -275,17 +275,24 @@ inventory. Key artifact hashes are recorded by field in the compact evidence
 JSON:
 
 - `source_snapshot`: archive `e2c000f…`, manifest `1162d2d…`, tree
-  `59f213b…`, 7,620 entries;
-- `external_locked_input_pack`: manifest `b79f399…`, seven locked hashes;
+  `59f213b…`, 7,620 entries, with exact archive, manifest, extracted-root
+  and reviewed-script paths;
+- `external_locked_input_pack`: manifest `b79f399…`, seven locked hashes,
+  with exact pack-root and manifest paths;
 - `isolated_build`: exit 0, `1:19.48`, peak RSS `1036196` KB, JAR
-  `b9afb03…` with required Taxi/PT/Car/multimodal classes;
+  `b9afb03…` with required Taxi/PT/Car/multimodal classes, exact build-root
+  and JAR paths;
 - `bundle`: `/mnt/DiskM/by/hk_stage8d_674a6025_staging_isolated2/bundle_corrected.tar`,
   SHA256 `ee821d3…`, deployment manifest `ad3bc6d…`;
 - `release`: `/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2`,
   21 files, `sha256sum -c` passed and no stale/pre-Ferry matches;
 - `upload`: independent `upload_evidence.json` SHA256 `987d099…` records
   `server_upload_performed=true` while the prepared deployment manifest
-  remains non-uploading and non-running.
+  remains non-uploading and non-running. The JSON records the exact deployment
+  manifest and upload-evidence paths.
+
+Runner discovered these paths read-only under `/mnt/DiskM/by`; Executor did
+not access the server or infer any path.
 
 This was preparation/upload evidence only. No MATSim/QSim/Stage 9 run,
 iteration, event, cost or score was produced.

@@ -732,3 +732,29 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed evidence SHA and dispatches Reviewer; Executor waits and does not begin Stage 9."
 ```
+
+## Entry 23 — Stage 8D evidence path correction
+
+```yaml
+timestamp: "2026-08-01T00:51:53+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D evidence path correction"
+input_sha: "9b1ea88680423694d6f09bccc7473acc1452b373"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Replace null evidence paths and add the exact Runner-discovered artifact locations without altering reviewed hashes or run-state facts."
+findings:
+  - "The compact JSON now records non-null source archive/manifest/root/script and external pack root/manifest paths."
+  - "It records exact build root/JAR, bundle/deployment-manifest, release-root and upload-evidence paths."
+  - "Every previously reviewed SHA256, source tree, count, tool version and build result remains unchanged."
+  - "Prepared-manifest false/false and independent upload-evidence true remain explicitly distinct."
+  - "Executor performed no server access, rerun, upload, MATSim/QSim/Stage 9 action or Reviewer contact."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#runner-server-bundle-result-for-source-674a6025"
+  - "docs/integration/stage-briefs/STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md#evidence"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed path-correction SHA and dispatches Reviewer; Executor waits and does not begin Stage 9."
+```

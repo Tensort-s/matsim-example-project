@@ -144,3 +144,33 @@ hard_gate_status: "RUNNER_PASS__PENDING_INDEPENDENT_GIT_EVIDENCE_REVIEW"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Wait; no additional Runner, MATSim, Stage 9 or server action is authorized by this archival entry."
 ```
+
+## Entry 5 — Stage 8D read-only evidence path discovery
+
+Compact archival transfer of the Runner path facts received through Supervisor:
+
+```yaml
+timestamp: "2026-08-01T00:51:53+08:00"
+session_id: "019fb38e-919f-7d92-a376-af88b49d5900"
+stage_id: "Stage 8D evidence path discovery"
+input_sha: "9b1ea88680423694d6f09bccc7473acc1452b373"
+output_sha_or_status: "READ_ONLY_PATHS_VERIFIED__NO_RUN"
+decision: "Supply exact existing server paths and matching hashes read-only to correct the compact Git evidence."
+findings:
+  - "Source archive, manifest, extracted root and reviewed preparation-script paths were verified under hk_stage8d_674a6025_staging_isolated2/source."
+  - "The exact external locked-input-pack root and manifest paths were verified with the recorded b79f3994… manifest hash."
+  - "The isolated build root and fat-JAR path were verified with the recorded b9afb033… JAR hash."
+  - "Bundle, corrected deployment manifest, release root and upload-evidence paths were verified with their previously recorded hashes."
+  - "Discovery was read-only; no rebuild, upload, MATSim/QSim/Stage 9 run, iteration, event, cost or score occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#source_snapshot"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#external_locked_input_pack"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#isolated_build"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#bundle"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_server_bundle_evidence.json#upload"
+blockers: []
+hard_gate_status: "RUNNER_PATH_DISCOVERY_TRANSFERRED__PENDING_GIT_EVIDENCE_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Wait; no additional Runner, MATSim, Stage 9 or server action is authorized."
+```
