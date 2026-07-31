@@ -14,6 +14,21 @@ session history. Never delete earlier worklog history.
 | INT-RUNNER | Exact-SHA server runs, smoke, calibration, 50 iterations and evidence capture | 019fb38e-919f-7d92-a376-af88b49d5900 | No Git writes; append-only run and evidence directories only | docs/agent-worklogs/integration-runner.md |
 | INT-REVIEWER | Independent pushed-commit and run-evidence review | 019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e | Read-only; no repository or run-directory writes | docs/agent-worklogs/integration-reviewer.md |
 
+## Canonical control-plane sources
+
+Future cross-session messages carry only the active-stage delta. Stable rules
+and evidence are read from these canonical paths:
+
+- [Integration policy](docs/integration/INTEGRATION_POLICY.md)
+- [Current stage](docs/integration/CURRENT_STAGE.md)
+- [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
+- [Stage-brief index](docs/integration/stage-briefs/README.md)
+
+The policy defines the compact command/worklog schemas, lane-specific output
+budgets and evidence-by-reference rules. The current-stage file identifies the
+authorized exact input and next handoff. These links do not change any lane
+identity, authority or write scope below.
+
 ## Authority and evidence boundary
 
 - `INT-EXECUTOR` is the sole writer for

@@ -225,3 +225,48 @@ blockers: []
 handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 3 push"
 next_allowed_action: "INT-EXECUTOR executes only the formal Stage 3 Brief, pushes the exact result, and returns evidence for independent review; no Runner or Stage 4 action."
 ```
+
+## Entry 6 — Stage 4A authorization
+
+```yaml
+timestamp: "2026-07-31T12:33:44+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 4A"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: "pending"
+decision: "Authorize INT-EXECUTOR only to perform the governance/documentation-only lean protocol migration."
+findings:
+  - "Stable rules move to canonical repository files; future commands carry stage deltas."
+  - "Lane authority, model/runtime contracts, Runner status, and protected refs remain unchanged."
+  - "The entry timestamp is the Executor append time because the formal Stage 4A brief supplied no source timestamp."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md#hard-gates"
+blockers: []
+hard_gate_status: "STAGE_4A_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Create and push only the Stage 4A governance delta, then hand the exact SHA to INT-REVIEWER and INT-SUPERVISOR."
+```
+
+## Entry 7 — Stage 4A HOLD and continuation
+
+```yaml
+timestamp: "2026-07-31T13:02:13+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 4A continuation"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: "pending"
+decision: "Resume the preserved uncommitted Stage 4A governance work in place and publish one focused commit after validation."
+findings:
+  - "The prior HOLD stopped work before staging, commit, or push."
+  - "The continuation forbids discard, restart, reset, clean, restore, stash, rebase, or deletion."
+  - "Scope remains governance/documentation only and ends after the exact pushed handoff."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#authorized-delta"
+  - "docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md#stop-condition"
+blockers: []
+hard_gate_status: "STAGE_4A_CONTINUATION_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Validate, commit and push the preserved Stage 4A governance delta, then stop."
+```

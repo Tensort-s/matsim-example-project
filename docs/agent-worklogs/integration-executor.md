@@ -212,3 +212,56 @@ blockers:
 handoff_to: "INT-SUPERVISOR and INT-REVIEWER after the exact Stage 3 merge commit is pushed"
 next_allowed_action: "Complete final source-parity, topology, diff, ref, structured-file and cleanliness checks; create and push the Stage 3 merge commit; then wait for independent review. No Runner or Stage 4 action."
 ```
+
+## Entry 5 — Stage 4A lean protocol migration
+
+```yaml
+timestamp: "2026-07-31T12:33:44+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 4A"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: "exact pushed SHA recorded in the cross-session handoff"
+decision: "Adopt the repository policy/current-stage/brief files as the canonical lean control plane without changing lane or model authority."
+findings:
+  - "Created the stable policy, compact active-stage record, Stage 4A brief, and brief index."
+  - "Linked every new path from agent-lanes.md without changing lane IDs or write scopes."
+  - "Defined compact commands/worklogs, evidence-by-reference rules, structural caps, and lane token budgets."
+  - "Corrected only the stale Stage 2/Car status paragraph in the integration document."
+  - "Historical worklog prefixes are verified byte-identical; all changes are append-only."
+diagnostics:
+  - "Prior prompts and historical worklogs remain verbose evidence; the lean limits apply prospectively."
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-cross-session-protocol"
+  - "docs/integration/INTEGRATION_POLICY.md#compact-future-worklog-schema"
+  - "docs/integration/INTEGRATION_POLICY.md#lane-specific-routine-output-budgets"
+  - "docs/integration/CURRENT_STAGE.md#authorized-delta"
+  - "agent-lanes.md#canonical-control-plane-sources"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_4A_GATE"
+handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
+next_action: "Review the exact pushed Stage 4A SHA; do not begin substantive Stage 4 or authorize Runner."
+```
+
+## Entry 6 — Stage 4A continuation after HOLD
+
+```yaml
+timestamp: "2026-07-31T13:02:13+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 4A continuation"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: "exact pushed SHA recorded in the cross-session handoff"
+decision: "Continue the existing uncommitted governance work without discarding or recreating it, then stop after the Stage 4A push."
+findings:
+  - "The HOLD arrived after edits but before staging, commit, or push."
+  - "Local and remote integration refs remained at the exact Stage 3 input throughout the HOLD."
+  - "Existing useful edits were inspected and preserved in place."
+  - "Historical worklog prefixes remain byte-identical to the Stage 3 input."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-cross-session-protocol"
+  - "agent-lanes.md#canonical-control-plane-sources"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_4A_GATE"
+handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
+next_action: "Review the exact pushed Stage 4A SHA; do not begin another stage."
+```

@@ -37,13 +37,31 @@ PT second parent:
   0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103
 ```
 
-Stage 2 remains pending independent exact-SHA review and Supervisor gating.
-The locked Car source is not part of Stage 2:
+Stage 2 passed independent exact-SHA review at:
 
 ```text
-Car:
+6902501e956bc9bede52de26e1e8ad9bf2b457d6
+```
+
+Stage 3 explicitly merges the locked offline Car source:
+
+```text
+integration first parent:
+  6902501e956bc9bede52de26e1e8ad9bf2b457d6
+Car second parent:
   fc906efd3afb98e027cc6cca44060dec9e32aa46
 ```
+
+The exact Stage 3 integration result entering the governance-only Stage 4A
+migration is:
+
+```text
+75988d2645f55a36fb6271ff49d887c1b5143c1b
+```
+
+Current stage status and stable cross-session rules are maintained in
+[`docs/integration/CURRENT_STAGE.md`](integration/CURRENT_STAGE.md) and
+[`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md).
 
 ## Stage 1 scope
 
