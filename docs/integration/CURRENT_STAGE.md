@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Dynamic exact-SHA snapshot identity rework` |
+| task_id | `Stage 8D - Full-tree snapshot evidence completeness rework` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6` |
+| exact_input_sha | `cb40845886fd1447489ad9d8af52592c704de918` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -20,10 +20,10 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Remove prior-commit self-locking from Git-metadata-free snapshot identity. The
-formal exact SHA is supplied at execution time; its Git commit object, tree,
-blob inventory, archive and extracted files must verify as one identity while
-the original exact-clean-Git guard remains strict.
+Commit the complete, reproducible full-tree snapshot evidence that was
+previously present only in the Executor handoff. The dynamic identity
+implementation remains unchanged: commit object, tree, blob inventory,
+archive and manifest must verify as one exact identity.
 
 ## Authorized delta
 

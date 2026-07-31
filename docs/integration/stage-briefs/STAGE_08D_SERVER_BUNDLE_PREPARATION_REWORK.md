@@ -1,8 +1,8 @@
-# Stage 8D — Dynamic exact-SHA snapshot identity rework
+# Stage 8D — Full-tree snapshot evidence completeness rework
 
 | Field | Value |
 |---|---|
-| Exact input | `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6` |
+| Exact input | `cb40845886fd1447489ad9d8af52592c704de918` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | not authorized |
@@ -10,10 +10,11 @@
 
 ## Objective
 
-Remove the self-lock loop after Runner correctly rejected the hardcoded prior
-`6ce087af…` source. The Supervisor/Runner command supplies the exact source
-SHA dynamically; Git-backed creation and Git-free verification must prove it
-without weakening any existing guard.
+Close the bounded evidence gate after the dynamic snapshot implementation was
+accepted as sound but its full-tree archive and manifest hashes existed only
+in the Executor handoff. Reproduce those values from the retained local
+`c9fc241…` snapshot and commit the exact commands, hashes and verification
+result without changing production logic or deployment state.
 
 ## Authorized result
 
@@ -42,12 +43,24 @@ master or feature-ref change.
 
 ## Evidence
 
+The committed validation JSON records the independently reproduced full-tree
+snapshot evidence for source `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6`:
+tree `3114228a02931c2d7b43a18c971649653d9ceb66`, 7,620 tracked
+files, blob-inventory SHA256
+`e4f95f66f6d2ce27de4827125c09e42c990f69e954321d223f7320ac77d05324`,
+archive SHA256
+`34209c954c598a1d374f48d3b18bc4925a2d764ce197104063c0cb2ed78477eb`
+and manifest SHA256
+`c5e9ed1ac0c59c99fb9ac385404a2317367f4484ca31ea83f04c6006f904cb7b`.
+The snapshot was local validation evidence only and was not transferred or
+deployed.
+
 - [`../../../data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json`](../../../data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json)
 - [`../../HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md`](../../HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md)
 - [`../../../scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py`](../../../scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py)
 
 ## Next action
 
-Executor pushes one exact control/deployment-preparation result and reports
-only to Supervisor. Supervisor verifies and dispatches Reviewer. Runner and
-Stage 9 remain unauthorized.
+Executor pushes one focused evidence-completeness result and reports only to
+Supervisor. Supervisor verifies and dispatches Reviewer. Runner and Stage 9
+remain unauthorized.

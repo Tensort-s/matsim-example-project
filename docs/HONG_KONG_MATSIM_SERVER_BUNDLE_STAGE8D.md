@@ -35,6 +35,52 @@ Only generated `target/` build output may coexist with the exact extracted
 tracked files. The script also rejects stale v1 or pre-Ferry input paths. A
 release root is mandatory and must be a new path below `/mnt/DiskM/by/`.
 
+### Committed full-tree validation evidence
+
+The bounded evidence rework independently re-hashed and re-verified the full
+local snapshot created from source commit
+`c9fc2410fd329c9aceef16b3b7ce627bb74dedb6`. This was a local validation
+artifact only; it was not transferred, deployed or executed.
+
+| Field | Verified value |
+|---|---|
+| Git tree | `3114228a02931c2d7b43a18c971649653d9ceb66` |
+| Tracked files | `7620` |
+| Git blob inventory SHA256 | `e4f95f66f6d2ce27de4827125c09e42c990f69e954321d223f7320ac77d05324` |
+| Full inventory SHA256 | `12cd617340b3f37a936d3d21e633d8378282a7422ba18532e15f4882224349f8` |
+| Archive SHA256 | `34209c954c598a1d374f48d3b18bc4925a2d764ce197104063c0cb2ed78477eb` |
+| Manifest SHA256 | `c5e9ed1ac0c59c99fb9ac385404a2317367f4484ca31ea83f04c6006f904cb7b` |
+| Archive size | `1155952640` bytes |
+| Manifest size | `2487564` bytes |
+| Verification | commit object/tree/blob inventory/archive/manifest pass; `.git` absent |
+
+Exact creation command:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py `
+  create-source-snapshot `
+  --source-commit-sha c9fc2410fd329c9aceef16b3b7ce627bb74dedb6 `
+  --snapshot-path "C:\Users\Yu Boyang\AppData\Local\Temp\hk-stage8d-dynamic-c9fc-blobbytes-20260731\source-c9fc.tar" `
+  --snapshot-manifest "C:\Users\Yu Boyang\AppData\Local\Temp\hk-stage8d-dynamic-c9fc-blobbytes-20260731\source-c9fc.manifest.json"
+```
+
+Exact verification command:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py `
+  verify-source-snapshot `
+  --source-commit-sha c9fc2410fd329c9aceef16b3b7ce627bb74dedb6 `
+  --source-snapshot "C:\Users\Yu Boyang\AppData\Local\Temp\hk-stage8d-dynamic-c9fc-blobbytes-20260731\source-c9fc.tar" `
+  --source-snapshot-manifest "C:\Users\Yu Boyang\AppData\Local\Temp\hk-stage8d-dynamic-c9fc-blobbytes-20260731\source-c9fc.manifest.json" `
+  --source-snapshot-manifest-sha256 c5e9ed1ac0c59c99fb9ac385404a2317367f4484ca31ea83f04c6006f904cb7b
+```
+
+Snapshot creation internally runs `git archive` with
+`core.autocrlf=false` and `core.eol=lf`; verification still treats each Git
+blob SHA1 and the reconstructed commit tree as the authority.
+
 ## Locked current inputs
 
 | Role | Repository-relative path below `data/` | SHA256 |

@@ -650,3 +650,30 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 20 — Stage 8D full-tree evidence completeness
+
+```yaml
+timestamp: "2026-07-31T23:10:25+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D full-tree snapshot evidence completeness rework"
+input_sha: "cb40845886fd1447489ad9d8af52592c704de918"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Commit the independently reproduced full-tree c9fc snapshot identity and artifact hashes that were previously present only in the Executor chat handoff."
+findings:
+  - "The retained full-tree archive and manifest re-hash to 34209c954c598a1d374f48d3b18bc4925a2d764ce197104063c0cb2ed78477eb and c5e9ed1ac0c59c99fb9ac385404a2317367f4484ca31ea83f04c6006f904cb7b."
+  - "Manifest and Git independently agree on source c9fc241, tree 3114228a, 7620 tracked files and blob-inventory SHA256 e4f95f66f6d2ce27de4827125c09e42c990f69e954321d223f7320ac77d05324."
+  - "The production verify-source-snapshot command passed again with commit object, tree, archive and manifest bound to the formal source SHA."
+  - "Committed evidence records the exact create/verify commands and canonical-byte core.autocrlf=false/core.eol=lf handling."
+  - "No production logic, model, MATSim input/config, server, transfer, build, upload, Runner or Stage 9 action occurred."
+diagnostics:
+  - "The verified archive and manifest remain local temporary evidence only and were not transferred or deployed."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#snapshot_validation"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#committed-full-tree-validation-evidence"
+  - "docs/integration/stage-briefs/STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md#evidence"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```
