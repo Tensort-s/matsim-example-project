@@ -4,11 +4,13 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.scoring.SumScoringFunction;
+import org.matsim.project.hongkong.scoring.HongKongScoringComponent;
 
 import java.util.Objects;
 
 /** Adds only the selected-plan-scheduled, distance-only taxi fare disutility. */
-public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScoring {
+public final class HongKongTaxiFareScoring
+		implements SumScoringFunction.LegScoring, HongKongScoringComponent {
 
 	private final Id<Person> personId;
 	private final HongKongTaxiPersonFareSchedule fareSchedule;
@@ -23,6 +25,11 @@ public final class HongKongTaxiFareScoring implements SumScoringFunction.LegScor
 		this.fareSchedule = Objects.requireNonNull(fareSchedule, "fareSchedule");
 		this.personId = fareSchedule.personId();
 		this.parameters = Objects.requireNonNull(parameters, "parameters");
+	}
+
+	@Override
+	public String componentId() {
+		return HongKongTaxiFareScoringComponentFactory.COMPONENT_ID;
 	}
 
 	@Override

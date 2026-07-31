@@ -13,7 +13,12 @@ fleet/DVRP boundary.
 
 ## Runtime data path
 
-Whenever `HongKongTaxiScoringFunctionFactory` creates a scoring function, it:
+The canonical `HongKongMultimodalScoringFunctionFactory` creates the standard
+MATSim scoring delegate and all registered person-local components. In Stage 5
+the registry contains only `HongKongTaxiFareScoringComponentFactory`, with
+component ID `taxi_route_fare_v1` and sole mode ownership `taxi`.
+
+Whenever that Taxi component factory creates its component, it:
 
 1. visits that person's current selected plan in plan-element order;
 2. calls `HongKongTaxiRouteContext.from(leg)` for every `mode=taxi` leg;
@@ -180,8 +185,8 @@ scenario:
 
 ```text
 default PrepareForSim updates the selected-plan Taxi route
-→ HongKongTaxiScoringFunctionFactory is requested
-→ routeFareScheduleFor(person) reads that prepared route
+→ HongKongMultimodalScoringFunctionFactory is requested
+→ HongKongTaxiFareScoringComponentFactory reads that prepared route
 → HongKongTaxiFareCalculator charges its current distance
 ```
 
@@ -201,7 +206,33 @@ data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/
 
 It observed 7,696 reasonable Taxi route changes, but no Taxi count, mode,
 routingMode, ordinal, attribute, or selected-plan sequence changes. The next
-technical stage may therefore run the fixed `ASC=-9` two-iteration smoke using
-the native-routing plans and standard PrepareForSim path. That smoke must
-retain the current route-based fare, passenger-only Taxi boundary, capacity,
-PT/Car scoring, and no-replanning settings.
+runtime stage, if separately authorized, must retain the current route-based
+fare, passenger-only Taxi boundary, capacity, offline PT/Car boundary, and
+no-replanning settings. Stage 5 authorizes no smoke or other MATSim run.
+
+## Stage 5 composable architecture and equivalence
+
+`HongKongTaxiScoringModule` now installs the generic
+`HongKongMultimodalScoringModule` and contributes only the Taxi route-fare
+component. Component ordering is deterministic. Duplicate component IDs,
+duplicate mode owners, and a component whose ID differs from its factory all
+fail closed.
+
+The former `HongKongTaxiScoringFunctionFactory` and
+`HongKongTaxiScoringFunction` are retained as a noncontrolling pre-Stage-5
+equivalence and historical load-audit baseline. The canonical module no longer
+binds them. The exact equivalence test applies activity, Taxi/non-Taxi leg,
+money, arbitrary event, trip, added-score, stuck, finish, score, and
+explanation callbacks to both implementations and requires zero score
+tolerance plus identical standard-delegate call counts.
+
+The Stage 5 validation record is:
+
+```text
+data/taxi/hongkong/processed/
+  taxi_scoring_composition_stage5_validation_v1/
+    stage5_taxi_scoring_composition_validation.json
+```
+
+PT and Car do not register components. The extension seam is structural only;
+it does not approve their runtime costs or select an economic interpretation.

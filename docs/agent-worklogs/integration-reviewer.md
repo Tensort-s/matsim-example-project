@@ -287,3 +287,36 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "INT-SUPERVISOR may record Stage 4A PASS; the next Executor stage appends the Stage 3 Reviewer PASS and explicit Supervisor Stage 3 closure without rewriting history."
 ```
+
+## Entry 8 — Stage 4 exact-SHA review
+
+Faithfully transcribed in the compact schema from the actual INT-REVIEWER
+handoff:
+
+```yaml
+timestamp: "2026-07-31T13:54:41+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 4 exact-SHA review"
+input_sha: "191befd0c93027c5584857333a29746de8b432f0"
+output_sha_or_status: null
+decision: "PASS"
+findings:
+  - "Verified exact local/tracking/remote identity, source ancestry, Taxi->PT->Car merge topology, and locked master/feature refs."
+  - "Verified the Stage 4 delta contains exactly eight authorized governance, manifest, validation, and append-only worklog paths."
+  - "Verified one sole authoritative manifest with exactly three unique interfaces: canonical Taxi runtime, offline PT, and offline Car."
+  - "Verified preserved legacy/superseded artifacts do not control current architecture and no PT/Car runtime or scoring activation occurred."
+  - "Verified append-only worklogs, deterministic validation, no Runner action, and no Stage 5 implementation."
+diagnostics:
+  - "Submitted raw logs were summarized rather than committed; structured evidence and local reports corroborated the result."
+  - "Two corrected ad-hoc checks remain recorded as non-model command-selection and Windows-decoding diagnostics."
+  - "Existing dependency, deprecation, source-limitation and historical/superseded warnings remain non-blocking."
+  - "No MATSim/server run or Stage 5 action was authorized by this review."
+evidence_refs:
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json"
+  - "docs/integration/stage-briefs/STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md"
+  - "docs/agent-worklogs/integration-executor.md#entry-7--stage-4-completeness-and-integration-boundary-audit"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "INT-SUPERVISOR may close Stage 4 and decide the next formal action; Reviewer does not authorize Stage 5 or Runner."
+```

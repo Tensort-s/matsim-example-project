@@ -1,9 +1,9 @@
 {
   "schema_version": "hong_kong_integrated_multimodal_cost_source_interface_manifest_v1",
   "manifest_role": "sole_authoritative_integrated_source_and_interface_registry",
-  "status": "pending_independent_review_and_supervisor_stage_4_gate",
-  "stage_id": "Stage 4 - Completeness and integration-boundary audit",
-  "stage_input_commit_sha": "3cbe393ec262550ab27bc13635614b8f0440c958",
+  "status": "pending_independent_review_and_supervisor_stage_5_gate",
+  "stage_id": "Stage 5 - Composable multimodal scoring architecture (Taxi-only migration)",
+  "stage_input_commit_sha": "191befd0c93027c5584857333a29746de8b432f0",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "canonical_interface_count": 3,
   "canonical_interface_ids": [
@@ -42,7 +42,7 @@
       "native_mode": "taxi",
       "native_routing_mode": "taxi",
       "prepare_for_sim_binding": "org.matsim.core.controler.PrepareForSimImpl",
-      "fare_charge_path": "selected prepared Taxi leg -> HongKongTaxiPersonFareSchedule -> HongKongTaxiFareScoring.handleLeg",
+      "fare_charge_path": "selected prepared Taxi leg -> HongKongTaxiFareScoringComponentFactory -> HongKongTaxiPersonFareSchedule -> HongKongTaxiFareScoring.handleLeg",
       "duplicate_charge_protection": {
         "canonical_route_fare_paths": 1,
         "taxi_standard_distance_monetary_term_required_zero": true,
@@ -50,7 +50,7 @@
         "taxi_fare_person_money_event_emitted": false,
         "mismatch_policy": "fail_closed"
       },
-      "implementation_validation": "data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/stage1_taxi_merge_validation.json",
+      "implementation_validation": "data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json",
       "native_routing_validation": "data/taxi/hongkong/processed/taxi_native_routing_v1/taxi_native_routing_validation.json",
       "prepare_for_sim_validation": "data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/taxi_prepare_for_sim_validation.json",
       "route_fare_validation": "data/taxi/hongkong/processed/taxi_route_fare_scoring_v1/taxi_route_fare_parity_validation.json",
@@ -127,6 +127,33 @@
       }
     }
   ],
+  "canonical_scoring_composition": {
+    "factory": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory",
+    "module": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringModule",
+    "scoring_function": "org.matsim.project.hongkong.scoring.HongKongComposableScoringFunction",
+    "standard_delegate": "org.matsim.core.scoring.functions.CharyparNagelScoringFunctionFactory",
+    "component_factory_contract": "org.matsim.project.hongkong.scoring.HongKongScoringComponentFactory",
+    "active_component_count": 1,
+    "active_component_ids": [
+      "taxi_route_fare_v1"
+    ],
+    "active_mode_owners": {
+      "taxi": "taxi_route_fare_v1"
+    },
+    "taxi_component_factory": "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentFactory",
+    "pt_runtime_or_scoring_active": false,
+    "car_runtime_or_scoring_active": false,
+    "duplicate_component_id_policy": "fail_closed",
+    "duplicate_mode_owner_policy": "fail_closed",
+    "factory_component_id_mismatch_policy": "fail_closed",
+    "pre_stage_5_taxi_wrapper": {
+      "factory": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory",
+      "scoring_function": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunction",
+      "classification": "preserved_pre_stage_5_equivalence_and_historical_load_audit_baseline",
+      "bound_by_canonical_runtime_module": false,
+      "controls_current_architecture": false
+    }
+  },
   "historical_legacy_and_superseded_inventory": [
     {
       "scope": "taxi",
@@ -182,7 +209,11 @@
     "matsim_config_plan_supply_input_or_output_change_in_stage_4": false,
     "economic_or_behavioral_semantic_change_in_stage_4": false,
     "runner_authorized": false,
-    "matsim_or_server_run_performed": false
+    "matsim_or_server_run_performed": false,
+    "stage_5_taxi_only_scoring_composition": true,
+    "stage_5_active_scoring_component_count": 1,
+    "stage_5_pt_or_car_runtime_activation": false,
+    "stage_5_economic_or_behavioral_semantic_change": false
   },
   "protected_refs": {
     "origin_master": "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d",
@@ -191,10 +222,10 @@
     "origin_feature_hk_car_cost_model_v1": "fc906efd3afb98e027cc6cca44060dec9e32aa46"
   },
   "validation_contract": {
-    "taxi": "Maven complete suite plus Taxi native-routing deterministic Python tests",
+    "taxi": "Maven complete suite, exact pre/post Taxi wrapper equivalence, synthetic standard PrepareForSim lifecycle, and Taxi native-routing deterministic Python tests",
     "pt": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py",
     "car": "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py",
     "structured_manifest_checks": "JSON parse, unique IDs, referenced paths, offline/runtime flags, locked counts and exact Git ancestry",
-    "result_identity": "The Stage 4 output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
+    "result_identity": "The Stage 5 output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
   }
 }

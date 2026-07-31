@@ -13,6 +13,9 @@ import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.scoring.ScoringFunction;
 import org.matsim.core.scoring.ScoringFunctionFactory;
+import org.matsim.project.hongkong.scoring.HongKongComposableScoringFunction;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -232,6 +235,71 @@ class HongKongTaxiScoringFunctionTest {
 		scoring.finish();
 
 		assertEquals(-5.125, scoring.getScore(), TOLERANCE);
+	}
+
+	@Test
+	void composableTaxiAdapterIsExactlyEquivalentToPreStage5Wrapper() {
+		Person baselinePerson = personWithTaxiRoutes(
+				"composition-equivalence-person", 2_000.0, 9_000.0);
+		Person composedPerson = personWithTaxiRoutes(
+				"composition-equivalence-person", 2_000.0, 9_000.0);
+		RecordingScoringFunction baselineDelegate =
+				new RecordingScoringFunction(7.25);
+		RecordingScoringFunction composedDelegate =
+				new RecordingScoringFunction(7.25);
+		ScoringFunction baseline = new HongKongTaxiScoringFunction(
+				baselineDelegate,
+				fareScoringFor(baselinePerson));
+		ScoringFunction composed = new HongKongComposableScoringFunction(
+				composedDelegate,
+				List.of(fareScoringFor(composedPerson)));
+
+		exerciseCompleteScoringSurface(baseline, baselinePerson);
+		exerciseCompleteScoringSurface(composed, composedPerson);
+
+		assertEquals(baseline.getScore(), composed.getScore(), 0.0);
+		assertEquals(baselineDelegate.activityCalls, composedDelegate.activityCalls);
+		assertEquals(baselineDelegate.legCalls, composedDelegate.legCalls);
+		assertEquals(baselineDelegate.moneyCalls, composedDelegate.moneyCalls);
+		assertEquals(baselineDelegate.addScoreCalls, composedDelegate.addScoreCalls);
+		assertEquals(baselineDelegate.stuckCalls, composedDelegate.stuckCalls);
+		assertEquals(baselineDelegate.eventCalls, composedDelegate.eventCalls);
+		assertEquals(baselineDelegate.tripCalls, composedDelegate.tripCalls);
+		assertEquals(baselineDelegate.finishCalls, composedDelegate.finishCalls);
+
+		StringBuilder baselineExplanation = new StringBuilder();
+		StringBuilder composedExplanation = new StringBuilder();
+		baseline.explainScore(baselineExplanation);
+		composed.explainScore(composedExplanation);
+		assertEquals(baselineExplanation.toString(), composedExplanation.toString());
+	}
+
+	private static void exerciseCompleteScoringSurface(
+			ScoringFunction scoring,
+			Person person) {
+		scoring.handleActivity(PopulationUtils.createActivityFromCoord(
+				"home", new Coord(0.0, 0.0)));
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.handleLeg(PopulationUtils.createLeg("walk"));
+		scoring.handleEvent(new PersonMoneyEvent(
+				100.0,
+				person.getId(),
+				-29.0,
+				"taxi-fare-equivalence",
+				"none",
+				"none"));
+		scoring.handleEvent(new Event(101.0) {
+			@Override
+			public String getEventType() {
+				return "taxi-composition-equivalence";
+			}
+		});
+		scoring.handleTrip(syntheticTrip());
+		scoring.addMoney(-3.0);
+		scoring.addScore(1.5);
+		scoring.agentStuck(500.0);
+		scoring.handleLeg(experiencedTaxiLeg());
+		scoring.finish();
 	}
 
 	private static HongKongTaxiFareScoring fareScoringFor(Person person) {

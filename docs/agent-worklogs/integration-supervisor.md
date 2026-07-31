@@ -327,3 +327,32 @@ hard_gate_status: "STAGE_4A_PASS__STAGE_4_DISPATCHED"
 handoff_to: "INT-EXECUTOR"
 next_action: "INT-EXECUTOR performs the compact Stage 4 audit, pushes one exact result and stops for INT-REVIEWER."
 ```
+
+## Entry 10 — Stage 4 gate closure and Stage 5 authorization
+
+Compact append-only record of the closure and formal Stage 5 brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 4 closure / Stage 5 authorization"
+input_sha: "191befd0c93027c5584857333a29746de8b432f0"
+output_sha_or_status: "STAGE_5_DISPATCHED"
+decision: "Stage 4 PASS; authorize only the Stage 5 composable scoring architecture and Taxi-only migration for INT-EXECUTOR."
+findings:
+  - "Received INT-REVIEWER PASS for exact pushed Stage 4 SHA with all hard gates satisfied and no blockers."
+  - "Preserved the sole authoritative Taxi/PT/Car source-interface manifest as the pre-runtime boundary."
+  - "Authorized a composable scoring refactor with Taxi as the sole active behavioral scoring mode."
+  - "PT and Car remain offline-only; no economic, behavioral, configuration, input, supply, demand or capacity change is authorized."
+  - "Runner, MATSim/server execution, Stage 6+, and master merge remain unauthorized."
+diagnostics:
+  - "The formal Stage 5 brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/agent-worklogs/integration-reviewer.md#entry-8--stage-4-exact-sha-review"
+  - "docs/integration/stage-briefs/STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+blockers: []
+hard_gate_status: "STAGE_4_PASS__STAGE_5_AUTHORIZED"
+handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 5 push"
+next_action: "INT-EXECUTOR executes only Stage 5, pushes one exact result, and stops for independent review; no Runner or Stage 6 action."
+```

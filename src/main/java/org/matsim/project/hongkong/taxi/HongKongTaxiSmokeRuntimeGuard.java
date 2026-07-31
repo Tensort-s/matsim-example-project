@@ -17,6 +17,7 @@ import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.core.scoring.ScoringFunctionFactory;
+import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 
@@ -40,7 +41,7 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 
 	static final long EXPECTED_TAXI_LEGS = 37_286L;
 	private static final String EXPECTED_FACTORY =
-			"org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory";
+			HongKongMultimodalScoringFunctionFactory.class.getName();
 
 	private final Config config;
 	private final HongKongTaxiPtRoutePreparation.PreparationAudit preparationAudit;
@@ -87,6 +88,14 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 
 		Map<String, Boolean> checks = new LinkedHashMap<>();
 		checks.put("custom_scoring_factory_bound", EXPECTED_FACTORY.equals(factoryClass));
+		checks.put("taxi_is_only_active_scoring_mode",
+				factory instanceof HongKongMultimodalScoringFunctionFactory combined
+						&& combined.componentIds().equals(
+								List.of(HongKongTaxiFareScoringComponentFactory.COMPONENT_ID))
+						&& combined.activeModeOwners().equals(
+								Map.of(
+										HongKongTaxiScoringParameters.TAXI_MODE,
+										HongKongTaxiFareScoringComponentFactory.COMPONENT_ID)));
 		checks.put("central_fare_utility_exact",
 				parameters.fareUtilityPerHkd()
 						== HongKongTaxiScoringParameters.CENTRAL_FARE_UTILITY_PER_HKD);
@@ -111,6 +120,12 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		startupAudit = ordered(
 				"scoring_module_installed", EXPECTED_FACTORY.equals(factoryClass),
 				"actual_scoring_function_factory_class", factoryClass,
+				"active_scoring_components",
+						factory instanceof HongKongMultimodalScoringFunctionFactory combined
+								? combined.componentIds() : List.of(),
+				"active_scoring_mode_owners",
+						factory instanceof HongKongMultimodalScoringFunctionFactory combined
+								? combined.activeModeOwners() : Map.of(),
 				"prepare_for_sim_class", prepareForSimClass,
 				"default_prepare_for_sim_impl_bound",
 						prepareForSim instanceof PrepareForSimImpl,

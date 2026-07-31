@@ -1,13 +1,13 @@
 package org.matsim.project.hongkong.taxi;
 
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringModule;
 
 import java.util.Objects;
 
 /**
- * Standalone module for a future Hong Kong taxi pilot runner.
- *
- * <p>This module is intentionally not installed in any existing runner.</p>
+ * Taxi-pilot convenience module that installs the combined scoring factory
+ * and contributes only the canonical Taxi route-fare component.
  */
 public final class HongKongTaxiScoringModule extends AbstractModule {
 
@@ -23,9 +23,7 @@ public final class HongKongTaxiScoringModule extends AbstractModule {
 
 	@Override
 	public void install() {
-		bind(HongKongTaxiScoringParameters.class).toInstance(parameters);
-		bind(HongKongTaxiFareCalculator.class).toInstance(
-				new HongKongTaxiFareCalculator());
-		bindScoringFunctionFactory().to(HongKongTaxiScoringFunctionFactory.class);
+		install(new HongKongMultimodalScoringModule());
+		install(new HongKongTaxiFareScoringComponentModule(parameters));
 	}
 }

@@ -10,6 +10,7 @@ import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.PrepareForSim;
 import org.matsim.core.controler.PrepareForSimImpl;
+import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
 import org.matsim.core.scenario.ScenarioUtils;
 
 import java.net.InetAddress;
@@ -174,9 +175,12 @@ public final class ValidateHongKongTaxiPrepareForSim {
 						sourceTaxi, preparedTaxi);
 		TaxiFareAudit taxiFareAudit = auditTaxiFares(scenario);
 
-		HongKongTaxiScoringFunctionFactory scoringFactory =
-				(HongKongTaxiScoringFunctionFactory)
+		HongKongMultimodalScoringFunctionFactory scoringFactory =
+				(HongKongMultimodalScoringFunctionFactory)
 						controler.getScoringFunctionFactory();
+		HongKongTaxiFareScoringComponentFactory taxiComponentFactory =
+				controler.getInjector().getInstance(
+						HongKongTaxiFareScoringComponentFactory.class);
 		Person representative = scenario.getPopulation().getPersons().values().stream()
 				.filter(person -> person.getSelectedPlan() != null
 						&& person.getSelectedPlan().getPlanElements().stream()
@@ -185,7 +189,7 @@ public final class ValidateHongKongTaxiPrepareForSim {
 				.findFirst()
 				.orElseThrow();
 		HongKongTaxiPersonFareSchedule representativeSchedule =
-				scoringFactory.routeFareScheduleFor(representative);
+				taxiComponentFactory.routeFareScheduleFor(representative);
 		boolean representativeScheduleExact =
 				representativeSchedule.size() > 0
 						&& representativeSchedule.fareAt(0).calculation().fareHkd()
@@ -224,7 +228,9 @@ public final class ValidateHongKongTaxiPrepareForSim {
 						representativeSchedule.size(),
 				"factory_schedule_matches_prepared_route",
 						representativeScheduleExact,
-				"scoring_factory_class", scoringFactory.getClass().getName()));
+				"scoring_factory_class", scoringFactory.getClass().getName(),
+				"active_components", scoringFactory.componentIds(),
+				"active_mode_owners", scoringFactory.activeModeOwners()));
 		report.put("assigned_explicit_car_vehicles", assignedVehicles);
 		report.put("scenario_supply_counts",
 				RunHongKongTaxiBehavioralPilot.supplyCounts(scenario));
@@ -276,6 +282,13 @@ public final class ValidateHongKongTaxiPrepareForSim {
 						&& taxiFareAudit.calculatedFares.size() == 37_286);
 		checks.put("scoring_factory_reads_prepared_route",
 				representativeScheduleExact);
+		checks.put("taxi_is_only_active_scoring_mode",
+				scoringFactory.componentIds().equals(
+						List.of(HongKongTaxiFareScoringComponentFactory.COMPONENT_ID))
+						&& scoringFactory.activeModeOwners().equals(
+								Map.of(
+										HongKongTaxiScoringParameters.TAXI_MODE,
+										HongKongTaxiFareScoringComponentFactory.COMPONENT_ID)));
 		checks.put("capacity_and_main_modes_unchanged",
 				flowCapacityBefore == config.qsim().getFlowCapFactor()
 						&& storageCapacityBefore

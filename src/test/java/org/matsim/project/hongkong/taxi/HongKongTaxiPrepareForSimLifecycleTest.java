@@ -18,7 +18,10 @@ import org.matsim.core.controler.PrepareForSimImpl;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,11 +76,22 @@ class HongKongTaxiPrepareForSimLifecycleTest {
 				preparedTaxi.getRoute().getTravelTime().seconds()));
 		assertTrue(preparedTaxi.getRoute().getTravelTime().seconds() >= 0.0);
 
-		HongKongTaxiScoringFunctionFactory scoringFactory =
-				(HongKongTaxiScoringFunctionFactory)
+		HongKongMultimodalScoringFunctionFactory scoringFactory =
+				(HongKongMultimodalScoringFunctionFactory)
 						controler.getScoringFunctionFactory();
+		assertEquals(
+				List.of(HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
+				scoringFactory.componentIds());
+		assertEquals(
+				Map.of(
+						HongKongTaxiScoringParameters.TAXI_MODE,
+						HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
+				scoringFactory.activeModeOwners());
+		HongKongTaxiFareScoringComponentFactory taxiComponentFactory =
+				controler.getInjector().getInstance(
+						HongKongTaxiFareScoringComponentFactory.class);
 		HongKongTaxiPersonFareSchedule schedule =
-				scoringFactory.routeFareScheduleFor(person);
+				taxiComponentFactory.routeFareScheduleFor(person);
 		HongKongTaxiPersonFareSchedule.RouteFare scheduledFare =
 				schedule.fareAt(0);
 		double expectedFare = new HongKongTaxiFareCalculator()

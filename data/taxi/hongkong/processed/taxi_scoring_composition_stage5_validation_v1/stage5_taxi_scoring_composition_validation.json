@@ -1,0 +1,135 @@
+{
+  "schema_version": "hong_kong_taxi_scoring_composition_stage5_validation_v1",
+  "stage_id": "Stage 5 - Composable multimodal scoring architecture (Taxi-only migration)",
+  "status": "pending_independent_review_and_supervisor_stage_5_gate",
+  "input_commit_sha": "191befd0c93027c5584857333a29746de8b432f0",
+  "output_commit_sha": null,
+  "integration_branch": "integration/hk-multimodal-cost-v1",
+  "canonical_composition": {
+    "factory": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory",
+    "scoring_function": "org.matsim.project.hongkong.scoring.HongKongComposableScoringFunction",
+    "standard_delegate": "org.matsim.core.scoring.functions.CharyparNagelScoringFunctionFactory",
+    "active_component_count": 1,
+    "active_component_ids": [
+      "taxi_route_fare_v1"
+    ],
+    "active_mode_owners": {
+      "taxi": "taxi_route_fare_v1"
+    },
+    "pt_active": false,
+    "car_active": false,
+    "duplicate_component_id_policy": "fail_closed",
+    "duplicate_mode_owner_policy": "fail_closed",
+    "factory_component_id_mismatch_policy": "fail_closed"
+  },
+  "taxi_adapter": {
+    "factory": "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentFactory",
+    "component": "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoring",
+    "component_id": "taxi_route_fare_v1",
+    "native_mode": "taxi",
+    "native_routing_mode": "taxi",
+    "prepare_for_sim_binding": "org.matsim.core.controler.PrepareForSimImpl",
+    "route_before_fare_schedule": true,
+    "ordinal_consumption": "exact_fail_closed",
+    "fare_charge_path_count": 1,
+    "taxi_to_ride_conversion": false,
+    "taxi_standard_distance_monetary_rate": 0.0,
+    "taxi_standard_distance_utility_rate": 0.0,
+    "person_money_event_fare_path": false,
+    "finite_value_policy": "fail_closed"
+  },
+  "pre_stage_5_equivalence_baseline": {
+    "factory": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionFactory",
+    "scoring_function": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunction",
+    "classification": "preserved_noncontrolling_pre_stage_5_equivalence_and_historical_load_audit_baseline",
+    "canonical_runtime_binding": false,
+    "exact_equivalence_test": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionTest#composableTaxiAdapterIsExactlyEquivalentToPreStage5Wrapper",
+    "score_tolerance": 0.0,
+    "callback_surface_compared": [
+      "activity",
+      "leg",
+      "money",
+      "add_score",
+      "stuck",
+      "event",
+      "trip",
+      "finish",
+      "score_explanation"
+    ]
+  },
+  "deterministic_validation": {
+    "maven_compile": {
+      "command": ".\\mvnw.cmd -DskipTests compile",
+      "duration_seconds": 28.348,
+      "status": "passed"
+    },
+    "focused_tests": {
+      "command": ".\\mvnw.cmd '-Dtest=HongKongMultimodalScoringFunctionFactoryTest,HongKongTaxiScoringFunctionTest,HongKongTaxiPrepareForSimLifecycleTest' test",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 33.538,
+      "status": "passed"
+    },
+    "complete_maven_suite": {
+      "command": ".\\mvnw.cmd test",
+      "tests": 66,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 43.895,
+      "status": "passed"
+    },
+    "native_routing_python_tests": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe test_prepare_hong_kong_taxi_native_routing.py (cwd=scripts/hong_kong_single_city/demand_generation)",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "duration_seconds": 0.037,
+      "status": "passed"
+    },
+    "test_driven_corrections": [
+      "The first focused run exposed non-identical fixture person IDs in the new equivalence assertion; the fixtures now use the same ID.",
+      "The first focused run exposed a Guice requireExplicitBindings requirement; the Taxi component factory now has an explicit singleton binding.",
+      "The first Python command referenced nonexistent package modules; the corrected explicit-interpreter command ran the repository's two-test native-routing file from its containing directory."
+    ]
+  },
+  "hard_gate_evidence": {
+    "unique_canonical_scoring_composition": "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition",
+    "native_taxi_and_no_taxi_to_ride": "data/taxi/hongkong/processed/taxi_native_routing_v1/taxi_native_routing_validation.json",
+    "standard_prepare_for_sim_and_route_before_fare": "org.matsim.project.hongkong.taxi.HongKongTaxiPrepareForSimLifecycleTest#defaultPrepareForSimUpdatesRouteBeforeScoringFactoryBuildsFareSchedule",
+    "pre_post_exact_equivalence": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionTest#composableTaxiAdapterIsExactlyEquivalentToPreStage5Wrapper",
+    "duplicate_charge_prevention": [
+      "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionTest#eventAndTripInterfacesDoNotDuplicateExperiencedLegFareCharge",
+      "org.matsim.project.hongkong.taxi.HongKongTaxiScoringFunctionTest#taxiDistanceMoneyAndPersonMoneyEventCannotDuplicateCustomFare",
+      "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringTest#repeatedScoreReadsAndFinishDoNotChargeAgain"
+    ],
+    "ordinal_exact_consumption": [
+      "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringTest#multipleTaxiFaresAreConsumedInSelectedPlanOrder",
+      "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringTest#unconsumedFareFailsAtFinishWithOrdinalContext",
+      "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringTest#extraExperiencedTaxiLegFailsImmediatelyWithOrdinalContext"
+    ],
+    "finite_values_and_zero_standard_distance_terms": [
+      "org.matsim.project.hongkong.taxi.HongKongTaxiScoringConfigGuardTest",
+      "org.matsim.project.hongkong.taxi.HongKongTaxiFareCalculatorTest"
+    ],
+    "pt_and_car_offline": "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#interfaces",
+    "no_matsim_or_server_run": true
+  },
+  "scope_disposition": {
+    "economic_or_behavioral_policy_changed": false,
+    "fare_policy_changed": false,
+    "asc_or_calibration_changed": false,
+    "monetary_utility_changed": false,
+    "demand_capacity_supply_changed": false,
+    "missing_data_rule_changed": false,
+    "pt_runtime_or_scoring_added": false,
+    "car_runtime_or_scoring_added": false,
+    "city_yaml_changed": false,
+    "run_manifest_changed": false,
+    "runner_authorized": false,
+    "matsim_or_server_run_performed": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_5_GATE"
+}

@@ -64,8 +64,9 @@ Current stage status and stable cross-session rules are maintained in
 [`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md).
 
 Stage 4A passed independent exact-SHA review at `3cbe393ec262550ab27bc13635614b8f0440c958`.
-Stage 4 now audits the combined boundary without changing model or runtime
-semantics. Its sole authoritative integrated registry is:
+Stage 4 passed independent exact-SHA review at
+`191befd0c93027c5584857333a29746de8b432f0`. Its sole authoritative integrated
+registry is:
 
 ```text
 data/transport_costs/hongkong/
@@ -77,6 +78,12 @@ Taxi runtime/route-fare path, the five-layer offline PT fare release, and the
 offline Car `unified_marginal_cost_interface_v1`. Historical, candidate,
 accounting, design-only and superseded artifacts remain preserved but cannot
 act as parallel canonical interfaces.
+
+Stage 5 migrates only the canonical Taxi route-fare runtime to the composable
+scoring factory recorded in that registry. The active component registry has
+exactly one entry, `taxi_route_fare_v1`, and exactly one mode owner,
+`taxi -> taxi_route_fare_v1`. PT and Car remain offline-only and contribute no
+runtime scoring component.
 
 ## Stage 1 scope
 
@@ -224,13 +231,22 @@ standard PrepareForSim updates the selected-plan Taxi route
 
 `RunHongKongTaxiBehavioralPilot` installs
 `HongKongTaxiRoutingModule` and `HongKongTaxiScoringModule`. The scoring module
-binds the canonical `HongKongTaxiScoringFunctionFactory`, which wraps the
-standard MATSim scoring delegate and adds one Taxi fare contribution.
+now binds the canonical `HongKongMultimodalScoringFunctionFactory`, which
+wraps the standard MATSim scoring delegate and composes a deterministic set of
+uniquely identified and uniquely mode-owning components.
 
-At scoring-function creation, the factory reads each selected-plan Taxi leg's
+The Taxi-only `HongKongTaxiFareScoringComponentFactory` is the sole registered
+component. At scoring-function creation it reads each selected-plan Taxi leg's
 current prepared route, calculates the distance fare, and builds an immutable
 ordinal `HongKongTaxiPersonFareSchedule`. Event-reconstructed experienced Taxi
 legs consume that schedule in order. Extra or unconsumed entries fail.
+
+The former `HongKongTaxiScoringFunctionFactory` and
+`HongKongTaxiScoringFunction` remain preserved as the pre-Stage-5 equivalence
+and historical load-audit baseline. They are not bound by the canonical
+runtime module and do not control the current architecture. An exact
+implementation test exercises the full scoring callback surface through both
+wrappers and requires identical score, callback counts, and explanation.
 
 The custom fare contribution is:
 
@@ -324,6 +340,31 @@ data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/
 Exact post-commit ancestry, pushed SHA, protected refs, and local/tracking/
 remote equality are recorded in the Stage 1 `INT-EXECUTOR` handoff because a
 commit cannot contain its own SHA.
+
+## Stage 5 Taxi-only scoring composition
+
+Stage 5 changes architecture, not Taxi economics. The route-fare calculator,
+fare utility `-0.05 util/HKD`, technical placeholder `ASC=-9`, zero standard
+Taxi distance terms, native routing, standard PrepareForSim lifecycle, and
+ordinal fail-closed charge path are unchanged.
+
+Composition guards reject duplicate component IDs, duplicate mode ownership,
+and factory/component ID mismatch. The production runtime guard and
+PrepareForSim validator also require exactly:
+
+```text
+active components:  [taxi_route_fare_v1]
+active mode owners: {taxi: taxi_route_fare_v1}
+```
+
+No PT/Car component, money-event fare, static cost lookup, fixed ownership,
+imputation, or silent-zero path is introduced. The compact Stage 5 evidence is:
+
+```text
+data/taxi/hongkong/processed/
+  taxi_scoring_composition_stage5_validation_v1/
+    stage5_taxi_scoring_composition_validation.json
+```
 
 Non-blocking diagnostics include Maven's deprecated `${parent.version}`
 expression, deprecated MATSim scoring APIs, Java 25 native-access/Unsafe

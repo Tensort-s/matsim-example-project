@@ -295,3 +295,34 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_4_GATE"
 handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
 next_action: "Review the exact pushed Stage 4 SHA; do not begin Stage 5 or authorize Runner."
 ```
+
+## Entry 8 — Stage 5 composable scoring and Taxi-only migration
+
+```yaml
+timestamp: "2026-07-31T14:25:22+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 5"
+input_sha: "191befd0c93027c5584857333a29746de8b432f0"
+output_sha_or_status: "exact pushed SHA recorded in the cross-session handoff"
+decision: "Bind one composable Hong Kong scoring factory and migrate only the unchanged canonical Taxi route-fare scorer through component taxi_route_fare_v1."
+findings:
+  - "The active registry contains one component and one mode owner: taxi_route_fare_v1 and taxi->taxi_route_fare_v1; duplicate IDs, duplicate mode owners, and factory/component ID mismatches fail closed."
+  - "Exact pre/post wrapper equivalence covers the full scoring callback surface with zero score tolerance, identical standard-delegate counts, and identical explanation."
+  - "The synthetic lifecycle test preserves standard PrepareForSimImpl, route-before-fare scheduling, native Taxi mode/routingMode, ordinal exact consumption, and one route-fare charge path."
+  - "Maven compile, 14 focused tests, the complete 66-test suite, and two Python native-routing tests passed with zero failures/errors/skips."
+  - "PT and Car remain offline-only; city.yaml, run_manifest, model inputs/configuration/economics, demand, capacity and supply are unchanged; no Hong Kong MATSim or server run occurred."
+diagnostics:
+  - "The first focused run exposed and corrected fixture person-ID mismatch plus Guice explicit-binding requirements; the final focused and complete suites pass."
+  - "The first Python invocation named nonexistent package modules; the corrected explicit-interpreter file invocation passed both repository tests."
+  - "Existing parent.version, deprecated scoring API, Java native-access/Unsafe, Guice ASM, and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json"
+  - "src/test/java/org/matsim/project/hongkong/taxi/HongKongTaxiScoringFunctionTest.java"
+  - "src/test/java/org/matsim/project/hongkong/taxi/HongKongTaxiPrepareForSimLifecycleTest.java"
+  - "src/test/java/org/matsim/project/hongkong/scoring/HongKongMultimodalScoringFunctionFactoryTest.java"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_5_GATE"
+handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
+next_action: "Review the exact pushed Stage 5 SHA; INT-EXECUTOR waits and does not begin Stage 6 or authorize Runner."
+```
