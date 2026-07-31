@@ -6,49 +6,49 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 6 - Legal PT itinerary and PT/walk stuck governance` |
-| status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_6_GATE` |
-| exact_input_sha | `d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a` |
+| task_id | `Stage 7 - PT fare runtime layered integration` |
+| status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_7_GATE` |
+| exact_input_sha | `176484d2be98664d280375c1d595c953d7d3163d` |
 | control_protocol_01_status | `PASS_CLOSED` |
+| stage_6_status | `PASS_CLOSED` |
 | authorized_owner | `INT-EXECUTOR` only |
 | authority_source | `INT-SUPERVISOR` only |
 | runner_authorized | `false` |
-| stage_7_authorized | `false` |
-| brief | [`stage-briefs/STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md`](stage-briefs/STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md) |
-| validation | [`../../data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json`](../../data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json) |
+| stage_8_authorized | `false` |
+| brief | [`stage-briefs/STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md`](stage-briefs/STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md) |
+| validation | [`../../data/transport_costs/hongkong/integration_stage7_validation_v1/stage7_pt_fare_runtime_validation.json`](../../data/transport_costs/hongkong/integration_stage7_validation_v1/stage7_pt_fare_runtime_validation.json) |
 
 ## Objective
 
-Audit prepared PT itinerary legality and classify future PT/walk stuck events
-deterministically without activating PT/Car scoring or changing Taxi behavior,
-fare policy, inputs, demand, capacity, or supply.
+Activate one strict five-layer PT fare component for explicit prepared
+itineraries while preserving Taxi equivalence, unresolved/null policy,
+transfer-concession boundaries, and offline Car status.
 
 ## Authorized delta
 
-- read-only PT itinerary/stuck audit logic and its Taxi runtime-guard hook;
-- focused deterministic tests and structured validation evidence;
-- relevant PT/Taxi/integration documentation and compact append-only
-  Supervisor-transferred handoffs.
+- hash-locked domestic MTR, Light Rail, GMB, Ferry, and Bus Core catalog;
+- selected-plan PT fare schedule, component/factory and combined Guice module;
+- deterministic null, quality, traceability and duplicate-prevention tests;
+- relevant PT/integration documentation, evidence and append-only worklogs.
 
 ## Forbidden delta
 
-PT or Car scoring/runtime activation; fare/transfer policy; economic
-parameters; MATSim configuration, plans, network, schedule, vehicles,
-facilities, demand, supply, capacity, city metadata or run manifest;
-Runner/server/Hong Kong MATSim execution; Stage 7+; and master or
-protected-feature changes.
+New fare/transfer/economic assumptions; generic PT fare inference; Bus
+simulation candidate or Airport Express cross-scope fallback; Car scoring;
+MATSim configuration, plans, network, schedule, vehicles, facilities, demand,
+supply, capacity, city metadata or run manifest; Runner/server/Hong Kong
+MATSim execution; Stage 8+; and master or protected-feature changes.
 
 ## Evidence references
 
-- Legality and stuck policy:
-  `docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`
+- Runtime policy: `docs/HONG_KONG_PT_FARE_RUNTIME.md`
 - Structured implementation evidence:
-  `data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json`
-- Historical cause boundary:
-  `stage6_pt_itinerary_stuck_governance_validation.json#historical_evidence`
+  `data/transport_costs/hongkong/integration_stage7_validation_v1/stage7_pt_fare_runtime_validation.json`
+- Layer quality/fallback matrix:
+  `data/transport_costs/hongkong/integration_stage7_validation_v1/pt_runtime_layer_quality_fallback_matrix.csv`
 
 ## Next action
 
 Executor reports the exact pushed SHA and compact handoff only to Supervisor
 and stops. Supervisor verifies and, if appropriate, dispatches Reviewer.
-Runner, Stage 7, and PT scoring remain unauthorized.
+Runner and Stage 8 remain unauthorized.

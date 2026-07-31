@@ -1,12 +1,21 @@
-# Hong Kong offline public-transport fare model v1
+# Hong Kong public-transport fare source model v1
 
 ## Current status
 
-This workflow is an offline fare-source, route-matching, and passenger-trip
-chargeability audit. It covers MTR, franchised bus, GMB, Ferry Core v1, and
-Light Rail. It does not write fares into MATSim and does not modify plans,
-config, scoring, Java runners, network, `transitSchedule`, vehicles,
-facilities, mode constants, ASC values, or marginal utility of money.
+This workflow remains the locked offline fare-source, route-matching, and
+passenger-trip chargeability release. It covers MTR, franchised bus, GMB,
+Ferry Core v1, and Light Rail. The source build itself does not write fares
+into MATSim and does not modify plans, config, network, `transitSchedule`,
+vehicles, facilities, mode constants, ASC values, or marginal utility of
+money.
+
+Stage 7 adds a separate, hash-locked runtime consumer for explicit prepared PT
+itineraries. Its scoring, null, quality, duplicate-prevention, and five-layer
+boundary is documented in
+[`HONG_KONG_PT_FARE_RUNTIME.md`](HONG_KONG_PT_FARE_RUNTIME.md). The source
+manifest and registry in this directory are unchanged; their historical
+offline approval status does not override the superseding integrated consumer
+manifest.
 
 Commit `c7be4a` originally generated a numeric fare for every generic PT leg by
 looking up distance bands for five different modes and taking their cross-mode
@@ -1507,6 +1516,8 @@ JSON parsing, CSV schemas, output portability, and output SHA256.
 - Light Rail station-OD v1 similarly supports only adult Octopus base fares
   for explicit ordered Light Rail stop IDs. It excludes transfer concessions
   and remains separate from the two MTR fare scopes.
-- This audit must not be connected to MATSim scoring until a separate,
-  explicitly approved integration stage supplies verifiable itineraries and
-  fare rules.
+- The former “must not connect” boundary is satisfied only by the explicitly
+  authorized Stage 7 runtime consumer. It requires prepared
+  `TransitPassengerRoute` references, exact crosswalks and strict rule hashes;
+  this source workflow itself remains offline and cannot price generic source
+  PT legs.

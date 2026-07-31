@@ -1,14 +1,14 @@
 {
   "schema_version": "hong_kong_integrated_multimodal_cost_source_interface_manifest_v1",
   "manifest_role": "sole_authoritative_integrated_source_and_interface_registry",
-  "status": "stage_5_pass_stage_6_itinerary_governance_pending_independent_review",
-  "stage_id": "Stage 6 - Legal PT itinerary and PT/walk stuck governance",
-  "stage_input_commit_sha": "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a",
+  "status": "stage_6_pass_stage_7_pt_fare_runtime_pending_independent_review",
+  "stage_id": "Stage 7 - PT fare runtime layered integration",
+  "stage_input_commit_sha": "176484d2be98664d280375c1d595c953d7d3163d",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "canonical_interface_count": 3,
   "canonical_interface_ids": [
     "taxi_native_runtime_route_fare_v1",
-    "pt_fare_v1_offline",
+    "pt_fare_v1_runtime_layered",
     "unified_marginal_cost_interface_v1"
   ],
   "locked_sources": {
@@ -64,28 +64,44 @@
     },
     {
       "mode": "pt",
-      "canonical_interface_id": "pt_fare_v1_offline",
-      "canonical_path": "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json",
+      "canonical_interface_id": "pt_fare_v1_runtime_layered",
+      "canonical_path": "src/main/java/org/matsim/project/hongkong/pt/HongKongPtFareRuntimeCatalog.java",
+      "source_manifest_path": "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json",
       "registry_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv",
       "release_validation_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json",
-      "status": "offline_interfaces_validated_not_integrated_with_scoring",
-      "runtime_approved": false,
-      "matsim_scoring_approved": false,
+      "status": "canonical_runtime_active_from_hash_locked_strict_offline_sources",
+      "runtime_approved": true,
+      "matsim_scoring_approved": true,
       "money_events_approved": false,
       "canonical_layer_count": 5,
       "canonical_layers": [
-        "mtr",
+        "mtr_domestic",
         "light_rail",
         "gmb",
         "ferry",
-        "bus"
+        "bus_core"
       ],
+      "runtime_implementation": {
+        "catalog": "src/main/java/org/matsim/project/hongkong/pt/HongKongPtFareRuntimeCatalog.java",
+        "selected_plan_schedule": "src/main/java/org/matsim/project/hongkong/pt/HongKongPtPersonFareSchedule.java",
+        "component_factory": "org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentFactory",
+        "component_id": "pt_fare_layered_v1",
+        "active_mode_owner": "pt",
+        "source_identity_policy": "verify ten canonical Parquet/crosswalk SHA256 values before loading",
+        "parquet_reader": "org.duckdb:duckdb_jdbc:1.4.3.0",
+        "fare_to_score_policy": "reuse existing finite nonnegative MATSim marginalUtilityOfMoney without changing config",
+        "standard_pt_monetary_distance_rate_required": 0.0,
+        "standard_pt_monetary_distance_rate_mutated": false,
+        "person_money_events_emitted": false,
+        "trip_callback_charges": 0
+      },
       "production_pt_leg_boundary": {
         "total": 557104,
         "priced": 0,
         "unresolved": 557104,
         "unresolved_cost_hkd": null,
-        "generic_leg_pricing_approved": false
+        "generic_leg_pricing_approved": false,
+        "boundary_role": "historical pre-routing source rows remain null; only explicit prepared TransitPassengerRoute segments may query runtime fares"
       },
       "transfer_concessions": "unmodelled_for_all_modes",
       "itinerary_governance": {
@@ -93,9 +109,23 @@
         "validation": "data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json",
         "status": "read_only_pre_qsim_legality_and_event_linked_stuck_classification",
         "plans_or_schedule_mutated": false,
-        "fare_or_scoring_used": false,
-        "pt_runtime_scoring_activated": false,
+        "itinerary_audit_fare_or_scoring_used": false,
+        "pt_runtime_scoring_activated": true,
         "runtime_cause_inference_policy": "legal_itinerary_runtime_cause_remains_unresolved_without_new_event_evidence"
+      },
+      "runtime_duplicate_protection": {
+        "selected_plan_pt_leg_ordinal_consumption": "exactly_once_fail_closed",
+        "experienced_route_fingerprint_match": "required",
+        "chained_segments": "quoted_once_in_chain_order",
+        "addMoney_callback_charge": false,
+        "handleEvent_callback_charge": false,
+        "handleTrip_callback_charge": false,
+        "unresolved_segment_fare_hkd": null,
+        "unresolved_segment_score_policy": "no fabricated fare contribution; explicit reason retained"
+      },
+      "source_release_status_preserved": {
+        "canonical_pt_fare_interface_manifest_release_status": "offline_interfaces_validated_not_integrated_with_scoring",
+        "reason": "the locked Stage 2 release describes source-interface provenance; Stage 7 approval is recorded only in this integrated consumer manifest and does not rewrite source evidence"
       },
       "prohibited_substitutions": [
         "distance_median",
@@ -138,19 +168,23 @@
   ],
   "canonical_scoring_composition": {
     "factory": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory",
-    "module": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringModule",
+    "module": "org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule",
+    "base_composition_module": "org.matsim.project.hongkong.scoring.HongKongMultimodalScoringModule",
     "scoring_function": "org.matsim.project.hongkong.scoring.HongKongComposableScoringFunction",
     "standard_delegate": "org.matsim.core.scoring.functions.CharyparNagelScoringFunctionFactory",
     "component_factory_contract": "org.matsim.project.hongkong.scoring.HongKongScoringComponentFactory",
-    "active_component_count": 1,
+    "active_component_count": 2,
     "active_component_ids": [
+      "pt_fare_layered_v1",
       "taxi_route_fare_v1"
     ],
     "active_mode_owners": {
+      "pt": "pt_fare_layered_v1",
       "taxi": "taxi_route_fare_v1"
     },
     "taxi_component_factory": "org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentFactory",
-    "pt_runtime_or_scoring_active": false,
+    "pt_component_factory": "org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentFactory",
+    "pt_runtime_or_scoring_active": true,
     "car_runtime_or_scoring_active": false,
     "duplicate_component_id_policy": "fail_closed",
     "duplicate_mode_owner_policy": "fail_closed",
@@ -161,6 +195,12 @@
       "classification": "preserved_pre_stage_5_equivalence_and_historical_load_audit_baseline",
       "bound_by_canonical_runtime_module": false,
       "controls_current_architecture": false
+    },
+    "taxi_only_stage_5_module": {
+      "module": "org.matsim.project.hongkong.taxi.HongKongTaxiScoringModule",
+      "classification": "preserved_taxi_only_equivalence_and_historical_smoke_entry",
+      "bound_by_canonical_stage_7_combined_module": false,
+      "controls_current_combined_architecture": false
     }
   },
   "historical_legacy_and_superseded_inventory": [
@@ -189,6 +229,14 @@
       "replacement_or_current_protection": "strict Bus Core remains separate; candidates do not overwrite it or price generic PT legs"
     },
     {
+      "scope": "pt",
+      "path_or_group": "pt_fare_v1_offline integrated interface identifier",
+      "classification": "superseded_stage_2_to_stage_6_integrated_consumer_status",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "pt_fare_v1_runtime_layered consumes the unchanged strict source release through exact hashed paths"
+    },
+    {
       "scope": "car",
       "path_or_group": "eight top-level paths listed in canonical_car_cost_interface_manifest.json#superseded_paths",
       "classification": "superseded_offline_prototype",
@@ -212,8 +260,8 @@
     "silent_legacy_activations": [],
     "stale_interfaces_controlling_current_architecture": [],
     "taxi_runtime_unchanged_since_stage_1_merge": true,
-    "pt_runtime_or_scoring_activation": false,
-    "car_runtime_or_scoring_activation": false,
+    "stage_4_pt_runtime_or_scoring_activation": false,
+    "stage_4_car_runtime_or_scoring_activation": false,
     "java_or_model_python_change_in_stage_4": false,
     "matsim_config_plan_supply_input_or_output_change_in_stage_4": false,
     "economic_or_behavioral_semantic_change_in_stage_4": false,
@@ -226,7 +274,17 @@
     "stage_6_read_only_pt_itinerary_governance": true,
     "stage_6_pt_fare_or_scoring_activation": false,
     "stage_6_plan_schedule_config_or_supply_mutation": false,
-    "stage_6_hong_kong_or_server_run_performed": false
+    "stage_6_hong_kong_or_server_run_performed": false,
+    "stage_7_pt_runtime_activation": true,
+    "stage_7_strict_layer_count": 5,
+    "stage_7_active_scoring_component_count": 2,
+    "stage_7_generic_source_rows_priced": 0,
+    "stage_7_money_events_emitted": false,
+    "stage_7_trip_callback_charges": 0,
+    "stage_7_bus_simulation_candidate_active": false,
+    "stage_7_car_runtime_or_scoring_activation": false,
+    "stage_7_city_run_config_or_supply_mutation": false,
+    "stage_7_hong_kong_or_server_run_performed": false
   },
   "protected_refs": {
     "origin_master": "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d",
@@ -236,9 +294,9 @@
   },
   "validation_contract": {
     "taxi": "Maven complete suite, exact pre/post Taxi wrapper equivalence, synthetic standard PrepareForSim lifecycle, and Taxi native-routing deterministic Python tests",
-    "pt": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py plus HongKongPtItineraryAuditTest and the Stage 6 read-only itinerary/stuck governance record",
+    "pt": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py plus HongKongPtFareRuntimeCatalogTest, HongKongPtFareScoringTest, HongKongPtItineraryAuditTest, and the Stage 7 runtime validation record",
     "car": "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py",
     "structured_manifest_checks": "JSON parse, unique IDs, referenced paths, offline/runtime flags, locked counts and exact Git ancestry",
-    "result_identity": "The Stage 6 output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
+    "result_identity": "The Stage 7 output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
   }
 }

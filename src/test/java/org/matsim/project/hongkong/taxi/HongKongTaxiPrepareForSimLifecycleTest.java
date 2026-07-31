@@ -18,6 +18,8 @@ import org.matsim.core.controler.PrepareForSimImpl;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentFactory;
+import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
 
 import java.util.List;
@@ -32,6 +34,37 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HongKongTaxiPrepareForSimLifecycleTest {
+
+	@Test
+	void stage7CombinedModuleHasExactlyTaxiAndPtModeOwners() {
+		Config config = HongKongTaxiTestFixtures.safeConfig();
+		config.transit().setUseTransit(false);
+		config.controller().setOutputDirectory(
+				"target/stage7-combined-module-" + UUID.randomUUID());
+		Scenario scenario = ScenarioUtils.createScenario(config);
+		addNetwork(scenario.getNetwork());
+
+		Controler controler = new Controler(scenario);
+		controler.addOverridingModule(
+				new HongKongMultimodalCostScoringModule());
+		controler.getInjector();
+		HongKongMultimodalScoringFunctionFactory scoringFactory =
+				(HongKongMultimodalScoringFunctionFactory)
+						controler.getScoringFunctionFactory();
+
+		assertEquals(
+				List.of(
+						HongKongPtFareScoringComponentFactory.COMPONENT_ID,
+						HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
+				scoringFactory.componentIds());
+		assertEquals(
+				Map.of(
+						"pt",
+						HongKongPtFareScoringComponentFactory.COMPONENT_ID,
+						"taxi",
+						HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
+				scoringFactory.activeModeOwners());
+	}
 
 	@Test
 	void defaultPrepareForSimUpdatesRouteBeforeScoringFactoryBuildsFareSchedule() {

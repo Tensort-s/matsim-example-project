@@ -1,0 +1,146 @@
+{
+  "schema_version": "hong_kong_stage7_pt_fare_runtime_validation_v1",
+  "stage_id": "Stage 7 - PT fare runtime layered integration",
+  "status": "implementation_validated_pending_independent_review",
+  "input_commit_sha": "176484d2be98664d280375c1d595c953d7d3163d",
+  "output_commit_sha": null,
+  "canonical_integrated_manifest": "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json",
+  "runtime_catalog": "src/main/java/org/matsim/project/hongkong/pt/HongKongPtFareRuntimeCatalog.java",
+  "runtime_component_id": "pt_fare_layered_v1",
+  "canonical_combined_module": "org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule",
+  "active_scoring_components": [
+    "pt_fare_layered_v1",
+    "taxi_route_fare_v1"
+  ],
+  "active_mode_owners": {
+    "pt": "pt_fare_layered_v1",
+    "taxi": "taxi_route_fare_v1"
+  },
+  "car_runtime_or_scoring_active": false,
+  "runtime_layers": {
+    "mtr_domestic_station_od_v1": {
+      "actual_mode": "train",
+      "rule_rows": 9216,
+      "available_rows": 9216,
+      "unresolved_rows": 0,
+      "exact_facility_mappings": 314,
+      "quality": {
+        "B": 9216
+      }
+    },
+    "light_rail_station_od_v1": {
+      "actual_mode": "light_rail",
+      "rule_rows": 4624,
+      "available_rows": 4624,
+      "unresolved_rows": 0,
+      "exact_facility_mappings": 377,
+      "quality": {
+        "B": 4624
+      }
+    },
+    "gmb_fare_v1": {
+      "actual_mode": "gmb",
+      "rule_rows": 97521,
+      "available_rows": 96866,
+      "unresolved_rows": 655,
+      "exact_facility_mappings": 13100,
+      "quality": {
+        "B": 96866,
+        "U": 655
+      },
+      "unresolved_breakdown": {
+        "conflicts": 361,
+        "identical_duplicates": 294
+      }
+    },
+    "ferry_fare_v1": {
+      "actual_mode": "ferry",
+      "rule_rows": 60,
+      "available_rows": 60,
+      "unresolved_rows": 0,
+      "exact_facility_mappings": 74,
+      "quality": {
+        "B": 48,
+        "C": 12
+      }
+    },
+    "bus_fare_v1": {
+      "actual_mode": "bus",
+      "rule_rows": 754133,
+      "available_rows": 754133,
+      "unresolved_rows": 0,
+      "exact_facility_mappings": 56056,
+      "quality": {
+        "B": 754133
+      },
+      "bus_simulation_candidate_active": false
+    }
+  },
+  "source_identity": {
+    "verified_sha256_path_count": 10,
+    "canonical_rule_sha256_path_count": 5,
+    "exact_crosswalk_sha256_path_count": 5,
+    "all_expected_sha256_match": true,
+    "registry_and_source_release_mutated": false
+  },
+  "generic_production_pt_boundary": {
+    "source_rows": 557104,
+    "source_rows_priced": 0,
+    "source_rows_unresolved": 557104,
+    "source_cost_hkd": null,
+    "runtime_query_requires_explicit_prepared_transit_passenger_route": true,
+    "distance_based_inference": false
+  },
+  "transfer_and_duplicate_contract": {
+    "transfer_concession_hkd": null,
+    "transfer_concession_status": "not_modelled",
+    "chained_segments_quoted_in_order": true,
+    "selected_plan_pt_leg_ordinals_consumed_exactly_once": true,
+    "experienced_route_fingerprint_required": true,
+    "duplicate_handleLeg_fails_closed": true,
+    "addMoney_callback_charge": false,
+    "handleEvent_callback_charge": false,
+    "handleTrip_callback_charge": false,
+    "person_money_events_emitted": 0,
+    "trip_callback_charges": 0
+  },
+  "score_contract": {
+    "fare_to_score": "negative resolved fare HKD multiplied by the unchanged existing MATSim marginalUtilityOfMoney",
+    "marginal_utility_of_money_changed": false,
+    "standard_pt_monetary_distance_rate_required": 0.0,
+    "standard_pt_monetary_distance_rate_changed": false,
+    "unresolved_fare_hkd": null,
+    "unresolved_score_behavior": "finite with no fabricated fare contribution and explicit reason retained",
+    "finite_nonnegative_fare_guard": true,
+    "finite_score_guard": true
+  },
+  "prohibited_fallbacks_active": {
+    "distance_median": false,
+    "cross_mode_aggregation": false,
+    "nearest_neighbor": false,
+    "reverse_lookup": false,
+    "path_sum": false,
+    "route_fullFare_substitution": false,
+    "bus_simulation_candidate": false,
+    "unresolved_to_zero": false
+  },
+  "deterministic_checks": {
+    "maven_compile": "passed",
+    "focused_maven_tests": "passed_35_of_35",
+    "complete_maven_tests": "passed_82_of_82",
+    "canonical_pt_release_validator": "passed_20_of_20",
+    "stage6_itinerary_tests": "passed_5_of_5",
+    "taxi_regression_tests": "passed_16_of_16_in_focused_suite",
+    "json_csv_reference_diff_and_conflict_checks": "passed"
+  },
+  "input_and_run_disposition": {
+    "city_yaml_changed": false,
+    "run_manifest_changed": false,
+    "matsim_config_or_plans_changed": false,
+    "network_schedule_vehicle_facility_changed": false,
+    "hong_kong_matsim_run_performed": false,
+    "runner_authorized": false,
+    "server_output_created": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_7_GATE"
+}

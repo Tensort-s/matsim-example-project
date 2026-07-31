@@ -409,3 +409,31 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor records the review outcome; Reviewer does not authorize Stage 6 or Runner."
 ```
+
+## Entry 12 — Stage 6 exact-SHA review
+
+Compact archival transfer from the Stage 7 Supervisor brief; the brief stated
+that this handoff was already archived, but the exact input tree contained no
+Stage 6 Reviewer entry, so only the supplied facts are appended here:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 6 exact-SHA review"
+input_sha: "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+output_sha_or_status: "176484d2be98664d280375c1d595c953d7d3163d"
+decision: "PASS"
+findings:
+  - "The legal-itinerary audit and explicit PT/walk stuck taxonomy are accepted."
+  - "Historical 79045 PT-stuck events remain bounded historical evidence."
+  - "No production run occurred."
+diagnostics:
+  - "The Supervisor transfer supplied no exact Reviewer timestamp or additional detailed findings; no missing facts are inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json"
+  - "data/transport_costs/hongkong/integration_stage6_validation_v1/stuck_root_cause_taxonomy.csv"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor may close Stage 6 and issue a separate Stage 7 authorization; Reviewer does not authorize execution or Runner."
+```

@@ -103,8 +103,30 @@ in
 [`docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`](HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md).
 It validates prepared-plan legality before QSim and classifies later PT/walk
 stuck events without pricing PT, changing the transit schedule, or inferring
-capacity/supply causes. PT and Car remain offline-only; Runner and Stage 7 are
-not authorized.
+capacity/supply causes. Stage 6 passed independent exact-SHA review and was
+formally closed at:
+
+```text
+176484d2be98664d280375c1d595c953d7d3163d
+```
+
+Stage 7 activates the strict five-layer PT fare runtime described in
+[`docs/HONG_KONG_PT_FARE_RUNTIME.md`](HONG_KONG_PT_FARE_RUNTIME.md). The
+combined composition has exactly two active components and unique mode
+owners:
+
+```text
+pt   -> pt_fare_layered_v1
+taxi -> taxi_route_fare_v1
+```
+
+The runtime reads hash-locked domestic MTR, Light Rail, GMB, Ferry, and Bus
+Core rules only after an explicit prepared itinerary exists. Generic source
+PT rows remain null/unresolved, transfer concessions remain unmodelled, Bus
+simulation candidates remain inactive, and Car remains offline. Stage 7
+changes no production config, plans, supply, demand, capacity, ASC, monetary
+utility, city metadata, or run manifest; no Runner or MATSim/server run is
+authorized.
 
 ## Stage 1 scope
 
@@ -393,6 +415,32 @@ warnings, Guice line-number inspection using an ASM version that does not
 understand class-file major version 69, and synthetic-fixture configuration
 warnings. Guice injection and all tests still pass; none of these diagnostics
 changes the Taxi runtime contract.
+
+## Stage 7 strict PT fare scoring composition
+
+`HongKongMultimodalCostScoringModule` supersedes the Taxi-only module as the
+canonical combined composition without deleting the Taxi-only equivalence and
+historical-smoke path. `HongKongPtFareRuntimeCatalog` validates ten source
+hashes, loads the five strict layer tables, and maps schedule facilities only
+through exact canonical crosswalks.
+
+`HongKongPtPersonFareSchedule` snapshots selected prepared PT legs, chained
+segments, ordinals and route fingerprints. `HongKongPtFareScoring` charges
+each resolved segment once from `handleLeg`; it emits no money event and
+ignores money/event/trip callbacks. Extra, missing, reordered, or changed
+route callbacks fail closed. Unresolved fare remains null with an explicit
+reason and no inferred fare contribution.
+
+The existing MATSim `marginalUtilityOfMoney` is reused without mutation.
+Standard PT `monetaryDistanceRate` must already be zero; a nonzero value is
+rejected rather than changed. Exact counts, layer qualities, representative
+quotes, duplicate probes, and regression commands are recorded in:
+
+```text
+data/transport_costs/hongkong/integration_stage7_validation_v1/
+  stage7_pt_fare_runtime_validation.json
+  pt_runtime_layer_quality_fallback_matrix.csv
+```
 
 ## Stage 2 verification boundary
 

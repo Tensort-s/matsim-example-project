@@ -70,6 +70,13 @@
 		</dependency>
 
 		<dependency>
+			<!-- Read the locked canonical PT Parquet rule tables directly. -->
+			<groupId>org.duckdb</groupId>
+			<artifactId>duckdb_jdbc</artifactId>
+			<version>1.4.3.0</version>
+		</dependency>
+
+		<dependency>
 			<!--MATSim test infrastructure.  Not transitive.-->
 			<groupId>org.matsim</groupId>
 			<artifactId>matsim</artifactId>

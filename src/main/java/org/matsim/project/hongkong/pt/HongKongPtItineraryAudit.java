@@ -359,7 +359,8 @@ public final class HongKongPtItineraryAudit {
 				}
 			}
 			update(digest, "pt\t" + id(current.getAccessStopId()) + "\t"
-					+ id(current.getEgressStopId()) + "\t"
+					+ id(HongKongPtFareRuntimeCatalog
+							.segmentEgressStopId(current)) + "\t"
 					+ id(current.getLineId()) + "\t"
 					+ id(current.getRouteId()) + "\t"
 					+ current.getDistance() + "\t"
@@ -412,11 +413,14 @@ public final class HongKongPtItineraryAudit {
 				reasons.add("PT_ACCESS_STOP_NOT_IN_SCHEDULE");
 			}
 		}
-		if (passengerRoute.getEgressStopId() == null) {
+		Id<TransitStopFacility> segmentEgress =
+				HongKongPtFareRuntimeCatalog.segmentEgressStopId(
+						passengerRoute);
+		if (segmentEgress == null) {
 			reasons.add("PT_EGRESS_STOP_ID_MISSING");
 		} else {
 			egress = schedule.getFacilities().get(
-					passengerRoute.getEgressStopId());
+					segmentEgress);
 			if (egress == null) {
 				reasons.add("PT_EGRESS_STOP_NOT_IN_SCHEDULE");
 			}

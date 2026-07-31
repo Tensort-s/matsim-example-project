@@ -412,3 +412,34 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_6_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed Stage 6 SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 7."
 ```
+
+## Entry 12 — Stage 7 layered PT fare runtime
+
+```yaml
+timestamp: "2026-07-31T16:44:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 7"
+input_sha: "176484d2be98664d280375c1d595c953d7d3163d"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Activate the five locked strict PT fare layers through component pt_fare_layered_v1 beside the unchanged Taxi component, with exact source hashes, ordered segment charging and null-preserving fail-closed behavior."
+findings:
+  - "The canonical composition has exactly two mode owners: pt->pt_fare_layered_v1 and taxi->taxi_route_fare_v1; Car remains offline and fixed ownership remains excluded."
+  - "The runtime catalog verifies five rule Parquet and five exact crosswalk SHA256 values, loads 9216 MTR, 4624 Light Rail, 97521 GMB, 60 Ferry and 754133 Bus Core rules, and excludes Airport Express cross-scope and Bus simulation candidates."
+  - "Selected-plan PT ordinals and route fingerprints are consumed exactly once; chained segments use immediate segment egress, duplicate callbacks fail closed, and money/event/trip callbacks cannot add a second charge."
+  - "Unresolved GMB records and generic PT remain null/U with explicit reasons; no distance, reverse, path-sum, nearest-neighbour, fullFare, transfer-concession, arbitrary candidate or zero fallback is active."
+  - "Compile, 35 focused tests, the complete 82-test suite, Stage 6 itinerary tests, and the canonical PT release validator 20/20 passed; no Hong Kong scenario/server run or city/run-manifest change occurred."
+diagnostics:
+  - "A chained-route test exposed that MATSim reports the final chain egress from the first passenger-route node; the runtime and Stage 6 audit now use the next chained route access stop as the immediate segment egress."
+  - "The first final focused run exposed a test-only shared ./output directory; assigning the Guice fixture a unique target directory was the relevant change, after which all 35 focused tests passed."
+  - "Catalog load through DuckDB took about 9 seconds in the final focused test; native-access, Maven parent.version, Java Unsafe, Guice ASM and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage7_validation_v1/stage7_pt_fare_runtime_validation.json"
+  - "data/transport_costs/hongkong/integration_stage7_validation_v1/pt_runtime_layer_quality_fallback_matrix.csv"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/HONG_KONG_PT_FARE_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_7_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed Stage 7 SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8."
+```

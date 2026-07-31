@@ -462,3 +462,32 @@ hard_gate_status: "STAGE_6_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement, validate and push one Stage 6 result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 15 — Stage 6 closure and Stage 7 authorization
+
+Compact archival record faithfully transferred from the formal Stage 7 brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 6 closure / Stage 7 authorization"
+input_sha: "176484d2be98664d280375c1d595c953d7d3163d"
+output_sha_or_status: "STAGE_6_PASS_CLOSED__STAGE_7_AUTHORIZED"
+decision: "Close Stage 6 PASS and authorize INT-EXECUTOR only to activate the five already-approved PT fare layers in composable scoring; keep Car offline and Runner inactive."
+findings:
+  - "Stage 6 exact-SHA review returned PASS with blockers=[] for 176484d2be98664d280375c1d595c953d7d3163d."
+  - "The legal-itinerary audit and explicit PT/walk stuck taxonomy are accepted."
+  - "Historical 79045 PT-stuck events remain bounded historical evidence; no production run occurred."
+  - "Stage 7 may use only the five canonical PT fare semantics and must fail closed for unresolved values."
+  - "Executor reports the exact pushed result only to Supervisor; Supervisor dispatches Reviewer."
+diagnostics:
+  - "The formal Stage 7 brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md"
+  - "docs/integration/stage-briefs/STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "STAGE_6_PASS_CLOSED__STAGE_7_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one Stage 7 result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
+```

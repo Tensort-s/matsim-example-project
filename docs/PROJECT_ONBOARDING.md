@@ -195,6 +195,11 @@ The pre-PT-scoring itinerary and stuck governance contract is in
 `docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`. It adds a read-only
 prepared-itinerary legality audit and fail-closed event taxonomy without
 changing PT fares, plans, supply, demand, capacity, or active scoring.
+The subsequent five-layer runtime consumer is documented in
+`docs/HONG_KONG_PT_FARE_RUNTIME.md`. It uses exact prepared PT segment
+references and hash-locked domestic MTR, Light Rail, GMB, Ferry, and strict
+Bus Core rules; unresolved fares stay null, transfer concessions remain
+unmodelled, Taxi remains equivalent, and Car remains offline.
 
 The private-car offline cost workspace is under
 `data/transport_costs/hongkong/car_cost_v1/` and documented in
