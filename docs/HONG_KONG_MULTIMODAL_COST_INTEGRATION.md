@@ -63,6 +63,21 @@ Current stage status and stable cross-session rules are maintained in
 [`docs/integration/CURRENT_STAGE.md`](integration/CURRENT_STAGE.md) and
 [`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md).
 
+Stage 4A passed independent exact-SHA review at `3cbe393ec262550ab27bc13635614b8f0440c958`.
+Stage 4 now audits the combined boundary without changing model or runtime
+semantics. Its sole authoritative integrated registry is:
+
+```text
+data/transport_costs/hongkong/
+  integrated_multimodal_cost_source_interface_manifest_v1.json
+```
+
+That registry points to exactly three current interfaces: the active native
+Taxi runtime/route-fare path, the five-layer offline PT fare release, and the
+offline Car `unified_marginal_cost_interface_v1`. Historical, candidate,
+accounting, design-only and superseded artifacts remain preserved but cannot
+act as parallel canonical interfaces.
+
 ## Stage 1 scope
 
 Stage 1 imports the Taxi population metadata conversion, native passenger

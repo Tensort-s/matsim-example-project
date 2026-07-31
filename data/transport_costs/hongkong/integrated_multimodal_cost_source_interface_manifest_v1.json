@@ -1,0 +1,200 @@
+{
+  "schema_version": "hong_kong_integrated_multimodal_cost_source_interface_manifest_v1",
+  "manifest_role": "sole_authoritative_integrated_source_and_interface_registry",
+  "status": "pending_independent_review_and_supervisor_stage_4_gate",
+  "stage_id": "Stage 4 - Completeness and integration-boundary audit",
+  "stage_input_commit_sha": "3cbe393ec262550ab27bc13635614b8f0440c958",
+  "integration_branch": "integration/hk-multimodal-cost-v1",
+  "canonical_interface_count": 3,
+  "canonical_interface_ids": [
+    "taxi_native_runtime_route_fare_v1",
+    "pt_fare_v1_offline",
+    "unified_marginal_cost_interface_v1"
+  ],
+  "locked_sources": {
+    "taxi": {
+      "source_commit_sha": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+      "integration_merge_commit_sha": "d54fdd775064ace1c9f2aa2b6cb96db0e9474975",
+      "merge_first_parent_sha": "476f25254a99e4b9c47d5b439a6e7b658a412f80",
+      "ancestor_of_stage_input": true
+    },
+    "pt": {
+      "source_commit_sha": "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+      "integration_merge_commit_sha": "6902501e956bc9bede52de26e1e8ad9bf2b457d6",
+      "merge_first_parent_sha": "d54fdd775064ace1c9f2aa2b6cb96db0e9474975",
+      "ancestor_of_stage_input": true
+    },
+    "car": {
+      "source_commit_sha": "fc906efd3afb98e027cc6cca44060dec9e32aa46",
+      "integration_merge_commit_sha": "75988d2645f55a36fb6271ff49d887c1b5143c1b",
+      "merge_first_parent_sha": "6902501e956bc9bede52de26e1e8ad9bf2b457d6",
+      "ancestor_of_stage_input": true
+    }
+  },
+  "interfaces": [
+    {
+      "mode": "taxi",
+      "canonical_interface_id": "taxi_native_runtime_route_fare_v1",
+      "canonical_path": "src/main/java/org/matsim/project/hongkong/taxi/",
+      "status": "canonical_runtime_active",
+      "runtime_approved": true,
+      "matsim_scoring_approved": true,
+      "native_mode": "taxi",
+      "native_routing_mode": "taxi",
+      "prepare_for_sim_binding": "org.matsim.core.controler.PrepareForSimImpl",
+      "fare_charge_path": "selected prepared Taxi leg -> HongKongTaxiPersonFareSchedule -> HongKongTaxiFareScoring.handleLeg",
+      "duplicate_charge_protection": {
+        "canonical_route_fare_paths": 1,
+        "taxi_standard_distance_monetary_term_required_zero": true,
+        "taxi_standard_distance_utility_term_required_zero": true,
+        "taxi_fare_person_money_event_emitted": false,
+        "mismatch_policy": "fail_closed"
+      },
+      "implementation_validation": "data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/stage1_taxi_merge_validation.json",
+      "native_routing_validation": "data/taxi/hongkong/processed/taxi_native_routing_v1/taxi_native_routing_validation.json",
+      "prepare_for_sim_validation": "data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/taxi_prepare_for_sim_validation.json",
+      "route_fare_validation": "data/taxi/hongkong/processed/taxi_route_fare_scoring_v1/taxi_route_fare_parity_validation.json",
+      "historical_runtime_evidence": {
+        "path": "data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/taxi_two_iteration_smoke_conditional_validation.json",
+        "status": "historical_incomplete_two_iteration_result",
+        "calibration_complete": false,
+        "asc_minus_9_role": "technical_placeholder_only",
+        "standalone_smoke_rerun_in_stage_4": false
+      }
+    },
+    {
+      "mode": "pt",
+      "canonical_interface_id": "pt_fare_v1_offline",
+      "canonical_path": "data/transport_costs/hongkong/pt_fare_v1/canonical_pt_fare_interface_manifest.json",
+      "registry_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_layer_registry.csv",
+      "release_validation_path": "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json",
+      "status": "offline_interfaces_validated_not_integrated_with_scoring",
+      "runtime_approved": false,
+      "matsim_scoring_approved": false,
+      "money_events_approved": false,
+      "canonical_layer_count": 5,
+      "canonical_layers": [
+        "mtr",
+        "light_rail",
+        "gmb",
+        "ferry",
+        "bus"
+      ],
+      "production_pt_leg_boundary": {
+        "total": 557104,
+        "priced": 0,
+        "unresolved": 557104,
+        "unresolved_cost_hkd": null,
+        "generic_leg_pricing_approved": false
+      },
+      "transfer_concessions": "unmodelled_for_all_modes",
+      "prohibited_substitutions": [
+        "distance_median",
+        "cross_mode_aggregation",
+        "nearest_neighbor",
+        "reverse_lookup",
+        "path_sum",
+        "route_fullFare_substitution",
+        "unresolved_to_zero"
+      ]
+    },
+    {
+      "mode": "car",
+      "canonical_interface_id": "unified_marginal_cost_interface_v1",
+      "canonical_path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/",
+      "source_manifest_path": "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json",
+      "release_validation_path": "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json",
+      "integrated_validation_path": "data/transport_costs/hongkong/integration_stage3_validation_v1/stage3_car_merge_validation.json",
+      "status": "canonical_offline_behavioral_cost_interface_candidate",
+      "runtime_approved": false,
+      "matsim_scoring_approved": false,
+      "scoring_implementation_approved": false,
+      "runtime_static_leg_lookup_approved": false,
+      "canonical_components": [
+        "fuel_or_electricity",
+        "toll",
+        "destination_parking"
+      ],
+      "fixed_vehicle_ownership_cost": {
+        "role": "accounting_sidecar_only",
+        "included_in_leg_components": false,
+        "included_in_behavioral_totals": false
+      },
+      "null_boundaries": {
+        "parking_unresolved_private_car_legs": 835,
+        "motorcycle_out_of_scope_legs": 2929,
+        "unresolved_or_out_of_scope_numeric_zero_count": 0
+      }
+    }
+  ],
+  "historical_legacy_and_superseded_inventory": [
+    {
+      "scope": "taxi",
+      "path_or_group": "data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/",
+      "classification": "historical_incomplete_runtime_evidence",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "Taxi implementation tests plus native-routing, PrepareForSim and route-fare validations referenced by the canonical Taxi interface"
+    },
+    {
+      "scope": "pt",
+      "path_or_group": "data/transport_costs/hongkong/pt_fare_v1/official_fares_normalized.parquet",
+      "classification": "historical_normalized_source_catalog_and_crosscheck_only",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "five-row pt_fare_layer_registry.csv and mode-specific canonical quote interfaces"
+    },
+    {
+      "scope": "pt",
+      "path_or_group": "Bus simulation candidate layer",
+      "classification": "offline_coverage_first_candidate_with_quality_and_anomaly_provenance",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "strict Bus Core remains separate; candidates do not overwrite it or price generic PT legs"
+    },
+    {
+      "scope": "car",
+      "path_or_group": "eight top-level paths listed in canonical_car_cost_interface_manifest.json#superseded_paths",
+      "classification": "superseded_offline_prototype",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "unified_marginal_cost_interface_v1"
+    },
+    {
+      "scope": "car",
+      "path_or_group": "fixed-ownership, supporting component candidates and scoring-design audit artifacts",
+      "classification": "accounting_sidecar_supporting_provenance_or_design_only",
+      "preserved": true,
+      "controls_current_architecture": false,
+      "replacement_or_current_protection": "only unified_marginal_cost_interface_v1 may supply current behavioral marginal costs"
+    }
+  ],
+  "boundary_audit": {
+    "one_authoritative_integrated_manifest": true,
+    "canonical_interface_ids_unique": true,
+    "duplicate_active_canonical_interfaces": [],
+    "silent_legacy_activations": [],
+    "stale_interfaces_controlling_current_architecture": [],
+    "taxi_runtime_unchanged_since_stage_1_merge": true,
+    "pt_runtime_or_scoring_activation": false,
+    "car_runtime_or_scoring_activation": false,
+    "java_or_model_python_change_in_stage_4": false,
+    "matsim_config_plan_supply_input_or_output_change_in_stage_4": false,
+    "economic_or_behavioral_semantic_change_in_stage_4": false,
+    "runner_authorized": false,
+    "matsim_or_server_run_performed": false
+  },
+  "protected_refs": {
+    "origin_master": "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d",
+    "origin_feature_hk_taxi_behavioral_pilot_v1": "aa0d4794fa3af8458c906db1614fd418893e4bd4",
+    "origin_feature_hk_pt_fare_model_v1": "0b0ce90375b9e3d0c055fa46c5a3b96bfc3a5103",
+    "origin_feature_hk_car_cost_model_v1": "fc906efd3afb98e027cc6cca44060dec9e32aa46"
+  },
+  "validation_contract": {
+    "taxi": "Maven complete suite plus Taxi native-routing deterministic Python tests",
+    "pt": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py",
+    "car": "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py",
+    "structured_manifest_checks": "JSON parse, unique IDs, referenced paths, offline/runtime flags, locked counts and exact Git ancestry",
+    "result_identity": "The Stage 4 output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
+  }
+}

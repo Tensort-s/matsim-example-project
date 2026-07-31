@@ -222,3 +222,68 @@ blockers: []
 handoff_to: "INT-SUPERVISOR session 019fb38e-0963-7f01-9461-ba84c9aa6378"
 next_allowed_action: "INT-SUPERVISOR may record the Stage 2 PASS and independently decide the formal next-stage action. INT-REVIEWER does not authorize Stage 3; INT-RUNNER remains unauthorized."
 ```
+
+## Entry 6 — Stage 3 exact-SHA review
+
+Faithfully transcribed in the compact prospective schema from the actual
+INT-REVIEWER PASS:
+
+```yaml
+timestamp: "2026-07-31T12:19:41+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 3 exact-SHA review"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: null
+decision: "PASS"
+findings:
+  - "Verified exact pushed SHA and merge topology: first parent 6902501e956bc9bede52de26e1e8ad9bf2b457d6, second parent locked Car fc906efd3afb98e027cc6cca44060dec9e32aa46; Taxi/PT remain ancestors and locked refs match."
+  - "Verified 118 locked Car source paths, zero omissions and 117 blob-identical paths; docs/PROJECT_ONBOARDING.md is the sole documented combined-resolution difference."
+  - "Verified unified_marginal_cost_interface_v1 is the sole canonical offline Car consumer interface and fixed ownership remains accounting-sidecar-only."
+  - "Verified all 835 parking-unresolved private-car legs and 2929 motorcycle legs remain null/out-of-scope; unresolved/out-of-scope numeric-zero count is zero."
+  - "Verified no src, POM or run-manifest change; city.yaml adds only offline metadata and no Car scoring, money event, static lookup or configuration activation."
+diagnostics:
+  - "Submitted validation and local test evidence support the claimed result; dependency and source-limitation warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage3_validation_v1/stage3_car_merge_validation.json#hard_gate_evidence"
+  - "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json#consumer_contract"
+  - "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json#hard_checks"
+  - "docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md#stage-3-canonical-offline-car-marginal-cost-boundary"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "INT-SUPERVISOR may close Stage 3 and decide the next formal action; Reviewer does not authorize Stage 4 or Runner."
+```
+
+## Entry 7 — Stage 4A exact-SHA review
+
+Faithfully transcribed from the actual INT-REVIEWER handoff:
+
+```yaml
+timestamp: "2026-07-31T13:15:38+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 4A exact-SHA review"
+input_sha: "3cbe393ec262550ab27bc13635614b8f0440c958"
+output_sha_or_status: null
+decision: "PASS"
+findings:
+  - "Verified exact SHA, required sole parent, clean status, remote equality and protected refs."
+  - "Verified the first-parent delta contains exactly eight authorized Markdown governance paths."
+  - "Verified unchanged lane identities, session IDs, authority and write scopes."
+  - "Verified append-only worklogs and complete lean protocol controls."
+  - "Verified CURRENT_STAGE leaves substantive Stage 4 and Runner unauthorized."
+diagnostics:
+  - "Prospective lean limits do not rewrite historical verbose records."
+  - "Documentation wording corrections do not alter model semantics."
+  - "No substantive Stage 4 or Runner activity was authorized by this review."
+evidence_refs:
+  - "agent-lanes.md#canonical-control-plane-sources"
+  - "docs/integration/INTEGRATION_POLICY.md#lean-cross-session-protocol"
+  - "docs/integration/INTEGRATION_POLICY.md#compact-future-worklog-schema"
+  - "docs/integration/INTEGRATION_POLICY.md#lane-specific-routine-output-budgets"
+  - "docs/integration/CURRENT_STAGE.md"
+  - "docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "INT-SUPERVISOR may record Stage 4A PASS; the next Executor stage appends the Stage 3 Reviewer PASS and explicit Supervisor Stage 3 closure without rewriting history."
+```

@@ -265,3 +265,33 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_4A_GATE"
 handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
 next_action: "Review the exact pushed Stage 4A SHA; do not begin another stage."
 ```
+
+## Entry 7 — Stage 4 completeness and integration-boundary audit
+
+```yaml
+timestamp: "2026-07-31T13:42:39+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 4"
+input_sha: "3cbe393ec262550ab27bc13635614b8f0440c958"
+output_sha_or_status: "exact pushed SHA recorded in the cross-session handoff"
+decision: "Publish one authoritative integrated Taxi/PT/Car source-interface manifest without changing any implementation, runtime, scoring, configuration or model semantic."
+findings:
+  - "Verified exact source ancestry and Taxi->PT->Car merge-parent topology; locked master and feature refs remain exact."
+  - "The sole integrated manifest registers exactly three unique current interfaces: active native Taxi runtime, offline five-layer PT, and offline unified Car marginal costs."
+  - "Classified Taxi historical runtime evidence, PT normalized/Bus candidate layers, Car superseded prototypes, fixed accounting and design artifacts as preserved non-controlling records."
+  - "PT validator passed 20/20 with five registry rows and 16 hashes; Car validator passed 12 canonical hashes, 609462 component rows and all null/fixed boundaries; Taxi Python tests passed 2/2."
+  - "Maven compile passed and the complete suite passed 61 tests with zero failures, errors or skips; no MATSim scenario or server task ran."
+diagnostics:
+  - "Maven parent.version, Java native-access/Unsafe, MATSim fixture and dependency warnings remain non-blocking."
+  - "The first two ad-hoc manifest-check invocations exposed only validator-command selection/Windows decoding issues; the corrected read-only check passed without changing model artifacts."
+evidence_refs:
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#boundary_audit"
+  - "data/transport_costs/hongkong/pt_fare_v1/pt_fare_release_validation.json#checks"
+  - "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json#hard_checks"
+  - "data/taxi/hongkong/processed/taxi_integration_stage1_validation_v1/stage1_taxi_merge_validation.json#structured_evidence"
+  - "docs/integration/stage-briefs/STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md#hard-gates"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_4_GATE"
+handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
+next_action: "Review the exact pushed Stage 4 SHA; do not begin Stage 5 or authorize Runner."
+```

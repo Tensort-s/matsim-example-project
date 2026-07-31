@@ -13,4 +13,8 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
+- [`STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md`](STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md)
+
+Closed briefs:
+
 - [`STAGE_04A_LEAN_PROTOCOL_MIGRATION.md`](STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)

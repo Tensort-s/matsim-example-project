@@ -270,3 +270,60 @@ hard_gate_status: "STAGE_4A_CONTINUATION_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Validate, commit and push the preserved Stage 4A governance delta, then stop."
 ```
+
+## Entry 8 — Stage 3 gate closure
+
+Compact append-only record of the Supervisor closure embodied by the formal
+Stage 4A authorization:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 3 gate closure / Stage 4A authorization"
+input_sha: "75988d2645f55a36fb6271ff49d887c1b5143c1b"
+output_sha_or_status: "STAGE_3_CLOSED"
+decision: "Stage 3 PASS; authorize only the governance/documentation Stage 4A migration for INT-EXECUTOR."
+findings:
+  - "Received INT-REVIEWER PASS for exact pushed Stage 3 SHA with no blockers."
+  - "Closed Stage 3 with the Taxi runtime, offline PT release and sole unified Car interface preserved."
+  - "Authorized Stage 4A as a governance-only delta; substantive Stage 4 and Runner remained unauthorized."
+diagnostics:
+  - "The formal Stage 4A authorization supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/agent-worklogs/integration-reviewer.md#entry-6--stage-3-exact-sha-review"
+  - "data/transport_costs/hongkong/integration_stage3_validation_v1/stage3_car_merge_validation.json"
+  - "docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md"
+blockers: []
+hard_gate_status: "STAGE_3_PASS__STAGE_4A_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Execute only Stage 4A governance migration, push one exact result and stop for independent review."
+```
+
+## Entry 9 — Stage 4A gate closure and Stage 4 authorization
+
+Faithfully transcribed in the compact prospective schema from the actual
+INT-SUPERVISOR handoff:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 4A closure / Stage 4 gated-autopilot activation"
+input_sha: "3cbe393ec262550ab27bc13635614b8f0440c958"
+output_sha_or_status: "STAGE_4_DISPATCHED"
+decision: "Stage 4A PASS and closed; Stage 4 authorized for INT-EXECUTOR only under gated autopilot."
+findings:
+  - "Verified HEAD, local integration ref, tracking ref and remote integration ref equal the exact SHA."
+  - "Verified Reviewer input SHA, decision PASS, hard-gate PASS and empty blockers."
+  - "Adopted INTEGRATION_POLICY.md prospectively and activated gated autopilot."
+  - "Dispatched the compact Stage 4 Brief to INT-EXECUTOR."
+  - "Runner remains inactive and no master merge is authorized."
+diagnostics: []
+evidence_refs:
+  - "docs/agent-worklogs/integration-reviewer.md#entry-7--stage-4a-exact-sha-review"
+  - "docs/integration/INTEGRATION_POLICY.md#lean-cross-session-protocol"
+  - "docs/integration/stage-briefs/STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md"
+blockers: []
+hard_gate_status: "STAGE_4A_PASS__STAGE_4_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action: "INT-EXECUTOR performs the compact Stage 4 audit, pushes one exact result and stops for INT-REVIEWER."
+```
