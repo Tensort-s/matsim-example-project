@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Exact-tree source-snapshot bounded rework` |
+| task_id | `Stage 8D - Exact-SHA source-snapshot lock-anchor rework` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` |
+| exact_input_sha | `6ce087af803da1a4b21717c1e0073ce4a04c608a` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -20,9 +20,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Add a Git-metadata-free source-snapshot identity path so a later separately
-authorized Runner can transfer and build the locked exact runtime on a server
-without a checkout, while retaining the original exact-clean-Git guard.
+Move the active Git-metadata-free source-snapshot lock to exact reviewed input
+`6ce087af803da1a4b21717c1e0073ce4a04c608a` and its Git-derived tree/blob
+inventory, while retaining the original exact-clean-Git guard.
 
 ## Authorized delta
 

@@ -21,8 +21,13 @@ strength:
   extracted files reconstruct the locked Git tree exactly.
 
 Snapshot mode is locked to source commit
-`3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` and tree
-`d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9`. It verifies the out-of-band
+`6ce087af803da1a4b21717c1e0073ce4a04c608a` and tree
+`137f00cb10394ce6ff9df657aff8e2de72fb0073`. Its deterministic 7,620-file
+Git blob inventory SHA256 is
+`616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5`.
+The prior snapshot source `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4`
+is an explicit rejected identity, not a fallback. The current contract verifies
+the out-of-band
 manifest SHA256, archive SHA256, 7,620-entry path/mode/blob/size/SHA256
 inventory, reconstructed Git tree, extraction contents and absence of `.git`.
 Only generated `target/` build output may coexist with the exact extracted
@@ -63,7 +68,7 @@ refs:
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
   create-source-snapshot `
-  --source-commit-sha 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4 `
+  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a `
   --snapshot-path <new-source-snapshot.tar> `
   --snapshot-manifest <new-source-snapshot-manifest.json>
 ```
@@ -73,9 +78,14 @@ Runner records those values before transfer, copies the reviewed control
 script, archive and manifest to new paths below `/mnt/DiskM/by/`, and verifies
 the archive before extraction:
 
+The control script must come from the exact pushed lock-anchor output reviewed
+after this rework and remain outside the extracted source root. The historical
+copy embedded in source commit `6ce087af…` is snapshot content, not the active
+verification authority.
+
 ```bash
-python3 prepare_hong_kong_matsim_server_bundle.py verify-source-snapshot \
-  --source-commit-sha 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4 \
+python3 <reviewed-external-control-script> verify-source-snapshot \
+  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a \
   --source-snapshot <transferred-source-snapshot.tar> \
   --source-snapshot-manifest <transferred-source-manifest.json> \
   --source-snapshot-manifest-sha256 <recorded-manifest-sha256>
@@ -116,9 +126,9 @@ metadata records the complete source-identity result. It also supplies the
 observed Java and Maven versions. MATSim is fixed at `2026.0`.
 
 ```bash
-python3 prepare_hong_kong_matsim_server_bundle.py build-bundle \
+python3 <reviewed-external-control-script> build-bundle \
   --source-identity-mode snapshot \
-  --source-commit-sha 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4 \
+  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a \
   --source-root <verified-source-root> \
   --source-snapshot <transferred-source-snapshot.tar> \
   --source-snapshot-manifest <transferred-source-manifest.json> \

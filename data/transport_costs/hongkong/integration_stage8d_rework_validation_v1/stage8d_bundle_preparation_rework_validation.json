@@ -1,8 +1,8 @@
 {
   "schema_version": "hong_kong_stage8d_bundle_preparation_rework_validation_v1",
   "status": "pending_independent_review_and_supervisor_stage_8d_gate",
-  "stage_id": "Stage 8D - Exact-tree source-snapshot bounded rework",
-  "input_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
+  "stage_id": "Stage 8D - Exact-SHA source-snapshot lock-anchor rework",
+  "input_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
   "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "scope": {
@@ -28,15 +28,20 @@
       "exact_git_tree_snapshot"
     ],
     "clean_source_checkout_guard_preserved": true,
-    "snapshot_source_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
-    "snapshot_source_tree_sha": "d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9",
+    "snapshot_source_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
+    "snapshot_source_tree_sha": "137f00cb10394ce6ff9df657aff8e2de72fb0073",
     "snapshot_tracked_file_count": 7620,
+    "snapshot_git_blob_inventory_sha256": "616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5",
+    "prior_snapshot_source_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
+    "prior_snapshot_source_commit_accepted": false,
     "snapshot_manifest_out_of_band_sha256_required": true,
     "snapshot_archive_sha256_required": true,
     "snapshot_git_tree_reconstruction_required": true,
     "snapshot_extracted_file_verification_required": true,
     "snapshot_git_metadata_allowed": false,
     "snapshot_outputs_inside_git_worktree_allowed": false,
+    "active_control_script_source": "exact_pushed_lock_anchor_output_commit",
+    "snapshot_embedded_prior_control_script_authoritative": false,
     "release_root_argument_required": true,
     "release_root_boundary": "/mnt/DiskM/by/<new-release>",
     "all_local_output_paths_must_be_new": true,
@@ -66,7 +71,7 @@
       ],
       "snapshot": [
         "verify manifest SHA256 and archive SHA256 before extraction",
-        "reconstruct exact d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9 Git tree from all 7620 member blobs",
+        "reconstruct exact 137f00cb10394ce6ff9df657aff8e2de72fb0073 Git tree from all 7620 member blobs",
         "extract to a new Git-metadata-free source root",
         "verify every extracted tracked file; allow only generated target/ build output"
       ]
@@ -145,10 +150,15 @@
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
       "exit_status": 0,
-      "result": "7/7 inputs and config boundary pass; locked 3a56bcd inventory reconstructs the 7620-file d3d57d6 tree; valid archive and extracted snapshot fixture accepted; wrong SHA/tree/manifest hash, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
+      "result": "7/7 inputs and config boundary pass; locked 6ce087a inventory 616c9a4 reconstructs the 7620-file 137f00c tree; valid archive and extracted snapshot fixture accepted; prior 3a56bcd, wrong SHA/tree/manifest hash, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
     }
   ],
   "snapshot_validation": {
+    "exact_source_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
+    "exact_source_tree_sha": "137f00cb10394ce6ff9df657aff8e2de72fb0073",
+    "exact_git_blob_inventory_sha256": "616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5",
+    "exact_tracked_file_count": 7620,
+    "exact_snapshot_anchor_fixture_generated_from_git": true,
     "locked_git_tree_reconstruction_passed": true,
     "valid_snapshot_fixture_accepted": true,
     "valid_snapshot_archive_accepted_before_extraction": true,
@@ -158,6 +168,7 @@
     "snapshot_archive_tampering_rejected": true,
     "extracted_source_tampering_rejected": true,
     "snapshot_output_inside_worktree_rejected": true,
+    "prior_3a56_snapshot_source_sha_rejected": true,
     "stale_v1_input_rejected": true
   },
   "artifact_status": {

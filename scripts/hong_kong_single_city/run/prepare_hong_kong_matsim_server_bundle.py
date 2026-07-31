@@ -37,11 +37,16 @@ CONFIG_NAME = "config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
 SERVER_BUILD_COMMAND = "./mvnw -DskipTests package"
 MATSIM_VERSION = "2026.0"
 LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA = (
-    "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4"
+    "6ce087af803da1a4b21717c1e0073ce4a04c608a"
 )
 LOCKED_SNAPSHOT_SOURCE_TREE_SHA = (
-    "d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9"
+    "137f00cb10394ce6ff9df657aff8e2de72fb0073"
 )
+LOCKED_SNAPSHOT_TRACKED_FILE_COUNT = 7_620
+LOCKED_SNAPSHOT_GIT_BLOB_INVENTORY_SHA256 = (
+    "616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5"
+)
+PRIOR_SNAPSHOT_SOURCE_COMMIT_SHA = "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4"
 SOURCE_SNAPSHOT_SCHEMA = "hong_kong_exact_git_tree_source_snapshot_v1"
 EXPECTED_INPUT_SHA256 = {
     "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml":
@@ -156,6 +161,25 @@ def canonical_inventory_sha256(entries: list[dict[str, Any]]) -> str:
             "git_blob_sha1": entry["git_blob_sha1"],
             "size_bytes": entry["size_bytes"],
             "sha256": entry["sha256"],
+        }
+        for entry in entries
+    ]
+    payload = json.dumps(
+        fields,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def canonical_git_blob_inventory_sha256(entries: list[dict[str, Any]]) -> str:
+    fields = [
+        {
+            "path": entry["path"],
+            "mode": entry["mode"],
+            "git_blob_sha1": entry["git_blob_sha1"],
+            "size_bytes": entry["size_bytes"],
         }
         for entry in entries
     ]
@@ -346,6 +370,13 @@ def create_source_snapshot(
     tree_sha, git_entries = read_git_tree_entries(source_commit_sha)
     if tree_sha != LOCKED_SNAPSHOT_SOURCE_TREE_SHA:
         raise ValueError("Snapshot source tree differs from the Stage 8D lock")
+    if len(git_entries) != LOCKED_SNAPSHOT_TRACKED_FILE_COUNT:
+        raise ValueError("Snapshot tracked-file count differs from the lock")
+    if (
+        canonical_git_blob_inventory_sha256(git_entries)
+        != LOCKED_SNAPSHOT_GIT_BLOB_INVENTORY_SHA256
+    ):
+        raise ValueError("Snapshot Git blob inventory differs from the lock")
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
         [
@@ -368,6 +399,8 @@ def create_source_snapshot(
         "source_archive_sha256": sha256_file(snapshot_path),
         "source_archive_size_bytes": snapshot_path.stat().st_size,
         "tracked_file_count": len(entries),
+        "git_blob_inventory_sha256":
+            canonical_git_blob_inventory_sha256(entries),
         "inventory_sha256": canonical_inventory_sha256(entries),
         "entries": entries,
         "git_metadata_included": False,
@@ -395,6 +428,10 @@ def load_and_validate_snapshot_manifest(
     *,
     expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
     expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+    expected_file_count: int = LOCKED_SNAPSHOT_TRACKED_FILE_COUNT,
+    expected_git_blob_inventory_sha256: str = (
+        LOCKED_SNAPSHOT_GIT_BLOB_INVENTORY_SHA256
+    ),
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     validate_sha256(snapshot_manifest_sha256, "Snapshot manifest SHA256")
     if sha256_file(snapshot_manifest) != snapshot_manifest_sha256:
@@ -430,10 +467,17 @@ def load_and_validate_snapshot_manifest(
         validate_sha256(entry["sha256"], "Snapshot file SHA256")
     if manifest.get("tracked_file_count") != len(entries):
         raise ValueError("Snapshot manifest file count mismatch")
+    if len(entries) != expected_file_count:
+        raise ValueError("Snapshot tracked-file count differs from the lock")
     if entries != sorted(entries, key=lambda entry: entry["path"]):
         raise ValueError("Snapshot manifest entries must be path-sorted")
     if canonical_inventory_sha256(entries) != manifest.get("inventory_sha256"):
         raise ValueError("Snapshot manifest inventory SHA256 mismatch")
+    git_blob_inventory_sha256 = canonical_git_blob_inventory_sha256(entries)
+    if git_blob_inventory_sha256 != manifest.get("git_blob_inventory_sha256"):
+        raise ValueError("Snapshot manifest Git blob inventory SHA256 mismatch")
+    if git_blob_inventory_sha256 != expected_git_blob_inventory_sha256:
+        raise ValueError("Snapshot Git blob inventory differs from the lock")
     if compute_git_tree_sha1(entries) != expected_tree_sha:
         raise ValueError("Snapshot entries do not reconstruct the locked Git tree")
     if snapshot_path.stat().st_size != manifest.get("source_archive_size_bytes"):
@@ -497,6 +541,10 @@ def verify_source_snapshot(
     *,
     expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
     expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+    expected_file_count: int = LOCKED_SNAPSHOT_TRACKED_FILE_COUNT,
+    expected_git_blob_inventory_sha256: str = (
+        LOCKED_SNAPSHOT_GIT_BLOB_INVENTORY_SHA256
+    ),
 ) -> dict[str, Any]:
     summary, entries = verify_source_snapshot_archive(
         source_commit_sha,
@@ -505,6 +553,9 @@ def verify_source_snapshot(
         snapshot_manifest_sha256=snapshot_manifest_sha256,
         expected_commit_sha=expected_commit_sha,
         expected_tree_sha=expected_tree_sha,
+        expected_file_count=expected_file_count,
+        expected_git_blob_inventory_sha256=
+            expected_git_blob_inventory_sha256,
     )
     verify_extracted_snapshot(source_root, entries)
     return {**summary, "extracted_source_verified": True}
@@ -518,6 +569,10 @@ def verify_source_snapshot_archive(
     *,
     expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
     expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+    expected_file_count: int = LOCKED_SNAPSHOT_TRACKED_FILE_COUNT,
+    expected_git_blob_inventory_sha256: str = (
+        LOCKED_SNAPSHOT_GIT_BLOB_INVENTORY_SHA256
+    ),
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     manifest, entries = load_and_validate_snapshot_manifest(
         source_commit_sha,
@@ -526,6 +581,9 @@ def verify_source_snapshot_archive(
         snapshot_manifest_sha256,
         expected_commit_sha=expected_commit_sha,
         expected_tree_sha=expected_tree_sha,
+        expected_file_count=expected_file_count,
+        expected_git_blob_inventory_sha256=
+            expected_git_blob_inventory_sha256,
     )
     return (
         {

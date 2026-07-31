@@ -108,6 +108,8 @@ def create_fixture_snapshot(
         "source_archive_sha256": preparer.sha256_file(archive_path),
         "source_archive_size_bytes": archive_path.stat().st_size,
         "tracked_file_count": len(entries),
+        "git_blob_inventory_sha256":
+            preparer.canonical_git_blob_inventory_sha256(entries),
         "inventory_sha256": preparer.canonical_inventory_sha256(entries),
         "entries": entries,
         "git_metadata_included": False,
@@ -127,6 +129,13 @@ def create_fixture_snapshot(
         "manifest_sha256": preparer.sha256_file(manifest_path),
         "manifest": manifest,
         "files": files,
+        "expected_identity": {
+            "expected_commit_sha": source_commit_sha,
+            "expected_tree_sha": tree_sha,
+            "expected_file_count": len(entries),
+            "expected_git_blob_inventory_sha256":
+                manifest["git_blob_inventory_sha256"],
+        },
     }
 
 
@@ -137,6 +146,9 @@ def main() -> None:
     )
     if locked_tree_sha != preparer.LOCKED_SNAPSHOT_SOURCE_TREE_SHA:
         raise AssertionError("Locked source commit tree identity changed")
+    locked_git_blob_inventory_sha256 = (
+        preparer.canonical_git_blob_inventory_sha256(locked_tree_entries)
+    )
     sources = preparer.current_input_sources(DATA_ROOT)
     hashes = preparer.verify_current_inputs(sources)
     config_source = sources[
@@ -193,8 +205,7 @@ def main() -> None:
             fixture["archive_path"],
             fixture["manifest_path"],
             fixture["manifest_sha256"],
-            expected_commit_sha=fixture["source_commit_sha"],
-            expected_tree_sha=fixture["tree_sha"],
+            **fixture["expected_identity"],
         )
         valid_snapshot = preparer.verify_source_snapshot(
             fixture["source_commit_sha"],
@@ -202,8 +213,7 @@ def main() -> None:
             fixture["archive_path"],
             fixture["manifest_path"],
             fixture["manifest_sha256"],
-            expected_commit_sha=fixture["source_commit_sha"],
-            expected_tree_sha=fixture["tree_sha"],
+            **fixture["expected_identity"],
         )
         wrong_sha_rejected = expect_rejection(
             lambda: preparer.verify_source_snapshot(
@@ -212,8 +222,7 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                expected_commit_sha=fixture["source_commit_sha"],
-                expected_tree_sha=fixture["tree_sha"],
+                **fixture["expected_identity"],
             ),
             "wrong source commit",
         )
@@ -232,8 +241,7 @@ def main() -> None:
                 fixture["archive_path"],
                 wrong_tree_manifest,
                 preparer.sha256_file(wrong_tree_manifest),
-                expected_commit_sha=fixture["source_commit_sha"],
-                expected_tree_sha=fixture["tree_sha"],
+                **fixture["expected_identity"],
             ),
             "wrong source tree",
         )
@@ -246,8 +254,7 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                expected_commit_sha=fixture["source_commit_sha"],
-                expected_tree_sha=fixture["tree_sha"],
+                **fixture["expected_identity"],
             ),
             "extracted source tampering",
         )
@@ -263,8 +270,7 @@ def main() -> None:
                 tampered_archive,
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                expected_commit_sha=fixture["source_commit_sha"],
-                expected_tree_sha=fixture["tree_sha"],
+                **fixture["expected_identity"],
             ),
             "snapshot archive tampering",
         )
@@ -275,8 +281,7 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 "0" * 64,
-                expected_commit_sha=fixture["source_commit_sha"],
-                expected_tree_sha=fixture["tree_sha"],
+                **fixture["expected_identity"],
             ),
             "wrong manifest hash",
         )
@@ -285,6 +290,14 @@ def main() -> None:
                 REPO_ROOT / "prohibited-source-snapshot.tar"
             ),
             "source snapshot output inside the Git worktree",
+        )
+        prior_snapshot_sha_rejected = expect_rejection(
+            lambda: preparer.create_source_snapshot(
+                preparer.PRIOR_SNAPSHOT_SOURCE_COMMIT_SHA,
+                temporary / "prohibited-prior-source.tar",
+                temporary / "prohibited-prior-source-manifest.json",
+            ),
+            "prior snapshot source SHA",
         )
     if not incomplete_jar_rejected:
         raise AssertionError("An old/incomplete server JAR was accepted")
@@ -346,6 +359,16 @@ def main() -> None:
             preparer.LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
         "locked_snapshot_source_tree_sha": locked_tree_sha,
         "locked_snapshot_tracked_file_count": len(locked_tree_entries),
+        "locked_snapshot_git_blob_inventory_sha256":
+            locked_git_blob_inventory_sha256,
+        "locked_snapshot_anchor_fixture": {
+            "generated_from_git": True,
+            "source_commit_sha": preparer.LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
+            "source_tree_sha": locked_tree_sha,
+            "tracked_file_count": len(locked_tree_entries),
+            "git_blob_inventory_sha256":
+                locked_git_blob_inventory_sha256,
+        },
         "locked_git_tree_reconstruction_passed": True,
         "valid_snapshot_fixture_accepted": bool(valid_snapshot),
         "valid_snapshot_archive_accepted_before_extraction":
@@ -357,6 +380,7 @@ def main() -> None:
         "wrong_snapshot_manifest_hash_rejected":
             wrong_manifest_hash_rejected,
         "snapshot_output_inside_worktree_rejected": worktree_output_rejected,
+        "prior_snapshot_source_sha_rejected": prior_snapshot_sha_rejected,
         "server_access_performed": False,
         "bundle_built": False,
     }

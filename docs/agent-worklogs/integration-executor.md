@@ -594,3 +594,30 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 18 — Stage 8D exact-SHA lock-anchor rework
+
+```yaml
+timestamp: "2026-07-31T22:30:23+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D exact-SHA lock-anchor rework"
+input_sha: "6ce087af803da1a4b21717c1e0073ce4a04c608a"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Replace every active snapshot source anchor with the Git-derived exact 6ce087af commit/tree/blob inventory and make prior 3a56bcd explicitly fail closed."
+findings:
+  - "Git resolves exact source 6ce087af to tree 137f00cb10394ce6ff9df657aff8e2de72fb0073 with 7620 tracked blobs."
+  - "The deterministic path/mode/blob/size inventory SHA256 is 616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5."
+  - "The new exact inventory reconstructs the locked tree; prior 3a56bcd, wrong tree/manifest, archive tampering and extracted-file tampering are rejected."
+  - "Seven input hashes, config boundary, JDK/JAR checks and exact-clean-Git mode remain unchanged."
+  - "No snapshot/server/JDK/JAR/bundle/Runner/Reviewer/MATSim/Stage 9 action occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#snapshot_validation"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#stage-8d-rework-boundary"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```

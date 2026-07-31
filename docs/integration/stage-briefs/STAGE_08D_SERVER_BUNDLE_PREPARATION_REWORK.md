@@ -1,8 +1,8 @@
-# Stage 8D — Exact-tree source-snapshot bounded rework
+# Stage 8D — Exact-SHA source-snapshot lock-anchor rework
 
 | Field | Value |
 |---|---|
-| Exact input | `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` |
+| Exact input | `6ce087af803da1a4b21717c1e0073ce4a04c608a` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | not authorized |
@@ -10,10 +10,9 @@
 
 ## Objective
 
-Add a source-snapshot identity mode after a Runner proved that the permitted
-server has no exact-SHA checkout. The new mode must transfer and build the
-locked `3a56bcd…` runtime without creating server Git metadata and without
-repeating the failed checkout-identity hypothesis.
+Move the source-snapshot anchor to the exact reviewed `6ce087af…` source after
+Runner correctly rejected the prior `3a56bcd…` lock. The new anchor must be
+derived from Git and must not weaken the Git-metadata-free validation path.
 
 ## Authorized result
 
@@ -21,8 +20,12 @@ repeating the failed checkout-identity hypothesis.
 - stale v1/pre-Ferry path rejection;
 - original exact clean Git-checkout guard retained unchanged;
 - `git archive` snapshot locked to source commit
-  `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` and tree
-  `d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9`;
+  `6ce087af803da1a4b21717c1e0073ce4a04c608a`, tree
+  `137f00cb10394ce6ff9df657aff8e2de72fb0073` and deterministic Git-blob
+  inventory SHA256
+  `616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5`;
+- prior source SHA `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4`
+  rejected explicitly;
 - out-of-band manifest SHA, archive SHA and 7,620-entry
   path/mode/blob/size/SHA256 verification before and after extraction;
 - wrong commit/tree/manifest/archive/file/stale-input rejection;
