@@ -552,3 +552,33 @@ hard_gate_status: "STAGE_8A_PASS_CLOSED__STAGE_8B_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement, validate and push one Stage 8B result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 18 — Stage 8B closure and Stage 8C authorization
+
+Compact archival record faithfully transferred from the formal Stage 8C
+brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8B closure / Stage 8C authorization"
+input_sha: "4ab83c79959bf4ccaa7d36cd6567b61cd84494b0"
+output_sha_or_status: "STAGE_8B_PASS_CLOSED__STAGE_8C_AUTHORIZED"
+decision: "Close Stage 8B PASS and authorize INT-EXECUTOR only to activate canonical resolved destination parking beside accepted Car energy and confirmed toll; keep unresolved parking, fixed ownership, motorcycles and Runner inactive."
+findings:
+  - "Stage 8B exact-SHA review returned PASS with blockers=[] for 4ab83c79959bf4ccaa7d36cd6567b61cd84494b0."
+  - "Unique Car/PT/Taxi owners, canonical energy plus confirmed toll, and hash-locked toll evidence were accepted."
+  - "The accepted toll boundary contains 25858 charge, 38931 no-charge private-car rows, 2929 motorcycle null/out-of-scope rows and 30837 physical events."
+  - "Exactly-once and fail-closed guards were accepted; destination parking and fixed ownership were inactive through Stage 8B."
+  - "Stage 8C may use only the approved canonical resolved-destination parking source; Executor reports only to Supervisor and Supervisor dispatches Reviewer."
+diagnostics:
+  - "The formal Stage 8C brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_08B_CAR_CONFIRMED_TOLL_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_08C_CAR_DESTINATION_PARKING_RUNTIME.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "STAGE_8B_PASS_CLOSED__STAGE_8C_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one Stage 8C result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
+```

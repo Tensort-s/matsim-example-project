@@ -6,18 +6,21 @@ import org.matsim.project.hongkong.scoring.HongKongScoringComponent;
 import java.util.List;
 import java.util.Objects;
 
-/** One Car mode owner composing the approved energy and toll subcomponents. */
+/** One Car mode owner composing approved energy, toll, and parking. */
 public final class HongKongCarMarginalCostScoring
 		implements HongKongScoringComponent {
 
 	private final HongKongCarEnergyScoring energy;
 	private final HongKongCarTollScoring toll;
+	private final HongKongCarParkingScoring parking;
 
 	public HongKongCarMarginalCostScoring(
 			HongKongCarEnergyScoring energy,
-			HongKongCarTollScoring toll) {
+			HongKongCarTollScoring toll,
+			HongKongCarParkingScoring parking) {
 		this.energy = Objects.requireNonNull(energy, "energy");
 		this.toll = Objects.requireNonNull(toll, "toll");
+		this.parking = Objects.requireNonNull(parking, "parking");
 	}
 
 	@Override
@@ -26,24 +29,27 @@ public final class HongKongCarMarginalCostScoring
 	}
 
 	public List<String> subcomponentIds() {
-		return List.of(energy.componentId(), toll.componentId());
+		return List.of(
+				energy.componentId(), toll.componentId(), parking.componentId());
 	}
 
 	@Override
 	public void handleLeg(Leg leg) {
 		energy.handleLeg(leg);
 		toll.handleLeg(leg);
+		parking.handleLeg(leg);
 	}
 
 	@Override
 	public void finish() {
 		energy.finish();
 		toll.finish();
+		parking.finish();
 	}
 
 	@Override
 	public double getScore() {
-		double score = energy.getScore() + toll.getScore();
+		double score = energy.getScore() + toll.getScore() + parking.getScore();
 		if (!Double.isFinite(score)) {
 			throw new IllegalStateException(
 					"Combined Car marginal-cost score is non-finite.");
@@ -59,6 +65,8 @@ public final class HongKongCarMarginalCostScoring
 		energy.explainScore(out);
 		out.append(';');
 		toll.explainScore(out);
+		out.append(';');
+		parking.explainScore(out);
 		out.append('}');
 	}
 
@@ -68,5 +76,9 @@ public final class HongKongCarMarginalCostScoring
 
 	HongKongCarTollScoring toll() {
 		return toll;
+	}
+
+	HongKongCarParkingScoring parking() {
+		return parking;
 	}
 }

@@ -12,13 +12,14 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * Canonical Stage 8B scoring composition: standard MATSim scoring plus the
+ * Canonical Stage 8C scoring composition: standard MATSim scoring plus the
  * established Taxi route fare, strict five-layer PT fare, and one Car owner
- * containing the approved energy and confirmed-toll components.
+ * containing approved energy, confirmed-toll, and resolved destination
+ * parking components.
  *
  * <p>The older {@code HongKongTaxiScoringModule} remains the Taxi-only
- * equivalence and historical-smoke entry point. Destination parking, fixed
- * ownership and motorcycles remain absent or out of scope.</p>
+ * equivalence and historical-smoke entry point. Unresolved parking, fixed
+ * ownership and motorcycles remain null, absent, or out of scope.</p>
  */
 public final class HongKongMultimodalCostScoringModule
 		extends AbstractModule {

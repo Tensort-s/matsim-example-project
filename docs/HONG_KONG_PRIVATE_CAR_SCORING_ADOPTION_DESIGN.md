@@ -2,14 +2,16 @@
 
 > Historical Stage 3 design evidence. Stage 8A supersedes its blanket
 > runtime-blocked conclusion only for hash-locked base energy, and Stage 8B
-> separately supersedes it only for hash-locked confirmed base toll. Exact
-> person/leg, route-distance, fingerprint, ordinal, physical facility-link,
-> and zero-standard-distance-rate guards replace the unguarded lookup risk.
-> The historical findings remain controlling for destination parking, fixed
-> ownership, motorcycles, arbitrary iterations, and any ambiguous, inferred,
-> unresolved, unguarded, or parallel interface. See
+> separately supersedes it only for hash-locked confirmed base toll. Stage 8C
+> supersedes it only for hash-locked resolved base destination parking. Exact
+> person/leg, route, destination, activity, source-time, fingerprint, ordinal,
+> physical facility-link, and zero-standard-distance-rate guards replace the
+> unguarded lookup risk. The historical findings remain controlling for all
+> unresolved or inferred parking, fixed ownership, motorcycles, arbitrary
+> iterations, and any ambiguous, inferred, unguarded, or parallel interface. See
 > `docs/HONG_KONG_CAR_ENERGY_RUNTIME.md` and
-> `docs/HONG_KONG_CAR_TOLL_RUNTIME.md`.
+> `docs/HONG_KONG_CAR_TOLL_RUNTIME.md`, and
+> `docs/HONG_KONG_CAR_PARKING_RUNTIME.md`.
 
 ## Decision
 

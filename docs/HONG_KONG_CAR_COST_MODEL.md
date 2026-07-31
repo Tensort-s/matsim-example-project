@@ -5,10 +5,12 @@
 This document records the canonical private-car cost sources and data-quality
 audit for the Hong Kong MATSim model. Stage 3 produced the immutable offline
 source release. Stage 8A later authorizes its hash-locked base
-`fuel_or_electricity` component, and Stage 8B adds only confirmed base toll.
+`fuel_or_electricity` component, Stage 8B adds only confirmed base toll, and
+Stage 8C adds only resolved base destination parking.
 The scoped runtime contracts are in
 [`HONG_KONG_CAR_ENERGY_RUNTIME.md`](HONG_KONG_CAR_ENERGY_RUNTIME.md) and
-[`HONG_KONG_CAR_TOLL_RUNTIME.md`](HONG_KONG_CAR_TOLL_RUNTIME.md).
+[`HONG_KONG_CAR_TOLL_RUNTIME.md`](HONG_KONG_CAR_TOLL_RUNTIME.md), and
+[`HONG_KONG_CAR_PARKING_RUNTIME.md`](HONG_KONG_CAR_PARKING_RUNTIME.md).
 
 The workflow does not modify:
 
@@ -50,8 +52,9 @@ All behavioral-cost integration must resolve the canonical path through that
 manifest and read only `unified_marginal_cost_interface_v1`. The locked
 source manifest remains an offline release record. Stage 8A does not rewrite
 it: the authoritative integrated consumer manifest separately approves the
-base `fuel_or_electricity` and confirmed base toll components for guarded
-runtime use. Destination parking, motorcycles, and fixed ownership remain
+base `fuel_or_electricity`, confirmed base toll, and resolved base destination
+parking components for guarded runtime use. The 835 unresolved parking rows
+remain null, motorcycles remain out of scope, and fixed ownership remains
 inactive.
 
 The original top-level `car_leg_cost_estimates_<scenario>.parquet`,

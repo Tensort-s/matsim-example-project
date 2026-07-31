@@ -173,6 +173,33 @@ Stages 7, 8A, and 8B change no production config, plans, supply, demand,
 capacity, ASC, monetary utility, city metadata, or run manifest; no Runner or
 MATSim/server run is authorized.
 
+Stage 8B passed independent exact-SHA review and was formally closed at:
+
+```text
+4ab83c79959bf4ccaa7d36cd6567b61cd84494b0
+```
+
+Stage 8C preserves energy and confirmed toll and adds only resolved base
+destination parking inside the same Car mode owner:
+
+```text
+car -> car_marginal_cost_v1
+       - car_fuel_or_electricity_v1
+       - car_confirmed_toll_v1
+       - car_destination_parking_v1
+```
+
+The runtime requires exact audited destination facility, activity, source
+times and route identity. It retains 835 unresolved private-car parking rows
+as null and 2,929 motorcycles as out of scope; documented home marginal zero
+does not activate fixed ownership. No nearest-location, candidate, distance,
+road-class or zero-fill inference is active. See
+[`docs/HONG_KONG_CAR_PARKING_RUNTIME.md`](HONG_KONG_CAR_PARKING_RUNTIME.md).
+
+Stages 7 through 8C change no production config, plans, supply, demand,
+capacity, ASC, monetary utility, city metadata, or run manifest; no Runner or
+MATSim/server run is authorized.
+
 ## Stage 1 scope
 
 Stage 1 imports the Taxi population metadata conversion, native passenger

@@ -1,9 +1,9 @@
 {
   "schema_version": "hong_kong_integrated_multimodal_cost_source_interface_manifest_v1",
   "manifest_role": "sole_authoritative_integrated_source_and_interface_registry",
-  "status": "stage_8a_pass_stage_8b_confirmed_toll_runtime_pending_independent_review",
-  "stage_id": "Stage 8B - Car confirmed toll runtime component",
-  "stage_input_commit_sha": "5cc8aaaca0f5d5e073fff2792a29ed929c372139",
+  "status": "stage_8b_pass_stage_8c_resolved_destination_parking_runtime_pending_independent_review",
+  "stage_id": "Stage 8C - Car resolved destination parking runtime component",
+  "stage_input_commit_sha": "4ab83c79959bf4ccaa7d36cd6567b61cd84494b0",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "canonical_interface_count": 3,
   "canonical_interface_ids": [
@@ -144,12 +144,12 @@
       "source_manifest_path": "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json",
       "release_validation_path": "data/transport_costs/hongkong/car_cost_v1/car_cost_release_validation.json",
       "integrated_validation_path": "data/transport_costs/hongkong/integration_stage3_validation_v1/stage3_car_merge_validation.json",
-      "status": "canonical_source_with_stage_8b_scoped_energy_and_confirmed_toll_runtime",
+      "status": "canonical_source_with_stage_8c_scoped_energy_confirmed_toll_and_resolved_destination_parking_runtime",
       "runtime_approved": true,
       "matsim_scoring_approved": true,
       "scoring_implementation_approved": true,
       "runtime_static_leg_lookup_approved": true,
-      "runtime_static_leg_lookup_scope": "hash_locked_base_fuel_or_electricity_and_confirmed_toll_rows_with_exact_person_leg_route_distance_fingerprint_and_physical_facility_link_guards_only",
+      "runtime_static_leg_lookup_scope": "hash_locked base fuel_or_electricity, confirmed toll and resolved destination-parking rows with exact person-leg, route, physical toll-facility, destination, activity and source-time guards only",
       "canonical_components": [
         "fuel_or_electricity",
         "toll",
@@ -253,9 +253,68 @@
         "fixed_ownership_leg_rows_loaded": 0,
         "missing_ambiguous_or_unconfirmed_source_policy": "fail_closed_without_zero_or_fallback"
       },
+      "stage_8c_runtime_activation": {
+        "mode_owner_component_id": "car_marginal_cost_v1",
+        "subcomponent_id": "car_destination_parking_v1",
+        "preserved_subcomponent_ids": [
+          "car_fuel_or_electricity_v1",
+          "car_confirmed_toll_v1"
+        ],
+        "active_canonical_components": [
+          "fuel_or_electricity",
+          "toll",
+          "destination_parking"
+        ],
+        "scenario": "base",
+        "catalog": "src/main/java/org/matsim/project/hongkong/car/HongKongCarParkingCostCatalog.java",
+        "selected_plan_schedule": "src/main/java/org/matsim/project/hongkong/car/HongKongCarParkingPersonSchedule.java",
+        "subcomponent_factory": "org.matsim.project.hongkong.car.HongKongCarParkingScoringComponentFactory",
+        "mode_owner_factory": "org.matsim.project.hongkong.car.HongKongCarMarginalCostScoringComponentFactory",
+        "canonical_component_path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/car_leg_marginal_cost_components_base.parquet",
+        "canonical_component_sha256": "0337469ca99d61650f782f273b7b275cee124449e01037f95e15f978f94e742b",
+        "component_registry_sha256": "ae2fd61342413b586aef1149f5221db0ffa04d994e1b415d6c7bccf077855580",
+        "canonical_manifest_sha256": "515d15df43a269da5f060338fcaf91cf004abfeb98ee4332e4172964f64be31d",
+        "source_candidate_path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/car_leg_parking_cost_estimates_base.parquet",
+        "source_candidate_sha256": "c2270353c3276691a7a55c77d2576b228ab68ed3c935b64f68419299f438b753",
+        "parking_rules_path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/parking_cost_rules_repository_relative.csv",
+        "parking_rules_sha256": "e1decd3b9d07f8c13cb9f3d5494b6b6fd61887348bc3ddac53918f758b79d8fa",
+        "parking_events_path": "data/transport_costs/hongkong/car_cost_v1/parking_event_application_v1/car_parking_events.parquet",
+        "parking_events_sha256": "c69b9941769a72e7a015be6d6dc8c673a013ea85794d1601b95cb3110317445e",
+        "source_key": [
+          "person_id",
+          "leg_sequence"
+        ],
+        "resolved_charge_rows": 35564,
+        "resolved_home_marginal_zero_rows": 28390,
+        "unresolved_private_car_rows": 835,
+        "motorcycle_out_of_scope_null_rows": 2929,
+        "unresolved_reason_counts": {
+          "unresolved_vehicle_time_overlap": 466,
+          "unresolved_next_departure_facility_mismatch": 269,
+          "unresolved_missing_destination_zone": 98,
+          "unresolved_missing_next_departure_non_home": 2
+        },
+        "resolved_parking_total_hkd": 2624827.0,
+        "resolved_parking_mean_hkd": 41.04242111517653,
+        "resolved_parking_median_hkd": 32.0,
+        "resolved_parking_p90_hkd": 110.0,
+        "resolved_parking_max_hkd": 210.0,
+        "cost_quality": "official_rate_bounded_zone_activity_proxy",
+        "destination_facility_observed_parking_facility": false,
+        "destination_facility_and_activity_match_required": true,
+        "source_departure_travel_and_next_departure_time_match_required": true,
+        "route_and_destination_fingerprint_match_required": true,
+        "nearest_location_or_facility_candidate_inference": false,
+        "distance_or_road_class_inference": false,
+        "unresolved_ambiguous_missing_or_non_destination_numeric_zero_allowed": false,
+        "person_money_events_emitted": false,
+        "trip_callback_charges": 0,
+        "fixed_ownership_leg_rows_loaded": 0,
+        "missing_changed_ambiguous_or_unresolved_source_policy": "explicit null/unresolved without numeric contribution; missing or changed selected-plan identity fails closed"
+      },
       "source_release_status_preserved": {
         "canonical_car_cost_interface_manifest_release_status": "canonical_offline_behavioral_cost_interface_candidate",
-        "reason": "the locked Stage 3 release remains immutable source provenance; Stage 8A scoped approval covers hash-locked base fuel_or_electricity and Stage 8B separately covers hash-locked confirmed base toll only"
+        "reason": "the locked Stage 3 release remains immutable source provenance; Stage 8A covers hash-locked base fuel_or_electricity, Stage 8B covers confirmed base toll and Stage 8C covers only hash-locked resolved base destination parking"
       },
       "null_boundaries": {
         "parking_unresolved_private_car_legs": 835,
@@ -287,14 +346,15 @@
     "car_component_factory": "org.matsim.project.hongkong.car.HongKongCarMarginalCostScoringComponentFactory",
     "car_subcomponent_ids": [
       "car_fuel_or_electricity_v1",
-      "car_confirmed_toll_v1"
+      "car_confirmed_toll_v1",
+      "car_destination_parking_v1"
     ],
     "pt_runtime_or_scoring_active": true,
     "car_runtime_or_scoring_active": true,
     "car_runtime_scope": {
       "fuel_or_electricity": true,
       "toll": true,
-      "destination_parking": false,
+      "destination_parking": true,
       "fixed_vehicle_ownership_cost": false,
       "motorcycle": false
     },
@@ -314,6 +374,7 @@
       "bound_by_canonical_stage_7_combined_module": false,
       "bound_by_canonical_stage_8a_combined_module": false,
       "bound_by_canonical_stage_8b_combined_module": false,
+      "bound_by_canonical_stage_8c_combined_module": false,
       "controls_current_combined_architecture": false
     }
   },
@@ -364,7 +425,7 @@
       "classification": "accounting_sidecar_supporting_provenance_or_design_only",
       "preserved": true,
       "controls_current_architecture": false,
-      "replacement_or_current_protection": "Stage 8B keeps Stage 8A energy and adds only hash-locked confirmed base toll inside one Car mode owner; exact source/route identity, physical facility-link evidence, ordinal guards and a zero standard Car distance-rate precondition supersede the historical unguarded static-lookup risk without activating parking or fixed ownership"
+      "replacement_or_current_protection": "Stage 8C keeps accepted energy and confirmed toll and adds only hash-locked resolved base destination parking inside one Car mode owner; exact source, route, destination, activity and source-time identity plus ordinal guards and a zero standard Car distance-rate precondition supersede the historical unguarded static-lookup risk without activating unresolved parking, motorcycles or fixed ownership"
     }
   ],
   "boundary_audit": {
@@ -419,7 +480,18 @@
     "stage_8b_destination_parking_runtime_activation": false,
     "stage_8b_fixed_ownership_runtime_activation": false,
     "stage_8b_city_run_config_or_supply_mutation": false,
-    "stage_8b_hong_kong_or_server_run_performed": false
+    "stage_8b_hong_kong_or_server_run_performed": false,
+    "stage_8c_car_resolved_destination_parking_runtime_activation": true,
+    "stage_8c_car_mode_owner_component_count": 1,
+    "stage_8c_car_subcomponent_count": 3,
+    "stage_8c_resolved_charge_rows": 35564,
+    "stage_8c_resolved_home_marginal_zero_rows": 28390,
+    "stage_8c_unresolved_private_car_rows": 835,
+    "stage_8c_motorcycle_scoring_activation": false,
+    "stage_8c_nearest_candidate_distance_or_road_class_inference": false,
+    "stage_8c_fixed_ownership_runtime_activation": false,
+    "stage_8c_city_run_config_or_supply_mutation": false,
+    "stage_8c_hong_kong_or_server_run_performed": false
   },
   "protected_refs": {
     "origin_master": "a3d6445cfd79a74b6fd6bd01e547d7df8055a64d",
@@ -430,8 +502,8 @@
   "validation_contract": {
     "taxi": "Maven complete suite, exact pre/post Taxi wrapper equivalence, synthetic standard PrepareForSim lifecycle, and Taxi native-routing deterministic Python tests",
     "pt": "scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py plus HongKongPtFareRuntimeCatalogTest, HongKongPtFareScoringTest, HongKongPtItineraryAuditTest, and the Stage 7 runtime validation record",
-    "car": "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py plus Stage 8A energy tests, HongKongCarTollCostCatalogTest, HongKongCarTollScoringTest, HongKongCarMarginalCostScoringTest, the combined Guice ownership test, and the Stage 8B runtime validation record",
+    "car": "scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py plus Stage 8A energy tests, Stage 8B toll tests, HongKongCarParkingCostCatalogTest, HongKongCarParkingScoringTest, HongKongCarMarginalCostScoringTest, the combined Guice ownership test, and the Stage 8C runtime validation record",
     "structured_manifest_checks": "JSON parse, unique IDs, referenced paths, offline/runtime flags, locked counts and exact Git ancestry",
-    "result_identity": "The Stage 8B output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
+    "result_identity": "The Stage 8C output SHA is supplied by the Executor handoff because a commit cannot contain its own SHA."
   }
 }

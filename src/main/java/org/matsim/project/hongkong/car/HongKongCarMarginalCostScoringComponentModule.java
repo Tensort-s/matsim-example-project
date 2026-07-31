@@ -8,7 +8,7 @@ import org.matsim.project.hongkong.scoring.HongKongScoringComponentFactory;
 import java.nio.file.Path;
 import java.util.Objects;
 
-/** Contributes one Car owner with energy and confirmed-toll subcomponents. */
+/** Contributes one Car owner with energy, toll, and destination parking. */
 public final class HongKongCarMarginalCostScoringComponentModule
 		extends AbstractModule {
 
@@ -30,6 +30,9 @@ public final class HongKongCarMarginalCostScoringComponentModule
 				.in(Scopes.SINGLETON);
 		bind(HongKongCarTollCostCatalog.class)
 				.toProvider(() -> HongKongCarTollCostCatalog.load(carCostRoot))
+				.in(Scopes.SINGLETON);
+		bind(HongKongCarParkingCostCatalog.class)
+				.toProvider(() -> HongKongCarParkingCostCatalog.load(carCostRoot))
 				.in(Scopes.SINGLETON);
 		bind(HongKongCarMarginalCostScoringComponentFactory.class)
 				.in(Scopes.SINGLETON);

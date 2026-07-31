@@ -495,3 +495,33 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor may close Stage 8A and issue a separate Stage 8B authorization; Reviewer does not authorize execution or Runner."
 ```
+
+## Entry 15 — Stage 8B exact-SHA review
+
+Compact archival transfer from the Stage 8C Supervisor brief; only the facts
+supplied by Supervisor are appended:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 8B exact-SHA review"
+input_sha: "5cc8aaaca0f5d5e073fff2792a29ed929c372139"
+output_sha_or_status: "4ab83c79959bf4ccaa7d36cd6567b61cd84494b0"
+decision: "PASS"
+findings:
+  - "Unique Car, PT and Taxi mode owners were verified."
+  - "Canonical energy plus confirmed toll and hash-locked toll evidence were verified."
+  - "The toll boundary contains 25858 charge and 38931 no-charge private-car rows, 2929 motorcycle null/out-of-scope rows and 30837 physical events."
+  - "Exactly-once and fail-closed guards were verified."
+  - "Destination parking and fixed ownership remained inactive through Stage 8B."
+diagnostics:
+  - "The Supervisor transfer supplied no exact Reviewer timestamp or additional detailed findings; no missing facts are inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8b_validation_v1/stage8b_car_confirmed_toll_runtime_validation.json"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/HONG_KONG_CAR_TOLL_RUNTIME.md"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor may close Stage 8B and issue a separate Stage 8C authorization; Reviewer does not authorize execution or Runner."
+```

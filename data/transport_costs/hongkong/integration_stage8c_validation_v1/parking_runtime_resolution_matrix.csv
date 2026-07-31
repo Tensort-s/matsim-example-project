@@ -1,0 +1,12 @@
+source_status,resolution,row_count,cost_policy,runtime_action,inference_allowed,fixed_ownership_included,motorcycle_as_private_car
+resolved_proxy_charge,resolved_charge,35564,canonical finite positive base destination-parking value,charge exactly once from handleLeg,false,false,false
+resolved_home_marginal_zero_fixed_separate,resolved_legal_zero,28390,documented marginal zero with fixed cost separate,consume ordinal without monetary contribution,false,false,false
+unresolved_vehicle_time_overlap,unresolved,466,null,retain explicit reason and no numeric contribution,false,false,false
+unresolved_next_departure_facility_mismatch,unresolved,269,null,retain explicit reason and no numeric contribution,false,false,false
+unresolved_missing_destination_zone,unresolved,98,null,retain explicit reason and no numeric contribution,false,false,false
+unresolved_missing_next_departure_non_home,unresolved,2,null,retain explicit reason and no numeric contribution,false,false,false
+out_of_scope_motorcycle,out_of_scope,2929,null,consume exclusion without private-car scoring,false,false,false
+missing_or_changed_selected_plan_identity,fail_closed,0,null,throw before scoring,false,false,false
+ambiguous_or_duplicate_source_key,fail_closed,0,null,reject catalog before scoring,false,false,false
+nearest_location_or_facility_candidate,prohibited,0,null,no lookup or fallback,false,false,false
+distance_or_road_class_inference,prohibited,0,null,no lookup or fallback,false,false,false

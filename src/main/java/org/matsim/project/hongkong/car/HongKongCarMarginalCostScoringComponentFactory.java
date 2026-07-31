@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/** Canonical single Car mode owner for Stage 8A/8B marginal components. */
+/** Canonical single Car mode owner for Stage 8A/8B/8C components. */
 public final class HongKongCarMarginalCostScoringComponentFactory
 		implements HongKongScoringComponentFactory {
 
@@ -18,12 +18,14 @@ public final class HongKongCarMarginalCostScoringComponentFactory
 
 	private final HongKongCarEnergyScoringComponentFactory energyFactory;
 	private final HongKongCarTollScoringComponentFactory tollFactory;
+	private final HongKongCarParkingScoringComponentFactory parkingFactory;
 
 	@Inject
 	public HongKongCarMarginalCostScoringComponentFactory(
 			Scenario scenario,
 			HongKongCarEnergyCostCatalog energyCatalog,
-			HongKongCarTollCostCatalog tollCatalog) {
+			HongKongCarTollCostCatalog tollCatalog,
+			HongKongCarParkingCostCatalog parkingCatalog) {
 		Objects.requireNonNull(scenario, "scenario");
 		double marginalUtilityOfMoney =
 				scenario.getConfig().scoring().getMarginalUtilityOfMoney();
@@ -36,14 +38,22 @@ public final class HongKongCarMarginalCostScoringComponentFactory
 		this.tollFactory = new HongKongCarTollScoringComponentFactory(
 				Objects.requireNonNull(tollCatalog, "tollCatalog"),
 				marginalUtilityOfMoney);
+		this.parkingFactory =
+				new HongKongCarParkingScoringComponentFactory(
+						Objects.requireNonNull(
+								parkingCatalog, "parkingCatalog"),
+						marginalUtilityOfMoney);
 	}
 
 	HongKongCarMarginalCostScoringComponentFactory(
 			HongKongCarEnergyScoringComponentFactory energyFactory,
-			HongKongCarTollScoringComponentFactory tollFactory) {
+			HongKongCarTollScoringComponentFactory tollFactory,
+			HongKongCarParkingScoringComponentFactory parkingFactory) {
 		this.energyFactory = Objects.requireNonNull(
 				energyFactory, "energyFactory");
 		this.tollFactory = Objects.requireNonNull(tollFactory, "tollFactory");
+		this.parkingFactory = Objects.requireNonNull(
+				parkingFactory, "parkingFactory");
 	}
 
 	@Override
@@ -59,7 +69,8 @@ public final class HongKongCarMarginalCostScoringComponentFactory
 	public List<String> subcomponentIds() {
 		return List.of(
 				energyFactory.componentId(),
-				tollFactory.componentId());
+				tollFactory.componentId(),
+				parkingFactory.componentId());
 	}
 
 	@Override
@@ -69,6 +80,8 @@ public final class HongKongCarMarginalCostScoringComponentFactory
 				(HongKongCarEnergyScoring)
 						energyFactory.createComponent(person),
 				(HongKongCarTollScoring)
-						tollFactory.createComponent(person));
+						tollFactory.createComponent(person),
+				(HongKongCarParkingScoring)
+						parkingFactory.createComponent(person));
 	}
 }

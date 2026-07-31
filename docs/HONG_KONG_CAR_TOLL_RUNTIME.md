@@ -3,17 +3,20 @@
 ## Stage 8B scope
 
 Stage 8B adds the canonical confirmed-toll subcomponent beside the accepted
-Car energy subcomponent:
+Car energy subcomponent. Stage 8C preserves both unchanged and adds resolved
+destination parking through its separate contract:
 
 ```text
 car -> car_marginal_cost_v1
        - car_fuel_or_electricity_v1
        - car_confirmed_toll_v1
+       - car_destination_parking_v1
 ```
 
 There remains exactly one top-level owner for mode `car`; the subcomponents do
-not bypass the duplicate-mode-owner guard. Destination parking, fixed
-ownership, and motorcycles remain inactive or out of scope.
+not bypass the duplicate-mode-owner guard. Only resolved destination parking
+is active in Stage 8C; unresolved parking remains null, while fixed ownership
+and motorcycles remain inactive or out of scope.
 
 ## Canonical source identity
 
@@ -57,10 +60,11 @@ reordered, changed-route, ambiguous, or non-finite input fails closed. Money,
 event, trip, and external-score callbacks are inert, and no
 `PersonMoneyEvent` is emitted.
 
-The Stage 8A energy scorer remains unchanged inside the composite. Standard
-Car `monetaryDistanceRate` must still already be zero; neither energy nor toll
-mutates or interprets it. Destination parking and fixed ownership load no
-runtime rows.
+The Stage 8A energy and Stage 8B toll scorers remain unchanged inside the
+Stage 8C composite. Standard Car `monetaryDistanceRate` must still already be
+zero; none of the Car subcomponents mutates or interprets it. Fixed ownership
+loads no runtime rows; parking is governed only by
+`docs/HONG_KONG_CAR_PARKING_RUNTIME.md`.
 
 ## Evidence
 

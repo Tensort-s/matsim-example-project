@@ -505,3 +505,34 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8B_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed Stage 8B SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8C/9."
 ```
+
+## Entry 15 — Stage 8C resolved destination-parking runtime
+
+```yaml
+timestamp: "2026-07-31T19:06:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8C"
+input_sha: "4ab83c79959bf4ccaa7d36cd6567b61cd84494b0"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Activate only hash-locked canonical resolved base destination parking beside accepted energy and confirmed toll inside the unique car_marginal_cost_v1 owner, with exact destination/source identity and null-preserving fail-closed behavior."
+findings:
+  - "The combined registry retains exactly three unique mode owners; the Car owner contains energy, confirmed toll and destination parking as three exactly-once subcomponents while Taxi/PT remain unchanged."
+  - "The parking catalog verifies six source hashes and loads 35564 resolved-charge, 28390 documented home marginal-zero, 835 unresolved private-car and 2929 motorcycle null/out-of-scope rows."
+  - "Selected-plan keys, destination facility/activity, source departure/travel/next-departure times, route and destination fingerprints and ordinal must match; missing or changed identity fails closed without nearest, candidate, distance or road-class inference."
+  - "The 835 unresolved rows retain null plus exact reasons, fixed ownership stays outside leg scoring, standard Car monetaryDistanceRate remains required at zero, and callbacks cannot duplicate energy, toll or parking."
+  - "Compile, 32 focused Car tests, the combined Guice ownership test, the complete 114-test suite, PT 20/20 release validation and Car release validation passed; city.yaml, run_manifest and production config/input/supply were unchanged and no Runner/Hong Kong/server run occurred."
+diagnostics:
+  - "Two initial focused catalog runs corrected status-specific validation: unresolved and motorcycle rows legitimately set behavioral inclusion false and leave pricing/provenance fields blank, while retaining null and an explicit status/reason."
+  - "The locked resolved parking source remains an official-rate-bounded zone/activity proxy and destination facility is not an observed parking facility; Stage 8C adds no new location or tariff inference."
+  - "Existing Maven parent.version, Java native-access/Unsafe, DuckDB native-access, Guice ASM class-version, deprecated fixture configuration and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8c_validation_v1/stage8c_car_destination_parking_runtime_validation.json"
+  - "data/transport_costs/hongkong/integration_stage8c_validation_v1/parking_runtime_resolution_matrix.csv"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#interfaces[mode=car].stage_8c_runtime_activation"
+  - "docs/HONG_KONG_CAR_PARKING_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_08C_CAR_DESTINATION_PARKING_RUNTIME.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8C_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed Stage 8C SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 9."
+```

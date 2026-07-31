@@ -37,11 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HongKongTaxiPrepareForSimLifecycleTest {
 
 	@Test
-	void stage8bCombinedModuleHasExactlyTaxiPtAndOneCarMarginalCostOwner() {
+	void stage8cCombinedModuleHasExactlyTaxiPtAndOneCarMarginalCostOwner() {
 		Config config = HongKongTaxiTestFixtures.safeConfig();
 		config.transit().setUseTransit(false);
 		config.controller().setOutputDirectory(
-				"target/stage8b-combined-module-" + UUID.randomUUID());
+				"target/stage8c-combined-module-" + UUID.randomUUID());
 		Scenario scenario = ScenarioUtils.createScenario(config);
 		addNetwork(scenario.getNetwork());
 
@@ -72,7 +72,10 @@ class HongKongTaxiPrepareForSimLifecycleTest {
 				controler.getInjector().getInstance(
 						HongKongCarMarginalCostScoringComponentFactory.class);
 		assertEquals(
-				List.of("car_fuel_or_electricity_v1", "car_confirmed_toll_v1"),
+				List.of(
+						"car_fuel_or_electricity_v1",
+						"car_confirmed_toll_v1",
+						"car_destination_parking_v1"),
 				carFactory.subcomponentIds());
 	}
 

@@ -274,6 +274,13 @@ toll zero. Missing, ambiguous, unconfirmed, changed-route, or non-finite
 records fail closed without distance, road-class, route-presence, or candidate
 fallback. Parking, fixed ownership, motorcycles, config, and scenario runs
 remain outside Stage 8B.
+The Stage 8C resolved destination-parking consumer is documented in
+`docs/HONG_KONG_CAR_PARKING_RUNTIME.md`. It adds only hash-locked resolved
+base destination parking beside energy and confirmed toll. Exact destination,
+activity, source-time and route identity are required; the 835 unresolved
+private-car rows remain explicit null, 2,929 motorcycles remain out of scope,
+and fixed ownership stays outside per-leg scoring. No nearest-location,
+candidate, distance or zero-fill inference is introduced.
 
 The final local SimWrapper project for this configuration is:
 
