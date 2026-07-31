@@ -91,11 +91,20 @@ Stage 5 passed independent exact-SHA review and was formally closed at:
 9235ccb62dbea43a2f321e4fba2aee6e5629bce0
 ```
 
-The current control-plane task adopts the Supervisor-centered hub-and-spoke
-protocol in
-[`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md).
-Real-time messages carry handoffs; worklogs preserve append-only audit history
-and do not authorize execution. Stage 6 and Runner remain unauthorized.
+CONTROL-PROTOCOL-01 passed independent exact-SHA review and was formally
+closed at `d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a`. The Supervisor-centered
+hub-and-spoke protocol in
+[`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md)
+remains active: real-time messages carry handoffs, while worklogs are
+append-only audit and do not authorize execution.
+
+Stage 6 adds the read-only PT itinerary and stuck-governance layer documented
+in
+[`docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`](HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md).
+It validates prepared-plan legality before QSim and classifies later PT/walk
+stuck events without pricing PT, changing the transit schedule, or inferring
+capacity/supply causes. PT and Car remain offline-only; Runner and Stage 7 are
+not authorized.
 
 ## Stage 1 scope
 

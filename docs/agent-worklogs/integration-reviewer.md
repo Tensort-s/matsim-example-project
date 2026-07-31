@@ -376,3 +376,36 @@ hard_gate_status: "NOT_A_REVIEW"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Wait for a formal Supervisor review dispatch."
 ```
+
+## Entry 11 — CONTROL-PROTOCOL-01 exact-SHA review
+
+Faithfully transferred by INT-SUPERVISOR from the original Reviewer handoff:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "CONTROL-PROTOCOL-01 exact-SHA review"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+decision: "PASS"
+findings:
+  - "Exact output has the required parent; local, tracking and remote refs are aligned and the worktree is clean."
+  - "The delta is governance/documentation/worklog-only; no implementation, configuration, input, output or server change occurred."
+  - "Lane IDs, session IDs, write scopes and authority are unchanged; Supervisor is the sole aggregator, dispatcher, gate owner and progression authority."
+  - "Hub-and-spoke, real-time versus append-only audit semantics, non-Supervisor non-authority and no recursive log-only review cycle are explicit."
+  - "Stage 5 PASS, Supervisor closure and lane confirmations remain append-only; Stage 6 and Runner were unauthorized at review time."
+diagnostics:
+  - "No tests or simulations were rerun for this governance-only read-only review."
+  - "CURRENT_STAGE remained pending Supervisor verification and Reviewer dispatch as required."
+evidence_refs:
+  - "agent-lanes.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md"
+  - "docs/integration/CURRENT_STAGE.md"
+  - "docs/agent-worklogs/integration-{supervisor,executor,reviewer,runner}.md"
+  - "exact diff 9235ccb62dbea43a2f321e4fba2aee6e5629bce0..d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor records the review outcome; Reviewer does not authorize Stage 6 or Runner."
+```

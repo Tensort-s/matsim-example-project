@@ -409,3 +409,56 @@ hard_gate_status: "AUTHORIZED_CONTROL_PLANE_ONLY"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement only the protocol migration, push one exact commit, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 13 — CONTROL-PROTOCOL-01 closure
+
+Faithfully transferred from the formal Supervisor closure:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-01 closure"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+decision: "PASS_CLOSED"
+findings:
+  - "Consumed the Reviewer PASS for the exact CONTROL-PROTOCOL-01 output."
+  - "Closed the protocol migration with the Hub-and-spoke rules controlling future lane communication."
+  - "The source closure supplied no exact timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+diagnostics: []
+evidence_refs:
+  - "docs/agent-worklogs/integration-reviewer.md#entry-11--control-protocol-01-exact-sha-review"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "PASS_CLOSED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Restore the normal Hub-and-spoke route and execute only the separately issued Stage 6 Brief."
+```
+
+## Entry 14 — Stage 6 authorization
+
+Compact archival record of the formal Stage 6 brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 6"
+input_sha: "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_ONLY"
+decision: "Authorize deterministic PT itinerary legality and PT/walk stuck root-cause governance without PT/Car scoring, model-policy change, or a run."
+findings:
+  - "Taxi native routing, Stage 5 scoring equivalence and route-fare behavior remain invariant."
+  - "PT fare remains offline-only and generic PT fare inference remains prohibited."
+  - "Legal itinerary and stuck attribution must be deterministic, explainable and fail closed."
+  - "Historical failures remain preserved and legacy/superseded guards do not control the new canonical audit."
+  - "Runner, Hong Kong MATSim/server execution, Stage 7+, and protected-branch changes remain unauthorized."
+diagnostics:
+  - "The formal Stage 6 brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "STAGE_6_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one Stage 6 result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
+```

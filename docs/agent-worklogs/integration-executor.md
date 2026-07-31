@@ -381,3 +381,34 @@ hard_gate_status: "PENDING_SUPERVISOR_VERIFICATION_AND_REVIEWER_DISPATCH"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed control-plane SHA and decides Reviewer dispatch; Executor stops and does not begin Stage 6."
 ```
+
+## Entry 11 — Stage 6 PT itinerary and stuck governance
+
+```yaml
+timestamp: "2026-07-31T15:50:40+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 6"
+input_sha: "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Add read-only prepared-PT itinerary legality and event-linked PT/walk stuck classification while leaving Taxi scoring and offline PT/Car cost interfaces unchanged."
+findings:
+  - "The audit validates trip/stage sequence, PT routing mode, route/schedule references, ordered stops, boarding/alighting permission, service availability, finite values, and access/egress/transfer link continuity."
+  - "Invalid itineraries fail closed; legal PT/walk stuck causes remain runtime-unresolved and never infer capacity, supply, fare, demand, transfer policy, or numeric zero."
+  - "The Taxi runtime guard invokes the audit before QSim and records classification beside future stuck events without changing Taxi routing, scoring, fare consumption, or active component ownership."
+  - "Focused PT/Taxi guard tests, the complete 71-test Maven suite, and the canonical PT release validator (20/20, 16 hashes, eight protected inputs) passed."
+  - "Historical generic-route and incomplete two-iteration evidence remains preserved; no Hong Kong scenario, server task, Runner action, Stage 7 work, or city/run-manifest change occurred."
+diagnostics:
+  - "The production population was not executed under Stage 6 because Runner/Hong Kong MATSim execution was not authorized."
+  - "Historical 79045 PT stuck events remain precise-runtime-cause unresolved under the new event-linked taxonomy."
+  - "Existing Maven, Java 25, Guice ASM, and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage6_validation_v1/stage6_pt_itinerary_stuck_governance_validation.json"
+  - "data/transport_costs/hongkong/integration_stage6_validation_v1/stuck_root_cause_taxonomy.csv"
+  - "docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md"
+  - "src/main/java/org/matsim/project/hongkong/pt/HongKongPtItineraryAudit.java"
+  - "src/test/java/org/matsim/project/hongkong/pt/HongKongPtItineraryAuditTest.java"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_6_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed Stage 6 SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 7."
+```

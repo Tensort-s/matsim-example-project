@@ -99,6 +99,7 @@ docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_TAXI_JAVA_SCORING.md
 docs/HONG_KONG_TAXI_LOAD_TEST.md
 docs/HONG_KONG_TAXI_SMOKE_TEST.md
+docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md
 docs/HONG_KONG_PT_FARE_MODEL.md
 docs/HONG_KONG_CAR_COST_MODEL.md
 docs/HONG_KONG_CAR_TOLL_NETWORK_MAPPING.md
@@ -190,6 +191,10 @@ The subsequent fixed-ASC, iterations 0-1 technical integration gate is
 defined in `docs/HONG_KONG_TAXI_SMOKE_TEST.md`. It freezes replanning and
 routing, keeps Taxi outside QSim main modes, verifies the live custom scoring
 factory, and audits each QSim iteration without introducing a Taxi/DVRP fleet.
+The pre-PT-scoring itinerary and stuck governance contract is in
+`docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`. It adds a read-only
+prepared-itinerary legality audit and fail-closed event taxonomy without
+changing PT fares, plans, supply, demand, capacity, or active scoring.
 
 The private-car offline cost workspace is under
 `data/transport_costs/hongkong/car_cost_v1/` and documented in

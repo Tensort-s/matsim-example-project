@@ -298,6 +298,16 @@ Taxi conditions pass. Non-Taxi stuck events are observations and fail this
 Taxi gate only when they prevent Taxi execution or make the two-iteration
 scenario incomplete or uninterpretable.
 
+Stage 6 extends this guard with the read-only
+`HongKongPtItineraryAudit` before QSim. The additional guard verifies PT trip
+sequence, ordered schedule stops and boarding/alighting permission,
+finite/nonnegative route/service values, and exact access/egress/transfer walk
+link continuity. It records a deterministic root-cause category beside future
+PT/walk stuck events. A stuck event on a legal audited itinerary remains
+`RUNTIME_CAUSE_UNRESOLVED`; the guard does not infer a fare, capacity, supply,
+demand, or transfer-policy cause. See
+`docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md`.
+
 Startup configuration/scoring failures, malformed Taxi attributes, invalid
 prepared PT references, and any pre-QSim Taxi fingerprint change remain
 immediate hard stops. BeforeMobsim stores both the PT and Taxi audit before

@@ -17,6 +17,7 @@ import org.matsim.core.controler.listener.BeforeMobsimListener;
 import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.events.handler.BasicEventHandler;
 import org.matsim.core.scoring.ScoringFunctionFactory;
+import org.matsim.project.hongkong.pt.HongKongPtItineraryAudit;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
 import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
@@ -50,6 +51,8 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 	private final Map<Integer, IterationEvents> iterations = new LinkedHashMap<>();
 	private final Map<Integer, HongKongTaxiPtRoutePreparation.PtRuntimeAudit>
 			preparedPtByIteration = new LinkedHashMap<>();
+	private final Map<Integer, HongKongPtItineraryAudit.AuditResult>
+			ptItineraryByIteration = new LinkedHashMap<>();
 	private final Map<Integer, HongKongTaxiPtRoutePreparation.TaxiInvarianceAudit>
 			taxiInvarianceByIteration = new LinkedHashMap<>();
 	private final Map<String, Boolean> dangerousEventTypes = new ConcurrentHashMap<>();
@@ -173,6 +176,10 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 				HongKongTaxiPtRoutePreparation.auditPreparedSelectedPt(
 						event.getServices().getScenario());
 		preparedPtByIteration.put(iteration, ptAudit);
+		HongKongPtItineraryAudit.AuditResult itineraryAudit =
+				HongKongPtItineraryAudit.audit(
+						event.getServices().getScenario());
+		ptItineraryByIteration.put(iteration, itineraryAudit);
 		long currentCustomRebuildInvocations =
 				HongKongTaxiPtRoutePreparation.customStartupRebuildInvocationCount();
 		if (currentCustomRebuildInvocations != customRebuildInvocationsAtConstruction) {
@@ -202,16 +209,25 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		}
 		taxiInvarianceByIteration.put(iteration, taxiAudit);
 		HongKongTaxiPtRoutePreparation.requireFormalPrepared(ptAudit);
+		HongKongPtItineraryAudit.requireLegal(itineraryAudit);
 		if (iteration == 1) {
 			HongKongTaxiPtRoutePreparation.PtRuntimeAudit first =
 					preparedPtByIteration.get(0);
+			HongKongPtItineraryAudit.AuditResult firstItinerary =
+					ptItineraryByIteration.get(0);
 			if (first == null) {
 				throw new IllegalStateException(
 						"Iteration 1 reached BeforeMobsim before iteration 0");
 			}
+			if (firstItinerary == null
+					|| !firstItinerary.fingerprintSha256().equals(
+					itineraryAudit.fingerprintSha256())) {
+				throw new IllegalStateException(
+						"Prepared PT itinerary changed between iterations");
+			}
 		}
 
-		current = new IterationEvents(iteration);
+		current = new IterationEvents(iteration, itineraryAudit);
 		current.startedNanos = System.nanoTime();
 		current.executedPlans = event.getServices().getScenario()
 				.getPopulation().getPersons().size();
@@ -273,9 +289,17 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		Map<String, Object> taxi = new LinkedHashMap<>();
 		taxiInvarianceByIteration.forEach((iteration, audit) ->
 				taxi.put(Integer.toString(iteration), audit.toMap()));
+		Map<String, Object> itineraries = new LinkedHashMap<>();
+		ptItineraryByIteration.forEach((iteration, audit) ->
+				itineraries.put(Integer.toString(iteration), audit.toMap()));
 		boolean samePtFingerprint = preparedPtByIteration.size() == 2
 				&& preparedPtByIteration.get(0).fingerprintSha256()
 				.equals(preparedPtByIteration.get(1).fingerprintSha256());
+		boolean sameItineraryFingerprint =
+				ptItineraryByIteration.size() == 2
+						&& ptItineraryByIteration.get(0).fingerprintSha256()
+						.equals(ptItineraryByIteration.get(1)
+								.fingerprintSha256());
 		return ordered(
 				"source_clear_audit", preparationAudit.toMap(),
 				"prepare_for_sim",
@@ -286,17 +310,21 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 						HongKongTaxiPtRoutePreparation
 								.customStartupRebuildInvocationCount(),
 				"prepared_pt_by_iteration", prepared,
+				"legal_pt_itinerary_by_iteration", itineraries,
 				"taxi_invariance_by_iteration", taxi,
 				"before_mobsim_audit_count", preparedPtByIteration.size(),
 				"after_mobsim_without_live_audit",
 						afterMobsimWithoutLiveAudit,
 				"pt_route_fingerprint_unchanged_after_iteration_0",
-						samePtFingerprint
+						samePtFingerprint,
+				"pt_itinerary_fingerprint_unchanged_after_iteration_0",
+						sameItineraryFingerprint
 		);
 	}
 
 	public boolean preparedPtAndTaxiGuardsPassed() {
 		return preparedPtByIteration.size() == 2
+				&& ptItineraryByIteration.size() == 2
 				&& taxiInvarianceByIteration.size() == 2
 				&& HongKongTaxiPtRoutePreparation
 						.customStartupRebuildInvocationCount()
@@ -315,6 +343,11 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 								&& audit.egressStopNotInSchedule() == 0
 								&& audit.lineNotInSchedule() == 0
 								&& audit.routeNotInSchedule() == 0)
+				&& ptItineraryByIteration.values().stream()
+						.allMatch(HongKongPtItineraryAudit.AuditResult::legal)
+				&& ptItineraryByIteration.get(0).fingerprintSha256()
+						.equals(ptItineraryByIteration.get(1)
+								.fingerprintSha256())
 				&& taxiInvarianceByIteration.values().stream()
 						.skip(1)
 						.allMatch(HongKongTaxiPtRoutePreparation
@@ -432,6 +465,7 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 
 	static final class IterationEvents {
 		final int iteration;
+		final HongKongPtItineraryAudit.AuditResult ptItineraryAudit;
 		long startedNanos;
 		long executedPlans;
 		long taxiDepartures;
@@ -452,13 +486,21 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 		final Map<String, Deque<Double>> openTaxiDepartures = new TreeMap<>();
 		final Map<String, Long> stuckByMode = new TreeMap<>();
 		final Map<String, Long> stuckByHour = new TreeMap<>();
+		final Map<String, Long> stuckRootCauseCounts = new TreeMap<>();
 		final List<Map<String, Object>> stuckExamples = new ArrayList<>();
 		final Map<String, Long> dvrpTaxiFleetEventTypes = new TreeMap<>();
 		final List<String> violations = new ArrayList<>();
 		final List<String> observations = new ArrayList<>();
 
 		IterationEvents(int iteration) {
+			this(iteration, null);
+		}
+
+		IterationEvents(
+				int iteration,
+				HongKongPtItineraryAudit.AuditResult ptItineraryAudit) {
 			this.iteration = iteration;
+			this.ptItineraryAudit = ptItineraryAudit;
 		}
 
 		void handleDeparture(PersonDepartureEvent event) {
@@ -496,6 +538,10 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 			stuckByMode.merge(mode, 1L, Long::sum);
 			stuckByHour.merge(Integer.toString((int) Math.floor(event.getTime() / 3600.0)),
 					1L, Long::sum);
+			String rootCause = ptItineraryAudit == null
+					? "PT_WALK_AUDIT_NOT_ATTACHED"
+					: ptItineraryAudit.classifyStuck(event);
+			stuckRootCauseCounts.merge(rootCause, 1L, Long::sum);
 			if ("taxi".equals(mode)) {
 				taxiStuckEvents++;
 			}
@@ -504,7 +550,8 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 						"person_id", event.getPersonId().toString(),
 						"time", event.getTime(),
 						"mode", mode,
-						"reason", event.getReason()
+						"event_reason", event.getReason(),
+						"root_cause_classification", rootCause
 				));
 			}
 		}
@@ -573,6 +620,7 @@ public final class HongKongTaxiSmokeRuntimeGuard implements
 					"total_stuck_events", totalStuckEvents,
 					"stuck_by_mode", stuckByMode,
 					"stuck_by_hour", stuckByHour,
+					"stuck_root_cause_counts", stuckRootCauseCounts,
 					"stuck_examples", stuckExamples,
 					"taxi_network_vehicle_traffic_events",
 							taxiNetworkVehicleTrafficEvents,

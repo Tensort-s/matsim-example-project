@@ -1,0 +1,8 @@
+classification,applies_when,proven_interpretation,automatic_hard_failure,policy_boundary
+PT_STUCK_INVALID_ITINERARY__REASON,PT stuck person has a prepared PT trip with at least one deterministic audit reason,The stuck is linked to the first sorted proven itinerary reason,true,Does not infer fare capacity demand or supply policy
+PT_WALK_STUCK_INVALID_ITINERARY__REASON,walk-family stuck person has a prepared PT trip with at least one deterministic audit reason,The stuck is linked to the first sorted proven PT/walk itinerary reason,true,Unresolved fields remain unresolved and are never numeric zero
+PT_STUCK_LEGAL_ITINERARY_RUNTIME_CAUSE_UNRESOLVED,PT stuck person has a legal prepared itinerary,Prepared itinerary legality did not explain the runtime stuck,false,Requires later authorized event/run evidence before any capacity supply or policy conclusion
+PT_WALK_STUCK_LEGAL_ITINERARY_RUNTIME_CAUSE_UNRESOLVED,walk-family stuck person has a legal prepared PT itinerary,Prepared PT/walk itinerary legality did not explain the runtime stuck,false,Requires later authorized event/run evidence
+PT_STUCK_PERSON_WITHOUT_AUDITED_PT_TRIP,PT stuck event has no matching audited PT-trip profile,The event and prepared-plan audit cannot be reconciled,true,No synthetic trip or numeric fallback is created
+WALK_STUCK_OUTSIDE_PT_ITINERARY_SCOPE,walk-family stuck person has no audited PT trip,The stuck is not attributed to the PT itinerary layer,false,Remains available to another authorized diagnostic scope
+STUCK_OUTSIDE_PT_WALK_SCOPE,stuck mode is neither PT nor a recognized walk-family mode,The event is outside Stage 6 PT/walk attribution,false,No cross-mode causal inference

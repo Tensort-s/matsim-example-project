@@ -1,0 +1,157 @@
+{
+  "audit": "hong_kong_pt_itinerary_and_stuck_governance_stage6_v1",
+  "status": "implementation_validated_pending_independent_review",
+  "input_sha": "d9f6c10e506e7c43a9d44d7d3cb772e5e9b8b41a",
+  "implementation": {
+    "audit_class": "org.matsim.project.hongkong.pt.HongKongPtItineraryAudit",
+    "version": "hong_kong_pt_itinerary_and_stuck_governance_v1",
+    "runtime_guard": "org.matsim.project.hongkong.taxi.HongKongTaxiSmokeRuntimeGuard",
+    "read_only": true,
+    "plans_mutated": false,
+    "transit_schedule_mutated": false,
+    "fare_or_scoring_used": false,
+    "runtime_guard_rejects_invalid_itinerary_before_qsim": true,
+    "stuck_classification_is_event_linked": true
+  },
+  "legality_contract": {
+    "selected_plan_and_pt_trip_sequence_required": true,
+    "routing_mode_pt_required_for_every_pt_trip_leg": true,
+    "supported_walk_modes": [
+      "walk",
+      "transit_walk",
+      "access_walk",
+      "egress_walk",
+      "non_network_walk"
+    ],
+    "stage_activity_sequence_required": true,
+    "transit_passenger_route_required": true,
+    "schedule_line_route_stop_references_required": true,
+    "ordered_access_before_egress_required": true,
+    "boarding_and_alighting_permission_required": true,
+    "finite_nonnegative_offsets_departures_distances_and_times_required": true,
+    "service_at_or_after_ready_time_required": true,
+    "walk_and_pt_interaction_link_continuity_required": true,
+    "unresolved_link_or_time_is_not_zero": true
+  },
+  "deterministic_fixture_validation": {
+    "test_class": "org.matsim.project.hongkong.pt.HongKongPtItineraryAuditTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "validated_cases": [
+      "legal_access_pt_egress_is_read_only_and_deterministic",
+      "wrong_stop_order_boarding_forbidden_and_no_later_service_fail_closed",
+      "walk_discontinuity_missing_links_and_nonfinite_values_fail_closed",
+      "explicit_transfer_walk_continuity_is_required",
+      "non_pt_walk_stuck_remains_outside_pt_itinerary_scope"
+    ]
+  },
+  "stuck_root_cause_policy": {
+    "taxonomy_path": "data/transport_costs/hongkong/integration_stage6_validation_v1/stuck_root_cause_taxonomy.csv",
+    "invalid_itinerary_is_attributed_to_first_sorted_proven_reason": true,
+    "legal_itinerary_runtime_cause_remains_unresolved": true,
+    "capacity_supply_fare_or_transfer_policy_is_not_inferred": true,
+    "event_reason_is_preserved_separately": true,
+    "numeric_zero_fill": false
+  },
+  "historical_evidence": {
+    "generic_pt_route_failure": {
+      "status": "historical_superseded_by_standard_prepare_for_sim",
+      "source": "data/taxi/hongkong/processed/taxi_smoke_dependency_audit_v1/taxi_smoke_dependency_validation.json",
+      "fields": [
+        "pt_route_runtime_type_audit.taxi.generic_route_impl",
+        "pt_removal_log_audit.pt_no_transit_route_log_lines",
+        "missing_taxi_departure_attribution.category_counts.invalid_pt_before_taxi_agent_removed"
+      ],
+      "generic_pt_legs": 557104,
+      "pt_removal_log_lines": 237950,
+      "downstream_taxi_departures_blocked": 7024
+    },
+    "standard_prepare_for_sim": {
+      "status": "historical_validated_offline_prepare",
+      "source": "data/taxi/hongkong/processed/taxi_prepare_for_sim_validation_v1/taxi_prepare_for_sim_validation.json",
+      "fields": [
+        "prepare_for_sim.default_prepare_for_sim_impl",
+        "prepared_pt.total_pt_legs",
+        "prepared_pt.transit_passenger_route",
+        "prepared_pt.route_null",
+        "prepared_pt.generic_route_impl"
+      ],
+      "prepared_pt_segments": 1092811,
+      "transit_passenger_routes": 1092811,
+      "null_routes": 0,
+      "generic_routes": 0
+    },
+    "two_iteration_attempt": {
+      "status": "historical_incomplete_runtime_evidence",
+      "source": "data/taxi/hongkong/processed/taxi_two_iteration_smoke_validation_v1/taxi_two_iteration_smoke_conditional_validation.json",
+      "fields": [
+        "iteration_0.total_stuck",
+        "iteration_0.pt_stuck",
+        "upstream_blocked_taxi.missing_taxi_legs",
+        "upstream_blocked_taxi.missing_by_last_stuck_mode",
+        "pt_runtime.fatal_route_stop_line_or_unknown_mode_errors"
+      ],
+      "total_stuck": 86245,
+      "pt_stuck": 79045,
+      "upstream_blocked_taxi_legs": 2198,
+      "last_stuck_mode_pt": 2156,
+      "last_stuck_mode_walk": 32,
+      "fatal_route_stop_line_or_unknown_mode_errors": 0,
+      "stage6_interpretation": "The historical event record proves upstream PT/walk blocking but cannot distinguish itinerary, waiting, capacity, supply, or another runtime cause with the new per-person Stage 6 audit. The precise cause remains unresolved; no rerun was performed."
+    }
+  },
+  "regression_validation": {
+    "focused_command": ".\\mvnw.cmd '-Dtest=HongKongPtItineraryAuditTest,HongKongTaxiSmokeIntegrationTest' test",
+    "focused_tests": 9,
+    "focused_failures": 0,
+    "focused_errors": 0,
+    "full_command": ".\\mvnw.cmd test",
+    "full_tests": 71,
+    "full_failures": 0,
+    "full_errors": 0,
+    "taxi_scoring_and_routing_tests_preserved": true,
+    "pt_release_command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe .\\scripts\\hong_kong_single_city\\costs\\validate_hong_kong_pt_fare_release_v1.py --repository-root .",
+    "pt_release_checks": 20,
+    "pt_release_failures": 0,
+    "pt_release_status": "offline_interfaces_validated_not_integrated_with_scoring",
+    "pt_registered_hashes_matched": 16,
+    "pt_protected_inputs_unchanged": 8
+  },
+  "runtime_boundaries": {
+    "taxi_scoring_changed": false,
+    "taxi_routing_changed": false,
+    "pt_fare_layer_changed": false,
+    "pt_scoring_active": false,
+    "pt_person_money_event_active": false,
+    "car_scoring_active": false,
+    "matsim_config_changed": false,
+    "plans_or_supply_changed": false,
+    "city_yaml_changed": false,
+    "run_manifest_changed": false
+  },
+  "run_flags": {
+    "hong_kong_scenario_run": false,
+    "server_run": false,
+    "runner_authorized": false,
+    "new_trend_evidence": false
+  },
+  "hard_gate_evidence": {
+    "exact_input_and_protected_refs": "Executor exact-SHA handoff and docs/agent-worklogs/integration-executor.md#entry-11--stage-6-pt-itinerary-and-stuck-governance",
+    "legal_itinerary_and_fail_closed_unresolved": "implementation plus deterministic_fixture_validation and stuck_root_cause_policy",
+    "taxi_runtime_and_scoring_invariant": "regression_validation.taxi_scoring_and_routing_tests_preserved and exact changed-path review",
+    "pt_fare_offline_and_unmodified": "regression_validation.pt_release_status plus runtime_boundaries",
+    "car_offline_and_unmodified": "runtime_boundaries.car_scoring_active plus exact changed-path review",
+    "historical_evidence_preserved": "historical_evidence",
+    "no_model_policy_or_input_change": "runtime_boundaries",
+    "no_runner_or_hong_kong_run": "run_flags",
+    "diff_refs_cleanliness_and_output_identity": "Executor exact-SHA handoff"
+  },
+  "diagnostics": [
+    "No production-population Stage 6 audit was executed because no Hong Kong MATSim or Runner execution was authorized.",
+    "The 79045 historical PT stuck events remain runtime-cause unresolved; assigning them to capacity, supply, fare, or itinerary without the new event-linked audit would be unsupported.",
+    "Existing Maven parent-expression, Java 25 native-access/Unsafe, Guice ASM, and synthetic-fixture warnings remain non-blocking."
+  ],
+  "all_implementation_checks_passed": true,
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_6_GATE"
+}
