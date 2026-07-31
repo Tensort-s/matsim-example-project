@@ -521,3 +521,34 @@ hard_gate_status: "STAGE_7_PASS_CLOSED__STAGE_8A_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement, validate and push one Stage 8A result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 17 — Stage 8A closure and Stage 8B authorization
+
+Compact archival record faithfully transferred from the formal Stage 8B
+brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8A closure / Stage 8B authorization"
+input_sha: "5cc8aaaca0f5d5e073fff2792a29ed929c372139"
+output_sha_or_status: "STAGE_8A_PASS_CLOSED__STAGE_8B_AUTHORIZED"
+decision: "Close Stage 8A PASS and authorize INT-EXECUTOR only to activate the canonical confirmed-toll Car component beside the accepted fuel_or_electricity component; keep parking, fixed ownership, motorcycles and Runner inactive."
+findings:
+  - "Stage 8A exact-SHA review returned PASS with blockers=[] for 5cc8aaaca0f5d5e073fff2792a29ed929c372139."
+  - "Canonical car_fuel_or_electricity_v1, 64789 resolved private-car rows and 2929 null/out-of-scope motorcycle rows were accepted."
+  - "Toll, destination parking and fixed ownership were absent from Stage 8A runtime rows, and the nonzero standard monetaryDistanceRate guard and no-duplicate-distance/fuel behavior were accepted."
+  - "Stage 8B may use only the approved canonical confirmed-toll source and must fail closed for unconfirmed or unresolved toll."
+  - "Executor reports the exact pushed result only to Supervisor; Supervisor dispatches Reviewer."
+diagnostics:
+  - "The representative fleet-average fuel rate remains existing canonical evidence and is not reinterpreted or changed."
+  - "The formal Stage 8B brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_08A_CAR_ENERGY_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_08B_CAR_CONFIRMED_TOLL_RUNTIME.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "STAGE_8A_PASS_CLOSED__STAGE_8B_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one Stage 8B result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
+```

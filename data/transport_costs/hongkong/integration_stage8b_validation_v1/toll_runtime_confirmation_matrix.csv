@@ -1,0 +1,8 @@
+source_status,runtime_resolution,cost_hkd_policy,route_evidence_policy,callback_policy
+confirmed_charge,charge_once,finite positive canonical base amount,exact person/leg plus distance full-link-count facility-link and fingerprint match,handleLeg only
+confirmed_no_charge,consume_once_without_charge,legal numeric zero only because full route has no audited toll facility,exact person/leg plus distance full-link-count and fingerprint match,handleLeg only
+unconfirmed_or_ambiguous,fail_closed,null required and never inferred,no distance road-class route-presence or candidate fallback,no callback charge
+missing_person_leg_key,fail_closed,null required and never filled,missing canonical key is explicit unresolved,no callback charge
+motorcycle,out_of_scope,null preserved and never treated as private car,route identity may be audited but no monetary passage is loaded,no callback charge
+destination_parking,inactive,no runtime value,Stage 8C not authorized,no callback charge
+fixed_vehicle_ownership_cost,accounting_only,no leg value,excluded by canonical registry,no callback charge

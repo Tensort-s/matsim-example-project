@@ -147,7 +147,29 @@ the energy component cannot double count the unverified distance monetary
 term. The full scoped contract is in
 [`docs/HONG_KONG_CAR_ENERGY_RUNTIME.md`](HONG_KONG_CAR_ENERGY_RUNTIME.md).
 
-Stage 7 and Stage 8A change no production config, plans, supply, demand,
+Stage 8A passed independent exact-SHA review and was formally closed at:
+
+```text
+5cc8aaaca0f5d5e073fff2792a29ed929c372139
+```
+
+Stage 8B preserves energy and adds only confirmed base toll inside one Car
+mode owner:
+
+```text
+car -> car_marginal_cost_v1
+       - car_fuel_or_electricity_v1
+       - car_confirmed_toll_v1
+```
+
+Confirmed toll is keyed to exact canonical person/leg, route distance,
+full-link count, physical facility-link evidence, and route fingerprint.
+Confirmed no-charge is a legal zero; missing, ambiguous, unconfirmed, or
+unresolved toll stays null and fails closed. No distance, road-class,
+route-presence, or candidate fallback is active. See
+[`docs/HONG_KONG_CAR_TOLL_RUNTIME.md`](HONG_KONG_CAR_TOLL_RUNTIME.md).
+
+Stages 7, 8A, and 8B change no production config, plans, supply, demand,
 capacity, ASC, monetary utility, city metadata, or run manifest; no Runner or
 MATSim/server run is authorized.
 
@@ -496,6 +518,33 @@ data/transport_costs/hongkong/integration_stage8a_validation_v1/
   car_energy_runtime_boundary_matrix.csv
 ```
 
+## Stage 8B confirmed Car toll composition
+
+`HongKongCarTollCostCatalog` verifies the canonical base component, toll
+candidate, toll-identification, and physical passage-event hashes. It admits
+only 25,858 confirmed charged legs and 38,931 confirmed full-route no-charge
+legs; 2,929 motorcycles remain null/out-of-scope and canonical private-car
+unresolved count is zero. The charged legs contain 30,837 physical passage
+events and total 751,760 HKD.
+
+`HongKongCarTollPersonSchedule` requires an exact source key, prepared
+NetworkRoute, distance, full-link count, facility-link sequence inside the
+audited source span, and callback fingerprint. `HongKongCarTollScoring`
+charges only from `handleLeg` and keeps all other callback paths inert.
+
+`HongKongCarMarginalCostScoringComponentFactory` is the single Car mode owner
+and exposes the accepted energy and toll IDs as internal subcomponents. This
+preserves the duplicate-mode-owner guard instead of registering two parallel
+Car owners. Parking and fixed ownership remain inactive.
+
+Structured Stage 8B evidence is:
+
+```text
+data/transport_costs/hongkong/integration_stage8b_validation_v1/
+  stage8b_car_confirmed_toll_runtime_validation.json
+  toll_runtime_confirmation_matrix.csv
+```
+
 ## Stage 2 verification boundary
 
 Stage 2 validation is offline and deterministic. It does not launch a Hong
@@ -618,8 +667,9 @@ metadata. It does not change current-model inputs or simulation parameters.
 Java module, money event, static leg lookup, MATSim scoring/config/plans/supply
 mutation, calibration, monetary-distance-rate interpretation, scenario run,
 server run, or Runner action. Stage 8A supersedes only that historical runtime
-status for the single guarded base energy component; all other Stage 3 source
-and exclusion boundaries remain intact.
+status for the guarded base energy component, and Stage 8B separately
+supersedes it only for confirmed base toll. All other Stage 3 source and
+exclusion boundaries remain intact.
 
 Stage 3 deterministic validation results:
 

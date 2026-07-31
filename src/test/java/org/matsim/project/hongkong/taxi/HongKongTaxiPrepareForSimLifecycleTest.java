@@ -18,7 +18,7 @@ import org.matsim.core.controler.PrepareForSimImpl;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
-import org.matsim.project.hongkong.car.HongKongCarEnergyScoringComponentFactory;
+import org.matsim.project.hongkong.car.HongKongCarMarginalCostScoringComponentFactory;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentFactory;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalScoringFunctionFactory;
@@ -37,11 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HongKongTaxiPrepareForSimLifecycleTest {
 
 	@Test
-	void stage8aCombinedModuleHasExactlyTaxiPtAndCarEnergyModeOwners() {
+	void stage8bCombinedModuleHasExactlyTaxiPtAndOneCarMarginalCostOwner() {
 		Config config = HongKongTaxiTestFixtures.safeConfig();
 		config.transit().setUseTransit(false);
 		config.controller().setOutputDirectory(
-				"target/stage8a-combined-module-" + UUID.randomUUID());
+				"target/stage8b-combined-module-" + UUID.randomUUID());
 		Scenario scenario = ScenarioUtils.createScenario(config);
 		addNetwork(scenario.getNetwork());
 
@@ -55,19 +55,25 @@ class HongKongTaxiPrepareForSimLifecycleTest {
 
 		assertEquals(
 				List.of(
-						HongKongCarEnergyScoringComponentFactory.COMPONENT_ID,
+						HongKongCarMarginalCostScoringComponentFactory.COMPONENT_ID,
 						HongKongPtFareScoringComponentFactory.COMPONENT_ID,
 						HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
 				scoringFactory.componentIds());
 		assertEquals(
 				Map.of(
 						"car",
-						HongKongCarEnergyScoringComponentFactory.COMPONENT_ID,
+						HongKongCarMarginalCostScoringComponentFactory.COMPONENT_ID,
 						"pt",
 						HongKongPtFareScoringComponentFactory.COMPONENT_ID,
 						"taxi",
 						HongKongTaxiFareScoringComponentFactory.COMPONENT_ID),
 				scoringFactory.activeModeOwners());
+		HongKongCarMarginalCostScoringComponentFactory carFactory =
+				controler.getInjector().getInstance(
+						HongKongCarMarginalCostScoringComponentFactory.class);
+		assertEquals(
+				List.of("car_fuel_or_electricity_v1", "car_confirmed_toll_v1"),
+				carFactory.subcomponentIds());
 	}
 
 	@Test

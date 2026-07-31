@@ -474,3 +474,34 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8A_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed Stage 8A SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8B/8C/9."
 ```
+
+## Entry 14 — Stage 8B confirmed Car toll runtime
+
+```yaml
+timestamp: "2026-07-31T18:22:24+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8B"
+input_sha: "5cc8aaaca0f5d5e073fff2792a29ed929c372139"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Activate only hash-locked canonical confirmed base toll beside the accepted energy subcomponent inside the unique car_marginal_cost_v1 mode owner, with exact source/route evidence and fail-closed unconfirmed handling."
+findings:
+  - "The combined registry has exactly three unique mode owners: car->car_marginal_cost_v1, pt->pt_fare_layered_v1 and taxi->taxi_route_fare_v1; the Car owner contains only car_fuel_or_electricity_v1 and car_confirmed_toll_v1."
+  - "The toll catalog verifies six source hashes and loads 25858 confirmed-charge private-car rows, 38931 confirmed-no-charge private-car rows, zero unresolved private-car rows, 2929 motorcycle null/out-of-scope rows and 30837 physical toll events."
+  - "Selected-plan keys, route distance, full-link count, ordered facility links inside the audited source span, route fingerprint and ordinal must match; unconfirmed/missing/ambiguous input fails closed without distance, road-class or candidate inference."
+  - "Confirmed charge/no-charge, callbacks and the energy+toll composite are exactly once; standard Car monetaryDistanceRate remains required at zero, destination parking and fixed ownership remain absent, and motorcycles never become private cars."
+  - "Compile, 22 focused Car tests, the combined Guice ownership test, the complete 104-test suite, PT 20/20 release validation and Car release validation passed; city.yaml, run_manifest and production inputs/config/supply were unchanged and no Runner/Hong Kong/server run occurred."
+diagnostics:
+  - "The first completed focused run exposed 2028 canonical fragmented or alias facility matches; exact ordered links inside the bounded audited source span are the source-preserving representation and are now covered by a focused test."
+  - "A second focused run exposed physical mapping candidates on motorcycle identification rows; motorcycles remain null/out-of-scope and no motorcycle monetary toll event is loaded."
+  - "Existing Maven parent.version, Java native-access/Unsafe, DuckDB native-access, Guice ASM class-version, deprecated fixture configuration and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8b_validation_v1/stage8b_car_confirmed_toll_runtime_validation.json"
+  - "data/transport_costs/hongkong/integration_stage8b_validation_v1/toll_runtime_confirmation_matrix.csv"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/HONG_KONG_CAR_TOLL_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_08B_CAR_CONFIRMED_TOLL_RUNTIME.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8B_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed Stage 8B SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8C/9."
+```

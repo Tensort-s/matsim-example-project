@@ -2,7 +2,7 @@ package org.matsim.project.hongkong.scoring;
 
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.project.hongkong.car.HongKongCarEnergyCostCatalog;
-import org.matsim.project.hongkong.car.HongKongCarEnergyScoringComponentModule;
+import org.matsim.project.hongkong.car.HongKongCarMarginalCostScoringComponentModule;
 import org.matsim.project.hongkong.pt.HongKongPtFareRuntimeCatalog;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentModule;
@@ -12,13 +12,13 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * Canonical Stage 8A scoring composition: standard MATSim scoring plus the
- * established Taxi route fare, strict five-layer PT fare, and only the Car
- * fuel-or-electricity marginal-cost component.
+ * Canonical Stage 8B scoring composition: standard MATSim scoring plus the
+ * established Taxi route fare, strict five-layer PT fare, and one Car owner
+ * containing the approved energy and confirmed-toll components.
  *
  * <p>The older {@code HongKongTaxiScoringModule} remains the Taxi-only
- * equivalence and historical-smoke entry point. Car toll, destination
- * parking, fixed ownership and motorcycles remain absent or out of scope.</p>
+ * equivalence and historical-smoke entry point. Destination parking, fixed
+ * ownership and motorcycles remain absent or out of scope.</p>
  */
 public final class HongKongMultimodalCostScoringModule
 		extends AbstractModule {
@@ -55,7 +55,7 @@ public final class HongKongMultimodalCostScoringModule
 				taxiParameters));
 		install(new HongKongPtFareScoringComponentModule(
 				ptFareReleaseRoot));
-		install(new HongKongCarEnergyScoringComponentModule(
+		install(new HongKongCarMarginalCostScoringComponentModule(
 				carCostRoot));
 	}
 }

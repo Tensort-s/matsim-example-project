@@ -465,3 +465,33 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor may close Stage 7 and issue a separate Stage 8A authorization; Reviewer does not authorize execution or Runner."
 ```
+
+## Entry 14 — Stage 8A exact-SHA review
+
+Compact archival transfer from the Stage 8B Supervisor brief; only the facts
+supplied by Supervisor are appended:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 8A exact-SHA review"
+input_sha: "d8fda87eda176f46dd00763709f56b530383476f"
+output_sha_or_status: "5cc8aaaca0f5d5e073fff2792a29ed929c372139"
+decision: "PASS"
+findings:
+  - "The canonical car_fuel_or_electricity_v1 runtime component was verified."
+  - "All 64789 private-car rows are resolved and all 2929 motorcycle rows remain explicit null/out-of-scope."
+  - "Toll, destination parking and fixed ownership are absent from runtime rows."
+  - "A nonzero standard Car monetaryDistanceRate fails closed, and no distance or fuel charge is duplicated."
+  - "Taxi and PT behavior remained unchanged."
+diagnostics:
+  - "The Supervisor transfer supplied no exact Reviewer timestamp or additional detailed findings; no missing facts are inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8a_validation_v1/stage8a_car_energy_runtime_validation.json"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/HONG_KONG_CAR_ENERGY_RUNTIME.md"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor may close Stage 8A and issue a separate Stage 8B authorization; Reviewer does not authorize execution or Runner."
+```

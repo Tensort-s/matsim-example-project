@@ -266,6 +266,14 @@ once. Toll, destination parking, motorcycles, and fixed ownership remain
 inactive. A nonzero standard Car `monetaryDistanceRate` fails closed without
 mutation or economic reinterpretation; no production config or scenario run
 is changed.
+The Stage 8B confirmed-toll consumer is documented in
+`docs/HONG_KONG_CAR_TOLL_RUNTIME.md`. One Car owner composes the unchanged
+energy scorer with confirmed base toll only. Confirmed charges retain exact
+source and physical facility-link evidence; confirmed no-charge is the only
+toll zero. Missing, ambiguous, unconfirmed, changed-route, or non-finite
+records fail closed without distance, road-class, route-presence, or candidate
+fallback. Parking, fixed ownership, motorcycles, config, and scenario runs
+remain outside Stage 8B.
 
 The final local SimWrapper project for this configuration is:
 

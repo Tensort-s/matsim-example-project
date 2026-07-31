@@ -2,10 +2,19 @@
 
 ## Stage 8A scope
 
-Stage 8A activates exactly one Car scoring component:
+Stage 8A originally activated exactly one Car scoring component:
 
 ```text
 car -> car_fuel_or_electricity_v1
+```
+
+Stage 8B preserves that scorer unchanged as a subcomponent of the unique Car
+owner and adds confirmed toll:
+
+```text
+car -> car_marginal_cost_v1
+       - car_fuel_or_electricity_v1
+       - car_confirmed_toll_v1
 ```
 
 The component consumes the `base` `fuel_or_electricity` rows from the
@@ -17,8 +26,9 @@ data/transport_costs/hongkong/car_cost_v1/
     car_leg_marginal_cost_components_base.parquet
 ```
 
-It does not activate toll, destination parking, fixed ownership, or
-motorcycle scoring. It changes no MATSim config, plans, network, schedule,
+Stage 8A did not activate toll; Stage 8B activates confirmed toll only through
+the separate contract above. Neither stage activates destination parking,
+fixed ownership, or motorcycle scoring. They change no MATSim config, plans, network, schedule,
 vehicles, facilities, demand, supply, capacity, city metadata, run manifest,
 or server output.
 
@@ -77,13 +87,17 @@ ordinal records exclusion and creates no fabricated private-car charge.
 
 ## Composition and evidence
 
-The canonical combined component registry has three unique owners:
+From Stage 8B, the canonical combined component registry still has three
+unique mode owners:
 
 ```text
-car  -> car_fuel_or_electricity_v1
+car  -> car_marginal_cost_v1
 pt   -> pt_fare_layered_v1
 taxi -> taxi_route_fare_v1
 ```
+
+The Car owner records energy and confirmed toll as distinct exactly-once
+subcomponents. See `docs/HONG_KONG_CAR_TOLL_RUNTIME.md`.
 
 Taxi and PT component behavior is unchanged. The source release manifest
 remains immutable historical/offline provenance; the scoped Stage 8A approval
