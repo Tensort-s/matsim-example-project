@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Exact-SHA server bundle preparation rework` |
+| task_id | `Stage 8D - Exact-tree source-snapshot bounded rework` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `67f812ab544b9842c65c4da9073ee8e58d10bc31` |
+| exact_input_sha | `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -20,15 +20,17 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Correct only the server bundle preparation path so a later separately
-authorized Runner can build and package the exact pushed runtime with the
-locked v2 demand and Ferry Core inputs.
+Add a Git-metadata-free source-snapshot identity path so a later separately
+authorized Runner can transfer and build the locked exact runtime on a server
+without a checkout, while retaining the original exact-clean-Git guard.
 
 ## Authorized delta
 
 - exact seven-file current input inventory and SHA256 checks;
 - stale v1/pre-Ferry path rejection;
-- exact clean source-SHA and Taxi/PT/Car fat-JAR inventory checks;
+- exact clean Git checkout or exact-tree snapshot source identity;
+- snapshot archive/manifest/file integrity and tamper rejection;
+- unchanged Taxi/PT/Car fat-JAR inventory checks;
 - external deployment manifest and Linux JDK 25 build interface;
 - deployment documentation, evidence and append-only worklogs.
 
@@ -37,8 +39,8 @@ locked v2 demand and Ferry Core inputs.
 Java/model logic, fare or cost semantics, economic parameters, MATSim input
 configuration, plans, network, schedule, vehicles, facilities, demand,
 supply, capacity, city metadata or run manifest; JDK download/fabrication;
-server access/build/upload/run; Runner; Stage 9 retry; master or protected
-feature changes.
+server access/build/upload/run or source transfer; Runner; Stage 9 retry;
+master or protected feature changes; Git metadata creation on the server.
 
 ## Evidence references
 

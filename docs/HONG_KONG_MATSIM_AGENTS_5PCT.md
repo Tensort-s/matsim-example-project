@@ -279,12 +279,16 @@ all MATSim outputs are redirected below the release root. Launchers fail if
 their target run directory already exists; no server files are deleted or
 overwritten.
 
-Before copying anything, the current script verifies a clean exact Git SHA,
-all seven current input hashes, the approved JDK archive hash, Linux JDK 25 /
-Maven / MATSim build metadata, and the Taxi/PT/Car runtime-class inventory in
-the fat JAR. It emits an external deployment manifest containing source, JAR,
-bundle and input hashes. Server-side build, upload and execution require a
-separate Supervisor authorization; no JDK is downloaded or fabricated by the
+Before copying anything, the current script verifies either a clean exact Git
+SHA or a Git-metadata-free snapshot that reconstructs the locked exact Git
+tree. Snapshot proof includes an out-of-band manifest hash, archive hash and a
+7,620-file path/mode/blob/size/SHA256 inventory; wrong SHA/tree or tampering
+fails closed. It also verifies all seven current input hashes, the approved
+JDK archive hash, Linux JDK 25 / Maven / MATSim build metadata, and the
+Taxi/PT/Car runtime-class inventory in the fat JAR. It emits an external
+deployment manifest containing source identity, JAR, bundle and input hashes.
+Server-side snapshot transfer/build, upload and execution require a separate
+Supervisor authorization; no JDK is downloaded or fabricated by the
 preparation workflow. The current contract is documented in
 `docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md`.
 

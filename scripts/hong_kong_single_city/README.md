@@ -218,6 +218,7 @@ Prepare the append-only Linux server bundle with:
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
+  build-bundle `
   --source-commit-sha <exact-pushed-sha> `
   --fat-jar .\matsim-example-project-0.0.1-SNAPSHOT.jar `
   --jdk-archive <approved-existing-Temurin-JDK-25-Linux-x64.tar.gz> `
@@ -230,21 +231,44 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 ```
 
 The active preparation contract is hash-locked to the v2 activity-modechoice
-demand and Ferry Core v1 / 10% PT-capacity supply. The script rejects legacy
-v1/pre-Ferry paths, dirty or wrong source checkouts, wrong input hashes,
+demand and Ferry Core v1 / 10% PT-capacity supply. Source identity may be an
+exact clean Git checkout or the Stage 8D exact-tree snapshot described below.
+The script rejects legacy v1/pre-Ferry paths, dirty or wrong source checkouts,
+wrong snapshot commit/tree/archive/manifest/file content, wrong input hashes,
 non-JDK-25 build metadata, and a fat JAR missing the current Taxi/PT/Car
 runtime classes. A release root must be supplied explicitly below
 `/mnt/DiskM/by/`; it is never inferred from an older deployment. The generated
 launchers create new run directories only and use `failIfDirectoryExists`.
 Preparing a bundle does not authorize upload or execution.
 
-On the authorized Linux server, the exact build command interface is:
+Create the Git-metadata-free source artifact from the locked reviewed runtime
+commit without changing the current worktree, index or refs. Both new output
+paths must be outside the worktree:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
+  create-source-snapshot `
+  --source-commit-sha 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4 `
+  --snapshot-path <new-source-snapshot.tar> `
+  --snapshot-manifest <new-source-snapshot-manifest.json>
+```
+
+The sidecar records the exact tree
+`d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9` plus every tracked path, mode,
+Git blob, size and SHA256. A later Runner records the printed archive and
+manifest hashes, transfers them only to new server paths, validates before
+extraction, extracts into a new Git-free source root and validates that root
+again. The `verify-source-snapshot` command performs both validations; omit
+`--source-root` before extraction and supply it after extraction.
+
+On the authorized Linux server, after checkout or snapshot identity succeeds,
+the exact build command interface is:
 
 ```bash
-test "$(git rev-parse HEAD)" = "<exact-pushed-sha>"
-test -z "$(git status --porcelain=v1)"
 export JAVA_HOME="<approved-existing-linux-jdk-25>"
 "$JAVA_HOME/bin/java" -version
+cd "<verified-source-root>"
 ./mvnw -DskipTests package
 ```
 

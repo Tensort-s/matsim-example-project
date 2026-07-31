@@ -1,8 +1,8 @@
 {
   "schema_version": "hong_kong_stage8d_bundle_preparation_rework_validation_v1",
   "status": "pending_independent_review_and_supervisor_stage_8d_gate",
-  "stage_id": "Stage 8D - Exact-SHA server bundle preparation rework",
-  "input_commit_sha": "67f812ab544b9842c65c4da9073ee8e58d10bc31",
+  "stage_id": "Stage 8D - Exact-tree source-snapshot bounded rework",
+  "input_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
   "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "scope": {
@@ -12,6 +12,7 @@
     "fare_or_cost_semantics_changed": false,
     "server_access_performed": false,
     "server_build_or_upload_performed": false,
+    "source_snapshot_created_or_transferred": false,
     "matsim_run_performed": false,
     "runner_authorized": false,
     "stage_9_retry_performed": false
@@ -22,7 +23,20 @@
     "validator": "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
     "validator_version_anchor": "exact reviewed output commit",
     "source_commit_argument_required": true,
-    "clean_source_checkout_required": true,
+    "accepted_source_identity_modes": [
+      "exact_clean_git_checkout",
+      "exact_git_tree_snapshot"
+    ],
+    "clean_source_checkout_guard_preserved": true,
+    "snapshot_source_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
+    "snapshot_source_tree_sha": "d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9",
+    "snapshot_tracked_file_count": 7620,
+    "snapshot_manifest_out_of_band_sha256_required": true,
+    "snapshot_archive_sha256_required": true,
+    "snapshot_git_tree_reconstruction_required": true,
+    "snapshot_extracted_file_verification_required": true,
+    "snapshot_git_metadata_allowed": false,
+    "snapshot_outputs_inside_git_worktree_allowed": false,
     "release_root_argument_required": true,
     "release_root_boundary": "/mnt/DiskM/by/<new-release>",
     "all_local_output_paths_must_be_new": true,
@@ -45,10 +59,18 @@
     "jdk_major": 25,
     "jdk_source": "approved_existing_server_jdk_only",
     "jdk_download_or_fabrication_allowed": false,
-    "source_preflight": [
-      "test \"$(git rev-parse HEAD)\" = \"<exact-pushed-sha>\"",
-      "test -z \"$(git status --porcelain=v1)\""
-    ],
+    "source_preflight_modes": {
+      "git": [
+        "test \"$(git rev-parse HEAD)\" = \"<exact-pushed-sha>\"",
+        "test -z \"$(git status --porcelain=v1)\""
+      ],
+      "snapshot": [
+        "verify manifest SHA256 and archive SHA256 before extraction",
+        "reconstruct exact d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9 Git tree from all 7620 member blobs",
+        "extract to a new Git-metadata-free source root",
+        "verify every extracted tracked file; allow only generated target/ build output"
+      ]
+    },
     "java_preflight": "\"$JAVA_HOME/bin/java\" -version",
     "build_command": "./mvnw -DskipTests package",
     "maven_wrapper_version_observed_locally": "3.9.8",
@@ -86,6 +108,10 @@
   },
   "deployment_manifest_fields": [
     "source_commit_sha",
+    "source_identity.source_identity_mode",
+    "source_identity.source_tree_sha",
+    "source_identity.snapshot_sha256",
+    "source_identity.snapshot_manifest_sha256",
     "fat_jar_sha256",
     "required_runtime_classes",
     "build_command",
@@ -114,19 +140,32 @@
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py --help",
       "exit_status": 0,
-      "result": "required exact-SHA, JAR, JDK archive, release, staging, bundle, deployment-manifest, Java and Maven interfaces present"
+      "result": "create-source-snapshot, verify-source-snapshot and build-bundle interfaces present"
     },
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
       "exit_status": 0,
-      "result": "7/7 hashes match; no stale active defaults; stale v1 input and incomplete JAR rejected; formal config changes only seven server paths; no replanning or QSim change"
+      "result": "7/7 inputs and config boundary pass; locked 3a56bcd inventory reconstructs the 7620-file d3d57d6 tree; valid archive and extracted snapshot fixture accepted; wrong SHA/tree/manifest hash, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
     }
   ],
+  "snapshot_validation": {
+    "locked_git_tree_reconstruction_passed": true,
+    "valid_snapshot_fixture_accepted": true,
+    "valid_snapshot_archive_accepted_before_extraction": true,
+    "wrong_snapshot_sha_rejected": true,
+    "wrong_snapshot_tree_rejected": true,
+    "wrong_snapshot_manifest_hash_rejected": true,
+    "snapshot_archive_tampering_rejected": true,
+    "extracted_source_tampering_rejected": true,
+    "snapshot_output_inside_worktree_rejected": true,
+    "stale_v1_input_rejected": true
+  },
   "artifact_status": {
+    "source_snapshot_built_in_rework": false,
     "fat_jar_built_in_rework": false,
     "bundle_built_in_rework": false,
     "deployment_manifest_built_in_rework": false,
-    "reason": "Server-side Linux JDK 25 build and bundle creation require a later exact-SHA Runner authorization after independent review."
+    "reason": "No source snapshot was created or transferred and no server action occurred; snapshot transfer, Linux JDK 25 build and bundle creation require a later exact-SHA Runner authorization after independent review."
   },
   "blockers": [],
   "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"

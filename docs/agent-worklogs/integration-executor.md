@@ -566,3 +566,31 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed rework SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 17 — Stage 8D exact-tree source-snapshot bounded rework
+
+```yaml
+timestamp: "2026-07-31T22:10:53+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D bounded source-snapshot rework"
+input_sha: "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Add an exact-tree, Git-metadata-free snapshot identity alongside the unchanged exact-clean-Git guard without changing runtime or input semantics."
+findings:
+  - "The locked 7620-file Git blob inventory reconstructs tree d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9 for source commit 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4."
+  - "Snapshot generation uses read-only git archive/ls-tree and new output paths; verification requires an out-of-band manifest SHA plus archive, inventory, blob, SHA256, mode and extracted-root checks."
+  - "Valid snapshot behavior passes while wrong commit, wrong tree, wrong manifest hash, archive tampering and extracted-file tampering fail closed."
+  - "Seven locked v2/Ferry Core hashes, stale-input rejection, config mutation boundary, JDK hash contract and Taxi/PT/Car JAR inventory remain unchanged."
+  - "No source snapshot, JDK, JAR or bundle was created/transferred; no server, Runner, Reviewer, MATSim or Stage 9 action occurred."
+diagnostics:
+  - "The validator reconstructs the full locked Git tree from 7620 Git entries and exercises archive/extraction behavior with a deterministic compact fixture; it does not create the approximately gigabyte-scale production snapshot."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#snapshot_validation"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#git-metadata-free-source-snapshot"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```

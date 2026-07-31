@@ -1,8 +1,8 @@
-# Stage 8D — Exact-SHA server bundle preparation rework
+# Stage 8D — Exact-tree source-snapshot bounded rework
 
 | Field | Value |
 |---|---|
-| Exact input | `67f812ab544b9842c65c4da9073ee8e58d10bc31` |
+| Exact input | `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | not authorized |
@@ -10,15 +10,23 @@
 
 ## Objective
 
-Correct only the deployment preparation path so a later authorized Runner can
-build and package the exact pushed runtime against the locked v2 demand and
-Ferry Core inputs.
+Add a source-snapshot identity mode after a Runner proved that the permitted
+server has no exact-SHA checkout. The new mode must transfer and build the
+locked `3a56bcd…` runtime without creating server Git metadata and without
+repeating the failed checkout-identity hypothesis.
 
 ## Authorized result
 
 - exact seven-file input inventory and SHA256 fail-closed checks;
 - stale v1/pre-Ferry path rejection;
-- exact clean source-SHA and current Taxi/PT/Car JAR-class checks;
+- original exact clean Git-checkout guard retained unchanged;
+- `git archive` snapshot locked to source commit
+  `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4` and tree
+  `d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9`;
+- out-of-band manifest SHA, archive SHA and 7,620-entry
+  path/mode/blob/size/SHA256 verification before and after extraction;
+- wrong commit/tree/manifest/archive/file/stale-input rejection;
+- current Taxi/PT/Car JAR-class checks;
 - sidecar deployment-manifest contract with build, version and bundle
   provenance;
 - Linux JDK 25 build interface without downloading or fabricating a JDK;
@@ -26,8 +34,9 @@ Ferry Core inputs.
 
 ## Boundaries
 
-No Java/model/config/input change, server access, JDK download, upload,
-deployment, Runner, MATSim run, Stage 9 retry, master or feature-ref change.
+No Java/model/config/input change, server access, transfer, JDK download,
+upload, deployment, Runner, MATSim run, Stage 9 retry, Git metadata creation,
+master or feature-ref change.
 
 ## Evidence
 

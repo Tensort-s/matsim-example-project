@@ -12,6 +12,7 @@ import json
 import os
 import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import tarfile
@@ -35,6 +36,13 @@ SUPPLY_RELATIVE = Path(
 CONFIG_NAME = "config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
 SERVER_BUILD_COMMAND = "./mvnw -DskipTests package"
 MATSIM_VERSION = "2026.0"
+LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA = (
+    "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4"
+)
+LOCKED_SNAPSHOT_SOURCE_TREE_SHA = (
+    "d3d57d61f39ba9d3377a915fc28ad9eeaff0deb9"
+)
+SOURCE_SNAPSHOT_SCHEMA = "hong_kong_exact_git_tree_source_snapshot_v1"
 EXPECTED_INPUT_SHA256 = {
     "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml":
         "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
@@ -84,11 +92,35 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def verify_repository_identity(source_commit_sha: str) -> None:
-    if len(source_commit_sha) != 40 or any(
-        character not in "0123456789abcdef" for character in source_commit_sha
+def validate_full_sha(value: str, label: str) -> str:
+    if len(value) != 40 or any(
+        character not in "0123456789abcdef" for character in value
     ):
-        raise ValueError("Source commit must be a full lowercase Git SHA")
+        raise ValueError(f"{label} must be a full lowercase Git SHA")
+    return value
+
+
+def validate_sha256(value: str, label: str) -> str:
+    if len(value) != 64 or any(
+        character not in "0123456789abcdef" for character in value
+    ):
+        raise ValueError(f"{label} must be a lowercase SHA256")
+    return value
+
+
+def verify_repository_clean() -> None:
+    status = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "status", "--porcelain=v1"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    if status:
+        raise ValueError("Repository must be clean before source preparation")
+
+
+def verify_repository_identity(source_commit_sha: str) -> None:
+    validate_full_sha(source_commit_sha, "Source commit")
     head = subprocess.run(
         ["git", "-C", str(REPO_ROOT), "rev-parse", "HEAD"],
         check=True,
@@ -99,14 +131,443 @@ def verify_repository_identity(source_commit_sha: str) -> None:
         raise ValueError(
             f"Repository HEAD mismatch: expected {source_commit_sha}, got {head}"
         )
-    status = subprocess.run(
-        ["git", "-C", str(REPO_ROOT), "status", "--porcelain=v1"],
+    verify_repository_clean()
+
+
+def git_blob_hashes(handle: Any, size: int) -> tuple[str, str]:
+    git_digest = hashlib.sha1(usedforsecurity=False)
+    git_digest.update(f"blob {size}\0".encode("ascii"))
+    sha256_digest = hashlib.sha256()
+    observed = 0
+    for block in iter(lambda: handle.read(1024 * 1024), b""):
+        observed += len(block)
+        git_digest.update(block)
+        sha256_digest.update(block)
+    if observed != size:
+        raise ValueError(f"Expected {size} bytes, read {observed}")
+    return git_digest.hexdigest(), sha256_digest.hexdigest()
+
+
+def canonical_inventory_sha256(entries: list[dict[str, Any]]) -> str:
+    fields = [
+        {
+            "path": entry["path"],
+            "mode": entry["mode"],
+            "git_blob_sha1": entry["git_blob_sha1"],
+            "size_bytes": entry["size_bytes"],
+            "sha256": entry["sha256"],
+        }
+        for entry in entries
+    ]
+    payload = json.dumps(
+        fields,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def validate_snapshot_path(value: str) -> str:
+    path = Path(value)
+    if (
+        not value
+        or "\\" in value
+        or path.is_absolute()
+        or value.startswith("/")
+        or any(part in ("", ".", "..") for part in value.split("/"))
+    ):
+        raise ValueError(f"Unsafe snapshot path: {value!r}")
+    return value
+
+
+def require_outside_repository_output(path: Path) -> None:
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(REPO_ROOT.resolve())
+    except ValueError:
+        return
+    raise ValueError(f"Source snapshot output must be outside the worktree: {path}")
+
+
+def compute_git_tree_sha1(entries: list[dict[str, Any]]) -> str:
+    root: dict[str, Any] = {}
+    for entry in entries:
+        path = validate_snapshot_path(entry["path"])
+        mode = entry["mode"]
+        if mode not in ("100644", "100755"):
+            raise ValueError(f"Unsupported Git mode for {path}: {mode}")
+        blob_sha = validate_full_sha(entry["git_blob_sha1"], "Git blob")
+        node = root
+        parts = path.split("/")
+        for part in parts[:-1]:
+            child = node.setdefault(part, {})
+            if not isinstance(child, dict):
+                raise ValueError(f"File/directory collision at {path}")
+            node = child
+        name = parts[-1]
+        if name in node:
+            raise ValueError(f"Duplicate snapshot path: {path}")
+        node[name] = (mode, blob_sha)
+
+    def hash_tree(node: dict[str, Any]) -> str:
+        children: list[tuple[bytes, str, bytes]] = []
+        for name, value in node.items():
+            encoded_name = name.encode("utf-8")
+            if isinstance(value, dict):
+                mode = "40000"
+                object_sha = hash_tree(value)
+                sort_key = encoded_name + b"/"
+            else:
+                mode, object_sha = value
+                sort_key = encoded_name
+            record = (
+                mode.encode("ascii")
+                + b" "
+                + encoded_name
+                + b"\0"
+                + bytes.fromhex(object_sha)
+            )
+            children.append((sort_key, name, record))
+        content = b"".join(record for _, _, record in sorted(children))
+        digest = hashlib.sha1(usedforsecurity=False)
+        digest.update(f"tree {len(content)}\0".encode("ascii"))
+        digest.update(content)
+        return digest.hexdigest()
+
+    return hash_tree(root)
+
+
+def read_git_tree_entries(source_commit_sha: str) -> tuple[str, list[dict[str, Any]]]:
+    validate_full_sha(source_commit_sha, "Source commit")
+    tree_sha = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(REPO_ROOT),
+            "rev-parse",
+            f"{source_commit_sha}^{{tree}}",
+        ],
         check=True,
         capture_output=True,
         text=True,
+    ).stdout.strip()
+    output = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(REPO_ROOT),
+            "ls-tree",
+            "-r",
+            "-l",
+            "-z",
+            "--full-tree",
+            source_commit_sha,
+        ],
+        check=True,
+        capture_output=True,
     ).stdout
-    if status:
-        raise ValueError("Repository must be clean before bundle preparation")
+    entries: list[dict[str, Any]] = []
+    for record in output.split(b"\0"):
+        if not record:
+            continue
+        metadata, path_bytes = record.split(b"\t", 1)
+        mode, object_type, object_sha, size = metadata.split(maxsplit=3)
+        path = path_bytes.decode("utf-8")
+        if object_type != b"blob" or mode not in (b"100644", b"100755"):
+            raise ValueError(f"Unsupported Git tree entry: {record!r}")
+        entries.append(
+            {
+                "path": validate_snapshot_path(path),
+                "mode": mode.decode("ascii"),
+                "git_blob_sha1": object_sha.decode("ascii"),
+                "size_bytes": int(size),
+            }
+        )
+    if compute_git_tree_sha1(entries) != tree_sha:
+        raise ValueError("Git tree inventory does not reconstruct its tree SHA")
+    return tree_sha, entries
+
+
+def inspect_snapshot_archive(
+    archive_path: Path,
+    expected_entries: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    expected = {entry["path"]: entry for entry in expected_entries}
+    observed: list[dict[str, Any]] = []
+    with tarfile.open(archive_path, "r:*") as archive:
+        members = archive.getmembers()
+        for member in members:
+            path = validate_snapshot_path(member.name.rstrip("/"))
+            if member.isdir():
+                continue
+            if not member.isfile():
+                raise ValueError(f"Snapshot contains non-file member: {member.name}")
+            entry = expected.get(path)
+            if entry is None:
+                raise ValueError(f"Snapshot contains unexpected file: {path}")
+            if member.size != entry["size_bytes"]:
+                raise ValueError(f"Snapshot size mismatch for {path}")
+            expected_executable = entry["mode"] == "100755"
+            if bool(member.mode & 0o111) != expected_executable:
+                raise ValueError(f"Snapshot executable mode mismatch for {path}")
+            handle = archive.extractfile(member)
+            if handle is None:
+                raise ValueError(f"Cannot read snapshot member: {path}")
+            blob_sha, content_sha = git_blob_hashes(handle, member.size)
+            if blob_sha != entry["git_blob_sha1"]:
+                raise ValueError(f"Snapshot Git blob mismatch for {path}")
+            observed.append(
+                {
+                    **entry,
+                    "sha256": content_sha,
+                }
+            )
+    if set(expected) != {entry["path"] for entry in observed}:
+        missing = sorted(set(expected) - {entry["path"] for entry in observed})
+        raise ValueError(f"Snapshot is missing tracked files: {missing[:5]}")
+    return sorted(observed, key=lambda entry: entry["path"])
+
+
+def create_source_snapshot(
+    source_commit_sha: str,
+    snapshot_path: Path,
+    snapshot_manifest: Path,
+) -> dict[str, Any]:
+    if source_commit_sha != LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA:
+        raise ValueError("Snapshot source commit differs from the Stage 8D lock")
+    verify_repository_clean()
+    snapshot_path = snapshot_path.resolve()
+    snapshot_manifest = snapshot_manifest.resolve()
+    require_outside_repository_output(snapshot_path)
+    require_outside_repository_output(snapshot_manifest)
+    assert_new_path(snapshot_path)
+    assert_new_path(snapshot_manifest)
+    tree_sha, git_entries = read_git_tree_entries(source_commit_sha)
+    if tree_sha != LOCKED_SNAPSHOT_SOURCE_TREE_SHA:
+        raise ValueError("Snapshot source tree differs from the Stage 8D lock")
+    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(REPO_ROOT),
+            "archive",
+            "--format=tar",
+            f"--output={snapshot_path}",
+            source_commit_sha,
+        ],
+        check=True,
+    )
+    entries = inspect_snapshot_archive(snapshot_path, git_entries)
+    manifest = {
+        "schema_version": SOURCE_SNAPSHOT_SCHEMA,
+        "source_commit_sha": source_commit_sha,
+        "source_tree_sha": tree_sha,
+        "source_archive_format": "git_archive_tar",
+        "source_archive_sha256": sha256_file(snapshot_path),
+        "source_archive_size_bytes": snapshot_path.stat().st_size,
+        "tracked_file_count": len(entries),
+        "inventory_sha256": canonical_inventory_sha256(entries),
+        "entries": entries,
+        "git_metadata_included": False,
+    }
+    write_new_text(
+        snapshot_manifest,
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+    )
+    return {
+        "source_commit_sha": source_commit_sha,
+        "source_tree_sha": tree_sha,
+        "snapshot_path": str(snapshot_path),
+        "snapshot_sha256": manifest["source_archive_sha256"],
+        "snapshot_manifest": str(snapshot_manifest),
+        "snapshot_manifest_sha256": sha256_file(snapshot_manifest),
+        "tracked_file_count": len(entries),
+    }
+
+
+def load_and_validate_snapshot_manifest(
+    source_commit_sha: str,
+    snapshot_path: Path,
+    snapshot_manifest: Path,
+    snapshot_manifest_sha256: str,
+    *,
+    expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
+    expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    validate_sha256(snapshot_manifest_sha256, "Snapshot manifest SHA256")
+    if sha256_file(snapshot_manifest) != snapshot_manifest_sha256:
+        raise ValueError("Snapshot manifest SHA256 mismatch")
+    manifest = json.loads(snapshot_manifest.read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != SOURCE_SNAPSHOT_SCHEMA:
+        raise ValueError("Unsupported source snapshot manifest schema")
+    if manifest.get("source_archive_format") != "git_archive_tar":
+        raise ValueError("Source snapshot must be a Git archive tar")
+    if source_commit_sha != expected_commit_sha:
+        raise ValueError("Requested snapshot source commit differs from the lock")
+    if manifest.get("source_commit_sha") != source_commit_sha:
+        raise ValueError("Snapshot manifest source commit mismatch")
+    if manifest.get("source_tree_sha") != expected_tree_sha:
+        raise ValueError("Snapshot manifest source tree mismatch")
+    if manifest.get("git_metadata_included") is not False:
+        raise ValueError("Source snapshot must not contain Git metadata")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("Snapshot manifest entries are missing")
+    required_entry_fields = {
+        "path",
+        "mode",
+        "git_blob_sha1",
+        "size_bytes",
+        "sha256",
+    }
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != required_entry_fields:
+            raise ValueError("Snapshot manifest entry schema mismatch")
+        if not isinstance(entry["size_bytes"], int) or entry["size_bytes"] < 0:
+            raise ValueError("Snapshot manifest entry size is invalid")
+        validate_sha256(entry["sha256"], "Snapshot file SHA256")
+    if manifest.get("tracked_file_count") != len(entries):
+        raise ValueError("Snapshot manifest file count mismatch")
+    if entries != sorted(entries, key=lambda entry: entry["path"]):
+        raise ValueError("Snapshot manifest entries must be path-sorted")
+    if canonical_inventory_sha256(entries) != manifest.get("inventory_sha256"):
+        raise ValueError("Snapshot manifest inventory SHA256 mismatch")
+    if compute_git_tree_sha1(entries) != expected_tree_sha:
+        raise ValueError("Snapshot entries do not reconstruct the locked Git tree")
+    if snapshot_path.stat().st_size != manifest.get("source_archive_size_bytes"):
+        raise ValueError("Snapshot archive size mismatch")
+    if sha256_file(snapshot_path) != manifest.get("source_archive_sha256"):
+        raise ValueError("Snapshot archive SHA256 mismatch")
+    observed = inspect_snapshot_archive(snapshot_path, entries)
+    if observed != entries:
+        raise ValueError("Snapshot archive content differs from its manifest")
+    return manifest, entries
+
+
+def verify_extracted_snapshot(
+    source_root: Path,
+    entries: list[dict[str, Any]],
+) -> None:
+    if not source_root.is_dir():
+        raise FileNotFoundError(source_root)
+    if (source_root / ".git").exists():
+        raise ValueError("Snapshot source root must not contain Git metadata")
+    expected = {entry["path"]: entry for entry in entries}
+    observed_paths: set[str] = set()
+    for path in source_root.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(source_root).as_posix()
+        if relative == "target" or relative.startswith("target/"):
+            continue
+        relative = validate_snapshot_path(relative)
+        entry = expected.get(relative)
+        if entry is None:
+            raise ValueError(f"Unexpected extracted source file: {relative}")
+        with path.open("rb") as handle:
+            blob_sha, content_sha = git_blob_hashes(
+                handle, path.stat().st_size
+            )
+        if path.stat().st_size != entry["size_bytes"]:
+            raise ValueError(f"Extracted source size mismatch for {relative}")
+        if blob_sha != entry["git_blob_sha1"]:
+            raise ValueError(f"Extracted source Git blob mismatch for {relative}")
+        if content_sha != entry["sha256"]:
+            raise ValueError(f"Extracted source SHA256 mismatch for {relative}")
+        if os.name != "nt":
+            executable = bool(stat.S_IMODE(path.stat().st_mode) & 0o111)
+            if executable != (entry["mode"] == "100755"):
+                raise ValueError(
+                    f"Extracted source executable mode mismatch for {relative}"
+                )
+        observed_paths.add(relative)
+    if set(expected) != observed_paths:
+        missing = sorted(set(expected) - observed_paths)
+        raise ValueError(f"Extracted source is missing files: {missing[:5]}")
+
+
+def verify_source_snapshot(
+    source_commit_sha: str,
+    source_root: Path,
+    snapshot_path: Path,
+    snapshot_manifest: Path,
+    snapshot_manifest_sha256: str,
+    *,
+    expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
+    expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+) -> dict[str, Any]:
+    summary, entries = verify_source_snapshot_archive(
+        source_commit_sha,
+        snapshot_path=snapshot_path,
+        snapshot_manifest=snapshot_manifest,
+        snapshot_manifest_sha256=snapshot_manifest_sha256,
+        expected_commit_sha=expected_commit_sha,
+        expected_tree_sha=expected_tree_sha,
+    )
+    verify_extracted_snapshot(source_root, entries)
+    return {**summary, "extracted_source_verified": True}
+
+
+def verify_source_snapshot_archive(
+    source_commit_sha: str,
+    snapshot_path: Path,
+    snapshot_manifest: Path,
+    snapshot_manifest_sha256: str,
+    *,
+    expected_commit_sha: str = LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
+    expected_tree_sha: str = LOCKED_SNAPSHOT_SOURCE_TREE_SHA,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    manifest, entries = load_and_validate_snapshot_manifest(
+        source_commit_sha,
+        snapshot_path,
+        snapshot_manifest,
+        snapshot_manifest_sha256,
+        expected_commit_sha=expected_commit_sha,
+        expected_tree_sha=expected_tree_sha,
+    )
+    return (
+        {
+            "source_identity_mode": "exact_git_tree_snapshot",
+            "source_commit_sha": source_commit_sha,
+            "source_tree_sha": manifest["source_tree_sha"],
+            "snapshot_sha256": manifest["source_archive_sha256"],
+            "snapshot_manifest_sha256": snapshot_manifest_sha256,
+            "tracked_file_count": len(entries),
+            "git_metadata_present": False,
+            "source_archive_verified": True,
+        },
+        entries,
+    )
+
+
+def verify_source_identity(args: argparse.Namespace) -> dict[str, Any]:
+    if args.source_identity_mode == "git":
+        verify_repository_identity(args.source_commit_sha)
+        tree_sha, entries = read_git_tree_entries(args.source_commit_sha)
+        return {
+            "source_identity_mode": "exact_clean_git_checkout",
+            "source_commit_sha": args.source_commit_sha,
+            "source_tree_sha": tree_sha,
+            "tracked_file_count": len(entries),
+        }
+    required = {
+        "source_snapshot": args.source_snapshot,
+        "source_snapshot_manifest": args.source_snapshot_manifest,
+        "source_snapshot_manifest_sha256":
+            args.source_snapshot_manifest_sha256,
+    }
+    missing = [name for name, value in required.items() if value is None]
+    if missing:
+        raise ValueError(f"Snapshot identity arguments missing: {missing}")
+    return verify_source_snapshot(
+        args.source_commit_sha,
+        args.source_root,
+        args.source_snapshot,
+        args.source_snapshot_manifest,
+        args.source_snapshot_manifest_sha256,
+    )
 
 
 def current_input_sources(data_root: Path) -> dict[str, Path]:
@@ -405,7 +866,7 @@ def validate_release_root(value: str) -> str:
 
 
 def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
-    verify_repository_identity(args.source_commit_sha)
+    source_identity = verify_source_identity(args)
     release_root = validate_release_root(args.release_root)
     assert_new_path(args.staging_dir)
     assert_new_path(args.bundle_path)
@@ -526,6 +987,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
 
     metadata = {
         "source_commit_sha": args.source_commit_sha,
+        "source_identity": source_identity,
         "release_root": release_root,
         "fat_jar_sha256": jar_hash,
         "required_runtime_classes": runtime_classes,
@@ -614,13 +1076,18 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
     return bundle_summary
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
+def add_bundle_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    parser.add_argument("--source-commit-sha", required=True)
     parser.add_argument(
-        "--source-commit-sha",
-        required=True,
+        "--source-identity-mode",
+        choices=("git", "snapshot"),
+        default="git",
     )
+    parser.add_argument("--source-root", type=Path, default=REPO_ROOT)
+    parser.add_argument("--source-snapshot", type=Path)
+    parser.add_argument("--source-snapshot-manifest", type=Path)
+    parser.add_argument("--source-snapshot-manifest-sha256")
     parser.add_argument("--fat-jar", type=Path, required=True)
     parser.add_argument("--jdk-archive", type=Path, required=True)
     parser.add_argument(
@@ -635,11 +1102,66 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--java-version", required=True)
     parser.add_argument("--maven-version", required=True)
     parser.add_argument("--matsim-version", default=MATSIM_VERSION)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    snapshot = commands.add_parser(
+        "create-source-snapshot",
+        help="Create a deterministic git-archive snapshot and provenance manifest",
+    )
+    snapshot.add_argument("--source-commit-sha", required=True)
+    snapshot.add_argument("--snapshot-path", type=Path, required=True)
+    snapshot.add_argument("--snapshot-manifest", type=Path, required=True)
+    verifier = commands.add_parser(
+        "verify-source-snapshot",
+        help="Verify archive, manifest, Git tree and extracted source without .git",
+    )
+    verifier.add_argument("--source-commit-sha", required=True)
+    verifier.add_argument("--source-root", type=Path)
+    verifier.add_argument("--source-snapshot", type=Path, required=True)
+    verifier.add_argument("--source-snapshot-manifest", type=Path, required=True)
+    verifier.add_argument(
+        "--source-snapshot-manifest-sha256",
+        required=True,
+    )
+    bundle = commands.add_parser(
+        "build-bundle",
+        help="Build the deployment bundle after exact source identity validation",
+    )
+    add_bundle_arguments(bundle)
     return parser.parse_args()
 
 
 def main() -> None:
-    build_bundle(parse_args())
+    args = parse_args()
+    if args.command == "create-source-snapshot":
+        result = create_source_snapshot(
+            args.source_commit_sha,
+            args.snapshot_path,
+            args.snapshot_manifest,
+        )
+    elif args.command == "verify-source-snapshot":
+        if args.source_root is None:
+            result, _ = verify_source_snapshot_archive(
+                args.source_commit_sha,
+                args.source_snapshot,
+                args.source_snapshot_manifest,
+                args.source_snapshot_manifest_sha256,
+            )
+        else:
+            result = verify_source_snapshot(
+                args.source_commit_sha,
+                args.source_root,
+                args.source_snapshot,
+                args.source_snapshot_manifest,
+                args.source_snapshot_manifest_sha256,
+            )
+    else:
+        result = build_bundle(args)
+    if args.command != "build-bundle":
+        print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

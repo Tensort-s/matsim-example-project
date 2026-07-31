@@ -611,3 +611,29 @@ hard_gate_status: "STAGE_8D_BOUNDED_REWORK_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused deployment/provenance rework commit and stop for Supervisor verification and Reviewer dispatch; do not contact Runner or begin Stage 9."
 ```
+
+## Entry 20 — Stage 8D exact-tree source-snapshot rework authorization
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8D bounded source-snapshot rework"
+input_sha: "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_ONLY"
+decision: "Authorize only a fail-closed Git-metadata-free source-snapshot identity path after Runner proved the permitted server lacks an exact-SHA checkout."
+findings:
+  - "The prior Runner identity failed before build because the reviewed clean-HEAD guard correctly rejected a plain archive; the identical failed hypothesis must not be repeated."
+  - "The original exact-clean-Git mode must remain available and unchanged."
+  - "Snapshot mode must prove source commit 3a56bcd14db3c6f815bbc5ac77901c24947b3ae4, exact Git tree identity and archive/extracted-file integrity without server Git metadata."
+  - "Seven v2/Ferry Core input hashes, runtime-class inventory, JDK hash, new-path rule and config mutation boundary remain locked."
+  - "Executor may change only preparation control, validation, documentation, evidence and append-only worklogs; no server, Runner, Reviewer or Stage 9 action is authorized."
+diagnostics:
+  - "The formal rework authorization supplied no exact timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#git-metadata-free-source-snapshot"
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#snapshot_validation"
+blockers: []
+hard_gate_status: "STAGE_8D_SOURCE_SNAPSHOT_REWORK_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one bounded source-snapshot control result, report only to Supervisor, and stop for exact-SHA review dispatch."
+```
