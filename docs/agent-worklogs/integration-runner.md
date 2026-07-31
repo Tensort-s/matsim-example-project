@@ -87,3 +87,28 @@ blockers:
 handoff_to: "INT-SUPERVISOR"
 next_allowed_action: "Wait for INT-SUPERVISOR to authorize an exact pushed commit SHA and explicit run specification; do not run a server task during Stage 0."
 ```
+
+## Entry 3 — Hub-and-spoke protocol confirmation
+
+Compact archival transfer of the Runner confirmation received by Supervisor:
+
+```yaml
+timestamp: "2026-07-31T14:36:00+08:00"
+session_id: "019fb38e-919f-7d92-a376-af88b49d5900"
+stage_id: "CONTROL-PROTOCOL-01 confirmation"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "NO_RUN__NO_GIT_CHANGE"
+decision: "Run only an exact Supervisor-authorized SHA for a genuinely execution-requiring stage and return run identity, evidence and handoff only to Supervisor."
+findings:
+  - "Runner does not contact or direct Executor or Reviewer."
+  - "Runner remains notLoaded/inactive."
+  - "No server, MATSim, smoke or calibration run and no Git change occurred."
+  - "The entry timestamp is the Supervisor archival-transfer time; the original confirmation timestamp was not supplied."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "NOT_EVALUATED — no run authorized"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Wait for an exact Supervisor run authorization; CONTROL-PROTOCOL-01 and Stage 6 require no Runner action."
+```

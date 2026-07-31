@@ -85,6 +85,18 @@ exactly one entry, `taxi_route_fare_v1`, and exactly one mode owner,
 `taxi -> taxi_route_fare_v1`. PT and Car remain offline-only and contribute no
 runtime scoring component.
 
+Stage 5 passed independent exact-SHA review and was formally closed at:
+
+```text
+9235ccb62dbea43a2f321e4fba2aee6e5629bce0
+```
+
+The current control-plane task adopts the Supervisor-centered hub-and-spoke
+protocol in
+[`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md).
+Real-time messages carry handoffs; worklogs preserve append-only audit history
+and do not authorize execution. Stage 6 and Runner remain unauthorized.
+
 ## Stage 1 scope
 
 Stage 1 imports the Taxi population metadata conversion, native passenger

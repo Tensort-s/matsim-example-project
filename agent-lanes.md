@@ -21,6 +21,7 @@ and evidence are read from these canonical paths:
 
 - [Integration policy](docs/integration/INTEGRATION_POLICY.md)
 - [Current stage](docs/integration/CURRENT_STAGE.md)
+- [Hub-and-spoke messaging protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
 - [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
 - [Stage-brief index](docs/integration/stage-briefs/README.md)
 
@@ -37,9 +38,14 @@ identity, authority or write scope below.
 - `INT-SUPERVISOR` and `INT-REVIEWER` are read-only. `INT-RUNNER` performs no
   Git writes and may write only to new, append-only run and evidence
   directories after explicit Supervisor authorization.
-- Only `INT-SUPERVISOR` advances stages. Executor and Runner report facts and
-  evidence; Reviewer independently assesses an exact pushed commit and run
-  evidence. No other lane declares a stage passed.
+- Only `INT-SUPERVISOR` aggregates lane messages, dispatches work and reviews,
+  decides gates, authorizes runs, and advances stages. Executor, Reviewer and
+  Runner send their complete handoffs only to Supervisor; they do not direct
+  or authorize one another. A non-Supervisor message never authorizes a write,
+  rework, run, review dispatch, or next stage.
+- Real-time cross-session messages carry handoffs. Git worklogs are append-only
+  audit records and are not notifications or execution authority. `BLOCKED`
+  does not authorize repair, and `PASS` does not authorize the next stage.
 - Protected `master` and feature branches must not be modified or force-pushed.
   No other worktree may be modified. Git merges, rather than manual file copies
   from another worktree, are the only allowed feature-integration mechanism.
@@ -106,14 +112,21 @@ replanning, and iteration duration across iterations or experiments.
 ```text
 Supervisor Brief
   -> Executor implement/test/commit/push
-  -> Reviewer review exact pushed SHA
-  -> if BLOCKED: Supervisor issues rework
+  -> Executor sends exact SHA/evidence/handoff to Supervisor
+  -> Supervisor dispatches exact-SHA review to Reviewer
+  -> Reviewer sends verdict/evidence/blockers/handoff to Supervisor
+  -> if BLOCKED: Supervisor decides and issues bounded Executor rework
   -> if PASS and a run is needed: Supervisor authorizes Runner
-  -> Runner executes exact SHA and returns Evidence Handoff
-  -> Executor commits compact evidence and pushes
-  -> Reviewer re-reviews exact pushed SHA and run evidence
+  -> Runner executes exact SHA and sends Evidence Handoff to Supervisor
+  -> Supervisor authorizes any evidence commit to Executor
+  -> Executor commits/pushes and reports only to Supervisor
+  -> Supervisor dispatches any required re-review
   -> Supervisor advances the stage
 ```
+
+No lane creates a commit merely to record a verdict that is already under
+review. Transferred handoffs are appended during the next otherwise-authorized
+write, preventing recursive log-only review cycles.
 
 ## Model-policy escalation boundary
 

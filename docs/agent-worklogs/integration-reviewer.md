@@ -320,3 +320,59 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "INT-SUPERVISOR may close Stage 4 and decide the next formal action; Reviewer does not authorize Stage 5 or Runner."
 ```
+
+## Entry 9 — Stage 5 exact-SHA review
+
+Faithfully transferred by INT-SUPERVISOR from the original Reviewer handoff:
+
+```yaml
+timestamp: "2026-07-31T14:34:05+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "Stage 5 exact-SHA review"
+input_sha: "191befd0c93027c5584857333a29746de8b432f0"
+output_sha_or_status: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+decision: "PASS"
+findings:
+  - "Exact output SHA has the required parent; local/tracking/remote refs, protected refs and worktree are clean."
+  - "The canonical composition has exactly one active component, taxi_route_fare_v1, and exactly one mode owner, taxi."
+  - "Taxi native mode/routing, standard PrepareForSimImpl, route-before-fare scheduling, ordinal fail-closed consumption and one fare path remain intact; submitted equivalence covers callbacks, score and explanation at zero tolerance."
+  - "PT and Car remain offline-only; no economic policy, monetary utility, config, plans, supply, input, city YAML or run manifest changed; historical wrappers remain non-controlling."
+  - "Submitted evidence reports compile, 14 focused tests, 66 full-suite tests, two native-routing tests, and structured/ref/diff/worklog checks passed; the 24-path delta is in scope."
+diagnostics:
+  - "Tests and validators were not rerun during this read-only review; committed validation and Executor evidence are the execution record."
+  - "Final evidence records two corrected test-command/fixture issues before the passing runs."
+  - "Existing Maven, Java, Guice and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/integration/stage-briefs/STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md"
+  - "docs/agent-worklogs/integration-executor.md#entry-8--stage-5-composable-scoring-and-taxi-only-migration"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor may record Stage 5 PASS; no Stage 6, Runner or other-lane authorization."
+```
+
+## Entry 10 — Hub-and-spoke protocol confirmation
+
+Compact archival transfer of the Reviewer confirmation received by Supervisor:
+
+```yaml
+timestamp: "2026-07-31T14:36:00+08:00"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "CONTROL-PROTOCOL-01 confirmation"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "NO_REPOSITORY_CHANGE"
+decision: "Accept review tasks only from Supervisor and report verdict, evidence, blockers, rework findings and handoff only to Supervisor."
+findings:
+  - "Reviewer does not contact, direct or authorize Executor."
+  - "Reviewer does not authorize Stage 6 or Runner."
+  - "The entry timestamp is the Supervisor archival-transfer time; the original confirmation timestamp was not supplied."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "NOT_A_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Wait for a formal Supervisor review dispatch."
+```

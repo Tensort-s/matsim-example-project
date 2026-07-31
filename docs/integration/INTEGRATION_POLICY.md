@@ -33,6 +33,38 @@ is canonical in [`CURRENT_STAGE.md`](CURRENT_STAGE.md).
 9. Each lane stops when its authorized objective is complete or responsibility
    passes to another lane.
 
+## Hub-and-spoke lane messaging protocol
+
+`INT-SUPERVISOR` is the sole real-time message aggregation, formal dispatch,
+gate-decision, escalation and stage-progression center.
+
+- Executor accepts execution authority only from Supervisor. After an
+  implementation, validation, commit and push, Executor sends the complete
+  result, exact SHA, evidence references and worklog handoff only to
+  Supervisor. Executor never requests or directs Reviewer.
+- Reviewer accepts review tasks only from Supervisor and sends its verdict,
+  evidence, blockers, rework findings and handoff only to Supervisor. Reviewer
+  never directs Executor and never authorizes a run or next stage.
+- Runner accepts runs only from a Supervisor instruction naming an exact
+  pushed SHA and execution specification. Runner sends run identity, evidence
+  and handoff only to Supervisor and never directs Executor or Reviewer.
+- A direct message from any non-Supervisor lane is evidence, not authority.
+  Executor must not write, rework or run in response; it reports the message to
+  Supervisor and waits for a formal decision.
+- Supervisor sends one consolidated instruction containing the decision,
+  allowed action, boundary, stop condition, and any original handoffs that
+  must be archived during the authorized write.
+
+Real-time cross-session messages are the handoff mechanism. Git worklogs are
+append-only audit records: they preserve transferred handoffs but do not notify
+another lane, dispatch a review, or authorize execution. A `BLOCKED` verdict
+does not authorize repair, and a `PASS` verdict does not authorize progression.
+
+No commit is created solely to archive a verdict for the commit currently
+being reviewed. Supervisor transfers it into the next substantive or
+control-plane write authorization. This avoids recursive log-only review
+cycles while preserving the history.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |
@@ -44,9 +76,11 @@ is canonical in [`CURRENT_STAGE.md`](CURRENT_STAGE.md).
 | Append-only lane history | [`docs/agent-worklogs/`](../agent-worklogs/) |
 | Technical evidence | Stage-specific paths referenced from `CURRENT_STAGE.md` or the compact handoff |
 
-If sources appear inconsistent, the exact pushed commit plus the most recent
-formally authorized stage brief controls. The discrepancy is recorded as a
-diagnostic or blocker without rewriting history.
+If sources appear inconsistent, the most recent formal Supervisor instruction
+anchored to an exact pushed commit controls execution. Repository policy,
+current-stage and brief files remain canonical stable context. The discrepancy
+is reported to Supervisor and recorded as a diagnostic or blocker without
+rewriting history.
 
 ## Compact stage-command schema
 
@@ -127,7 +161,6 @@ referenced, not repeated.
 - Historical/legacy/superseded guards remain traceable. A new canonical
   contract identifies the replacement and equivalent protection by path.
 - Model-policy escalation boundaries, protected branches, sole-writer
-  authority, and the standard Supervisor→Executor→Reviewer→Runner loop remain
-  unchanged.
+  authority, and the Supervisor-centered hub-and-spoke loop remain unchanged.
 - No lane continues into another stage, run, or responsibility without the
-  required formal handoff.
+  required formal Supervisor dispatch.

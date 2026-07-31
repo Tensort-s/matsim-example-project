@@ -326,3 +326,58 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_5_GATE"
 handoff_to: "INT-REVIEWER and INT-SUPERVISOR"
 next_action: "Review the exact pushed Stage 5 SHA; INT-EXECUTOR waits and does not begin Stage 6 or authorize Runner."
 ```
+
+## Entry 9 — Hub-and-spoke protocol confirmation
+
+Compact archival transfer of the Executor confirmation consumed by Supervisor:
+
+```yaml
+timestamp: "2026-07-31T14:36:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-01 confirmation"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "NO_REPOSITORY_CHANGE_AT_CONFIRMATION"
+decision: "Accept Supervisor as the sole execution-authority source and return implementation results only to Supervisor."
+findings:
+  - "Executor does not directly request or direct Reviewer."
+  - "A non-Supervisor message cannot authorize writes, rework, runs or stage progression; Executor reports it to Supervisor and waits."
+  - "Supervisor-transferred handoffs are appended only during the next authorized write."
+  - "Log-only recursive review cycles are prohibited."
+  - "The entry timestamp is the Supervisor archival-transfer time; the original confirmation supplied only the Asia/Shanghai date."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "CONTROL_PROTOCOL_01_CONFIRMED__NO_WRITE_AUTHORIZED"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Act only on a later formal Supervisor authorization."
+```
+
+## Entry 10 — CONTROL-PROTOCOL-01 implementation
+
+```yaml
+timestamp: "2026-07-31T15:07:03+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-01"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Adopt the Supervisor-centered Hub-and-spoke messaging protocol without changing lane identity, write scope, model/runtime state, or Stage 6 authorization."
+findings:
+  - "Supervisor is documented as the sole message aggregator, formal dispatcher, gate authority and stage-progression authority."
+  - "Executor, Reviewer and Runner return handoffs only to Supervisor and do not direct or authorize one another; non-Supervisor messages are evidence only."
+  - "Real-time messages perform handoff while Git worklogs are append-only audit records and cannot authorize execution."
+  - "Stage 5 Reviewer PASS, Supervisor closure/authorization and all three lane confirmations are preserved append-only."
+  - "All changed paths are governance Markdown; lane registry rows, src, data, cities, runs and pom.xml are unchanged, and Stage 6/Runner remain unauthorized."
+diagnostics:
+  - "Confirmation entries without original exact timestamps use the Supervisor archival-transfer timestamp and explicitly record that limitation."
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+  - "agent-lanes.md#standard-stage-loop"
+  - "docs/integration/CURRENT_STAGE.md"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md"
+  - "docs/agent-worklogs/integration-supervisor.md#entry-11--stage-5-gate-closure"
+blockers: []
+hard_gate_status: "PENDING_SUPERVISOR_VERIFICATION_AND_REVIEWER_DISPATCH"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed control-plane SHA and decides Reviewer dispatch; Executor stops and does not begin Stage 6."
+```

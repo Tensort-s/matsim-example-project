@@ -356,3 +356,56 @@ hard_gate_status: "STAGE_4_PASS__STAGE_5_AUTHORIZED"
 handoff_to: "INT-EXECUTOR; later INT-REVIEWER after Stage 5 push"
 next_action: "INT-EXECUTOR executes only Stage 5, pushes one exact result, and stops for independent review; no Runner or Stage 6 action."
 ```
+
+## Entry 11 — Stage 5 gate closure
+
+Faithfully transferred from the formal Supervisor handoff:
+
+```yaml
+timestamp: "2026-07-31T14:35:00+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 5 gate closure"
+input_sha: "191befd0c93027c5584857333a29746de8b432f0"
+output_sha_or_status: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+decision: "Stage 5 PASS and formally closed; Stage 6 and Runner remain unauthorized."
+findings:
+  - "Read-only verified HEAD, tracking, remote and parent exact."
+  - "Consumed the complete Reviewer PASS handoff for the exact output SHA."
+  - "Confirmed blockers=[] and no Runner action."
+diagnostics: []
+evidence_refs:
+  - "data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/integration/stage-briefs/STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md"
+blockers: []
+hard_gate_status: "PASS_CLOSED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Execute only CONTROL-PROTOCOL-01 from exact parent 9235ccb62dbea43a2f321e4fba2aee6e5629bce0."
+```
+
+## Entry 12 — CONTROL-PROTOCOL-01 authorization
+
+Faithfully transferred from the formal Supervisor directive:
+
+```yaml
+timestamp: "2026-07-31T14:36:00+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-01"
+input_sha: "9235ccb62dbea43a2f321e4fba2aee6e5629bce0"
+output_sha_or_status: "AUTHORIZED_CONTROL_PLANE_ONLY"
+decision: "Authorize INT-EXECUTOR only to adopt the Hub-and-spoke messaging protocol; keep Stage 6 unpublished and Runner inactive."
+findings:
+  - "Stage 5 PASS was consumed and closed before this task."
+  - "Executor, Reviewer and Runner protocol notices were sent and all three confirmations were received."
+  - "Supervisor remains the sole message aggregator, formal dispatch center, gate authority and stage-progression authority."
+  - "This is the sole current control-plane write authorization."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+  - "agent-lanes.md#authority-and-evidence-boundary"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md"
+blockers: []
+hard_gate_status: "AUTHORIZED_CONTROL_PLANE_ONLY"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement only the protocol migration, push one exact commit, and stop for Supervisor verification and Reviewer dispatch."
+```

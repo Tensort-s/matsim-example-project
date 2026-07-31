@@ -1,54 +1,53 @@
 # Current integration stage
 
-This is the canonical compact active-stage record. Stable rules are in
-[`INTEGRATION_POLICY.md`](INTEGRATION_POLICY.md); lane authority is in
-[`agent-lanes.md`](../../agent-lanes.md).
+This is the canonical compact active-task record. Stable rules are in
+[`INTEGRATION_POLICY.md`](INTEGRATION_POLICY.md); lane identity and write
+scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| stage_id | `Stage 5 - Composable multimodal scoring architecture (Taxi-only migration)` |
-| status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_5_GATE` |
-| exact_input_sha | `191befd0c93027c5584857333a29746de8b432f0` |
-| result_ref | `integration/hk-multimodal-cost-v1` HEAD; exact pushed SHA is returned in the Executor handoff |
+| task_id | `CONTROL-PROTOCOL-01 - Hub-and-spoke lane messaging protocol` |
+| status | `PENDING_SUPERVISOR_VERIFICATION_AND_REVIEWER_DISPATCH` |
+| exact_input_sha | `9235ccb62dbea43a2f321e4fba2aee6e5629bce0` |
+| stage_5_status | `PASS_CLOSED` |
 | authorized_owner | `INT-EXECUTOR` only |
-| active_scoring_modes | `taxi` only |
-| pt_car_runtime_or_scoring | `false` |
+| authority_source | `INT-SUPERVISOR` only |
 | runner_authorized | `false` |
 | stage_6_authorized | `false` |
-| brief | [`stage-briefs/STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md`](stage-briefs/STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md) |
-| authoritative_manifest | [`../../data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json`](../../data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json) |
-| validation | [`../../data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json`](../../data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json) |
+| brief | [`stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md`](stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md) |
+| stage_5_validation | [`../../data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json`](../../data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json) |
 
 ## Objective
 
-Establish one composable Hong Kong scoring factory and migrate only the
-already-canonical Taxi route-fare scorer, with exact implementation-level
-equivalence to the pre-Stage-5 wrapper.
+Adopt Supervisor-centered real-time messaging while retaining Git worklogs as
+append-only audit evidence. Lane identities and write scopes do not change.
 
 ## Authorized delta
 
-- generic scoring component/factory/composition interfaces and Guice wiring;
-- the Taxi component adapter and canonical Taxi module binding;
-- focused deterministic implementation tests;
-- the integrated manifest, Stage 5 validation, relevant Markdown, and
-  append-only compact worklog entries.
+- `agent-lanes.md` and integration governance/status/brief Markdown;
+- narrow stale control-plane wording in onboarding/integration documentation;
+- compact append-only Supervisor-transferred handoffs in all four lane
+  worklogs.
 
 ## Forbidden delta
 
-PT or Car runtime/scoring; economic or behavioral policy; fare assumptions;
-ASC/calibration; monetary utility; demand, capacity, supply, plans, inputs,
-runtime configuration or outputs; MATSim/server runs; Runner authorization;
-master merge; and Stage 6 or later work.
+Stage 6; Java/Python implementation; model or behavioral semantics; MATSim
+configuration, plans, network, schedule, vehicles, facilities, demand, supply,
+capacity, city metadata or run manifest; Runner/server/MATSim execution; and
+master or protected-feature changes.
 
 ## Evidence references
 
-- Unique composition and active-mode ownership:
-  `data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition`
-- Taxi equivalence and deterministic checks:
-  `data/taxi/hongkong/processed/taxi_scoring_composition_stage5_validation_v1/stage5_taxi_scoring_composition_validation.json`
-- Exact pushed identity and protected-ref checks: compact Executor handoff.
+- Messaging authority and audit distinction:
+  `docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol`
+- Lane scopes and standard loop:
+  `agent-lanes.md#authority-and-evidence-boundary` and
+  `agent-lanes.md#standard-stage-loop`
+- Stage 5 closure:
+  `docs/agent-worklogs/integration-supervisor.md#entry-11--stage-5-gate-closure`
 
 ## Next action
 
-INT-REVIEWER reviews the exact pushed Stage 5 SHA. INT-EXECUTOR stops; no
-Stage 6 or Runner action starts without a later formal Supervisor decision.
+After one focused push, Executor reports the exact SHA and compact handoff only
+to Supervisor and stops. Supervisor verifies and, if appropriate, dispatches
+Reviewer. Stage 6 and Runner remain unauthorized.

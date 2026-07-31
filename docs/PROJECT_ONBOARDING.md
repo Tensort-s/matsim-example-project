@@ -74,6 +74,9 @@ For the active multimodal-cost integration, [`agent-lanes.md`](../agent-lanes.md
 is the current persistent-lane registry. The files under
 [`docs/agent-worklogs/`](agent-worklogs/) are append-only audit records for
 lane handoffs, evidence, decisions, gates, blockers, and allowed next actions.
+The stable Supervisor-centered messaging protocol and active authorized task
+are in [`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md)
+and [`docs/integration/CURRENT_STAGE.md`](integration/CURRENT_STAGE.md).
 The staged Taxi/PT/Car merge contract and current integration evidence are in
 [`docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md`](HONG_KONG_MULTIMODAL_COST_INTEGRATION.md).
 
