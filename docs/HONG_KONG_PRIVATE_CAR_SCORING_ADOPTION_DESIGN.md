@@ -1,5 +1,13 @@
 # Hong Kong private-car MATSim scoring adoption design v1
 
+> Historical Stage 3 design evidence. Stage 8A supersedes only its blanket
+> runtime-blocked conclusion for the hash-locked `base`
+> `fuel_or_electricity` component under exact person/leg, route-distance,
+> fingerprint, ordinal, and zero-standard-distance-rate guards. The historical
+> findings remain controlling for toll, destination parking, fixed ownership,
+> motorcycles, arbitrary iterations, and any unguarded or parallel interface.
+> See `docs/HONG_KONG_CAR_ENERGY_RUNTIME.md`.
+
 ## Decision
 
 This is a **design candidate for review**, not a scoring implementation or an

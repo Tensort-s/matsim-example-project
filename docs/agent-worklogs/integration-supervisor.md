@@ -491,3 +491,33 @@ hard_gate_status: "STAGE_6_PASS_CLOSED__STAGE_7_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement, validate and push one Stage 7 result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 16 — Stage 7 closure and Stage 8A authorization
+
+Compact archival record faithfully transferred from the formal Stage 8A
+brief:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 7 closure / Stage 8A authorization"
+input_sha: "d8fda87eda176f46dd00763709f56b530383476f"
+output_sha_or_status: "STAGE_7_PASS_CLOSED__STAGE_8A_AUTHORIZED"
+decision: "Close Stage 7 PASS and authorize INT-EXECUTOR only to activate the canonical Car fuel_or_electricity component; keep toll, parking, motorcycles, fixed ownership and Runner inactive."
+findings:
+  - "Stage 7 exact-SHA review returned PASS with blockers=[] for d8fda87eda176f46dd00763709f56b530383476f."
+  - "The five locked PT fare layers, unique PT/Taxi composition, null/U semantics and duplicate prevention were accepted."
+  - "Stage 8A may use only the approved canonical Car fuel_or_electricity source."
+  - "Toll, destination parking, motorcycle-as-private-car, fixed ownership, monetary-rate reinterpretation and unresolved zero fill remain prohibited."
+  - "Executor reports the exact pushed result only to Supervisor; Supervisor dispatches Reviewer."
+diagnostics:
+  - "The formal Stage 8A brief supplied no exact source timestamp; the available Asia/Shanghai date is retained without inventing finer precision."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md"
+  - "docs/integration/stage-briefs/STAGE_08A_CAR_ENERGY_RUNTIME.md"
+  - "docs/integration/INTEGRATION_POLICY.md#hub-and-spoke-lane-messaging-protocol"
+blockers: []
+hard_gate_status: "STAGE_7_PASS_CLOSED__STAGE_8A_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement, validate and push one Stage 8A result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
+```

@@ -1,6 +1,8 @@
 package org.matsim.project.hongkong.scoring;
 
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.project.hongkong.car.HongKongCarEnergyCostCatalog;
+import org.matsim.project.hongkong.car.HongKongCarEnergyScoringComponentModule;
 import org.matsim.project.hongkong.pt.HongKongPtFareRuntimeCatalog;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentModule;
@@ -10,31 +12,39 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * Canonical Stage 7 scoring composition: standard MATSim scoring plus the
- * established Taxi route fare and the strict five-layer PT fare component.
+ * Canonical Stage 8A scoring composition: standard MATSim scoring plus the
+ * established Taxi route fare, strict five-layer PT fare, and only the Car
+ * fuel-or-electricity marginal-cost component.
  *
  * <p>The older {@code HongKongTaxiScoringModule} remains the Taxi-only
- * equivalence and historical-smoke entry point. Car is deliberately absent.</p>
+ * equivalence and historical-smoke entry point. Car toll, destination
+ * parking, fixed ownership and motorcycles remain absent or out of scope.</p>
  */
 public final class HongKongMultimodalCostScoringModule
 		extends AbstractModule {
 
 	private final HongKongTaxiScoringParameters taxiParameters;
 	private final Path ptFareReleaseRoot;
+	private final Path carCostRoot;
 
 	public HongKongMultimodalCostScoringModule() {
 		this(
 				HongKongTaxiScoringParameters.centralV1(),
-				HongKongPtFareRuntimeCatalog.DEFAULT_RELEASE_ROOT);
+				HongKongPtFareRuntimeCatalog.DEFAULT_RELEASE_ROOT,
+				HongKongCarEnergyCostCatalog.DEFAULT_CAR_COST_ROOT);
 	}
 
 	public HongKongMultimodalCostScoringModule(
 			HongKongTaxiScoringParameters taxiParameters,
-			Path ptFareReleaseRoot) {
+			Path ptFareReleaseRoot,
+			Path carCostRoot) {
 		this.taxiParameters =
 				Objects.requireNonNull(taxiParameters, "taxiParameters");
 		this.ptFareReleaseRoot = Objects.requireNonNull(
 						ptFareReleaseRoot, "ptFareReleaseRoot")
+				.toAbsolutePath().normalize();
+		this.carCostRoot = Objects.requireNonNull(
+						carCostRoot, "carCostRoot")
 				.toAbsolutePath().normalize();
 	}
 
@@ -45,5 +55,7 @@ public final class HongKongMultimodalCostScoringModule
 				taxiParameters));
 		install(new HongKongPtFareScoringComponentModule(
 				ptFareReleaseRoot));
+		install(new HongKongCarEnergyScoringComponentModule(
+				carCostRoot));
 	}
 }

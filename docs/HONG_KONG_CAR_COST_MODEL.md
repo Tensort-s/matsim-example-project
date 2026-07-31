@@ -1,19 +1,21 @@
-# Hong Kong private-car offline cost model v1
+# Hong Kong private-car cost source model v1
 
 ## Scope
 
-This document records the first offline private-car cost and data-quality
-audit for the Hong Kong MATSim model. It estimates monetary costs but does not
-write them into MATSim scoring.
+This document records the canonical private-car cost sources and data-quality
+audit for the Hong Kong MATSim model. Stage 3 produced the immutable offline
+source release. Stage 8A later authorizes only its hash-locked base
+`fuel_or_electricity` component through the runtime contract in
+[`HONG_KONG_CAR_ENERGY_RUNTIME.md`](HONG_KONG_CAR_ENERGY_RUNTIME.md).
 
 The workflow does not modify:
 
 - routed or unrouted plans, config, network, facilities, private vehicles,
   transit schedule, or transit vehicles;
-- `src/main/java/` or `RunHongKong5Pct.java`;
+- `RunHongKong5Pct.java`;
 - `car` or `ride` ASC, `car monetaryDistanceRate`, global
   `marginalUtilityOfMoney`, or `SubtourModeChoice`;
-- taxi or public-transport scoring;
+- taxi or public-transport scoring behavior;
 - road capacity or any simulation output.
 
 The four cost components remain separate:
@@ -42,10 +44,12 @@ data/transport_costs/hongkong/car_cost_v1/
   canonical_car_cost_interface_manifest.json
 ```
 
-All future offline behavioral-cost integration must resolve the canonical path
-through that manifest and read only `unified_marginal_cost_interface_v1`.
-This remains an offline candidate: MATSim scoring and scoring implementation
-are not approved.
+All behavioral-cost integration must resolve the canonical path through that
+manifest and read only `unified_marginal_cost_interface_v1`. The locked
+source manifest remains an offline release record. Stage 8A does not rewrite
+it: the authoritative integrated consumer manifest separately approves only
+the base `fuel_or_electricity` component for guarded runtime use. Toll,
+destination parking, motorcycles, and fixed ownership remain inactive.
 
 The original top-level `car_leg_cost_estimates_<scenario>.parquet`,
 `car_cost_model_validation.json`, and `car_cost_summary_by_*.csv` files remain
@@ -110,13 +114,19 @@ The routed XML maps 64,789 of those legs to `private_car` vehicles and 2,929
 to `motorcycle` vehicles. Motorcycle legs remain in the audit so the `car`
 count conserves, but private-car costs are not assigned to them.
 
-The current read-only car scoring snapshot remains:
+The current read-only Car scoring snapshot remains unchanged:
 
 | Parameter | Value |
 |---|---:|
 | constant | -0.5 |
 | marginalUtilityOfTraveling | -6 util/h |
 | monetaryDistanceRate | -0.0007/m |
+
+Stage 8A does not assign an economic meaning to that distance rate and does
+not modify it. The new Car energy component requires the standard Car
+`monetaryDistanceRate` to be exactly zero at factory creation and fails closed
+otherwise. This is an activation precondition, not a config change or a claim
+that the existing snapshot is HKD/fuel.
 
 ## Sources and provenance
 

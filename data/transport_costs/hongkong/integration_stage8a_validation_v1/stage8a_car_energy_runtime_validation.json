@@ -1,0 +1,167 @@
+{
+  "schema_version": "hong_kong_stage8a_car_energy_runtime_validation_v1",
+  "status": "pending_independent_review_and_supervisor_stage_8a_gate",
+  "stage_id": "Stage 8A - Car fuel_or_electricity runtime component",
+  "input_commit_sha": "d8fda87eda176f46dd00763709f56b530383476f",
+  "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
+  "integration_branch": "integration/hk-multimodal-cost-v1",
+  "runtime_component": {
+    "component_id": "car_fuel_or_electricity_v1",
+    "mode_owner": "car",
+    "scenario": "base",
+    "active_canonical_component": "fuel_or_electricity",
+    "inactive_components": [
+      "toll",
+      "destination_parking",
+      "fixed_vehicle_ownership_cost",
+      "motorcycle"
+    ],
+    "catalog": "src/main/java/org/matsim/project/hongkong/car/HongKongCarEnergyCostCatalog.java",
+    "selected_plan_schedule": "src/main/java/org/matsim/project/hongkong/car/HongKongCarEnergyPersonSchedule.java",
+    "scoring": "src/main/java/org/matsim/project/hongkong/car/HongKongCarEnergyScoring.java",
+    "factory": "src/main/java/org/matsim/project/hongkong/car/HongKongCarEnergyScoringComponentFactory.java",
+    "module": "src/main/java/org/matsim/project/hongkong/car/HongKongCarEnergyScoringComponentModule.java"
+  },
+  "canonical_source_identity": {
+    "canonical_interface_id": "unified_marginal_cost_interface_v1",
+    "canonical_manifest": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/canonical_car_cost_interface_manifest.json",
+      "sha256": "515d15df43a269da5f060338fcaf91cf004abfeb98ee4332e4172964f64be31d"
+    },
+    "base_component_table": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/car_leg_marginal_cost_components_base.parquet",
+      "sha256": "0337469ca99d61650f782f273b7b275cee124449e01037f95e15f978f94e742b"
+    },
+    "component_registry": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/marginal_cost_component_registry.csv",
+      "sha256": "ae2fd61342413b586aef1149f5221db0ffa04d994e1b415d6c7bccf077855580"
+    },
+    "source_candidate": {
+      "path": "data/transport_costs/hongkong/car_cost_v1/energy_application_v1/car_leg_energy_cost_estimates_base.parquet",
+      "sha256": "0e0cc3fdd3440b4be8e51ad98289de590af1b479222c8e29b15845055d82f5da"
+    },
+    "source_key": [
+      "person_id",
+      "leg_sequence"
+    ],
+    "source_release_status_preserved": "canonical_offline_behavioral_cost_interface_candidate",
+    "stage8a_scoped_approval_record": "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#interfaces[mode=car].stage_8a_runtime_activation"
+  },
+  "canonical_base_counts_and_distributions": {
+    "all_component_table_rows": 203154,
+    "fuel_or_electricity_rows": 67718,
+    "private_car_resolved_rows": 64789,
+    "motorcycle_out_of_scope_null_rows": 2929,
+    "legal_zero_distance_energy_rows": 33,
+    "individual_powertrain_available": false,
+    "base_representative_fleet_rate_hkd_per_km": 2.3260259843327393,
+    "resolved_cost_total_hkd": 2341793.9504491785,
+    "resolved_cost_mean_hkd": 36.14493124526044,
+    "resolved_cost_median_hkd": 28.861846791369157,
+    "resolved_cost_p90_hkd": 76.4376128255154,
+    "formula_max_abs_error_hkd": 0.0,
+    "toll_runtime_rows_loaded": 0,
+    "destination_parking_runtime_rows_loaded": 0,
+    "fixed_ownership_leg_rows_loaded": 0
+  },
+  "composition": {
+    "active_component_count": 3,
+    "active_component_ids": [
+      "car_fuel_or_electricity_v1",
+      "pt_fare_layered_v1",
+      "taxi_route_fare_v1"
+    ],
+    "active_mode_owners": {
+      "car": "car_fuel_or_electricity_v1",
+      "pt": "pt_fare_layered_v1",
+      "taxi": "taxi_route_fare_v1"
+    },
+    "duplicate_component_ids": [],
+    "duplicate_mode_owners": [],
+    "taxi_or_pt_semantics_changed": false
+  },
+  "fail_closed_and_duplicate_guards": {
+    "mode_and_routing_mode_required_car": true,
+    "selected_plan_key_exact": true,
+    "source_route_distance_match_required": true,
+    "source_route_distance_tolerance_m": 1e-06,
+    "route_fingerprint_match_required": true,
+    "ordinal_exactly_once": true,
+    "missing_or_unresolved_zero_fill": false,
+    "motorcycle_as_private_car_fallback": false,
+    "money_events_emitted": 0,
+    "trip_callback_charges": 0,
+    "event_callback_charges": 0,
+    "external_score_callback_charges": 0,
+    "standard_car_monetary_distance_rate_required": 0.0,
+    "standard_car_monetary_distance_rate_mutated": false,
+    "standard_car_monetary_distance_rate_interpreted": false,
+    "nonzero_standard_car_distance_rate_policy": "reject_factory_construction",
+    "finite_nonnegative_cost_required": true,
+    "finite_score_required": true
+  },
+  "deterministic_checks": [
+    {
+      "command": ".\\mvnw.cmd -DskipTests compile",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS; 47 main source files",
+      "duration_seconds": 28.354
+    },
+    {
+      "command": ".\\mvnw.cmd '-Dtest=HongKongCarEnergyCostCatalogTest,HongKongCarEnergyScoringTest' test",
+      "exit_status": 0,
+      "result": "10 tests; 0 failures; 0 errors; 0 skipped",
+      "duration_seconds_approx": 61.0
+    },
+    {
+      "command": ".\\mvnw.cmd '-Dtest=HongKongTaxiPrepareForSimLifecycleTest#stage8aCombinedModuleHasExactlyTaxiPtAndCarEnergyModeOwners' test",
+      "exit_status": 0,
+      "result": "1 test; 0 failures; 0 errors; 0 skipped",
+      "duration_seconds_approx": 45.8
+    },
+    {
+      "command": ".\\mvnw.cmd test",
+      "exit_status": 0,
+      "result": "BUILD SUCCESS; 92 tests; 0 failures; 0 errors; 0 skipped",
+      "maven_total_time": "01:06 min"
+    },
+    {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/costs/validate_hong_kong_pt_fare_release_v1.py --repository-root .",
+      "exit_status": 0,
+      "result": "20/20 passed; 16 registered hashes; 8 protected inputs; 23 scripts compile"
+    },
+    {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/costs/car/validate_hong_kong_car_cost_release_v1.py --repository-root . --input-project-root F:\\Matsim\\matsim-example-project",
+      "exit_status": 0,
+      "result": "passed; 12 canonical hashes; 5 candidate bundles; 9 protected inputs; 26 Parquet readable; 12 Car scripts compile"
+    }
+  ],
+  "hard_gate_evidence": {
+    "exact_input_and_ancestry": "executor_handoff_ref_checks",
+    "source_mapping_and_counts": "HongKongCarEnergyCostCatalogTest and canonical_source_identity",
+    "private_car_energy_and_finite_values": "HongKongCarEnergyScoringTest",
+    "missing_and_unresolved_fail_closed": "HongKongCarEnergyScoringTest",
+    "motorcycle_exclusion": "HongKongCarEnergyCostCatalogTest and HongKongCarEnergyScoringTest",
+    "fixed_ownership_exclusion": "HongKongCarEnergyCostCatalogTest and car_energy_runtime_boundary_matrix.csv",
+    "distance_duplicate_prevention": "HongKongCarEnergyScoringTest#nonzeroStandardCarMonetaryDistanceChargeIsRejectedNotMutated",
+    "callback_duplicate_prevention": "HongKongCarEnergyScoringTest#privateCarEnergyChargesExactlyOnceAndOtherCallbacksAreInert",
+    "taxi_and_pt_regression": "complete 92-test Maven suite and PT release validator",
+    "structured_source_release": "Car and PT release validators"
+  },
+  "configuration_and_run_boundary": {
+    "city_yaml_changed": false,
+    "run_manifest_changed": false,
+    "matsim_config_changed": false,
+    "plans_or_supply_changed": false,
+    "runner_authorized": false,
+    "hong_kong_or_server_run_performed": false,
+    "stage_8b_8c_or_9_work_performed": false
+  },
+  "diagnostics": [
+    "The source has no individual powertrain assignment; the canonical representative licensed-fleet average remains explicit.",
+    "The first full-suite tool invocation used a 1-second command wrapper timeout and produced no Maven verdict; the same deterministic suite was then allowed to finish and passed 92/92.",
+    "Existing Maven parent.version, Java native-access/Unsafe, DuckDB native-access, Guice ASM class-version, deprecated fixture configuration and synthetic-fixture warnings remain non-blocking."
+  ],
+  "blockers": [],
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8A_GATE"
+}

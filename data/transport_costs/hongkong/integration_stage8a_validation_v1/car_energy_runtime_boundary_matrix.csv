@@ -1,0 +1,11 @@
+scope,status,runtime_behavior,canonical_source_or_guard
+fuel_or_electricity,active_base_scenario,one handleLeg charge for each resolved private-car ordinal,data/transport_costs/hongkong/car_cost_v1/unified_marginal_cost_interface_v1/car_leg_marginal_cost_components_base.parquet
+toll,inactive,no runtime rows loaded and no charge,Stage 8B not authorized
+destination_parking,inactive,no runtime rows loaded and no charge,Stage 8C not authorized
+fixed_vehicle_ownership_cost,accounting_only,no leg row or behavioral charge,marginal_cost_component_registry.csv behavioral inclusion false
+motorcycle,out_of_scope_null,ordinal consumed with zero fabricated cost and explicit out-of-scope evidence,2929 canonical motorcycle rows
+missing_person_leg_key,unresolved_fail_closed,schedule construction rejects missing source and never fills zero,person_id plus leg_sequence exact key
+changed_route,fail_closed,source distance and route fingerprint must match prepared selected plan,source distance tolerance 1e-6 m
+standard_car_monetary_distance_rate,required_zero,nonzero existing rate rejects factory construction and is never mutated or reinterpreted,double-count prevention guard
+money_event_callback,inert,no charge and no emitted PersonMoneyEvent,HongKongScoringComponent default callback
+trip_callback,inert,no charge,HongKongScoringComponent default callback

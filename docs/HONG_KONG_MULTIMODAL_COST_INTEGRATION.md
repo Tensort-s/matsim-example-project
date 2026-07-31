@@ -74,10 +74,10 @@ data/transport_costs/hongkong/
 ```
 
 That registry points to exactly three current interfaces: the active native
-Taxi runtime/route-fare path, the five-layer offline PT fare release, and the
-offline Car `unified_marginal_cost_interface_v1`. Historical, candidate,
-accounting, design-only and superseded artifacts remain preserved but cannot
-act as parallel canonical interfaces.
+Taxi runtime/route-fare path, the five-layer PT fare interface, and the Car
+`unified_marginal_cost_interface_v1`. Historical, candidate, accounting,
+design-only and superseded artifacts remain preserved but cannot act as
+parallel canonical interfaces.
 
 Stage 5 migrates only the canonical Taxi route-fare runtime to the composable
 scoring factory recorded in that registry. The active component registry has
@@ -123,10 +123,33 @@ taxi -> taxi_route_fare_v1
 The runtime reads hash-locked domestic MTR, Light Rail, GMB, Ferry, and Bus
 Core rules only after an explicit prepared itinerary exists. Generic source
 PT rows remain null/unresolved, transfer concessions remain unmodelled, Bus
-simulation candidates remain inactive, and Car remains offline. Stage 7
-changes no production config, plans, supply, demand, capacity, ASC, monetary
-utility, city metadata, or run manifest; no Runner or MATSim/server run is
-authorized.
+simulation candidates remain inactive, and Car remains offline in Stage 7.
+Stage 7 passed independent exact-SHA review and was formally closed at:
+
+```text
+d8fda87eda176f46dd00763709f56b530383476f
+```
+
+Stage 8A then activates only the hash-locked base Car
+`fuel_or_electricity` component. The current unique composition is:
+
+```text
+car  -> car_fuel_or_electricity_v1
+pt   -> pt_fare_layered_v1
+taxi -> taxi_route_fare_v1
+```
+
+Car toll, destination parking, motorcycles, and fixed ownership remain
+inactive. Exact source-key, route-distance, route-fingerprint, ordinal and
+callback guards fail closed. A nonzero standard Car
+`monetaryDistanceRate` is rejected without mutation or reinterpretation, so
+the energy component cannot double count the unverified distance monetary
+term. The full scoped contract is in
+[`docs/HONG_KONG_CAR_ENERGY_RUNTIME.md`](HONG_KONG_CAR_ENERGY_RUNTIME.md).
+
+Stage 7 and Stage 8A change no production config, plans, supply, demand,
+capacity, ASC, monetary utility, city metadata, or run manifest; no Runner or
+MATSim/server run is authorized.
 
 ## Stage 1 scope
 
@@ -442,6 +465,37 @@ data/transport_costs/hongkong/integration_stage7_validation_v1/
   pt_runtime_layer_quality_fallback_matrix.csv
 ```
 
+## Stage 8A Car fuel-or-electricity composition
+
+`HongKongCarEnergyCostCatalog` verifies the exact canonical manifest,
+component-table and registry hashes and loads only the `base`
+`fuel_or_electricity` rows. It loads zero toll, parking or fixed-ownership
+runtime rows. The source has 64,789 resolved private-car rows, 2,929
+motorcycle null/out-of-scope rows, and 33 legal zero-distance energy rows.
+There is no individual powertrain field; the already-published representative
+licensed-fleet average is retained without a fabricated electric/petrol split.
+
+`HongKongCarEnergyPersonSchedule` maps selected prepared Car legs by exact
+`person_id + leg_sequence`, ignores interaction activities when deriving the
+source sequence, and requires mode/routingMode, route distance, and route
+fingerprint agreement. `HongKongCarEnergyScoring` charges a resolved ordinal
+once from `handleLeg`; money/event/trip callbacks are inert. Missing,
+unresolved, reordered, duplicate, changed-route, or non-finite input fails
+closed.
+
+Standard Car `monetaryDistanceRate` must already equal zero. The factory
+rejects a nonzero value and neither mutates nor interprets it. Fixed ownership
+remains an accounting sidecar, toll and destination parking remain future
+sub-stages, and motorcycle source cost remains null/out-of-scope.
+
+Structured Stage 8A evidence is:
+
+```text
+data/transport_costs/hongkong/integration_stage8a_validation_v1/
+  stage8a_car_energy_runtime_validation.json
+  car_energy_runtime_boundary_matrix.csv
+```
+
 ## Stage 2 verification boundary
 
 Stage 2 validation is offline and deterministic. It does not launch a Hong
@@ -560,10 +614,12 @@ single documented combined-resolution blob.
 Stage 3 changes `cities/hongkong/city.yaml` only by adopting the locked
 documentation pointer and `read_only_offline_audit_not_active_matsim_scoring`
 metadata. It does not change current-model inputs or simulation parameters.
-`runs/hongkong/run_manifest.json` is unchanged. No Car Java module, money
-event, static leg lookup, MATSim scoring/config/plans/supply mutation,
-calibration, monetary-distance-rate interpretation, scenario run, server run,
-or Runner action is introduced.
+`runs/hongkong/run_manifest.json` is unchanged. Stage 3 introduced no Car
+Java module, money event, static leg lookup, MATSim scoring/config/plans/supply
+mutation, calibration, monetary-distance-rate interpretation, scenario run,
+server run, or Runner action. Stage 8A supersedes only that historical runtime
+status for the single guarded base energy component; all other Stage 3 source
+and exclusion boundaries remain intact.
 
 Stage 3 deterministic validation results:
 

@@ -443,3 +443,34 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_7_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed Stage 7 SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8."
 ```
+
+## Entry 13 — Stage 8A Car fuel-or-electricity runtime
+
+```yaml
+timestamp: "2026-07-31T17:35:17+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8A"
+input_sha: "d8fda87eda176f46dd00763709f56b530383476f"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Activate only the hash-locked canonical base Car fuel_or_electricity component through car_fuel_or_electricity_v1 with exact source/route identity and fail-closed distance-double-count prevention."
+findings:
+  - "The combined registry has exactly three unique owners: car->car_fuel_or_electricity_v1, pt->pt_fare_layered_v1 and taxi->taxi_route_fare_v1; Taxi/PT behavior remains unchanged."
+  - "The catalog verifies the canonical manifest, base component table and registry hashes, loads 64789 resolved private-car rows plus 2929 motorcycle null/out-of-scope rows, and loads zero toll, parking or fixed-ownership runtime rows."
+  - "Person/leg keys, main-activity sequence, source distance and route fingerprint must match; ordinals and callbacks are exactly-once and missing, changed, duplicate, unresolved or non-finite input fails closed."
+  - "The factory requires standard Car monetaryDistanceRate=0 and rejects a nonzero value without mutation or interpretation; fixed ownership remains accounting-only and motorcycles never become private cars."
+  - "Compile, 10 focused Car tests, the combined Guice ownership test, the complete 92-test suite, PT 20/20 release validation and Car release validation all passed; city.yaml, run_manifest and production inputs/config/supply were unchanged and no Runner/Hong Kong/server run occurred."
+diagnostics:
+  - "Canonical source data has no individual powertrain field, so the approved representative licensed-fleet average remains explicit."
+  - "The first full-suite tool invocation had a 1-second wrapper timeout and no Maven verdict; the completed deterministic retry passed 92/92."
+  - "Existing Maven parent.version, Java native-access/Unsafe, DuckDB native-access, Guice ASM class-version and synthetic-fixture warnings remain non-blocking."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8a_validation_v1/stage8a_car_energy_runtime_validation.json"
+  - "data/transport_costs/hongkong/integration_stage8a_validation_v1/car_energy_runtime_boundary_matrix.csv"
+  - "data/transport_costs/hongkong/integrated_multimodal_cost_source_interface_manifest_v1.json#canonical_scoring_composition"
+  - "docs/HONG_KONG_CAR_ENERGY_RUNTIME.md"
+  - "docs/integration/stage-briefs/STAGE_08A_CAR_ENERGY_RUNTIME.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8A_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed Stage 8A SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 8B/8C/9."
+```

@@ -199,7 +199,7 @@ The subsequent five-layer runtime consumer is documented in
 `docs/HONG_KONG_PT_FARE_RUNTIME.md`. It uses exact prepared PT segment
 references and hash-locked domestic MTR, Light Rail, GMB, Ferry, and strict
 Bus Core rules; unresolved fares stay null, transfer concessions remain
-unmodelled, Taxi remains equivalent, and Car remains offline.
+unmodelled, Taxi remains equivalent, and Car remains offline through Stage 7.
 
 The private-car offline cost workspace is under
 `data/transport_costs/hongkong/car_cost_v1/` and documented in
@@ -255,7 +255,17 @@ existing 0.7 currency/km distance term cannot be called HKD or fuel without new
 provenance, rejects static iteration-time leg lookup, and defines future
 experienced-event and baseline-replay contracts. The design is reviewable but
 blocked; it implements no scoring and keeps fixed ownership permanently outside
-the current daily behavioral model.
+the current daily behavioral model. That blocked status is historical Stage 3
+design evidence; it does not control the later, more narrowly guarded Stage 8A
+authorization.
+The Stage 8A scoped runtime consumer is documented in
+`docs/HONG_KONG_CAR_ENERGY_RUNTIME.md`. It consumes only the hash-locked base
+`fuel_or_electricity` rows from the canonical interface, requires exact source
+and prepared-route identity, and charges each resolved private-car ordinal
+once. Toll, destination parking, motorcycles, and fixed ownership remain
+inactive. A nonzero standard Car `monetaryDistanceRate` fails closed without
+mutation or economic reinterpretation; no production config or scenario run
+is changed.
 
 The final local SimWrapper project for this configuration is:
 
