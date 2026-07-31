@@ -582,3 +582,32 @@ hard_gate_status: "STAGE_8B_PASS_CLOSED__STAGE_8C_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement, validate and push one Stage 8C result, report only to Supervisor, and stop for Supervisor verification and Reviewer dispatch."
 ```
+
+## Entry 19 — Stage 8D bounded rework authorization
+
+Compact archival record faithfully transferred from the user-approved formal
+Supervisor rework authorization:
+
+```yaml
+timestamp: "2026-07-31 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "Stage 8D bounded rework"
+input_sha: "67f812ab544b9842c65c4da9073ee8e58d10bc31"
+output_sha_or_status: "AUTHORIZED_INT_EXECUTOR_ONLY"
+decision: "Authorize only a deployment/provenance correction from stale v1/pre-Ferry defaults to the hash-locked v2 demand and Ferry Core supply contract."
+findings:
+  - "The earlier Stage 8D attempt stopped because no approved local JDK archive was present and the specified script selected historical inputs."
+  - "User approval permits bundle/prepare/deployment script, documentation and validation-evidence changes only."
+  - "Taxi/PT/Car runtime semantics and all locked input bytes must remain unchanged."
+  - "Server-side Linux JDK 25 build, bundle creation, upload and execution require a later separate Runner authorization after review."
+  - "Executor reports the exact pushed rework result only to Supervisor; Supervisor dispatches Reviewer."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+blockers: []
+hard_gate_status: "STAGE_8D_BOUNDED_REWORK_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused deployment/provenance rework commit and stop for Supervisor verification and Reviewer dispatch; do not contact Runner or begin Stage 9."
+```

@@ -266,11 +266,11 @@ calibration against future disaggregate resident trip records.
 
 The append-only server bundle is prepared with
 `scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py`.
-The deployed release is restricted to:
-
-```text
-/mnt/DiskM/by/hk_matsim_5pct_mixed_pcu005_v1/
-```
+The active Stage 8D contract supersedes the historical v1/pre-Ferry defaults:
+it accepts only the hash-locked v2 activity-modechoice demand and Ferry Core
+v1 / 10% PT-capacity supply. The caller must provide a new release root below
+`/mnt/DiskM/by/` and an exact pushed source SHA; no historical release root is
+an active default.
 
 It contains a portable Temurin JDK 25, the fat JAR, checksummed inputs,
 server-specific configs, a deterministic 7,716-person smoke population, and
@@ -278,6 +278,15 @@ separate smoke/formal launchers. `HOME`, `TMPDIR`, Java preferences, logs, and
 all MATSim outputs are redirected below the release root. Launchers fail if
 their target run directory already exists; no server files are deleted or
 overwritten.
+
+Before copying anything, the current script verifies a clean exact Git SHA,
+all seven current input hashes, the approved JDK archive hash, Linux JDK 25 /
+Maven / MATSim build metadata, and the Taxi/PT/Car runtime-class inventory in
+the fat JAR. It emits an external deployment manifest containing source, JAR,
+bundle and input hashes. Server-side build, upload and execution require a
+separate Supervisor authorization; no JDK is downloaded or fabricated by the
+preparation workflow. The current contract is documented in
+`docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md`.
 
 The server smoke test used the complete 158,131-departure PT timetable and
 finished the 00:00-30:00 QSim with exit code 0, maximum `lost=0`, no stuck or

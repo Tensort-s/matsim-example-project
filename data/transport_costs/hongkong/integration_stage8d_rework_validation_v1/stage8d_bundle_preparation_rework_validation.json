@@ -1,0 +1,133 @@
+{
+  "schema_version": "hong_kong_stage8d_bundle_preparation_rework_validation_v1",
+  "status": "pending_independent_review_and_supervisor_stage_8d_gate",
+  "stage_id": "Stage 8D - Exact-SHA server bundle preparation rework",
+  "input_commit_sha": "67f812ab544b9842c65c4da9073ee8e58d10bc31",
+  "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
+  "integration_branch": "integration/hk-multimodal-cost-v1",
+  "scope": {
+    "deployment_and_provenance_only": true,
+    "java_or_model_logic_changed": false,
+    "matsim_input_bytes_changed": false,
+    "fare_or_cost_semantics_changed": false,
+    "server_access_performed": false,
+    "server_build_or_upload_performed": false,
+    "matsim_run_performed": false,
+    "runner_authorized": false,
+    "stage_9_retry_performed": false
+  },
+  "preparation_contract": {
+    "entry_point": "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py",
+    "entry_point_version_anchor": "exact reviewed output commit",
+    "validator": "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+    "validator_version_anchor": "exact reviewed output commit",
+    "source_commit_argument_required": true,
+    "clean_source_checkout_required": true,
+    "release_root_argument_required": true,
+    "release_root_boundary": "/mnt/DiskM/by/<new-release>",
+    "all_local_output_paths_must_be_new": true,
+    "stale_v1_or_pre_ferry_input_allowed": false,
+    "old_or_incomplete_server_jar_allowed": false,
+    "deployment_manifest_required": true
+  },
+  "locked_inputs": {
+    "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+    "input/plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+    "input/facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+    "input/privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+    "input/network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+    "input/transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+    "input/transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+  },
+  "server_build_contract": {
+    "authority": "requires_a_later_exact_sha_int_supervisor_runner_authorization",
+    "platform": "Linux",
+    "jdk_major": 25,
+    "jdk_source": "approved_existing_server_jdk_only",
+    "jdk_download_or_fabrication_allowed": false,
+    "source_preflight": [
+      "test \"$(git rev-parse HEAD)\" = \"<exact-pushed-sha>\"",
+      "test -z \"$(git status --porcelain=v1)\""
+    ],
+    "java_preflight": "\"$JAVA_HOME/bin/java\" -version",
+    "build_command": "./mvnw -DskipTests package",
+    "maven_wrapper_version_observed_locally": "3.9.8",
+    "matsim_version": "2026.0",
+    "bundle_jdk_archive_sha256_contract": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "missing_approved_jdk_or_archive_policy": "stop_without_download_or_substitution"
+  },
+  "required_fat_jar_classes": [
+    "org/matsim/project/hongkong/taxi/HongKongTaxiFareScoringComponentFactory.class",
+    "org/matsim/project/hongkong/pt/HongKongPtFareScoringComponentFactory.class",
+    "org/matsim/project/hongkong/car/HongKongCarEnergyScoringComponentFactory.class",
+    "org/matsim/project/hongkong/car/HongKongCarTollScoringComponentFactory.class",
+    "org/matsim/project/hongkong/car/HongKongCarParkingScoringComponentFactory.class",
+    "org/matsim/project/hongkong/car/HongKongCarMarginalCostScoringComponentFactory.class",
+    "org/matsim/project/hongkong/scoring/HongKongMultimodalScoringFunctionFactory.class"
+  ],
+  "generated_config_boundary": {
+    "formal_allowed_changes": [
+      "network.inputNetworkFile",
+      "plans.inputPlansFile",
+      "facilities.inputFacilitiesFile",
+      "vehicles.vehiclesFile",
+      "transit.transitScheduleFile",
+      "transit.vehiclesFile",
+      "controller.outputDirectory"
+    ],
+    "smoke_additional_allowed_changes": [
+      "controller.lastIteration",
+      "controller.writeEventsInterval",
+      "controller.writePlansInterval"
+    ],
+    "formal_replanning_change": false,
+    "formal_qsim_change": false,
+    "formal_scoring_change": false
+  },
+  "deployment_manifest_fields": [
+    "source_commit_sha",
+    "fat_jar_sha256",
+    "required_runtime_classes",
+    "build_command",
+    "prepare_command",
+    "java_version",
+    "maven_version",
+    "matsim_version",
+    "locked_input_sha256",
+    "jdk_sha256",
+    "release_root",
+    "staging_dir",
+    "bundle_path",
+    "bundle_sha256",
+    "bundle_size_bytes",
+    "release_file_count",
+    "prepared_at_utc",
+    "server_upload_performed",
+    "server_run_performed"
+  ],
+  "deterministic_checks": [
+    {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe -m py_compile scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "exit_status": 0,
+      "result": "passed"
+    },
+    {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py --help",
+      "exit_status": 0,
+      "result": "required exact-SHA, JAR, JDK archive, release, staging, bundle, deployment-manifest, Java and Maven interfaces present"
+    },
+    {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "exit_status": 0,
+      "result": "7/7 hashes match; no stale active defaults; stale v1 input and incomplete JAR rejected; formal config changes only seven server paths; no replanning or QSim change"
+    }
+  ],
+  "artifact_status": {
+    "fat_jar_built_in_rework": false,
+    "bundle_built_in_rework": false,
+    "deployment_manifest_built_in_rework": false,
+    "reason": "Server-side Linux JDK 25 build and bundle creation require a later exact-SHA Runner authorization after independent review."
+  },
+  "blockers": [],
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+}

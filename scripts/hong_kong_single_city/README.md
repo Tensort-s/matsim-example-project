@@ -216,17 +216,42 @@ the audit instead of being silently reassigned.
 Prepare the append-only Linux server bundle with:
 
 ```powershell
-python .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
+  --source-commit-sha <exact-pushed-sha> `
   --fat-jar .\matsim-example-project-0.0.1-SNAPSHOT.jar `
-  --jdk-archive <Temurin-JDK-25-Linux-x64.tar.gz> `
+  --jdk-archive <approved-existing-Temurin-JDK-25-Linux-x64.tar.gz> `
+  --release-root /mnt/DiskM/by/<new-exact-sha-release> `
   --staging-dir <new-empty-staging-directory> `
-  --bundle-path <new-bundle.tar>
+  --bundle-path <new-bundle.tar> `
+  --deployment-manifest <new-deployment-manifest.json> `
+  --java-version <verified-linux-jdk-25-version> `
+  --maven-version <verified-wrapper-version>
 ```
 
-The server release root is fixed to
-`/mnt/DiskM/by/hk_matsim_5pct_mixed_pcu005_v1`. The generated launchers create
-new run directories only and use `failIfDirectoryExists`; the formal
-50-iteration launcher is not called during deployment.
+The active preparation contract is hash-locked to the v2 activity-modechoice
+demand and Ferry Core v1 / 10% PT-capacity supply. The script rejects legacy
+v1/pre-Ferry paths, dirty or wrong source checkouts, wrong input hashes,
+non-JDK-25 build metadata, and a fat JAR missing the current Taxi/PT/Car
+runtime classes. A release root must be supplied explicitly below
+`/mnt/DiskM/by/`; it is never inferred from an older deployment. The generated
+launchers create new run directories only and use `failIfDirectoryExists`.
+Preparing a bundle does not authorize upload or execution.
+
+On the authorized Linux server, the exact build command interface is:
+
+```bash
+test "$(git rev-parse HEAD)" = "<exact-pushed-sha>"
+test -z "$(git status --porcelain=v1)"
+export JAVA_HOME="<approved-existing-linux-jdk-25>"
+"$JAVA_HOME/bin/java" -version
+./mvnw -DskipTests package
+```
+
+No JDK download or replacement is part of this interface. Missing approved
+JDK/archive assets are a stop condition. See
+`docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md` for exact input hashes and
+the deployment-manifest contract.
 
 Build the fixed-link typical-weekday 5% resident, school, work, and border
 population together with scenario facilities and private vehicles:

@@ -281,6 +281,12 @@ activity, source-time and route identity are required; the 835 unresolved
 private-car rows remain explicit null, 2,929 motorcycles remain out of scope,
 and fixed ownership stays outside per-leg scoring. No nearest-location,
 candidate, distance or zero-fill inference is introduced.
+The exact-SHA server bundle preparation contract is documented in
+`docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md`. It locks the current v2
+demand and Ferry Core inputs by SHA256, rejects historical v1/pre-Ferry
+defaults, requires a clean exact source SHA and current Taxi/PT/Car JAR class
+inventory, and defines a later Supervisor-authorized Linux JDK 25 build and
+deployment-manifest interface. It does not authorize server access or a run.
 
 The final local SimWrapper project for this configuration is:
 

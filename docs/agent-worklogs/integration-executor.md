@@ -536,3 +536,33 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8C_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed Stage 8C SHA and dispatches independent review; Executor waits and does not contact Reviewer or begin Stage 9."
 ```
+
+## Entry 16 — Stage 8D exact-SHA bundle preparation rework
+
+```yaml
+timestamp: "2026-07-31T21:34:22+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D bounded rework"
+input_sha: "67f812ab544b9842c65c4da9073ee8e58d10bc31"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Replace only active historical bundle defaults with fail-closed exact-SHA, v2-demand, Ferry-Core, JAR-inventory and deployment-manifest controls."
+findings:
+  - "Seven current config/plans/facilities/private-vehicle/network/schedule/transit-vehicle paths are explicit and all SHA256 values match the adopted inputs."
+  - "Active defaults contain no stale v1/pre-Ferry path; a stale v1 source path and an incomplete old server JAR are deterministically rejected."
+  - "Formal server config adaptation changes only six input paths plus outputDirectory; replanning, QSim, scoring, demand and capacity parameters remain unchanged."
+  - "The script requires an exact clean source SHA, current Taxi/PT/Car class inventory, new release/output paths and a sidecar manifest containing source/JAR/bundle/input/JDK/version provenance."
+  - "No Java/model/config/input byte, server state or protected ref changed; no JDK was downloaded, no bundle/server build/upload/run occurred and Runner remains unauthorized."
+diagnostics:
+  - "The original script also rewrote formal replanning weights; this stale deployment behavior was removed so the locked v2 formal semantics are preserved."
+  - "An approved JDK/archive remains a later Runner preflight requirement; missing assets fail closed without download or substitution."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md"
+  - "docs/integration/stage-briefs/STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed rework SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```
