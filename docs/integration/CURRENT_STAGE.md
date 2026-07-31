@@ -6,9 +6,9 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 | Field | Value |
 |---|---|
-| task_id | `Stage 8D - Exact-SHA source-snapshot lock-anchor rework` |
+| task_id | `Stage 8D - Dynamic exact-SHA snapshot identity rework` |
 | status | `PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE` |
-| exact_input_sha | `6ce087af803da1a4b21717c1e0073ce4a04c608a` |
+| exact_input_sha | `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6` |
 | control_protocol_01_status | `PASS_CLOSED` |
 | stage_8c_source_status | `PUSHED_AT_INPUT_SHA` |
 | authorized_owner | `INT-EXECUTOR` only |
@@ -20,15 +20,17 @@ scope are in [`agent-lanes.md`](../../agent-lanes.md).
 
 ## Objective
 
-Move the active Git-metadata-free source-snapshot lock to exact reviewed input
-`6ce087af803da1a4b21717c1e0073ce4a04c608a` and its Git-derived tree/blob
-inventory, while retaining the original exact-clean-Git guard.
+Remove prior-commit self-locking from Git-metadata-free snapshot identity. The
+formal exact SHA is supplied at execution time; its Git commit object, tree,
+blob inventory, archive and extracted files must verify as one identity while
+the original exact-clean-Git guard remains strict.
 
 ## Authorized delta
 
 - exact seven-file current input inventory and SHA256 checks;
 - stale v1/pre-Ferry path rejection;
-- exact clean Git checkout or exact-tree snapshot source identity;
+- exact clean Git checkout or dynamic exact-SHA snapshot source identity;
+- Git commit-object hash and commit-tree reconstruction;
 - snapshot archive/manifest/file integrity and tamper rejection;
 - unchanged Taxi/PT/Car fat-JAR inventory checks;
 - external deployment manifest and Linux JDK 25 build interface;

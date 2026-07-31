@@ -1,8 +1,8 @@
-# Stage 8D — Exact-SHA source-snapshot lock-anchor rework
+# Stage 8D — Dynamic exact-SHA snapshot identity rework
 
 | Field | Value |
 |---|---|
-| Exact input | `6ce087af803da1a4b21717c1e0073ce4a04c608a` |
+| Exact input | `c9fc2410fd329c9aceef16b3b7ce627bb74dedb6` |
 | Owner | `INT-EXECUTOR` only |
 | Authority | `INT-SUPERVISOR` |
 | Runner | not authorized |
@@ -10,24 +10,23 @@
 
 ## Objective
 
-Move the source-snapshot anchor to the exact reviewed `6ce087af…` source after
-Runner correctly rejected the prior `3a56bcd…` lock. The new anchor must be
-derived from Git and must not weaken the Git-metadata-free validation path.
+Remove the self-lock loop after Runner correctly rejected the hardcoded prior
+`6ce087af…` source. The Supervisor/Runner command supplies the exact source
+SHA dynamically; Git-backed creation and Git-free verification must prove it
+without weakening any existing guard.
 
 ## Authorized result
 
 - exact seven-file input inventory and SHA256 fail-closed checks;
 - stale v1/pre-Ferry path rejection;
 - original exact clean Git-checkout guard retained unchanged;
-- `git archive` snapshot locked to source commit
-  `6ce087af803da1a4b21717c1e0073ce4a04c608a`, tree
-  `137f00cb10394ce6ff9df657aff8e2de72fb0073` and deterministic Git-blob
-  inventory SHA256
-  `616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5`;
-- prior source SHA `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4`
-  rejected explicitly;
-- out-of-band manifest SHA, archive SHA and 7,620-entry
-  path/mode/blob/size/SHA256 verification before and after extraction;
+- no hardcoded expected source commit/tree/count/inventory constant;
+- Git-backed create embeds the exact commit object and derives its tree and
+  complete deterministic path/mode/blob/size/SHA256 inventory;
+- verification recomputes the commit-object SHA, requires equality with the
+  formal exact-SHA argument and reconstructs that commit's tree;
+- out-of-band manifest SHA and archive/extracted-file verification;
+- prior source identity rejected when it does not match the formal exact SHA;
 - wrong commit/tree/manifest/archive/file/stale-input rejection;
 - current Taxi/PT/Car JAR-class checks;
 - sidecar deployment-manifest contract with build, version and bundle

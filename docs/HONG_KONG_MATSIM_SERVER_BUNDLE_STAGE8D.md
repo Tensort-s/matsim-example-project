@@ -18,18 +18,19 @@ strength:
 
 - `git`: the original clean checkout whose `HEAD` equals the requested SHA;
 - `snapshot`: a Git-metadata-free `git archive` whose sidecar manifest and
-  extracted files reconstruct the locked Git tree exactly.
+  extracted files reconstruct the exact tree named by that commit object.
 
-Snapshot mode is locked to source commit
-`6ce087af803da1a4b21717c1e0073ce4a04c608a` and tree
-`137f00cb10394ce6ff9df657aff8e2de72fb0073`. Its deterministic 7,620-file
-Git blob inventory SHA256 is
-`616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5`.
-The prior snapshot source `3a56bcd14db3c6f815bbc5ac77901c24947b3ae4`
-is an explicit rejected identity, not a fallback. The current contract verifies
-the out-of-band
-manifest SHA256, archive SHA256, 7,620-entry path/mode/blob/size/SHA256
-inventory, reconstructed Git tree, extraction contents and absence of `.git`.
+Snapshot identity is dynamic: no source commit, tree, file count or inventory
+hash is hardcoded in the control script. The formal Supervisor/Runner command
+supplies the full exact source SHA. The Git-backed create command embeds the
+raw Git commit object in the manifest, then derives its tree and complete
+path/mode/blob/size/SHA256 inventory from that Git object. Verification
+recomputes the Git commit-object SHA, requires equality with the supplied
+exact SHA, requires the manifest/tree inventory to reconstruct the commit's
+`tree` header, and checks the out-of-band manifest SHA256, archive SHA256,
+extraction contents and absence of `.git`. Snapshot creation disables
+host-specific `core.autocrlf`/`core.eol` conversion so archive members remain
+the canonical Git blob bytes whose hashes reconstruct that tree.
 Only generated `target/` build output may coexist with the exact extracted
 tracked files. The script also rejects stale v1 or pre-Ferry input paths. A
 release root is mandatory and must be a new path below `/mnt/DiskM/by/`.
@@ -68,7 +69,7 @@ refs:
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
   create-source-snapshot `
-  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a `
+  --source-commit-sha <supervisor-authorized-exact-source-sha> `
   --snapshot-path <new-source-snapshot.tar> `
   --snapshot-manifest <new-source-snapshot-manifest.json>
 ```
@@ -78,14 +79,13 @@ Runner records those values before transfer, copies the reviewed control
 script, archive and manifest to new paths below `/mnt/DiskM/by/`, and verifies
 the archive before extraction:
 
-The control script must come from the exact pushed lock-anchor output reviewed
-after this rework and remain outside the extracted source root. The historical
-copy embedded in source commit `6ce087af…` is snapshot content, not the active
-verification authority.
+The control script must come from the exact pushed dynamic-identity output
+reviewed after this rework and remain outside the extracted source root for
+the pre-extraction check. No prior commit is an implicit fallback.
 
 ```bash
 python3 <reviewed-external-control-script> verify-source-snapshot \
-  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a \
+  --source-commit-sha <supervisor-authorized-exact-source-sha> \
   --source-snapshot <transferred-source-snapshot.tar> \
   --source-snapshot-manifest <transferred-source-manifest.json> \
   --source-snapshot-manifest-sha256 <recorded-manifest-sha256>
@@ -128,7 +128,7 @@ observed Java and Maven versions. MATSim is fixed at `2026.0`.
 ```bash
 python3 <reviewed-external-control-script> build-bundle \
   --source-identity-mode snapshot \
-  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a \
+  --source-commit-sha <supervisor-authorized-exact-source-sha> \
   --source-root <verified-source-root> \
   --source-snapshot <transferred-source-snapshot.tar> \
   --source-snapshot-manifest <transferred-source-manifest.json> \
@@ -146,7 +146,8 @@ fallback.
 The preparation script creates a sidecar deployment manifest after the bundle
 is complete. It records:
 
-- exact source commit and checkout-or-snapshot identity contract;
+- exact source commit, verified Git commit object and checkout-or-snapshot
+  identity contract;
 - source identity mode, exact tree and snapshot/archive/manifest hashes when
   snapshot mode is used;
 - build and prepare commands plus Java, Maven and MATSim versions;

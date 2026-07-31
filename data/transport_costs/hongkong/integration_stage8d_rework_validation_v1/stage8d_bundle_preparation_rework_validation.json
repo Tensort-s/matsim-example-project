@@ -1,8 +1,8 @@
 {
   "schema_version": "hong_kong_stage8d_bundle_preparation_rework_validation_v1",
   "status": "pending_independent_review_and_supervisor_stage_8d_gate",
-  "stage_id": "Stage 8D - Exact-SHA source-snapshot lock-anchor rework",
-  "input_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
+  "stage_id": "Stage 8D - Dynamic exact-SHA snapshot identity rework",
+  "input_commit_sha": "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6",
   "output_commit_identity": "supplied_in_executor_handoff_because_a_commit_cannot_contain_its_own_sha",
   "integration_branch": "integration/hk-multimodal-cost-v1",
   "scope": {
@@ -28,19 +28,19 @@
       "exact_git_tree_snapshot"
     ],
     "clean_source_checkout_guard_preserved": true,
-    "snapshot_source_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
-    "snapshot_source_tree_sha": "137f00cb10394ce6ff9df657aff8e2de72fb0073",
-    "snapshot_tracked_file_count": 7620,
-    "snapshot_git_blob_inventory_sha256": "616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5",
-    "prior_snapshot_source_commit_sha": "3a56bcd14db3c6f815bbc5ac77901c24947b3ae4",
-    "prior_snapshot_source_commit_accepted": false,
+    "hardcoded_snapshot_commit_tree_inventory_anchors_present": false,
+    "snapshot_exact_sha_supplied_by_supervisor_runner_command": true,
+    "snapshot_commit_object_embedded_in_manifest": true,
+    "snapshot_commit_object_sha_recomputed": true,
+    "snapshot_commit_tree_header_enforced": true,
+    "snapshot_host_line_ending_conversion_disabled": true,
     "snapshot_manifest_out_of_band_sha256_required": true,
     "snapshot_archive_sha256_required": true,
     "snapshot_git_tree_reconstruction_required": true,
     "snapshot_extracted_file_verification_required": true,
     "snapshot_git_metadata_allowed": false,
     "snapshot_outputs_inside_git_worktree_allowed": false,
-    "active_control_script_source": "exact_pushed_lock_anchor_output_commit",
+    "active_control_script_source": "exact_pushed_dynamic_identity_output_commit",
     "snapshot_embedded_prior_control_script_authoritative": false,
     "release_root_argument_required": true,
     "release_root_boundary": "/mnt/DiskM/by/<new-release>",
@@ -70,8 +70,9 @@
         "test -z \"$(git status --porcelain=v1)\""
       ],
       "snapshot": [
+        "recompute the embedded Git commit-object SHA and require equality with the Supervisor-supplied exact SHA",
         "verify manifest SHA256 and archive SHA256 before extraction",
-        "reconstruct exact 137f00cb10394ce6ff9df657aff8e2de72fb0073 Git tree from all 7620 member blobs",
+        "reconstruct the commit object's tree from every manifest/archive blob and require exact equality",
         "extract to a new Git-metadata-free source root",
         "verify every extracted tracked file; allow only generated target/ build output"
       ]
@@ -150,25 +151,29 @@
     {
       "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
       "exit_status": 0,
-      "result": "7/7 inputs and config boundary pass; locked 6ce087a inventory 616c9a4 reconstructs the 7620-file 137f00c tree; valid archive and extracted snapshot fixture accepted; prior 3a56bcd, wrong SHA/tree/manifest hash, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
+      "result": "7/7 inputs and config boundary pass; Git-backed exact-input fixture c9fc241 links commit object to 7620-file tree 3114228 and inventory e4f95f6; valid dynamic archive/extracted fixture accepted; prior 6ce087a under the current exact identity, wrong SHA/tree/manifest/commit object, archive tampering, extracted-file tampering, worktree output, stale v1 input and incomplete JAR rejected"
     }
   ],
   "snapshot_validation": {
-    "exact_source_commit_sha": "6ce087af803da1a4b21717c1e0073ce4a04c608a",
-    "exact_source_tree_sha": "137f00cb10394ce6ff9df657aff8e2de72fb0073",
-    "exact_git_blob_inventory_sha256": "616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5",
-    "exact_tracked_file_count": 7620,
-    "exact_snapshot_anchor_fixture_generated_from_git": true,
-    "locked_git_tree_reconstruction_passed": true,
+    "dynamic_identity_enabled": true,
+    "hardcoded_expected_source_identity_present": false,
+    "exact_input_fixture_source_commit_sha": "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6",
+    "exact_input_fixture_source_tree_sha": "3114228a02931c2d7b43a18c971649653d9ceb66",
+    "exact_input_fixture_git_blob_inventory_sha256": "e4f95f66f6d2ce27de4827125c09e42c990f69e954321d223f7320ac77d05324",
+    "exact_input_fixture_tracked_file_count": 7620,
+    "exact_input_commit_object_verified": true,
+    "dynamic_git_tree_reconstruction_passed": true,
+    "canonical_git_blob_archive_bytes_required": true,
     "valid_snapshot_fixture_accepted": true,
     "valid_snapshot_archive_accepted_before_extraction": true,
     "wrong_snapshot_sha_rejected": true,
     "wrong_snapshot_tree_rejected": true,
     "wrong_snapshot_manifest_hash_rejected": true,
+    "tampered_commit_object_rejected": true,
     "snapshot_archive_tampering_rejected": true,
     "extracted_source_tampering_rejected": true,
     "snapshot_output_inside_worktree_rejected": true,
-    "prior_3a56_snapshot_source_sha_rejected": true,
+    "prior_6ce087_commit_object_rejected_under_current_exact_sha": true,
     "stale_v1_input_rejected": true
   },
   "artifact_status": {

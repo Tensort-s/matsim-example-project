@@ -241,31 +241,32 @@ runtime classes. A release root must be supplied explicitly below
 launchers create new run directories only and use `failIfDirectoryExists`.
 Preparing a bundle does not authorize upload or execution.
 
-Create the Git-metadata-free source artifact from the locked reviewed runtime
-commit without changing the current worktree, index or refs. Both new output
-paths must be outside the worktree:
+Create the Git-metadata-free source artifact from the exact SHA named by the
+formal Supervisor/Runner command without changing the current worktree, index
+or refs. Both new output paths must be outside the worktree:
 
 ```powershell
 F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
   .\scripts\hong_kong_single_city\run\prepare_hong_kong_matsim_server_bundle.py `
   create-source-snapshot `
-  --source-commit-sha 6ce087af803da1a4b21717c1e0073ce4a04c608a `
+  --source-commit-sha <supervisor-authorized-exact-source-sha> `
   --snapshot-path <new-source-snapshot.tar> `
   --snapshot-manifest <new-source-snapshot-manifest.json>
 ```
 
-The sidecar records exact tree
-`137f00cb10394ce6ff9df657aff8e2de72fb0073` and Git-blob inventory SHA256
-`616c9a46eec91f103a03bb27d1d6b045135238d81f8db45eafcf7e8c1228d5d5`
-plus every tracked path, mode, Git blob, size and SHA256. A later Runner
-records the printed archive and
-manifest hashes, transfers them only to new server paths, validates before
+The sidecar embeds the Git commit object and records its derived tree plus
+every tracked path, mode, Git blob, size and SHA256. No source SHA/tree/count
+or inventory is hardcoded. Verification recomputes the commit-object SHA and
+requires it to equal the exact command argument, then reconstructs the commit
+tree from canonical Git blob bytes in the archive inventory; snapshot creation
+disables host line-ending conversion. A later Runner records the printed
+archive and manifest hashes, transfers them only to new server paths, validates before
 extraction, extracts into a new Git-free source root and validates that root
 again. The `verify-source-snapshot` command performs both validations; omit
 `--source-root` before extraction and supply it after extraction.
-The verifier used on the server must be the external control script from the
-exact reviewed lock-anchor output commit, not the historical copy embedded in
-the `6ce087af…` source snapshot.
+The pre-extraction verifier used on the server must be the external control
+script from the exact reviewed dynamic-identity output commit. No prior source
+identity is an implicit fallback.
 
 On the authorized Linux server, after checkout or snapshot identity succeeds,
 the exact build command interface is:

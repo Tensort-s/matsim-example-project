@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import base64
 import importlib.util
 import io
 import json
@@ -21,6 +22,8 @@ PREPARER_PATH = Path(__file__).with_name(
 )
 DATA_ROOT = Path(r"F:\Matsim\matsim-example-project\data")
 RELEASE_ROOT = "/mnt/DiskM/by/stage8d_contract_validation_not_deployed"
+EXACT_INPUT_COMMIT_SHA = "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6"
+PRIOR_CONTROL_COMMIT_SHA = "6ce087af803da1a4b21717c1e0073ce4a04c608a"
 
 
 def load_preparer() -> ModuleType:
@@ -99,10 +102,19 @@ def create_fixture_snapshot(
             member.mode = 0o755 if entry["mode"] == "100755" else 0o644
             member.mtime = 0
             archive.addfile(member, io.BytesIO(content))
-    source_commit_sha = "1" * 40
+    commit_payload = (
+        f"tree {tree_sha}\n"
+        "author Stage8D Fixture <fixture@example.invalid> 0 +0000\n"
+        "committer Stage8D Fixture <fixture@example.invalid> 0 +0000\n"
+        "\n"
+        "deterministic snapshot fixture\n"
+    ).encode("utf-8")
+    source_commit_sha = preparer.git_object_sha1("commit", commit_payload)
     manifest = {
         "schema_version": preparer.SOURCE_SNAPSHOT_SCHEMA,
         "source_commit_sha": source_commit_sha,
+        "source_commit_object_base64":
+            base64.b64encode(commit_payload).decode("ascii"),
         "source_tree_sha": tree_sha,
         "source_archive_format": "git_archive_tar",
         "source_archive_sha256": preparer.sha256_file(archive_path),
@@ -129,25 +141,21 @@ def create_fixture_snapshot(
         "manifest_sha256": preparer.sha256_file(manifest_path),
         "manifest": manifest,
         "files": files,
-        "expected_identity": {
-            "expected_commit_sha": source_commit_sha,
-            "expected_tree_sha": tree_sha,
-            "expected_file_count": len(entries),
-            "expected_git_blob_inventory_sha256":
-                manifest["git_blob_inventory_sha256"],
-        },
     }
 
 
 def main() -> None:
     preparer = load_preparer()
-    locked_tree_sha, locked_tree_entries = preparer.read_git_tree_entries(
-        preparer.LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA
+    exact_commit_payload, exact_commit_tree_sha = (
+        preparer.read_git_commit_object(EXACT_INPUT_COMMIT_SHA)
     )
-    if locked_tree_sha != preparer.LOCKED_SNAPSHOT_SOURCE_TREE_SHA:
-        raise AssertionError("Locked source commit tree identity changed")
-    locked_git_blob_inventory_sha256 = (
-        preparer.canonical_git_blob_inventory_sha256(locked_tree_entries)
+    exact_tree_sha, exact_tree_entries = preparer.read_git_tree_entries(
+        EXACT_INPUT_COMMIT_SHA
+    )
+    if exact_tree_sha != exact_commit_tree_sha:
+        raise AssertionError("Exact input commit object and tree inventory disagree")
+    exact_git_blob_inventory_sha256 = (
+        preparer.canonical_git_blob_inventory_sha256(exact_tree_entries)
     )
     sources = preparer.current_input_sources(DATA_ROOT)
     hashes = preparer.verify_current_inputs(sources)
@@ -205,7 +213,6 @@ def main() -> None:
             fixture["archive_path"],
             fixture["manifest_path"],
             fixture["manifest_sha256"],
-            **fixture["expected_identity"],
         )
         valid_snapshot = preparer.verify_source_snapshot(
             fixture["source_commit_sha"],
@@ -213,7 +220,6 @@ def main() -> None:
             fixture["archive_path"],
             fixture["manifest_path"],
             fixture["manifest_sha256"],
-            **fixture["expected_identity"],
         )
         wrong_sha_rejected = expect_rejection(
             lambda: preparer.verify_source_snapshot(
@@ -222,7 +228,6 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                **fixture["expected_identity"],
             ),
             "wrong source commit",
         )
@@ -241,7 +246,6 @@ def main() -> None:
                 fixture["archive_path"],
                 wrong_tree_manifest,
                 preparer.sha256_file(wrong_tree_manifest),
-                **fixture["expected_identity"],
             ),
             "wrong source tree",
         )
@@ -254,7 +258,6 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                **fixture["expected_identity"],
             ),
             "extracted source tampering",
         )
@@ -270,7 +273,6 @@ def main() -> None:
                 tampered_archive,
                 fixture["manifest_path"],
                 fixture["manifest_sha256"],
-                **fixture["expected_identity"],
             ),
             "snapshot archive tampering",
         )
@@ -281,7 +283,6 @@ def main() -> None:
                 fixture["archive_path"],
                 fixture["manifest_path"],
                 "0" * 64,
-                **fixture["expected_identity"],
             ),
             "wrong manifest hash",
         )
@@ -291,13 +292,38 @@ def main() -> None:
             ),
             "source snapshot output inside the Git worktree",
         )
+        prior_commit_payload, _ = preparer.read_git_commit_object(
+            PRIOR_CONTROL_COMMIT_SHA
+        )
         prior_snapshot_sha_rejected = expect_rejection(
-            lambda: preparer.create_source_snapshot(
-                preparer.PRIOR_SNAPSHOT_SOURCE_COMMIT_SHA,
-                temporary / "prohibited-prior-source.tar",
-                temporary / "prohibited-prior-source-manifest.json",
+            lambda: preparer.validate_git_commit_object(
+                EXACT_INPUT_COMMIT_SHA,
+                base64.b64encode(prior_commit_payload).decode("ascii"),
             ),
-            "prior snapshot source SHA",
+            "prior commit object under the current formal exact SHA",
+        )
+        tampered_commit_manifest = temporary / "tampered-commit-manifest.json"
+        tampered_commit = dict(fixture["manifest"])
+        tampered_payload = base64.b64decode(
+            tampered_commit["source_commit_object_base64"]
+        ) + b"tampering"
+        tampered_commit["source_commit_object_base64"] = (
+            base64.b64encode(tampered_payload).decode("ascii")
+        )
+        tampered_commit_manifest.write_text(
+            json.dumps(tampered_commit, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        commit_object_tampering_rejected = expect_rejection(
+            lambda: preparer.verify_source_snapshot(
+                fixture["source_commit_sha"],
+                fixture["source_root"],
+                fixture["archive_path"],
+                tampered_commit_manifest,
+                preparer.sha256_file(tampered_commit_manifest),
+            ),
+            "tampered Git commit object",
         )
     if not incomplete_jar_rejected:
         raise AssertionError("An old/incomplete server JAR was accepted")
@@ -355,21 +381,19 @@ def main() -> None:
         "stale_active_defaults": stale_defaults,
         "stale_v1_input_rejected": stale_input_rejected,
         "incomplete_server_jar_rejected": incomplete_jar_rejected,
-        "locked_snapshot_source_commit_sha":
-            preparer.LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
-        "locked_snapshot_source_tree_sha": locked_tree_sha,
-        "locked_snapshot_tracked_file_count": len(locked_tree_entries),
-        "locked_snapshot_git_blob_inventory_sha256":
-            locked_git_blob_inventory_sha256,
-        "locked_snapshot_anchor_fixture": {
+        "dynamic_exact_input_anchor_fixture": {
             "generated_from_git": True,
-            "source_commit_sha": preparer.LOCKED_SNAPSHOT_SOURCE_COMMIT_SHA,
-            "source_tree_sha": locked_tree_sha,
-            "tracked_file_count": len(locked_tree_entries),
+            "source_commit_sha": EXACT_INPUT_COMMIT_SHA,
+            "source_commit_object_verified": (
+                preparer.git_object_sha1("commit", exact_commit_payload)
+                == EXACT_INPUT_COMMIT_SHA
+            ),
+            "source_tree_sha": exact_tree_sha,
+            "tracked_file_count": len(exact_tree_entries),
             "git_blob_inventory_sha256":
-                locked_git_blob_inventory_sha256,
+                exact_git_blob_inventory_sha256,
         },
-        "locked_git_tree_reconstruction_passed": True,
+        "dynamic_git_tree_reconstruction_passed": True,
         "valid_snapshot_fixture_accepted": bool(valid_snapshot),
         "valid_snapshot_archive_accepted_before_extraction":
             bool(valid_archive),
@@ -381,6 +405,8 @@ def main() -> None:
             wrong_manifest_hash_rejected,
         "snapshot_output_inside_worktree_rejected": worktree_output_rejected,
         "prior_snapshot_source_sha_rejected": prior_snapshot_sha_rejected,
+        "commit_object_tampering_rejected":
+            commit_object_tampering_rejected,
         "server_access_performed": False,
         "bundle_built": False,
     }

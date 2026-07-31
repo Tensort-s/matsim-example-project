@@ -621,3 +621,32 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
 ```
+
+## Entry 19 — Stage 8D dynamic snapshot identity
+
+```yaml
+timestamp: "2026-07-31T22:52:55+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "Stage 8D dynamic snapshot identity"
+input_sha: "c9fc2410fd329c9aceef16b3b7ce627bb74dedb6"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Remove hardcoded snapshot identity anchors and cryptographically bind the formal exact SHA to its embedded Git commit object, derived tree, archive inventory and extracted files."
+findings:
+  - "No expected source commit/tree/file-count/inventory constant remains in the preparation or validation path."
+  - "Create reads the exact Git commit object; verify recomputes its commit SHA and requires equality with the formal exact-SHA argument before accepting its tree."
+  - "The exact-input Git fixture c9fc241 verifies commit object, 7620-file tree 3114228a and blob-inventory SHA256 e4f95f66."
+  - "Prior 6ce087af under the current exact identity, wrong SHA/tree/manifest/commit object and archive/extracted tampering are rejected."
+  - "Seven input hashes, config boundary, JDK/JAR guards and exact-clean-Git mode remain unchanged; no server or run action occurred."
+diagnostics:
+  - "A pre-commit full snapshot attempt was correctly rejected by the unchanged clean-worktree guard while authorized edits were present; no archive was produced."
+  - "The first post-commit full-tree test exposed host core.autocrlf conversion in git archive; snapshot creation now disables host EOL conversion and the exact blob inventory remains the acceptance authority."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_bundle_preparation_rework_validation.json#snapshot_validation"
+  - "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+  - "docs/HONG_KONG_MATSIM_SERVER_BUNDLE_STAGE8D.md#stage-8d-rework-boundary"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed SHA and dispatches Reviewer; Executor waits and does not contact Runner/Reviewer or begin Stage 9."
+```
