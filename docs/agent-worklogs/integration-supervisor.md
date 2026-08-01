@@ -788,3 +788,28 @@ hard_gate_status: "STAGE_8D_EVIDENCE_PATH_CORRECTION_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused path-correction result from 9b1ea886, report only to Supervisor, and wait for exact-SHA review."
 ```
+
+## Entry 27 — CONTROL-PROTOCOL-02 authorization
+
+```yaml
+timestamp: "2026-08-01T12:00:14+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-02 lean delta-only review"
+input_sha: "9f21414fed09f36bdcb76e4f681e77be7ce53587"
+output_sha_or_status: "AUTHORIZED_GOVERNANCE_ONLY"
+decision: "Authorize a prospective canonical lean delta-only review protocol without changing Stage 9 or any runtime artifact."
+findings:
+  - "Reviewer review scope is limited to the current Stage Brief delta at an exact pushed SHA."
+  - "Immutable prior evidence is referenced, not recopied or revalidated unless touched."
+  - "Artifact/deployment review must prove producer-to-consumer dependency closure."
+  - "BLOCKED identities and repeated heartbeat handling require changed hypotheses and deduplication."
+  - "Lane authority and Stage 9 BLOCKED status remain unchanged."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-delta-only-review-protocol"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md"
+blockers: []
+hard_gate_status: "CONTROL_PROTOCOL_02_GOVERNANCE_WRITE_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused governance-only commit from 9f21414f and report only to Supervisor."
+```

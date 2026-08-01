@@ -65,6 +65,48 @@ being reviewed. Supervisor transfers it into the next substantive or
 control-plane write authorization. This avoids recursive log-only review
 cycles while preserving the history.
 
+## Lean delta-only review protocol
+
+This is the canonical prospective review protocol. The reusable compact
+submission and verdict shape is
+[`stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md`](stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md).
+
+1. Reviewer reviews only the current Stage Brief delta at the exact pushed
+   output SHA, compared with its declared exact input SHA and parent.
+2. Immutable evidence already reviewed at a prior exact SHA is cited by
+   `path#field` or `path#section`; it is neither recopied nor revalidated unless
+   the current delta touches that evidence or a named dependency.
+3. Every review separates Hard Gate evidence, Diagnostics and Trends.
+   Diagnostics and Trends do not fail a stage unless evidence ties them to a
+   named hard gate.
+4. Machine results live in committed JSON/CSV or durable server evidence.
+   Prompts, reviews and worklogs cite path plus field and do not paste full
+   command output, logs, manifests or inventories.
+5. Hard gates cover, as applicable: exact output/input/parent and ref identity;
+   allowlisted path scope; stage-specific semantic invariants; required tests
+   and validators; protected refs and inputs; and clean diff, index and working
+   tree.
+6. Artifact and deployment reviews prove producer-to-consumer dependency
+   closure, not merely archive existence. Every executable, path and version
+   required by a launcher must be present in the released artifact and checked
+   by a fail-closed preflight before execution authorization.
+7. Unchanged historical Taxi/PT/Car evidence, prior-stage history and untouched
+   guards are not re-reviewed. Superseded guards remain preserved and
+   non-controlling under the canonical architecture.
+8. Routine Reviewer output contains one decision, at most five findings, at
+   most five diagnostics, one next action and one compact WORKLOG HANDOFF with
+   evidence references.
+9. A `BLOCKED` result records the failing identity, the changed hypothesis or
+   relevant change required before retry, and the next authorized owner. An
+   identical failed run/config/input/command/runtime identity is never repeated.
+10. Repeated heartbeat snapshots with the same blocker are deduplicated. They
+    neither redispatch nor rereport the same action.
+11. Prompts specify objective, boundaries, hard gates, evidence and stop
+    conditions without prescribing ordinary implementation details.
+12. Lane authority is unchanged: Executor is the integration writer, Reviewer
+    is read-only, Runner is inactive unless Supervisor explicitly authorizes an
+    exact execution, and Supervisor alone aggregates messages and gates stages.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |

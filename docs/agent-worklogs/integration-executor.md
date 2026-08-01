@@ -758,3 +758,29 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed path-correction SHA and dispatches Reviewer; Executor waits and does not begin Stage 9."
 ```
+
+## Entry 24 — CONTROL-PROTOCOL-02 lean delta-only review
+
+```yaml
+timestamp: "2026-08-01T12:00:14+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-02 lean delta-only review"
+input_sha: "9f21414fed09f36bdcb76e4f681e77be7ce53587"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Document the canonical prospective delta-only review rules and compact review template without changing lane authority or Stage 9 state."
+findings:
+  - "Policy now limits review to the current Stage Brief delta and exact pushed SHA."
+  - "Hard Gate, Diagnostic and Trend evidence are separated and machine results are referenced by path plus field."
+  - "Deployment review now requires fail-closed producer-to-consumer dependency closure."
+  - "BLOCKED retry identity, changed hypothesis and heartbeat deduplication are explicit."
+  - "No runtime, model, config, input, bundle, server or Stage 9 path changed."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-delta-only-review-protocol"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md"
+  - "agent-lanes.md#canonical-control-plane-sources"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_02_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer or alter Stage 9."
+```
