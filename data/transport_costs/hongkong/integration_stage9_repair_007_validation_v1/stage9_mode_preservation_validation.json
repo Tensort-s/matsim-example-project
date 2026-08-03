@@ -1,0 +1,133 @@
+{
+  "schema_version": "stage9_mode_preservation_validation_v1",
+  "task_id": "STAGE9-REPAIR-MODE-PRESERVATION-007",
+  "blocker_id": "STAGE9-RUNNER-WORKDIR-MODE-001",
+  "exact_input_sha": "f182b24c2b1bffdb216248d50e579275001d1b1b",
+  "failure_identity": {
+    "staging_root": "/mnt/DiskM/by/hk_stage9_f182b2_staging6",
+    "reserved_run_identity": "smoke_qsim_v1_f182b2_run6",
+    "run_started": false,
+    "observed_git_mode": "100755",
+    "observed_extracted_mode": "0775",
+    "failure": "strict pre-Maven wrapper mode guard rejected extracted mode 0775",
+    "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+    "package_performed": false,
+    "bundle_performed": false,
+    "upload_performed": false,
+    "smoke_performed": false
+  },
+  "diagnosis_evidence": {
+    "path": "/mnt/DiskM/by/hk_stage9_f182b2_staging6/evidence/diagnosis_stage9_wrapper_mode.json",
+    "rerun_performed": false,
+    "existing_state_modified": false,
+    "executor_server_access_performed": false
+  },
+  "diagnosis_confidence": {
+    "exact_failure_identity_matched": true,
+    "direct_failure_condition_observed": true,
+    "causal_chain_demonstrated": true,
+    "material_alternatives_checked": true,
+    "repair_hypothesis_testable": true,
+    "root_cause_status": "KNOWN"
+  },
+  "root_cause": "The snapshot/archive extraction path changed mvnw from Git mode 100755 to runtime mode 0775; the strict required-0755 pre-Maven guard stopped the attempt.",
+  "read_only_exact_object_observation": {
+    "command_git_tree": "git ls-tree f182b24c2b1bffdb216248d50e579275001d1b1b -- mvnw",
+    "command_archive": "git -c core.autocrlf=false -c core.eol=lf archive --format=tar f182b24c2b1bffdb216248d50e579275001d1b1b mvnw; inspect member in memory",
+    "git_tree": {
+      "type": "blob",
+      "mode": "100755",
+      "blob_sha1": "19529ddf8c6eaa08c5c75ff80652d21ce4b72f8c"
+    },
+    "unnormalized_archive_member": {
+      "name": "mvnw",
+      "type": "regular_file",
+      "mode": "0775",
+      "size_bytes": 10665,
+      "sha256": "7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad",
+      "accepted": false,
+      "rejection_reason": "archive member mode must be exactly 0755"
+    }
+  },
+  "mode_preservation_contract": {
+    "git_tree_required_mode": "100755",
+    "accepted_archive_required_mode": "0755",
+    "source_root_required_mode": "0755",
+    "build_root_required_mode": "0755",
+    "required_type": "regular_non_symlink_executable",
+    "required_size_bytes": 10665,
+    "required_sha256": "7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad",
+    "archive_normalization_timing": "before archive sealing and acceptance in a new artifact identity",
+    "post_extraction_chmod_allowed": false,
+    "existing_failed_staging_mutation_allowed": false,
+    "mode_0775_allowed": false,
+    "sha_and_mode_continuity_required": true
+  },
+  "deterministic_guard_matrix": [
+    {
+      "case": "exact Git tree regular executable blob 100755",
+      "expected": "accept source identity",
+      "result": "pass"
+    },
+    {
+      "case": "unnormalized archive regular member 0775",
+      "expected": "reject before extraction",
+      "result": "pass"
+    },
+    {
+      "case": "normalized archive regular member 0755 with exact bytes",
+      "expected": "eligible for new-identity extraction",
+      "result": "pass"
+    },
+    {
+      "case": "source_root or build_root mode 0775",
+      "expected": "reject before Maven",
+      "result": "pass"
+    },
+    {
+      "case": "missing, non-executable, symlink, duplicate, wrong-size, wrong-SHA or other mode",
+      "expected": "reject before Maven",
+      "result": "pass"
+    }
+  ],
+  "validation": {
+    "method": "Read-only exact Git-object and tar-member inspection plus a temporary local normalized-tar fixture and static four-boundary mode/SHA contract assertions",
+    "git_tree_mode_check": "pass",
+    "raw_archive_0775_rejection": "pass",
+    "normalized_0755_contract": "pass",
+    "normalized_fixture": {
+      "member_type": "regular_file",
+      "mode": "0755",
+      "size_bytes": 10665,
+      "sha256": "7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad",
+      "accepted": true,
+      "temporary_local_artifact_only": true,
+      "repository_or_server_artifact_created": false
+    },
+    "source_root_and_build_root_0775_rejection": "pass",
+    "workdir_guard_006_preserved": true,
+    "protocol_07_unchanged": true,
+    "maven_executed_by_executor": false,
+    "server_or_stage9_run_performed_by_executor": false
+  },
+  "replacement_identity_required": {
+    "new_repair_sha": true,
+    "new_staging_root": true,
+    "new_bundle_sha": true,
+    "new_release_root": true,
+    "new_run_identity": true,
+    "staging6_release6_run6_or_prior_identity_reuse_allowed": false
+  },
+  "unchanged_contracts": {
+    "protocol_07_confidence_and_budget": true,
+    "java_or_python_runtime_implementation_changed": false,
+    "matsim_config_or_locked_input_changed": false,
+    "bundle_content_or_preparation_script_changed": false,
+    "jdk_contract_changed": false,
+    "server_state_changed_by_executor": false,
+    "runner_authorized": false,
+    "stage_9_execution_authorized": false,
+    "stage_10_or_later_authorized": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

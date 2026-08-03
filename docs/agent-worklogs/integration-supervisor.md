@@ -1270,3 +1270,46 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push one governance-only workdir-guard repair, report only to Supervisor, and stop."
 required_transition: null
 ```
+
+## Entry 40 — Stage 9 mode-preservation repair dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
+input_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch a governance-only source-snapshot wrapper-mode preservation contract; Runner and Stage 9 execution remain unauthorized."
+findings:
+  - "The exact Git tree records mvnw as mode 100755, while staging6 extraction produced mode 0775."
+  - "The strict pre-Maven guard stopped before package, bundle, upload or smoke; reserved run6 did not start."
+  - "Protocol 07 classifies the exact mode mismatch as a KNOWN ordinary technical defect."
+  - "The repair must prove Git 100755 to archive/source_root/build_root 0755 continuity and reject 0775 without mutating staging6."
+  - "A later attempt requires a new repair SHA and new staging, release and run identities."
+diagnostics: []
+evidence_refs:
+  - "/mnt/DiskM/by/hk_stage9_f182b2_staging6/evidence/diagnosis_stage9_wrapper_mode.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_MODE_PRESERVATION_007.md"
+blocker:
+  blocker_id: "STAGE9-RUNNER-WORKDIR-MODE-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+    staging_root: "/mnt/DiskM/by/hk_stage9_f182b2_staging6"
+    reserved_run_identity: "smoke_qsim_v1_f182b2_run6"
+    git_tree_mode: "100755"
+    extracted_mode: "0775"
+  root_cause: "Snapshot/archive extraction changed mvnw from Git 100755 to extracted 0775; the strict required-0755 pre-Maven guard stopped."
+  changed_hypothesis_required_for_retry: "Archive-to-source_root-to-build_root extraction must preserve or establish the exact Git executable mapping as 0755 before Maven and prove it without chmodding an existing failed staging."
+  repair_task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new repair SHA, normalized snapshot archive, staging, bundle, release and run identities"
+  superseded_run_identity: "source f182b24 / staging6 / reserved run6"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push one governance-only mode-preservation repair, report only to Supervisor, and stop."
+required_transition: null
+```

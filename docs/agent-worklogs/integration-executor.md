@@ -1161,3 +1161,37 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 37 — Stage 9 mode-preservation contract
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
+input_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Require exact Git/archive/source_root/build_root wrapper type, mode and byte continuity before Maven."
+findings:
+  - "Exact Git tree mode is 100755 and blob identity is 19529ddf8c6eaa08c5c75ff80652d21ce4b72f8c."
+  - "Read-only exact-object reproduction with the reviewed LF snapshot command found raw archive member mvnw regular with mode 0775, SHA256 7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad and 10,665 bytes; it is rejected."
+  - "Only a new normalized archive member at 0755 may be accepted; extracted source_root and build_root must remain regular, non-symlink, executable 0755 with identical bytes."
+  - "Mode 0775, post-extraction chmod, and mutation or reuse of staging6/release6/run6 are forbidden."
+  - "No Maven, server access, bundle/upload/smoke, Runner contact, Stage 9 execution or Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_007_validation_v1/stage9_mode_preservation_validation.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_MODE_PRESERVATION_007.md"
+  - "/mnt/DiskM/by/hk_stage9_f182b2_staging6/evidence/diagnosis_stage9_wrapper_mode.json"
+blocker:
+  blocker_id: "STAGE9-RUNNER-WORKDIR-MODE-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
+required_transition: null
+```

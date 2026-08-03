@@ -7,29 +7,30 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE9-RUNNER-WORKDIR-GUARD-006"
-  exact_input_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+  transition_id: "AGT-20260803-STAGE9-MODE-PRESERVATION-007"
+  exact_input_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
   closed_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "AUTHORIZED_PRE_BUILD_ATTEMPT"
+    previous_status: "AUTHORIZED_PRE_MAVEN_ATTEMPT"
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    reviewed_output_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    reviewed_output_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
     reviewer_verdict: "BLOCKED"
-    reviewer_verdict_reference: "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json"
+    reviewer_verdict_reference: "/mnt/DiskM/by/hk_stage9_f182b2_staging6/evidence/diagnosis_stage9_wrapper_mode.json"
     verdict_source: "INT-RUNNER failure diagnosis accepted by INT-SUPERVISOR"
     supervisor_gate: "BLOCKED_SUPERSEDED_BY_REPAIR"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "AUTHORIZED_PRE_BUILD_ATTEMPT"
+    previous_status: "AUTHORIZED_PRE_MAVEN_ATTEMPT"
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
-    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
+    source_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+    staging_root: "/mnt/DiskM/by/hk_stage9_f182b2_staging6"
+    reserved_run_identity: "smoke_qsim_v1_f182b2_run6"
   blocker:
-    blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+    blocker_id: "STAGE9-RUNNER-WORKDIR-MODE-001"
     previous_status: "OPEN"
     final_status: "REPAIR_DISPATCHED"
   next_active_task:
-    task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+    task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
     status: "ACTIVE"
     owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
@@ -40,8 +41,8 @@ atomic_gate_transition:
   stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-39--stage-9-runner-workdir-guard-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-36--stage-9-runner-workdir-guard"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-40--stage-9-mode-preservation-repair-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-37--stage-9-mode-preservation-contract"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -54,11 +55,10 @@ last_closed_task:
 superseded_stage9_task:
   task_id: "STAGE9-JOINT-SHORT-SMOKE"
   status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
-  staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
-  runner_cwd: "/home/by"
-  command: "./mvnw --version"
-  failure: "/bin/bash: ./mvnw: No such file or directory"
+  source_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+  staging_root: "/mnt/DiskM/by/hk_stage9_f182b2_staging6"
+  reserved_run_identity: "smoke_qsim_v1_f182b2_run6"
+  failure: "source snapshot/archive extraction changed mvnw from Git 100755 to extracted 0775; strict pre-Maven guard stopped"
   package_performed: false
   bundle_performed: false
   upload_performed: false
@@ -94,22 +94,22 @@ closed_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
   status: "ACTIVE"
   owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md"
+  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_MODE_PRESERVATION_007.md"
 
 active_blocker:
-  blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+  blocker_id: "STAGE9-RUNNER-WORKDIR-MODE-001"
   status: "REPAIR_DISPATCHED"
   failure_identity:
-    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
-    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
-    snapshot_build_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root"
-    runner_cwd: "/home/by"
-    command: "./mvnw --version"
-    failure: "/bin/bash: ./mvnw: No such file or directory"
-  root_cause: "Runner invoked the relative Maven wrapper from /home/by instead of the exact snapshot build_root containing executable mvnw."
+    source_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+    staging_root: "/mnt/DiskM/by/hk_stage9_f182b2_staging6"
+    reserved_run_identity: "smoke_qsim_v1_f182b2_run6"
+    git_tree_mode: "100755"
+    extracted_mode: "0775"
+    failure: "strict pre-Maven mode guard stopped before build"
+  root_cause: "The source snapshot/archive extraction path changed mvnw from Git mode 100755 to extracted runtime mode 0775 instead of the required 0755."
   diagnosis_confidence:
     exact_failure_identity_matched: true
     direct_failure_condition_observed: true
@@ -117,19 +117,19 @@ active_blocker:
     material_alternatives_checked: true
     repair_hypothesis_testable: true
     root_cause_status: "KNOWN"
-  changed_hypothesis_required_for_retry: "Every wrapper/build command must use an absolute snapshot build_root, cd there first, and record pwd plus wrapper path, SHA256 and mode before Maven."
-  repair_task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  changed_hypothesis_required_for_retry: "The archive-to-source_root-to-build_root path must preserve the Git executable mapping as exact archive/runtime mode 0755 and prove type, mode and byte identity before Maven; 0775 fails closed."
+  repair_task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
   repair_owner: "INT-EXECUTOR"
   replacement_identity_required:
     - "new pushed repair SHA"
-    - "new staging root; never reuse /mnt/DiskM/by/hk_stage9_e58861_staging5"
+    - "new normalized snapshot archive and staging root; never reuse /mnt/DiskM/by/hk_stage9_f182b2_staging6"
     - "new bundle and release identity"
-    - "new run identity"
+    - "new run identity; never reuse smoke_qsim_v1_f182b2_run6"
   superseded_run_identity:
-    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
-    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
-    command: "./mvnw --version from /home/by"
-  diagnosis_evidence: "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json"
+    source_sha: "f182b24c2b1bffdb216248d50e579275001d1b1b"
+    staging_root: "/mnt/DiskM/by/hk_stage9_f182b2_staging6"
+    reserved_run_identity: "smoke_qsim_v1_f182b2_run6"
+  diagnosis_evidence: "/mnt/DiskM/by/hk_stage9_f182b2_staging6/evidence/diagnosis_stage9_wrapper_mode.json"
   runner_authorized: false
 
 protocol_06:
@@ -188,7 +188,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  task_id: "STAGE9-REPAIR-MODE-PRESERVATION-007"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -196,12 +196,13 @@ control_transition_review:
 
 ## Canonical interpretation
 
-Protocol 07 classified the staging5 cwd omission as a `KNOWN` ordinary
-technical defect. The failed Stage 9 attempt is
+Protocol 07 classified the staging6 wrapper-mode mismatch as a `KNOWN`
+ordinary technical defect. The failed Stage 9 attempt is
 `BLOCKED_SUPERSEDED_BY_REPAIR`; package, bundle, upload and smoke did not run.
-The active bounded repair adds only the absolute build-root command and
-preflight contract. Earlier release3/run3 evidence remains preserved in the
-closed dependency blocker and append-only worklogs.
+The active bounded repair defines only the immutable source-snapshot mode and
+identity-continuity contract: Git `100755` maps to archive/runtime `0755`, and
+the observed raw archive mode `0775` fails closed. Earlier failure evidence
+remains preserved in append-only worklogs.
 
 Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
@@ -211,5 +212,6 @@ work is authorized.
 
 Executor pushes this one bounded governance repair commit and reports only to
 Supervisor. Supervisor verifies its exact SHA, parent and scope before one
-read-only review. Any later Stage 9 attempt requires a separate authorization
-and new source, staging, bundle, release and run identities.
+read-only review. Any later Stage 9 attempt requires a separate authorization,
+a newly normalized and verified snapshot archive, and new source, staging,
+bundle, release and run identities.

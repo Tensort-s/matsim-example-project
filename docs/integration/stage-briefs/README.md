@@ -13,10 +13,13 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md)
+- [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md)
 
 Blocked/superseded briefs:
 
+- [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md) —
+  its absolute-cwd guard remains valid; the next identity exposed a distinct
+  archive-to-runtime wrapper-mode mismatch before Maven.
 - [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md) —
   `BLOCKED_SUPERSEDED_BY_REPAIR`; no Runner execution is authorized.
 - [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md) —
