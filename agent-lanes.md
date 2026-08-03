@@ -22,17 +22,18 @@ and evidence are read from these canonical paths:
 - [Integration policy](docs/integration/INTEGRATION_POLICY.md)
 - [Lean delta-only review protocol and template](docs/integration/stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md)
 - [Blocker-to-repair transition protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md)
+- [Protocol 02/03 schema consistency](docs/integration/stage-briefs/CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md)
 - [Current stage](docs/integration/CURRENT_STAGE.md)
 - [Hub-and-spoke messaging protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
 - [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
 - [Stage-brief index](docs/integration/stage-briefs/README.md)
 
 The policy defines the compact command/worklog schemas, lane-specific output
-budgets, evidence-by-reference rules, canonical delta-only review protocol and
-mandatory blocker-to-repair transition. The templates apply those rules
-without changing lane authority. The current-stage file identifies the
-authorized exact input and next handoff. These links do not change any lane
-identity, authority or write scope below.
+budgets, evidence-by-reference rules, canonical delta-only review protocol,
+mandatory blocker-to-repair transition and their synchronized Reviewer/state
+schemas. The templates apply those rules without changing lane authority. The
+current-stage file identifies the authorized exact input and next handoff.
+These links do not change any lane identity, authority or write scope below.
 
 ## Authority and evidence boundary
 

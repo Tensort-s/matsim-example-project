@@ -810,3 +810,29 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_03
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer, Runner or Stage 9."
 ```
+
+## Entry 26 — CONTROL-PROTOCOL-04 schema consistency
+
+```yaml
+timestamp: "2026-08-03T15:57:38+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-04_PROTOCOL_02_03_SCHEMA_CONSISTENCY"
+input_sha: "fb06546f806819020ad40e751dad26cabfa718af"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Synchronize Protocol 02/03 Reviewer output, diagnosis, escalation, blocker-ID and Supervisor transition schemas as governance only."
+findings:
+  - "Reviewer output now uses next_action_summary plus nullable required_transition without contradictory dispatch semantics."
+  - "DIAGNOSIS_DISPATCHED and diagnosis-to-repair transitions are explicit and cannot directly rerun."
+  - "Missing-dispatch escalation persists emitted/emitted_at/escalation_id exactly once."
+  - "Supervisor owns canonical blocker IDs, UNDER_REVIEW dispatch and CLOSED transition."
+  - "The complete non-authorizing example keeps Runner false and does not instantiate Stage 9/JDK repair."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_04_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer or alter Runner/Stage 9."
+```

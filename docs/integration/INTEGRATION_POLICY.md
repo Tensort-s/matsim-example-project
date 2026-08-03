@@ -94,16 +94,23 @@ submission and verdict shape is
    guards are not re-reviewed. Superseded guards remain preserved and
    non-controlling under the canonical architecture.
 8. Routine Reviewer output contains one decision, at most five findings, at
-   most five diagnostics, one next action and one compact WORKLOG HANDOFF with
-   evidence references.
-9. A `BLOCKED` result records the failing identity, the changed hypothesis or
+   most five diagnostics, one `next_action_summary`, one nullable
+   `required_transition`, and one compact WORKLOG HANDOFF with evidence
+   references.
+9. Reviewer output is one unambiguous union. Ordinary `PASS` and results outside
+   CONTROL-PROTOCOL-03 use a short `next_action_summary` with
+   `required_transition: null`. A technical `BLOCKED` governed by
+   CONTROL-PROTOCOL-03 must use its structured `required_transition`; that
+   structure overrides the summary for dispatch semantics, and the two fields
+   must not contradict each other.
+10. A `BLOCKED` result records the failing identity, the changed hypothesis or
    relevant change required before retry, and the next authorized owner. An
    identical failed run/config/input/command/runtime identity is never repeated.
-10. Repeated heartbeat snapshots with the same blocker are deduplicated. They
+11. Repeated heartbeat snapshots with the same blocker are deduplicated. They
     neither redispatch nor rereport the same action.
-11. Prompts specify objective, boundaries, hard gates, evidence and stop
+12. Prompts specify objective, boundaries, hard gates, evidence and stop
     conditions without prescribing ordinary implementation details.
-12. Lane authority is unchanged: Executor is the integration writer, Reviewer
+13. Lane authority is unchanged: Executor is the integration writer, Reviewer
     is read-only, Runner is inactive unless Supervisor explicitly authorizes an
     exact execution, and Supervisor alone aggregates messages and gates stages.
 
@@ -113,40 +120,67 @@ CONTROL-PROTOCOL-03 extends the lean delta-only review protocol. Its canonical
 schemas and worked example are in
 [`stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md`](stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md).
 
-1. Every technical blocker has one stable, unique `blocker_id` and records:
-   `status`, `failure_identity`, `root_cause`,
-   `changed_hypothesis_required_for_retry`, `repair_task_id`, `repair_owner`,
-   `replacement_identity_required`, and `superseded_run_identity`.
-2. Supported blocker states are `OPEN`, `REPAIR_DISPATCHED`, `UNDER_REVIEW`,
-   `CLOSED`, and `ESCALATED_TO_USER`. State changes are append-only audit
-   events; earlier records are not rewritten.
-3. For a technical `BLOCKED` result with a known root cause and an executable,
+1. Supervisor creates or confirms the canonical `blocker_id` when it accepts
+   the first `BLOCKED` result. The format is
+   `STAGE-DOMAIN-ROOT_CAUSE-SEQUENCE`: uppercase; fixed token order; spaces,
+   slashes and underscores normalized to one hyphen; repeated separators
+   collapsed; and sequence zero-padded. The active-stage blocker record is
+   authoritative.
+2. Every technical blocker records `blocker_id`, `status`, `failure_identity`,
+   `root_cause`, `changed_hypothesis_required_for_retry`, `diagnosis_task_id`,
+   `repair_task_id`, `repair_owner`, `replacement_identity_required`,
+   `superseded_run_identity`, and persisted `missing_dispatch_escalation`
+   fields `emitted`, `emitted_at`, and `escalation_id`.
+3. Supported blocker states are `OPEN`, `DIAGNOSIS_DISPATCHED`,
+   `REPAIR_DISPATCHED`, `UNDER_REVIEW`, `CLOSED`, and `ESCALATED_TO_USER`.
+   State changes are append-only audit events; earlier records are not
+   rewritten.
+4. For a technical `BLOCKED` result with a known root cause and an executable,
    verifiable repair, Supervisor's next effective action is
    `CREATE_REPAIR_STAGE`. If the root cause is unknown, the next effective
    action is `CREATE_DIAGNOSIS_STAGE`. Repeating the blocker heartbeat is not a
    valid next action.
-4. Once Supervisor issues the repair or diagnosis stage, the prior active stage
-   becomes `BLOCKED_SUPERSEDED_BY_REPAIR` (or
-   `BLOCKED_SUPERSEDED_BY_DIAGNOSIS`) and is no longer the active task.
-5. Heartbeats are keyed by `blocker_id`. The same blocker at
-   `REPAIR_DISPATCHED` or `UNDER_REVIEW` is silently deduplicated. The same
-   blocker at `OPEN` with no `repair_task_id` emits exactly one
-   `MISSING_REPAIR_DISPATCH` escalation to Supervisor and is not silently
-   deduplicated.
-6. Reviewer `next_action` contains `required_transition` with `action`,
-   `blocker_id`, `owner`, `repair_owner`, and `runner_authorized`. Reviewer
-   reports it only to Supervisor; it is not itself execution authority.
-7. A repair-stage brief supplies a new `task_id`, exact input SHA, allowed
+5. Unknown cause transitions `OPEN -> DIAGNOSIS_DISPATCHED`. A diagnosis result
+   never directly authorizes a rerun; Supervisor must issue a repair stage,
+   producing `DIAGNOSIS_DISPATCHED -> REPAIR_DISPATCHED`. A known cause may
+   transition directly `OPEN -> REPAIR_DISPATCHED`.
+6. A diagnosis or repair dispatch changes the prior stage to
+   `BLOCKED_SUPERSEDED_BY_DIAGNOSIS` or `BLOCKED_SUPERSEDED_BY_REPAIR` and makes
+   the new bounded task active.
+7. The first repeated `OPEN` heartbeat with no diagnosis/repair task emits one
+   `MISSING_REPAIR_DISPATCH` and atomically persists
+   `missing_dispatch_escalation.emitted: true`, `emitted_at`, and a stable
+   `escalation_id` in the append-only worklog. Further identical heartbeats are
+   deduplicated. Only a substantive root-cause or failure-identity change, or a
+   formal dispatch state change, permits a new audit event; dispatch does not
+   reset the exactly-once escalation fields.
+8. Heartbeats deduplicate by canonical `blocker_id` plus failure identity.
+   Case, separator, token-order, timestamp, directory, log-path, or attempt
+   differences are non-substantive and reuse the ID. A new ID is created only
+   for a substantively different root-cause class or failure identity. A
+   diagnosis refining `UNKNOWN` within the same observed causal class keeps the
+   existing ID. A repaired replacement identity remains attached to the same
+   blocker unless a new attempt fails with a substantively different cause.
+9. For technical `BLOCKED`, Reviewer sets the CONTROL-PROTOCOL-02
+   `required_transition` fields `action`, `blocker_id`, `owner`,
+   `repair_owner`, and `runner_authorized`. It reports PASS/BLOCKED and evidence
+   only to Supervisor; the transition request is not execution authority.
+10. A repair-stage brief supplies a new `task_id`, exact input SHA, allowed
    paths, objective, hard gates, evidence, stop conditions, replacement run
    identity requirements, and `runner_authorized: false`. Only a later,
    separate Supervisor dispatch may authorize Runner.
-8. A new directory alone never changes a failed identity. A retry authorization
+11. Executor push does not set `UNDER_REVIEW`; the blocker remains
+    `REPAIR_DISPATCHED` pending verification. Supervisor verifies exact output
+    SHA and parent, formally dispatches Reviewer, and only then records
+    `UNDER_REVIEW`. Reviewer cannot close the blocker. Only Supervisor records
+    `CLOSED` after consuming the verdict.
+12. A new directory alone never changes a failed identity. A retry authorization
    proves at least one related identity changed: commit, bundle, config, input,
    command, runtime environment, or verified dependency-closure repair.
-9. `CLOSED` requires reviewed repair evidence and Supervisor gate closure.
+13. `CLOSED` requires reviewed repair evidence and Supervisor gate closure.
    A blocker requiring model-policy or user authority transitions to
    `ESCALATED_TO_USER`, not an inferred technical repair.
-10. Supervisor-only dispatch/gate authority and Executor-only integration-write
+14. Supervisor-only dispatch/gate authority and Executor-only integration-write
     authority remain unchanged throughout the transition.
 
 ## Canonical control-plane sources

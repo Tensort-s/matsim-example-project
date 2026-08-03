@@ -838,3 +838,28 @@ hard_gate_status: "CONTROL_PROTOCOL_03_GOVERNANCE_WRITE_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused governance-only commit from d5625084 and report only to Supervisor."
 ```
+
+## Entry 29 — CONTROL-PROTOCOL-04 authorization
+
+```yaml
+timestamp: "2026-08-03T15:57:38+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-04_PROTOCOL_02_03_SCHEMA_CONSISTENCY"
+input_sha: "fb06546f806819020ad40e751dad26cabfa718af"
+output_sha_or_status: "AUTHORIZED_GOVERNANCE_ONLY"
+decision: "Authorize one focused consistency repair for the Protocol 02 Reviewer union and Protocol 03 blocker state machine."
+findings:
+  - "Synchronize short action summaries with nullable structured transitions and prohibit contradictions."
+  - "Add DIAGNOSIS_DISPATCHED and diagnosis-to-repair transition semantics."
+  - "Persist exactly-once missing-dispatch escalation fields and canonical blocker-ID authority."
+  - "Reserve UNDER_REVIEW and CLOSED transitions to Supervisor after exact-SHA verification and review dispatch."
+  - "CURRENT_STAGE, Stage 9 and Runner authorization must remain unchanged."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md"
+  - "docs/integration/INTEGRATION_POLICY.md#blocker-to-repair-state-transition"
+blockers: []
+hard_gate_status: "CONTROL_PROTOCOL_04_GOVERNANCE_WRITE_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused governance-only commit from fb06546f and report only to Supervisor."
+```

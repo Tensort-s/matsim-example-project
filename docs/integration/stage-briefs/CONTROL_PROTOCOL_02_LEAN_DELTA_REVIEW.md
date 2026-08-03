@@ -49,8 +49,14 @@ WORKLOG_HANDOFF:
   hard_gate_status: PASS_or_BLOCKED
   next_authorized_owner: INT-SUPERVISOR
   handoff_to: INT-SUPERVISOR
-  next_action: one_action
+  next_action_summary: one_short_noncontradictory_summary
+  required_transition: null_or_CONTROL_PROTOCOL_03_structure
 ```
+
+This is a union: ordinary `PASS` and results outside CONTROL-PROTOCOL-03 set
+`required_transition: null`. A technical `BLOCKED` under CONTROL-PROTOCOL-03
+must supply the structured transition defined there. The structured transition
+controls dispatch semantics and must not contradict `next_action_summary`.
 
 Immutable earlier evidence is referenced, not copied. Untouched historical
 Taxi/PT/Car evidence and guards are out of delta. For artifact or deployment
