@@ -1,0 +1,122 @@
+{
+  "schema_version": "stage9_shaded_jar_dependency_closure_validation_v1",
+  "task_id": "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005",
+  "blocker_id": "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001",
+  "exact_input_sha": "c129c18fe5996ef38740c454f7f0482c4ffe4695",
+  "failed_identity": {
+    "source_sha": "c129c18fe5996ef38740c454f7f0482c4ffe4695",
+    "bundle_sha256": "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45",
+    "release_root": "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3",
+    "run_identity": "smoke_qsim_v1_c129c1_run3",
+    "failure": "NoClassDefFoundError org/matsim/core/controler/AbstractModule",
+    "status": "BLOCKED_SUPERSEDED_BY_REPAIR"
+  },
+  "root_cause": {
+    "maven_artifacts": [
+      {
+        "path": "<build_root>/target/matsim-example-project-0.0.1-SNAPSHOT.jar",
+        "kind": "thin project JAR",
+        "approximate_size": "454 KB",
+        "deployment_allowed": false
+      },
+      {
+        "path": "<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar",
+        "kind": "Maven Shade fat JAR",
+        "approximate_size": "300 MB",
+        "deployment_allowed": true
+      }
+    ],
+    "cause": "Bundle preparation accepted the arbitrary target/ thin JAR, which contained project classes but omitted MATSim dependencies."
+  },
+  "deployment_jar_contract": {
+    "cli_input": "--build-root",
+    "selected_relative_path": "matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "arbitrary_fat_jar_argument_allowed": false,
+    "target_thin_jar_rejected": true,
+    "required_project_class_count": 7,
+    "required_dependency_class_count": 6,
+    "required_dependency_classes": [
+      "org/matsim/core/controler/AbstractModule.class",
+      "org/matsim/core/controler/Controler.class",
+      "org/matsim/core/config/ConfigUtils.class",
+      "ch/sbb/matsim/routing/pt/raptor/SwissRailRaptorModule.class",
+      "org/duckdb/DuckDBDriver.class",
+      "com/google/inject/Guice.class"
+    ]
+  },
+  "sha_identity_continuity": {
+    "required_chain": [
+      "built root Shade JAR SHA256",
+      "staged/final release app JAR SHA256",
+      "bundle app JAR SHA256"
+    ],
+    "all_equal_required": true,
+    "bundle_manifest_records_chain": true,
+    "final_release_worker_rechecks_built_sha": true,
+    "tamper_rejection_tested": true
+  },
+  "class_loading_preflight": {
+    "java": "runtime/jdk-25/bin/java",
+    "classpath": "app/matsim-example-project-0.0.1-SNAPSHOT.jar only",
+    "source": "scripts/RuntimeDependencyPreflight.java",
+    "class_initialization": false,
+    "config_loaded": false,
+    "matsim_main_started": false,
+    "runs_before_matsim_worker_command": true,
+    "fail_closed_errors": [
+      "ClassNotFoundException",
+      "NoClassDefFoundError",
+      "LinkageError",
+      "missing success marker"
+    ]
+  },
+  "validation": {
+    "python_interpreter": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe",
+    "commands": [
+      "python -m py_compile scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_shaded_jar_contract.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_shaded_jar_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+    ],
+    "shaded_jar_contract": {
+      "schema_version": "stage9_shaded_jar_dependency_contract_test_v1",
+      "status": "pass",
+      "checks_passed": 20,
+      "checks_total": 20
+    },
+    "runtime_jdk_contract": {
+      "schema_version": "stage8d_r1_runtime_jdk_contract_test_v3",
+      "status": "pass",
+      "checks_passed": 40,
+      "checks_total": 40
+    },
+    "existing_server_bundle_contract": {
+      "status": "passed",
+      "locked_input_count": 7,
+      "stale_active_defaults": [],
+      "server_access_performed": false,
+      "bundle_built": false
+    }
+  },
+  "unchanged_contracts": {
+    "approved_jdk_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "jdk_version": "25.0.3",
+    "locked_input_count": 7,
+    "java_model_or_scoring_changed": false,
+    "matsim_config_or_input_changed": false,
+    "taxi_pt_car_cost_semantics_changed": false,
+    "server_access_performed_by_executor": false,
+    "bundle_or_release_produced_by_executor": false,
+    "runner_invoked": false,
+    "stage9_run_performed": false,
+    "stage10_or_later_started": false
+  },
+  "replacement_identity_required": {
+    "new_pushed_source_sha": true,
+    "new_bundle_sha": true,
+    "new_release_root": true,
+    "new_run_identity": true,
+    "reuse_release3_or_run3_allowed": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

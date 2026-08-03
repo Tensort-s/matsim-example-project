@@ -44,6 +44,9 @@ APPROVED_JDK_ARCHIVE_SHA256 = (
 )
 RUNTIME_JDK_RELATIVE = "runtime/jdk-25"
 RUNTIME_JAVA_RELATIVE = "runtime/jdk-25/bin/java"
+APPLICATION_JAR_NAME = "matsim-example-project-0.0.1-SNAPSHOT.jar"
+APPLICATION_JAR_RELATIVE = f"app/{APPLICATION_JAR_NAME}"
+DEPENDENCY_PREFLIGHT_SOURCE_RELATIVE = "scripts/RuntimeDependencyPreflight.java"
 SOURCE_SNAPSHOT_SCHEMA = "hong_kong_exact_git_tree_source_snapshot_v1"
 LOCKED_INPUT_PACK_SCHEMA = "hong_kong_external_locked_input_pack_v1"
 EXTERNAL_LOCKED_INPUT_PACK_MODE = "external_locked_input_pack"
@@ -84,6 +87,18 @@ REQUIRED_RUNTIME_CLASSES = (
     "HongKongCarMarginalCostScoringComponentFactory.class",
     "org/matsim/project/hongkong/scoring/"
     "HongKongMultimodalScoringFunctionFactory.class",
+)
+REQUIRED_DEPENDENCY_CLASSES = (
+    "org/matsim/core/controler/AbstractModule.class",
+    "org/matsim/core/controler/Controler.class",
+    "org/matsim/core/config/ConfigUtils.class",
+    "ch/sbb/matsim/routing/pt/raptor/SwissRailRaptorModule.class",
+    "org/duckdb/DuckDBDriver.class",
+    "com/google/inject/Guice.class",
+)
+REQUIRED_DEPLOYMENT_CLASSES = (
+    *REQUIRED_RUNTIME_CLASSES,
+    *REQUIRED_DEPENDENCY_CLASSES,
 )
 SMOKE_PERSON_COUNT = 7_716
 
@@ -915,18 +930,141 @@ def resolve_input_contract(
     )
 
 
+def resolve_deployment_jar(build_root: Path) -> Path:
+    if not build_root.is_dir():
+        raise NotADirectoryError(build_root)
+    expected = build_root / APPLICATION_JAR_NAME
+    thin = build_root / "target" / APPLICATION_JAR_NAME
+    if not expected.is_file():
+        if thin.is_file():
+            raise ValueError(
+                "Refusing target/ thin JAR; Maven Shade deployment artifact "
+                f"must be {expected}"
+            )
+        raise FileNotFoundError(expected)
+    if expected.is_symlink() or expected.parent.resolve() != build_root.resolve():
+        raise ValueError(
+            f"Deployment JAR must be a direct regular child of build root: {expected}"
+        )
+    return expected
+
+
 def verify_fat_jar(path: Path) -> tuple[str, list[str]]:
     if not path.is_file():
         raise FileNotFoundError(path)
+    if path.is_symlink():
+        raise ValueError(f"Deployment JAR cannot be a symbolic link: {path}")
     with zipfile.ZipFile(path) as archive:
         names = set(archive.namelist())
-    missing = [name for name in REQUIRED_RUNTIME_CLASSES if name not in names]
+    missing = [name for name in REQUIRED_DEPLOYMENT_CLASSES if name not in names]
     if missing:
         raise ValueError(
-            "Fat JAR is missing Stage 8C Taxi/PT/Car runtime classes: "
+            "Shade fat JAR is missing required project/dependency classes: "
             + ", ".join(missing)
         )
-    return sha256_file(path), list(REQUIRED_RUNTIME_CLASSES)
+    return sha256_file(path), list(REQUIRED_DEPLOYMENT_CLASSES)
+
+
+def verify_release_application_contract(
+    release_root: Path,
+    expected_sha256: str,
+) -> dict[str, Any]:
+    validate_sha256(expected_sha256, "expected application JAR SHA256")
+    jar_path = release_root / APPLICATION_JAR_RELATIVE
+    observed_sha256, required_classes = verify_fat_jar(jar_path)
+    if observed_sha256 != expected_sha256:
+        raise ValueError(
+            f"Release application JAR checksum mismatch: {observed_sha256}"
+        )
+    return {
+        "release_app_jar": APPLICATION_JAR_RELATIVE,
+        "release_app_jar_sha256": observed_sha256,
+        "required_class_count": len(required_classes),
+        "required_classes": required_classes,
+        "built_to_release_sha256_equal": True,
+    }
+
+
+def dependency_preflight_source() -> str:
+    class_names = [
+        path.removesuffix(".class").replace("/", ".")
+        for path in REQUIRED_DEPLOYMENT_CLASSES
+    ]
+    values = ",\n".join(f'        "{name}"' for name in class_names)
+    return f"""public final class RuntimeDependencyPreflight {{
+  private static final String[] REQUIRED_CLASSES = {{
+{values}
+  }};
+
+  public static void main(String[] args) {{
+    ClassLoader loader = RuntimeDependencyPreflight.class.getClassLoader();
+    for (String className : REQUIRED_CLASSES) {{
+      try {{
+        Class.forName(className, false, loader);
+      }} catch (ClassNotFoundException error) {{
+        fail("ClassNotFoundException", className, error);
+      }} catch (NoClassDefFoundError error) {{
+        fail("NoClassDefFoundError", className, error);
+      }} catch (LinkageError error) {{
+        fail("LinkageError", className, error);
+      }}
+    }}
+    System.out.println("dependency_preflight_passed=" + REQUIRED_CLASSES.length);
+  }}
+
+  private static void fail(String kind, String className, Throwable error) {{
+    System.err.println(kind + ": " + className + ": " + error);
+    System.exit(101);
+  }}
+}}
+"""
+
+
+def run_release_class_preflight(
+    java_path: Path,
+    jar_path: Path,
+    source_path: Path,
+    runner: Any = None,
+) -> dict[str, Any]:
+    if not java_path.is_file():
+        raise FileNotFoundError(java_path)
+    if not jar_path.is_file():
+        raise FileNotFoundError(jar_path)
+    if not source_path.is_file():
+        raise FileNotFoundError(source_path)
+    command = [
+        str(java_path),
+        "--class-path",
+        str(jar_path),
+        str(source_path),
+    ]
+    completed = (runner or subprocess.run)(
+        command,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    output = "\n".join(
+        value.strip()
+        for value in (completed.stdout or "", completed.stderr or "")
+        if value.strip()
+    )
+    expected_marker = (
+        f"dependency_preflight_passed={len(REQUIRED_DEPLOYMENT_CLASSES)}"
+    )
+    if completed.returncode != 0 or expected_marker not in output:
+        raise ValueError(
+            "Runtime dependency class-loading preflight failed "
+            f"({completed.returncode}): {output}"
+        )
+    return {
+        "command": command,
+        "status": "passed",
+        "required_class_count": len(REQUIRED_DEPLOYMENT_CLASSES),
+        "class_initialization_performed": False,
+        "matsim_main_started": False,
+        "output": output,
+    }
 
 
 def validate_jdk_archive_layout(
@@ -1301,6 +1439,49 @@ def verify_bundle_runtime_contract(bundle_path: Path) -> dict[str, Any]:
     }
 
 
+def verify_bundle_application_contract(
+    bundle_path: Path,
+    expected_sha256: str,
+) -> dict[str, Any]:
+    if not bundle_path.is_file():
+        raise FileNotFoundError(bundle_path)
+    validate_sha256(expected_sha256, "expected bundled application JAR SHA256")
+    with tarfile.open(bundle_path, "r:*") as archive:
+        try:
+            jar_member = archive.getmember(APPLICATION_JAR_RELATIVE)
+        except KeyError as error:
+            raise ValueError(
+                f"Bundle is missing {APPLICATION_JAR_RELATIVE}"
+            ) from error
+        if not jar_member.isfile():
+            raise ValueError(
+                f"Bundled application JAR is not a regular file: "
+                f"{APPLICATION_JAR_RELATIVE}"
+            )
+        source = archive.extractfile(jar_member)
+        if source is None:
+            raise ValueError(
+                f"Cannot read bundled application JAR: {APPLICATION_JAR_RELATIVE}"
+            )
+        digest = hashlib.sha256()
+        with source:
+            for block in iter(lambda: source.read(1024 * 1024), b""):
+                digest.update(block)
+    observed_sha256 = digest.hexdigest()
+    if observed_sha256 != expected_sha256:
+        raise ValueError(
+            f"Bundled application JAR checksum mismatch: {observed_sha256}"
+        )
+    return {
+        "bundle_app_jar": APPLICATION_JAR_RELATIVE,
+        "bundle_app_jar_sha256": observed_sha256,
+        "required_class_count": len(REQUIRED_DEPLOYMENT_CLASSES),
+        "required_classes": list(REQUIRED_DEPLOYMENT_CLASSES),
+        "class_inventory_anchored_by_built_jar_sha256": True,
+        "built_to_bundle_sha256_equal": True,
+    }
+
+
 def assert_new_path(path: Path) -> None:
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite existing path: {path}")
@@ -1448,7 +1629,11 @@ def write_server_config(
         handle.write("\n")
 
 
-def worker_script(release_root: str, config_name: str) -> str:
+def worker_script(
+    release_root: str,
+    config_name: str,
+    expected_jar_sha256: str,
+) -> str:
     return f"""#!/usr/bin/env bash
 set -euo pipefail
 ROOT={release_root!r}
@@ -1462,6 +1647,8 @@ export XDG_CACHE_HOME="$ROOT/home/.cache"
 export JAVA_HOME="$ROOT/runtime/jdk-25"
 export PATH="$JAVA_HOME/bin:/usr/bin:/bin"
 export JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=$ROOT/tmp -Djava.util.prefs.userRoot=$ROOT/home/.java"
+APP_JAR="$ROOT/{APPLICATION_JAR_RELATIVE}"
+PREFLIGHT_SOURCE="$ROOT/{DEPENDENCY_PREFLIGHT_SOURCE_RELATIVE}"
 if ! test -x "$JAVA_HOME/bin/java"; then
   printf '%s\n' "Missing or non-executable runtime Java: $JAVA_HOME/bin/java" >&2
   exit 91
@@ -1474,9 +1661,27 @@ case "$java_version_output" in
   *'version "{APPROVED_JAVA_VERSION}"'*) ;;
   *) printf '%s\n' "Unexpected runtime Java version: $java_version_output" >&2; exit 93 ;;
 esac
+if ! test -f "$APP_JAR"; then
+  printf '%s\n' "Missing release application JAR: $APP_JAR" >&2
+  exit 94
+fi
+observed_jar_sha256="$(sha256sum "$APP_JAR")"
+observed_jar_sha256="${{observed_jar_sha256%% *}}"
+if test "$observed_jar_sha256" != {expected_jar_sha256!r}; then
+  printf '%s\n' "Release application JAR SHA mismatch: $observed_jar_sha256" >&2
+  exit 95
+fi
+if ! dependency_preflight_output="$("$JAVA_HOME/bin/java" --class-path "$APP_JAR" "$PREFLIGHT_SOURCE" 2>&1)"; then
+  printf '%s\n' "Runtime dependency preflight failed: $dependency_preflight_output" >&2
+  exit 96
+fi
+case "$dependency_preflight_output" in
+  *'dependency_preflight_passed={len(REQUIRED_DEPLOYMENT_CLASSES)}'*) ;;
+  *) printf '%s\n' "Runtime dependency preflight incomplete: $dependency_preflight_output" >&2; exit 97 ;;
+esac
 set +e
 /usr/bin/time -v "$JAVA_HOME/bin/java" -Xms16g -Xmx96g \\
-  -cp "$ROOT/app/matsim-example-project-0.0.1-SNAPSHOT.jar" \\
+  -cp "$APP_JAR" \\
   org.matsim.project.RunHongKong5Pct \\
   "$ROOT/config/{config_name}" unused --simulate
 rc=$?
@@ -1566,7 +1771,8 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         )
     if args.jdk_sha256 != APPROVED_JDK_ARCHIVE_SHA256:
         raise ValueError("JDK archive SHA256 is not the approved contract value")
-    jar_hash, runtime_classes = verify_fat_jar(args.fat_jar)
+    deployment_jar = resolve_deployment_jar(args.build_root)
+    jar_hash, deployment_classes = verify_fat_jar(deployment_jar)
     current_sources, input_contract = resolve_input_contract(args)
     input_hashes = input_contract["locked_input_sha256"]
     args.staging_dir.mkdir(parents=True)
@@ -1595,7 +1801,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
     ]
     sources = {
-        "app/matsim-example-project-0.0.1-SNAPSHOT.jar": args.fat_jar,
+        APPLICATION_JAR_RELATIVE: deployment_jar,
         "archives/OpenJDK25U-jdk_x64_linux_hotspot_25.0.3_9.tar.gz": args.jdk_archive,
         **{
             relative: source
@@ -1613,6 +1819,20 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         expected_version=args.java_version,
     )
     jdk_hash = jdk_runtime["archive_sha256"]
+
+    dependency_source_path = (
+        args.staging_dir / DEPENDENCY_PREFLIGHT_SOURCE_RELATIVE
+    )
+    write_new_text(dependency_source_path, dependency_preflight_source())
+    release_application_contract = verify_release_application_contract(
+        args.staging_dir,
+        jar_hash,
+    )
+    class_loading_preflight = run_release_class_preflight(
+        args.staging_dir / RUNTIME_JAVA_RELATIVE,
+        args.staging_dir / APPLICATION_JAR_RELATIVE,
+        dependency_source_path,
+    )
 
     formal_plans = args.staging_dir / "input/plans_routed_5pct_v2.xml.gz"
     selected = select_smoke_person_ids(formal_plans, SMOKE_PERSON_COUNT)
@@ -1640,10 +1860,10 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
 
     scripts = {
         "scripts/smoke_worker.sh": worker_script(
-            release_root, "config_smoke_qsim.xml"
+            release_root, "config_smoke_qsim.xml", jar_hash
         ),
         "scripts/formal_worker.sh": worker_script(
-            release_root, "config_formal_50it.xml"
+            release_root, "config_formal_50it.xml", jar_hash
         ),
         "scripts/run_smoke.sh": launcher_script(
             release_root, "smoke_qsim_v1", "smoke_worker.sh"
@@ -1685,8 +1905,16 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "source_commit_sha": args.source_commit_sha,
         "source_identity": source_identity,
         "release_root": release_root,
+        "build_root": str(args.build_root.resolve()),
+        "selected_deployment_jar": str(deployment_jar.resolve()),
+        "target_thin_jar_deployment_allowed": False,
+        "built_fat_jar_sha256": jar_hash,
         "fat_jar_sha256": jar_hash,
-        "required_runtime_classes": runtime_classes,
+        "required_runtime_classes": list(REQUIRED_RUNTIME_CLASSES),
+        "required_dependency_classes": list(REQUIRED_DEPENDENCY_CLASSES),
+        "required_deployment_classes": deployment_classes,
+        "release_application_contract": release_application_contract,
+        "class_loading_preflight": class_loading_preflight,
         "build_command": args.build_command,
         "prepare_command": shlex.join([sys.executable, *sys.argv]),
         "java_version": args.java_version,
@@ -1752,6 +1980,19 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
                 filter=normalize_tar_permissions,
             )
     bundle_runtime_contract = verify_bundle_runtime_contract(args.bundle_path)
+    bundle_application_contract = verify_bundle_application_contract(
+        args.bundle_path,
+        jar_hash,
+    )
+    sha_identity_continuity = all(
+        value == jar_hash
+        for value in (
+            release_application_contract["release_app_jar_sha256"],
+            bundle_application_contract["bundle_app_jar_sha256"],
+        )
+    )
+    if not sha_identity_continuity:
+        raise ValueError("Application JAR SHA identity continuity failed")
     bundle_summary = {
         **metadata,
         "staging_dir": str(args.staging_dir),
@@ -1759,6 +2000,18 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "bundle_size_bytes": args.bundle_path.stat().st_size,
         "bundle_sha256": sha256_file(args.bundle_path),
         "bundle_runtime_contract": bundle_runtime_contract,
+        "bundle_application_contract": bundle_application_contract,
+        "application_jar_sha_identity_continuity": {
+            "built_fat_jar_sha256": jar_hash,
+            "release_app_jar_sha256": release_application_contract[
+                "release_app_jar_sha256"
+            ],
+            "bundle_app_jar_sha256": bundle_application_contract[
+                "bundle_app_jar_sha256"
+            ],
+            "all_equal": sha_identity_continuity,
+            "final_release_worker_rechecks_sha256": True,
+        },
         "release_file_count": sum(
             path.is_file() for path in args.staging_dir.rglob("*")
         ),
@@ -1803,7 +2056,7 @@ def add_bundle_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--source-snapshot", type=Path)
     parser.add_argument("--source-snapshot-manifest", type=Path)
     parser.add_argument("--source-snapshot-manifest-sha256")
-    parser.add_argument("--fat-jar", type=Path, required=True)
+    parser.add_argument("--build-root", type=Path, required=True)
     parser.add_argument("--jdk-archive", type=Path, required=True)
     parser.add_argument(
         "--jdk-sha256",

@@ -13,7 +13,7 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md`](STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md)
+- [`STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md`](STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md)
 
 Blocked/superseded briefs:
 
@@ -22,6 +22,9 @@ Blocked/superseded briefs:
 - [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md) —
   superseded after diagnosis proved the approved member is a symlink rather
   than the assumed hard link.
+- [`STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md`](STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md) —
+  JDK closure preserved; the later Stage 9 identity exposed an unrelated thin
+  versus shaded JAR dependency-closure blocker.
 
 Canonical review template:
 

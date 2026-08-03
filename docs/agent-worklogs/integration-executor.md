@@ -1040,3 +1040,37 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and scope, then dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 33 — Stage 9 shaded-JAR dependency closure
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+input_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Select only the build-root Maven Shade JAR and prove dependency inventory, SHA continuity and pre-MATSim class loading."
+findings:
+  - "The CLI derives the deployment artifact from --build-root; target/ thin JAR selection is rejected."
+  - "Seven project and six named dependency classes are required in release and bundle JARs."
+  - "Built, staged release and bundle app JAR SHA256 values must match, and the final worker rechecks the same SHA."
+  - "Release Java class-loads all required classes without initialization before config or MATSim startup and fails closed on load/link errors."
+  - "Dedicated 20/20, JDK 40/40 and seven-input bundle validators pass without server or Runner action."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_005_validation_v1/stage9_shaded_jar_dependency_closure_validation.json"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_shaded_jar_contract.py"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
+required_transition: null
+```

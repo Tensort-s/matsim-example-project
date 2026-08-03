@@ -7,8 +7,8 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE9-JDK-LEGAL-SYMLINK-004"
-  exact_input_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+  transition_id: "AGT-20260803-STAGE9-SHADED-JAR-CLOSURE-005"
+  exact_input_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
   closed_task:
     task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
     previous_status: "PASS_CLOSED"
@@ -19,15 +19,15 @@ atomic_gate_transition:
     supervisor_gate: "PASS_CLOSED"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "AUTHORIZED_RUN_IDENTITY_BLOCKED_BEFORE_UPLOAD"
+    previous_status: "RUN_BLOCKED_RUNTIME_DEPENDENCY_MISSING"
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+    source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
   blocker:
-    blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
+    blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
     previous_status: "OPEN"
     final_status: "REPAIR_DISPATCHED"
   next_active_task:
-    task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+    task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
     status: "ACTIVE"
     owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
@@ -37,8 +37,8 @@ atomic_gate_transition:
   stage_9_execution_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-35--stage-9-diagnosed-jdk-legal-symlink-repair-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-32--stage-9-diagnosed-jdk-legal-symlink-repair"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-36--stage-9-shaded-jar-dependency-closure-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-33--stage-9-shaded-jar-dependency-closure"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -53,49 +53,53 @@ last_closed_task:
 superseded_stage9_task:
   task_id: "STAGE9-JOINT-SHORT-SMOKE"
   status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+  source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+  bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
+  release_root: "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
+  run_identity: "smoke_qsim_v1_c129c1_run3"
+  failure: "NoClassDefFoundError org/matsim/core/controler/AbstractModule"
   brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
 
 active_blocker:
-  blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
+  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
   status: "REPAIR_DISPATCHED"
   failure_identity:
-    stage: "Stage 9 joint short smoke"
-    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
-    prior_failure_identity: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
-    approved_jdk_archive_sha256: "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f"
-    preparation_script_sha256: "382be155f44429e183182c02b1917ab82704bb1865c4ec6c3d4ca921cc201609"
-    failing_member: "jdk-25.0.3+9/legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
-    raw_member_type: "b'2'"
-    linkname: "../java.base/ADDITIONAL_LICENSE_INFO"
-    staging_root: "/mnt/DiskM/by/hk_stage9_77961542_staging2"
-    release_produced: false
-    bundle_produced: false
-    matsim_process_started: false
-  root_cause: "The approved archive uses a legal/* symbolic link to a regular legal metadata member; the prior contract supported only regular files, directories and hard links."
-  changed_hypothesis_required_for_retry: "Resolve only relative legal/* symbolic links whose normalized target remains under legal/ in the same trusted JDK root, require a direct non-executable regular target, and materialize target bytes as an ordinary file."
-  repair_task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+    source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+    bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
+    run_identity: "smoke_qsim_v1_c129c1_run3"
+    failure: "NoClassDefFoundError org/matsim/core/controler/AbstractModule"
+    selected_artifact: "build_root/target/matsim-example-project-0.0.1-SNAPSHOT.jar"
+  root_cause: "Maven produced a target/ thin JAR and a build-root Maven Shade fat JAR with the same filename; bundle preparation copied the arbitrary target/ path, leaving MATSim and other dependencies outside the release classpath."
+  changed_hypothesis_required_for_retry: "Derive only the build-root top-level Shade JAR, verify project and dependency classes, enforce built/release/bundle SHA equality, and class-load every required class with final release Java before MATSim startup."
+  repair_task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
   repair_owner: "INT-EXECUTOR"
   replacement_identity_required:
     - "new pushed repair source SHA"
-    - "new staging root; never reuse /mnt/DiskM/by/hk_stage9_77961542_staging2"
-    - "new release root; never reuse release2 or any prior release identity"
-    - "new run identity under separate Supervisor authorization"
+    - "new bundle SHA built from the deterministic root Shade JAR"
+    - "new release root; never reuse /mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
+    - "new run identity; never reuse smoke_qsim_v1_c129c1_run3"
   superseded_run_identity:
-    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
-    staging_root: "/mnt/DiskM/by/hk_stage9_77961542_staging2"
-    release_identity: "release2 was not produced and must not be reused"
-    run_identity: "Stage 9 attempt blocked before upload/run"
-  diagnosis_evidence:
-    path: "/mnt/DiskM/by/hk_stage9_77961542_diag1/diagnosis.json"
-    sha256: "a86521620e00c917150f10c037f13b741e924782e13d95a9108408d181cc80f1"
+    source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+    bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
+    run_identity: "smoke_qsim_v1_c129c1_run3"
   runner_authorized: false
 
 active_task:
-  task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
   status: "ACTIVE"
   owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md"
+  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md"
+
+runtime_contract:
+  deployment_jar: "<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar"
+  target_thin_jar_allowed: false
+  required_project_class_count: 7
+  required_dependency_class_count: 6
+  built_release_bundle_sha256_must_match: true
+  final_release_worker_rechecks_sha256: true
+  class_loading_preflight_before_matsim: true
 
 execution_authority:
   authority_source: "INT-SUPERVISOR"
@@ -110,7 +114,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -118,19 +122,19 @@ control_transition_review:
 
 ## Canonical interpretation
 
-The Stage 9 identity at source `7796154...` is blocked before bundle creation,
-upload or execution and is superseded by this diagnosed JDK legal-symlink
-repair. The approved JDK archive and preparation-script identities remain hash
-locked. The repaired contract copies only a safely resolved direct regular
-`legal/*` target to an ordinary file; it never emits a symbolic link.
+The Stage 9 release3/run3 identity is historical and superseded after failing
+on a thin-JAR dependency gap. The active task only repairs deterministic Maven
+Shade artifact selection, dependency-class validation, SHA continuity and the
+pre-MATSim class-loading contract. The approved JDK 25.0.3, locked inputs,
+model, config and cost semantics remain unchanged.
 
-Runner and Stage 9 execution are unauthorized during this repair. No bundle,
-release, upload, smoke, formal 50-iteration, calibration, Stage 10 or later
+Runner and Stage 9 execution are unauthorized during this repair. No server,
+bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
 work is authorized.
 
 ## Next action
 
-Executor pushes one bounded repair commit and reports only to Supervisor.
+Executor pushes one focused repair commit and reports only to Supervisor.
 Supervisor verifies its exact SHA, parent and scope before one read-only review.
-Any later Stage 9 attempt requires a separate authorization plus new source,
-staging, release and run identities.
+Any later attempt requires a separate authorization and new source, bundle,
+release and run identities.

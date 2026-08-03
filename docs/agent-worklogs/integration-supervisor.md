@@ -1115,3 +1115,46 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement one focused diagnosed symlink repair, push it, report only to Supervisor, and stop."
 required_transition: null
 ```
+
+## Entry 36 — Stage 9 shaded-JAR dependency-closure dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+input_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch deterministic Maven Shade JAR selection and runtime dependency-closure repair; Runner remains unauthorized."
+findings:
+  - "The failed identity used bundle 0f4ab658, release3 and smoke_qsim_v1_c129c1_run3."
+  - "The release failed with NoClassDefFoundError for org/matsim/core/controler/AbstractModule."
+  - "Maven produced same-name thin target/ and build-root Shade JARs; preparation copied the thin JAR."
+  - "JDK, model, config, inputs and cost semantics are unrelated and unchanged."
+  - "Replacement requires new source, bundle, release and run identities."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+    bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
+    run_identity: "smoke_qsim_v1_c129c1_run3"
+    failure: "NoClassDefFoundError org/matsim/core/controler/AbstractModule"
+  root_cause: "Preparation copied the target/ thin JAR instead of the build-root Maven Shade fat JAR."
+  changed_hypothesis_required_for_retry: "Select only the root Shade JAR, validate dependency classes and enforce built/release/bundle SHA plus pre-MATSim class-loading closure."
+  repair_task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new pushed source, bundle SHA, release root and run identity"
+  superseded_run_identity: "c129c18 / bundle 0f4ab658 / release3 / run3"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement one focused dependency-closure repair, push it, report only to Supervisor, and stop."
+required_transition: null
+```

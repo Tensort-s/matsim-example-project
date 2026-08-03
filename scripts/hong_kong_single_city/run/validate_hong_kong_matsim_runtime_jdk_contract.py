@@ -720,6 +720,7 @@ def main() -> int:
         worker = preparer.worker_script(
             "/mnt/DiskM/by/stage8d_r1_not_deployed",
             "config_smoke_qsim.xml",
+            "a" * 64,
         )
         worker_guard_passed = all(
             marker in worker
@@ -727,6 +728,8 @@ def main() -> int:
                 'test -x "$JAVA_HOME/bin/java"',
                 '"$JAVA_HOME/bin/java" -version',
                 f'version "{preparer.APPROVED_JAVA_VERSION}"',
+                'sha256sum "$APP_JAR"',
+                preparer.DEPENDENCY_PREFLIGHT_SOURCE_RELATIVE,
             )
         )
         build_bundle_source = inspect.getsource(preparer.build_bundle)
