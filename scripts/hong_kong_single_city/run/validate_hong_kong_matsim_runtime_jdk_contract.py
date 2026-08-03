@@ -105,6 +105,99 @@ def create_special_member_fixture(path: Path) -> None:
         archive.addfile(device)
 
 
+def add_symlink_member(
+    archive: tarfile.TarFile,
+    name: str,
+    target: str,
+    mode: int = 0o777,
+    pax_headers: dict[str, str] | None = None,
+) -> None:
+    member = tarfile.TarInfo(name)
+    member.type = tarfile.SYMTYPE
+    member.linkname = target
+    member.mode = mode
+    member.mtime = 0
+    member.pax_headers = pax_headers or {}
+    archive.addfile(member)
+
+
+def create_legal_symlink_fixture(
+    path: Path,
+    *,
+    link_relative: str = "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO",
+    target_relative: str = "legal/java.base/ADDITIONAL_LICENSE_INFO",
+    link_target: str = "../java.base/ADDITIONAL_LICENSE_INFO",
+    include_target: bool = True,
+    target_kind: str = "regular",
+    target_mode: int = 0o644,
+    duplicate_link_path: bool = False,
+    link_pax_headers: dict[str, str] | None = None,
+) -> bytes:
+    root = "jdk-25.0.3+9"
+    content = b"fixture approved JDK legal metadata\n"
+    with tarfile.open(path, "x:gz") as archive:
+        add_tar_member(archive, f"{root}/", None, 0o755)
+        add_tar_member(archive, f"{root}/bin/", None, 0o755)
+        add_tar_member(
+            archive,
+            f"{root}/bin/java",
+            b"#!/usr/bin/env sh\nexit 0\n",
+            0o755,
+        )
+        if include_target and target_kind == "regular":
+            add_tar_member(
+                archive,
+                f"{root}/{target_relative}",
+                content,
+                target_mode,
+            )
+        elif include_target and target_kind == "directory":
+            add_tar_member(
+                archive,
+                f"{root}/{target_relative}/",
+                None,
+                0o755,
+            )
+        elif include_target and target_kind == "symlink":
+            add_tar_member(
+                archive,
+                f"{root}/legal/java.base/LICENSE",
+                content,
+                0o644,
+            )
+            add_symlink_member(
+                archive,
+                f"{root}/{target_relative}",
+                "LICENSE",
+            )
+        elif include_target and target_kind == "hardlink":
+            add_tar_member(
+                archive,
+                f"{root}/legal/java.base/LICENSE",
+                content,
+                0o644,
+            )
+            add_hardlink_member(
+                archive,
+                f"{root}/{target_relative}",
+                f"{root}/legal/java.base/LICENSE",
+            )
+        if duplicate_link_path:
+            add_tar_member(
+                archive,
+                f"{root}/{link_relative}",
+                content,
+                0o644,
+            )
+        add_symlink_member(
+            archive,
+            f"{root}/{link_relative}",
+            link_target,
+            pax_headers=link_pax_headers,
+        )
+    return content
+
+
 def add_hardlink_member(
     archive: tarfile.TarFile,
     name: str,
@@ -258,11 +351,13 @@ def main() -> int:
             "stale JDK layout",
         ) and not stale_target.exists()
 
-        symbolic_link_archive = temporary / "symbolic-link.tar.gz"
-        create_link_fixture(symbolic_link_archive)
-        symbolic_link_rejected = expect_rejection(
-            lambda: preparer.validate_jdk_archive_layout(symbolic_link_archive),
-            "symbolic-link archive member",
+        outside_legal_symlink_archive = temporary / "symlink-outside-legal.tar.gz"
+        create_link_fixture(outside_legal_symlink_archive)
+        outside_legal_symlink_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                outside_legal_symlink_archive
+            ),
+            "symbolic link outside legal metadata",
         )
 
         device_archive = temporary / "device.tar.gz"
@@ -270,6 +365,172 @@ def main() -> int:
         device_member_rejected = expect_rejection(
             lambda: preparer.validate_jdk_archive_layout(device_archive),
             "device archive member",
+        )
+
+        legal_symlink_archive = temporary / "legal-symlink.tar.gz"
+        legal_symlink_content = create_legal_symlink_fixture(
+            legal_symlink_archive
+        )
+        _, legal_symlink_entries = preparer.validate_jdk_archive_layout(
+            legal_symlink_archive
+        )
+        legal_symlink_entry = next(
+            entry
+            for entry in legal_symlink_entries
+            if entry["relative_path"]
+            == "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+        )
+        legal_symlink_runtime = temporary / "legal-symlink/runtime/jdk-25"
+        legal_symlink_materialized = preparer.materialize_runtime_jdk(
+            legal_symlink_archive,
+            preparer.sha256_file(legal_symlink_archive),
+            legal_symlink_runtime,
+            version_runner=version_runner(preparer.APPROVED_JAVA_VERSION),
+            executable_checker=lambda _path: True,
+        )
+        legal_symlink_output = (
+            legal_symlink_runtime
+            / "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+        )
+        diagnosed_legal_symlink_accepted_and_materialized = all(
+            (
+                legal_symlink_entry["member_type"]
+                == "legal_metadata_symlink",
+                legal_symlink_entry["link_name"]
+                == "../java.base/ADDITIONAL_LICENSE_INFO",
+                legal_symlink_entry["archive_mode"] == 0o777,
+                legal_symlink_entry["archive_size_bytes"] == 0,
+                legal_symlink_entry["pax_headers"] == {},
+                legal_symlink_entry["source_relative_path"]
+                == "legal/java.base/ADDITIONAL_LICENSE_INFO",
+                legal_symlink_output.is_file(),
+                not legal_symlink_output.is_symlink(),
+                legal_symlink_output.read_bytes() == legal_symlink_content,
+                legal_symlink_materialized[
+                    "materialized_legal_metadata_symlink_count"
+                ]
+                == 1,
+            )
+        )
+
+        absolute_symlink_archive = temporary / "symlink-absolute.tar.gz"
+        create_legal_symlink_fixture(
+            absolute_symlink_archive,
+            link_target="/legal/java.base/ADDITIONAL_LICENSE_INFO",
+        )
+        absolute_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                absolute_symlink_archive
+            ),
+            "absolute legal symbolic-link target",
+        )
+
+        escaping_symlink_archive = temporary / "symlink-escape.tar.gz"
+        create_legal_symlink_fixture(
+            escaping_symlink_archive,
+            link_target="../../../outside",
+        )
+        escaping_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                escaping_symlink_archive
+            ),
+            "escaping legal symbolic-link target",
+        )
+
+        nonlegal_symlink_archive = temporary / "symlink-nonlegal.tar.gz"
+        create_legal_symlink_fixture(
+            nonlegal_symlink_archive,
+            link_target="../../bin/java",
+        )
+        nonlegal_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                nonlegal_symlink_archive
+            ),
+            "non-legal symbolic-link target",
+        )
+
+        missing_symlink_archive = temporary / "symlink-missing.tar.gz"
+        create_legal_symlink_fixture(
+            missing_symlink_archive,
+            include_target=False,
+        )
+        missing_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                missing_symlink_archive
+            ),
+            "missing legal symbolic-link target",
+        )
+
+        chained_symlink_archive = temporary / "symlink-chain.tar.gz"
+        create_legal_symlink_fixture(
+            chained_symlink_archive,
+            target_kind="symlink",
+        )
+        chained_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                chained_symlink_archive
+            ),
+            "chained legal symbolic-link target",
+        )
+
+        hardlink_target_archive = temporary / "symlink-to-hardlink.tar.gz"
+        create_legal_symlink_fixture(
+            hardlink_target_archive,
+            target_kind="hardlink",
+        )
+        hardlink_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                hardlink_target_archive
+            ),
+            "hard-link target of legal symbolic link",
+        )
+
+        directory_symlink_archive = temporary / "symlink-directory.tar.gz"
+        create_legal_symlink_fixture(
+            directory_symlink_archive,
+            target_kind="directory",
+        )
+        directory_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                directory_symlink_archive
+            ),
+            "directory legal symbolic-link target",
+        )
+
+        executable_symlink_archive = temporary / "symlink-executable.tar.gz"
+        create_legal_symlink_fixture(
+            executable_symlink_archive,
+            target_mode=0o755,
+        )
+        executable_symlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                executable_symlink_archive
+            ),
+            "executable legal symbolic-link target",
+        )
+
+        duplicate_symlink_archive = temporary / "symlink-duplicate.tar.gz"
+        create_legal_symlink_fixture(
+            duplicate_symlink_archive,
+            duplicate_link_path=True,
+        )
+        duplicate_symlink_path_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                duplicate_symlink_archive
+            ),
+            "duplicate legal symbolic-link path",
+        )
+
+        pax_symlink_archive = temporary / "symlink-pax.tar.gz"
+        create_legal_symlink_fixture(
+            pax_symlink_archive,
+            link_pax_headers={"comment": "unexpected"},
+        )
+        pax_symlink_metadata_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                pax_symlink_archive
+            ),
+            "PAX metadata on legal symbolic link",
         )
 
         legal_archive = temporary / "legal-hardlink.tar.gz"
@@ -505,8 +766,41 @@ def main() -> int:
             "stale_jdk_layout_rejected_before_target_creation": (
                 stale_layout_rejected
             ),
-            "symbolic_link_member_rejected": symbolic_link_rejected,
+            "symlink_outside_legal_rejected": (
+                outside_legal_symlink_rejected
+            ),
             "device_member_rejected": device_member_rejected,
+            "diagnosed_legal_symlink_accepted_and_materialized": (
+                diagnosed_legal_symlink_accepted_and_materialized
+            ),
+            "absolute_symlink_target_rejected": (
+                absolute_symlink_target_rejected
+            ),
+            "escaping_symlink_target_rejected": (
+                escaping_symlink_target_rejected
+            ),
+            "nonlegal_symlink_target_rejected": (
+                nonlegal_symlink_target_rejected
+            ),
+            "missing_symlink_target_rejected": (
+                missing_symlink_target_rejected
+            ),
+            "chained_symlink_target_rejected": (
+                chained_symlink_target_rejected
+            ),
+            "hardlink_symlink_target_rejected": (
+                hardlink_symlink_target_rejected
+            ),
+            "directory_symlink_target_rejected": (
+                directory_symlink_target_rejected
+            ),
+            "executable_symlink_target_rejected": (
+                executable_symlink_target_rejected
+            ),
+            "duplicate_symlink_path_rejected": (
+                duplicate_symlink_path_rejected
+            ),
+            "pax_symlink_metadata_rejected": pax_symlink_metadata_rejected,
             "approved_legal_hardlink_accepted_and_materialized": (
                 legal_hardlink_accepted_and_materialized
             ),
@@ -553,7 +847,7 @@ def main() -> int:
                 + ", ".join(key for key, value in checks.items() if not value)
             )
         result = {
-            "schema_version": "stage8d_r1_runtime_jdk_contract_test_v2",
+            "schema_version": "stage8d_r1_runtime_jdk_contract_test_v3",
             "status": "pass",
             "approved_runtime_contract": {
                 "archive_sha256_production_lock": (

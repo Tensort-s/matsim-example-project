@@ -7,8 +7,8 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE9-JDK-LEGAL-REPAIR-001"
-  exact_input_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+  transition_id: "AGT-20260803-STAGE9-JDK-LEGAL-SYMLINK-004"
+  exact_input_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
   closed_task:
     task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
     previous_status: "PASS_CLOSED"
@@ -19,15 +19,15 @@ atomic_gate_transition:
     supervisor_gate: "PASS_CLOSED"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "ACTIVATED_AWAITING_SEPARATE_RUNNER_INSTRUCTION"
+    previous_status: "AUTHORIZED_RUN_IDENTITY_BLOCKED_BEFORE_UPLOAD"
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    source_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
   blocker:
-    blocker_id: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
+    blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
     previous_status: "OPEN"
     final_status: "REPAIR_DISPATCHED"
   next_active_task:
-    task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+    task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
     status: "ACTIVE"
     owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
@@ -37,8 +37,8 @@ atomic_gate_transition:
   stage_9_execution_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-34--stage-9-jdk-legal-member-repair-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-31--stage-9-jdk-legal-member-repair"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-35--stage-9-diagnosed-jdk-legal-symlink-repair-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-32--stage-9-diagnosed-jdk-legal-symlink-repair"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -53,42 +53,49 @@ last_closed_task:
 superseded_stage9_task:
   task_id: "STAGE9-JOINT-SHORT-SMOKE"
   status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  source_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+  source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
   brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
 
 active_blocker:
-  blocker_id: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
+  blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
   status: "REPAIR_DISPATCHED"
   failure_identity:
     stage: "Stage 9 joint short smoke"
-    source_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+    prior_failure_identity: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
     approved_jdk_archive_sha256: "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f"
-    failing_member: "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
-    operation: "JDK archive layout validation before runtime materialization"
-    staging_root: "/mnt/DiskM/by/hk_stage9_fe6a216_staging1"
-    release_root: "/mnt/DiskM/by/hk_multimodal_cost_fe6a216_stage9_release1"
+    preparation_script_sha256: "382be155f44429e183182c02b1917ab82704bb1865c4ec6c3d4ca921cc201609"
+    failing_member: "jdk-25.0.3+9/legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+    raw_member_type: "b'2'"
+    linkname: "../java.base/ADDITIONAL_LICENSE_INFO"
+    staging_root: "/mnt/DiskM/by/hk_stage9_77961542_staging2"
+    release_produced: false
     bundle_produced: false
     matsim_process_started: false
-  root_cause: "The approved JDK archive contains legal metadata hard-link members, but the extraction contract rejected every non-file/non-directory member before materializing runtime/jdk-25."
-  changed_hypothesis_required_for_retry: "Safely accept only approved legal/* metadata hard links whose direct regular-file targets remain inside the same legal subtree, while preserving all archive and runtime executable guards."
-  repair_task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+  root_cause: "The approved archive uses a legal/* symbolic link to a regular legal metadata member; the prior contract supported only regular files, directories and hard links."
+  changed_hypothesis_required_for_retry: "Resolve only relative legal/* symbolic links whose normalized target remains under legal/ in the same trusted JDK root, require a direct non-executable regular target, and materialize target bytes as an ordinary file."
+  repair_task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
   repair_owner: "INT-EXECUTOR"
   replacement_identity_required:
     - "new pushed repair source SHA"
-    - "new staging directory; do not reuse /mnt/DiskM/by/hk_stage9_fe6a216_staging1"
-    - "new release root; do not reuse /mnt/DiskM/by/hk_multimodal_cost_fe6a216_stage9_release1"
-    - "new run identity under a separate Supervisor Runner authorization"
+    - "new staging root; never reuse /mnt/DiskM/by/hk_stage9_77961542_staging2"
+    - "new release root; never reuse release2 or any prior release identity"
+    - "new run identity under separate Supervisor authorization"
   superseded_run_identity:
-    staging_root: "/mnt/DiskM/by/hk_stage9_fe6a216_staging1"
-    release_root: "/mnt/DiskM/by/hk_multimodal_cost_fe6a216_stage9_release1"
-    run_identity: "Stage 9 attempt at source fe6a216c91a3d871fee0d58672868127fc2482a0"
+    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+    staging_root: "/mnt/DiskM/by/hk_stage9_77961542_staging2"
+    release_identity: "release2 was not produced and must not be reused"
+    run_identity: "Stage 9 attempt blocked before upload/run"
+  diagnosis_evidence:
+    path: "/mnt/DiskM/by/hk_stage9_77961542_diag1/diagnosis.json"
+    sha256: "a86521620e00c917150f10c037f13b741e924782e13d95a9108408d181cc80f1"
   runner_authorized: false
 
 active_task:
-  task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+  task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
   status: "ACTIVE"
   owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md"
+  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md"
 
 execution_authority:
   authority_source: "INT-SUPERVISOR"
@@ -103,7 +110,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+  task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -111,11 +118,11 @@ control_transition_review:
 
 ## Canonical interpretation
 
-The initial Stage 9 execution identity is blocked before bundle creation and
-superseded by the active bounded JDK archive-member repair. The approved JDK
-archive remains hash locked. This task changes only its safe materialization
-contract: a `legal/*` hard link may be copied as a regular metadata file only
-when its direct, non-executable regular-file target is also under `legal/*`.
+The Stage 9 identity at source `7796154...` is blocked before bundle creation,
+upload or execution and is superseded by this diagnosed JDK legal-symlink
+repair. The approved JDK archive and preparation-script identities remain hash
+locked. The repaired contract copies only a safely resolved direct regular
+`legal/*` target to an ordinary file; it never emits a symbolic link.
 
 Runner and Stage 9 execution are unauthorized during this repair. No bundle,
 release, upload, smoke, formal 50-iteration, calibration, Stage 10 or later
@@ -123,7 +130,7 @@ work is authorized.
 
 ## Next action
 
-Executor pushes the single bounded repair commit and reports only to
-Supervisor. Supervisor verifies its exact SHA, parent and scope before one
-read-only review. Any later Runner attempt requires a separate authorization
-and a new source, staging, release and run identity.
+Executor pushes one bounded repair commit and reports only to Supervisor.
+Supervisor verifies its exact SHA, parent and scope before one read-only review.
+Any later Stage 9 attempt requires a separate authorization plus new source,
+staging, release and run identities.

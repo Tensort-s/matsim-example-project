@@ -1,0 +1,98 @@
+{
+  "schema_version": "stage9_jdk_legal_symlink_repair_validation_v1",
+  "task_id": "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004",
+  "blocker_id": "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002",
+  "exact_input_sha": "7796154241518e4fb13b29f345b20bef0d91e9a2",
+  "diagnosis": {
+    "status": "pass",
+    "server_evidence_path": "/mnt/DiskM/by/hk_stage9_77961542_diag1/diagnosis.json",
+    "server_evidence_sha256": "a86521620e00c917150f10c037f13b741e924782e13d95a9108408d181cc80f1",
+    "approved_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "preparation_script_sha256": "382be155f44429e183182c02b1917ab82704bb1865c4ec6c3d4ca921cc201609",
+    "member": {
+      "name": "jdk-25.0.3+9/legal/jdk.jshell/ADDITIONAL_LICENSE_INFO",
+      "raw_type": "b'2'",
+      "raw_type_decimal": 50,
+      "isfile": false,
+      "isdir": false,
+      "islnk": false,
+      "issym": true,
+      "linkname": "../java.base/ADDITIONAL_LICENSE_INFO",
+      "mode_octal": "0777",
+      "size_bytes": 0,
+      "pax_headers": {}
+    }
+  },
+  "bounded_contract": {
+    "accepted_member_type": "legal_metadata_symlink",
+    "accepted_link_path_prefix": "legal/",
+    "linkname_requirement": "relative path whose normalization from the link parent remains under legal/",
+    "target_requirement": "existing direct non-executable regular file under legal/ in the same single JDK root",
+    "materialization": "copy target bytes to a new ordinary file; do not preserve the symbolic link",
+    "still_rejected": [
+      "symbolic link outside legal/",
+      "absolute symbolic-link target",
+      "target escaping the single archive root or legal/ subtree",
+      "non-legal target",
+      "missing target",
+      "symbolic-link or hard-link target chain",
+      "directory or device target",
+      "executable legal metadata target",
+      "duplicate archive path collision",
+      "unsafe hard link",
+      "unexpected or multiple top-level roots",
+      "missing, non-regular, non-executable, or wrong-version bin/java"
+    ]
+  },
+  "approved_runtime_contract": {
+    "archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "archive_lock_changed": false,
+    "runtime_path": "runtime/jdk-25",
+    "java_executable": "runtime/jdk-25/bin/java",
+    "java_version": "25.0.3"
+  },
+  "validation": {
+    "python_interpreter": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe",
+    "commands": [
+      "python -m py_compile scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+    ],
+    "runtime_jdk_contract": {
+      "schema_version": "stage8d_r1_runtime_jdk_contract_test_v3",
+      "status": "pass",
+      "checks_passed": 40,
+      "checks_total": 40,
+      "diagnosed_legal_symlink_accepted_and_materialized": true,
+      "symlink_output_is_ordinary_file": true,
+      "adversarial_symlink_rejections_passed": 10,
+      "existing_hardlink_guards_passed": true,
+      "runtime_java_guards_passed": true
+    },
+    "existing_server_bundle_contract": {
+      "status": "passed",
+      "locked_input_count": 7,
+      "stale_active_defaults": [],
+      "server_access_performed": false,
+      "bundle_built": false
+    }
+  },
+  "failure_and_replacement_identity": {
+    "superseded_staging_root": "/mnt/DiskM/by/hk_stage9_77961542_staging2",
+    "superseded_release_identity": "Stage 9 release2 identity; no release was produced",
+    "superseded_run_identity": "Stage 9 attempt at source 7796154241518e4fb13b29f345b20bef0d91e9a2",
+    "partial_staging_preserved": true,
+    "new_source_staging_release_and_run_required": true
+  },
+  "scope": {
+    "java_model_changed": false,
+    "matsim_config_or_input_changed": false,
+    "taxi_pt_car_semantics_changed": false,
+    "server_access_performed_by_executor": false,
+    "bundle_or_release_produced_by_executor": false,
+    "runner_invoked": false,
+    "stage9_smoke_performed": false,
+    "stage10_or_later_started": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

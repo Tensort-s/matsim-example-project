@@ -13,12 +13,15 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md)
+- [`STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md`](STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md)
 
 Blocked/superseded briefs:
 
 - [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md) —
   `BLOCKED_SUPERSEDED_BY_REPAIR`; no Runner execution is authorized.
+- [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md) —
+  superseded after diagnosis proved the approved member is a symlink rather
+  than the assumed hard link.
 
 Canonical review template:
 

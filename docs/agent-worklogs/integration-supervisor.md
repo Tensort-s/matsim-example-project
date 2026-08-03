@@ -1072,3 +1072,46 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push one bounded repair commit, report only to Supervisor, and do not contact Reviewer or Runner."
 required_transition: null
 ```
+
+## Entry 35 — Stage 9 diagnosed JDK legal-symlink repair dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+input_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch the diagnosed legal-symlink materialization repair and keep Stage 9 execution and Runner unauthorized."
+findings:
+  - "Diagnosis proved raw type b'2', issym=true, mode 0777, size 0 and relative target ../java.base/ADDITIONAL_LICENSE_INFO."
+  - "The exact preparation script and approved JDK archive hashes matched the failed identity."
+  - "No bundle, release, upload, smoke or MATSim process was produced."
+  - "The partial staging2 directory is preserved and cannot be reused or cleaned."
+  - "A later attempt requires a new source, staging, release and run identity."
+diagnostics: []
+evidence_refs:
+  - "/mnt/DiskM/by/hk_stage9_77961542_diag1/diagnosis.json#sha256=a86521620e00c917150f10c037f13b741e924782e13d95a9108408d181cc80f1"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md"
+blocker:
+  blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+    prior_failure_identity: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
+    member_type: "b'2' symbolic link"
+    linkname: "../java.base/ADDITIONAL_LICENSE_INFO"
+    staging_root: "/mnt/DiskM/by/hk_stage9_77961542_staging2"
+  root_cause: "The approved archive uses a legal/* symbolic link unsupported by the prior regular/directory/hardlink contract."
+  changed_hypothesis_required_for_retry: "Resolve only relative legal/* links to direct non-executable regular legal/* targets and copy target bytes to ordinary files."
+  repair_task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new pushed source SHA; new staging, release and run identities"
+  superseded_run_identity: "Stage 9 7796154 staging2/release2/run identity"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement one focused diagnosed symlink repair, push it, report only to Supervisor, and stop."
+required_transition: null
+```

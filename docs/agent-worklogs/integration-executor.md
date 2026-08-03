@@ -1006,3 +1006,37 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and scope, then dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 32 — Stage 9 diagnosed JDK legal-symlink repair
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+input_sha: "7796154241518e4fb13b29f345b20bef0d91e9a2"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Materialize the diagnosed bounded legal/* symbolic link as an ordinary file without weakening archive or runtime-JDK guards."
+findings:
+  - "The fixture exactly matches type b'2', linkname ../java.base/ADDITIONAL_LICENSE_INFO, mode 0777 and size 0."
+  - "Only relative links normalizing under legal/ to direct non-executable regular legal targets are accepted."
+  - "Output contains copied target bytes as a regular file and no symbolic link."
+  - "Focused runtime-JDK validation passes 40/40 and the seven-input bundle validator remains passing."
+  - "No server access, bundle/release, Runner contact, MATSim run or model/config/input change occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_004_validation_v1/stage9_jdk_legal_symlink_repair_validation.json"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md"
+blocker:
+  blocker_id: "STAGE9-JDK-LEGAL-REGULAR-CONTRACT-002"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-JDK-LEGAL-SYMLINK-004"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and scope, then dispatches one read-only review; Executor waits."
+required_transition: null
+```

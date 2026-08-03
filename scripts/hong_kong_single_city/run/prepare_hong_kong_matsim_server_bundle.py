@@ -954,7 +954,12 @@ def validate_jdk_archive_layout(
                 if not member.isdir():
                     raise ValueError("JDK archive root must be a directory")
                 continue
-            if not (member.isdir() or member.isfile() or member.islnk()):
+            if not (
+                member.isdir()
+                or member.isfile()
+                or member.islnk()
+                or member.issym()
+            ):
                 raise ValueError(
                     f"JDK archive contains unsupported member: {member.name}"
                 )
@@ -974,9 +979,18 @@ def validate_jdk_archive_layout(
                         else "regular_file"
                         if member.isfile()
                         else "legal_metadata_hardlink"
+                        if member.islnk()
+                        else "legal_metadata_symlink"
                     ),
-                    "link_name": member.linkname if member.islnk() else None,
+                    "link_name": (
+                        member.linkname
+                        if member.islnk() or member.issym()
+                        else None
+                    ),
                     "source_archive_name": member.name,
+                    "archive_mode": stat.S_IMODE(member.mode),
+                    "archive_size_bytes": member.size,
+                    "pax_headers": dict(member.pax_headers),
                     "mode": stat.S_IMODE(member.mode),
                     "size_bytes": member.size,
                 }
@@ -1039,6 +1053,73 @@ def validate_jdk_archive_layout(
         if source_entry["mode"] & 0o111:
             raise ValueError(
                 f"JDK legal metadata hard-link target is executable: "
+                f"{source_relative}"
+            )
+        entry["source_archive_name"] = source_entry["archive_name"]
+        entry["source_relative_path"] = source_relative
+        entry["mode"] = source_entry["mode"]
+        entry["size_bytes"] = source_entry["size_bytes"]
+    for entry in entries:
+        if entry["member_type"] != "legal_metadata_symlink":
+            continue
+        relative = entry["relative_path"]
+        if not relative.startswith("legal/"):
+            raise ValueError(
+                f"JDK symbolic link is outside legal metadata: {relative}"
+            )
+        if entry["archive_size_bytes"] != 0 or entry["pax_headers"]:
+            raise ValueError(
+                "JDK legal metadata symbolic link has unsupported payload or "
+                f"PAX metadata: {relative}"
+            )
+        raw_link_name = entry["link_name"].rstrip("/")
+        if (
+            not raw_link_name
+            or "\\" in raw_link_name
+            or raw_link_name.startswith("/")
+        ):
+            raise ValueError(
+                f"Unsafe JDK legal metadata symbolic-link target: "
+                f"{entry['link_name']!r}"
+            )
+        link_parts = raw_link_name.split("/")
+        if any(part in ("", ".") for part in link_parts):
+            raise ValueError(
+                f"Unsafe JDK legal metadata symbolic-link target: "
+                f"{entry['link_name']!r}"
+            )
+        resolved_parts = list(PurePosixPath(relative).parent.parts)
+        for part in link_parts:
+            if part == "..":
+                if not resolved_parts:
+                    raise ValueError(
+                        "JDK legal metadata symbolic link escapes archive root: "
+                        f"{entry['link_name']!r}"
+                    )
+                resolved_parts.pop()
+            else:
+                resolved_parts.append(part)
+        source_relative = PurePosixPath(*resolved_parts).as_posix()
+        validate_snapshot_path(source_relative)
+        if not source_relative.startswith("legal/"):
+            raise ValueError(
+                f"JDK symbolic-link target is outside legal metadata: "
+                f"{source_relative}"
+            )
+        source_entry = entries_by_relative.get(source_relative)
+        if source_entry is None:
+            raise ValueError(
+                f"JDK legal metadata symbolic-link target is missing: "
+                f"{source_relative}"
+            )
+        if source_entry["member_type"] != "regular_file":
+            raise ValueError(
+                "JDK legal metadata symbolic-link target is not a direct "
+                f"regular file: {source_relative}"
+            )
+        if source_entry["mode"] & 0o111:
+            raise ValueError(
+                f"JDK legal metadata symbolic-link target is executable: "
                 f"{source_relative}"
             )
         entry["source_archive_name"] = source_entry["archive_name"]
@@ -1187,6 +1268,10 @@ def materialize_runtime_jdk(
         ),
         "materialized_legal_metadata_hardlink_count": sum(
             entry["member_type"] == "legal_metadata_hardlink"
+            for entry in entries
+        ),
+        "materialized_legal_metadata_symlink_count": sum(
+            entry["member_type"] == "legal_metadata_symlink"
             for entry in entries
         ),
         **preflight,
