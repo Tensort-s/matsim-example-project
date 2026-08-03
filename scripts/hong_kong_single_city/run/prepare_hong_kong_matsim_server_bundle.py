@@ -954,7 +954,7 @@ def validate_jdk_archive_layout(
                 if not member.isdir():
                     raise ValueError("JDK archive root must be a directory")
                 continue
-            if not (member.isdir() or member.isfile()):
+            if not (member.isdir() or member.isfile() or member.islnk()):
                 raise ValueError(
                     f"JDK archive contains unsupported member: {member.name}"
                 )
@@ -968,6 +968,15 @@ def validate_jdk_archive_layout(
                     "archive_name": member.name,
                     "relative_path": relative,
                     "is_directory": member.isdir(),
+                    "member_type": (
+                        "directory"
+                        if member.isdir()
+                        else "regular_file"
+                        if member.isfile()
+                        else "legal_metadata_hardlink"
+                    ),
+                    "link_name": member.linkname if member.islnk() else None,
+                    "source_archive_name": member.name,
                     "mode": stat.S_IMODE(member.mode),
                     "size_bytes": member.size,
                 }
@@ -977,9 +986,70 @@ def validate_jdk_archive_layout(
     archive_root = next(iter(roots))
     if not archive_root.startswith("jdk-25"):
         raise ValueError(f"Stale or unsupported JDK archive root: {archive_root}")
+    entries_by_relative = {
+        entry["relative_path"]: entry for entry in entries
+    }
+    for entry in entries:
+        if entry["member_type"] != "legal_metadata_hardlink":
+            continue
+        relative = entry["relative_path"]
+        if not relative.startswith("legal/"):
+            raise ValueError(
+                f"JDK hard link is outside legal metadata: {relative}"
+            )
+        if entry["mode"] & 0o111:
+            raise ValueError(
+                f"JDK legal metadata hard link is executable: {relative}"
+            )
+        raw_link_name = entry["link_name"].rstrip("/")
+        if (
+            not raw_link_name
+            or "\\" in raw_link_name
+            or raw_link_name.startswith("/")
+            or any(
+                part in ("", ".", "..")
+                for part in raw_link_name.split("/")
+            )
+        ):
+            raise ValueError(
+                f"Unsafe JDK legal metadata hard-link target: "
+                f"{entry['link_name']!r}"
+            )
+        link_parts = PurePosixPath(raw_link_name).parts
+        if link_parts[0] == archive_root:
+            link_parts = link_parts[1:]
+        if not link_parts or link_parts[0] != "legal":
+            raise ValueError(
+                f"JDK hard-link target is outside legal metadata: "
+                f"{entry['link_name']}"
+            )
+        source_relative = PurePosixPath(*link_parts).as_posix()
+        validate_snapshot_path(source_relative)
+        source_entry = entries_by_relative.get(source_relative)
+        if source_entry is None:
+            raise ValueError(
+                f"JDK legal metadata hard-link target is missing: "
+                f"{source_relative}"
+            )
+        if source_entry["member_type"] != "regular_file":
+            raise ValueError(
+                f"JDK legal metadata hard-link target is not a regular file: "
+                f"{source_relative}"
+            )
+        if source_entry["mode"] & 0o111:
+            raise ValueError(
+                f"JDK legal metadata hard-link target is executable: "
+                f"{source_relative}"
+            )
+        entry["source_archive_name"] = source_entry["archive_name"]
+        entry["source_relative_path"] = source_relative
+        entry["mode"] = source_entry["mode"]
+        entry["size_bytes"] = source_entry["size_bytes"]
     kinds = {
         entry["relative_path"]: (
-            "directory" if entry["is_directory"] else "file"
+            "directory"
+            if entry["member_type"] == "directory"
+            else "file"
         )
         for entry in entries
     }
@@ -992,7 +1062,8 @@ def validate_jdk_archive_layout(
     java_entries = [
         entry
         for entry in entries
-        if entry["relative_path"] == "bin/java" and not entry["is_directory"]
+        if entry["relative_path"] == "bin/java"
+        and entry["member_type"] == "regular_file"
     ]
     if len(java_entries) != 1:
         raise ValueError("JDK archive must contain exactly one bin/java")
@@ -1092,7 +1163,7 @@ def materialize_runtime_jdk(
                 continue
             assert_new_path(target)
             target.parent.mkdir(parents=True, exist_ok=True)
-            member = members[entry["archive_name"]]
+            member = members[entry["source_archive_name"]]
             source = archive.extractfile(member)
             if source is None:
                 raise ValueError(f"Cannot read JDK archive member: {member.name}")
@@ -1113,6 +1184,10 @@ def materialize_runtime_jdk(
         "unrelated_paths_overwritten_or_deleted": False,
         "extracted_file_count": sum(
             not entry["is_directory"] for entry in entries
+        ),
+        "materialized_legal_metadata_hardlink_count": sum(
+            entry["member_type"] == "legal_metadata_hardlink"
+            for entry in entries
         ),
         **preflight,
     }

@@ -1029,3 +1029,46 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one atomic Stage 9 activation commit from exact input 9c66fa7 and stop; do not contact Reviewer or Runner."
 required_transition: null
 ```
+
+## Entry 34 — Stage 9 JDK legal-member repair dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+input_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Supersede the blocked Stage 9 run task with a bounded repair of the approved JDK archive-member contract; Runner remains unauthorized."
+findings:
+  - "blocker_id=STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001; root cause is reproducible and known."
+  - "The approved archive contains legal/* metadata members rejected by the prior file/directory-only validator."
+  - "No bundle tar, release or smoke was produced and no MATSim process ran."
+  - "repair_task_id=STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001 and repair_owner=INT-EXECUTOR."
+  - "Any later retry requires a new source SHA plus new staging, release and run identities."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md"
+blocker:
+  blocker_id: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+    approved_jdk_archive_sha256: "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f"
+    failing_member: "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+    staging_root: "/mnt/DiskM/by/hk_stage9_fe6a216_staging1"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_fe6a216_stage9_release1"
+  root_cause: "The extraction contract rejected approved legal metadata hard-link members before runtime/jdk-25 materialization."
+  changed_hypothesis_required_for_retry: "Accept only safely bounded legal/* hard links while preserving traversal, absolute-path, symlink/device, unexpected-root and executable/version guards."
+  repair_task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new pushed source SHA; new staging, release and run identities"
+  superseded_run_identity: "Stage 9 fe6a216 staging/release/run identity"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push one bounded repair commit, report only to Supervisor, and do not contact Reviewer or Runner."
+required_transition: null
+```

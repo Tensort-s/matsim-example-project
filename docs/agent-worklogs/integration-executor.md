@@ -971,3 +971,38 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact activation SHA and dispatches one final Reviewer review; Executor stops."
 required_transition: null
 ```
+
+## Entry 31 — Stage 9 JDK legal-member repair
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+input_sha: "fe6a216c91a3d871fee0d58672868127fc2482a0"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Safely materialize approved legal/* hard-link metadata as copied regular files without weakening archive or runtime-JDK guards."
+findings:
+  - "Only legal/* hard links to direct, existing, non-executable regular legal/* targets are accepted."
+  - "Symbolic links, devices, unsafe paths, non-legal links, missing targets, link chains and executable legal metadata remain rejected."
+  - "runtime/jdk-25/bin/java remains required as a regular executable reporting Java 25.0.3 after archive-hash verification."
+  - "Focused runtime-JDK validation passes 29/29 and the existing server-bundle contract validator remains passing."
+  - "No server access, bundle/upload, MATSim run, model/config/input semantic change, Reviewer or Runner contact occurred."
+diagnostics:
+  - "The approved production archive was not accessed by Executor; the exact observed member shape is represented by deterministic tar fixtures, while the production SHA lock remains unchanged."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_validation_v1/stage9_jdk_legal_member_repair_validation.json"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md"
+blocker:
+  blocker_id: "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and scope, then dispatches one read-only review; Executor waits."
+required_transition: null
+```

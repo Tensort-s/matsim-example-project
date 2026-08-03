@@ -1,0 +1,95 @@
+{
+  "schema_version": "stage9_jdk_legal_member_repair_validation_v1",
+  "task_id": "STAGE9-REPAIR-JDK-ARCHIVE-MEMBERS-001",
+  "blocker_id": "STAGE9-JDK-LEGAL-MEMBER-CONTRACT-001",
+  "exact_input_sha": "fe6a216c91a3d871fee0d58672868127fc2482a0",
+  "approved_jdk": {
+    "archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "version": "25.0.3",
+    "runtime_path": "runtime/jdk-25",
+    "java_executable": "runtime/jdk-25/bin/java",
+    "archive_bytes_accessed_by_executor": false,
+    "archive_lock_changed": false
+  },
+  "observed_failure": {
+    "member": "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO",
+    "staging_root": "/mnt/DiskM/by/hk_stage9_fe6a216_staging1",
+    "release_root": "/mnt/DiskM/by/hk_multimodal_cost_fe6a216_stage9_release1",
+    "bundle_produced": false,
+    "release_produced": false,
+    "matsim_process_started": false,
+    "root_cause": "The approved archive contains legal metadata hard-link members, while the prior contract accepted only directories and regular files."
+  },
+  "bounded_contract": {
+    "accepted_member_type": "legal_metadata_hardlink",
+    "accepted_path_prefix": "legal/",
+    "target_requirement": "existing direct non-executable regular file under legal/ in the same single JDK root",
+    "materialization": "copy target bytes to a new regular metadata file",
+    "still_rejected": [
+      "absolute path",
+      "path traversal",
+      "backslash path",
+      "unexpected or multiple JDK roots",
+      "symbolic link",
+      "device or other special member",
+      "hard link outside legal/",
+      "hard-link target outside legal/",
+      "missing target",
+      "hard-link chain",
+      "executable legal metadata",
+      "missing, non-regular, non-executable, or wrong-version bin/java"
+    ]
+  },
+  "validation": {
+    "python_interpreter": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe",
+    "commands": [
+      "python -m py_compile scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py",
+      "python scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py"
+    ],
+    "python_compile_exit_code": 0,
+    "runtime_jdk_contract": {
+      "schema_version": "stage8d_r1_runtime_jdk_contract_test_v2",
+      "status": "pass",
+      "checks_passed": 29,
+      "checks_total": 29,
+      "approved_legal_hardlink_accepted_and_materialized": true,
+      "root_relative_legal_hardlink_target_accepted": true,
+      "symbolic_link_member_rejected": true,
+      "device_member_rejected": true,
+      "hardlink_outside_legal_rejected": true,
+      "hardlink_traversal_target_rejected": true,
+      "hardlink_absolute_target_rejected": true,
+      "hardlink_missing_target_rejected": true,
+      "hardlink_chain_rejected": true,
+      "executable_legal_hardlink_rejected": true,
+      "executable_hardlink_target_rejected": true,
+      "runtime_java_exists_executable_and_version_checked": true
+    },
+    "existing_server_bundle_contract": {
+      "status": "passed",
+      "locked_input_count": 7,
+      "stale_active_defaults": [],
+      "server_access_performed": false,
+      "bundle_built": false
+    }
+  },
+  "scope": {
+    "java_model_changed": false,
+    "matsim_config_or_input_changed": false,
+    "taxi_pt_car_semantics_changed": false,
+    "server_access_performed": false,
+    "bundle_built_or_uploaded": false,
+    "runner_invoked": false,
+    "stage9_smoke_performed": false,
+    "stage10_or_later_started": false
+  },
+  "replacement_identity_required": {
+    "new_pushed_source_sha": true,
+    "reuse_staging_root_allowed": false,
+    "reuse_release_root_allowed": false,
+    "new_run_identity_required": true,
+    "separate_supervisor_runner_authorization_required": true
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

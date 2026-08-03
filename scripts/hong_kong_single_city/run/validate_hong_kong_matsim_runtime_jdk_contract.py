@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Stage 8D-R1 runtime-JDK closure without server access."""
+"""Validate Stage 8D-R1 JDK closure plus the bounded Stage 9 member repair."""
 
 from __future__ import annotations
 
@@ -87,6 +87,86 @@ def create_link_fixture(path: Path) -> None:
         link.type = tarfile.SYMTYPE
         link.linkname = "../../outside"
         archive.addfile(link)
+
+
+def create_special_member_fixture(path: Path) -> None:
+    with tarfile.open(path, "x:gz") as archive:
+        add_tar_member(archive, "jdk-25.0.3+9/", None, 0o755)
+        add_tar_member(archive, "jdk-25.0.3+9/bin/", None, 0o755)
+        add_tar_member(
+            archive,
+            "jdk-25.0.3+9/bin/java",
+            b"fixture\n",
+            0o755,
+        )
+        device = tarfile.TarInfo("jdk-25.0.3+9/legal/unsafe-device")
+        device.type = tarfile.CHRTYPE
+        device.mode = 0o644
+        archive.addfile(device)
+
+
+def add_hardlink_member(
+    archive: tarfile.TarFile,
+    name: str,
+    target: str,
+    mode: int = 0o644,
+) -> None:
+    member = tarfile.TarInfo(name)
+    member.type = tarfile.LNKTYPE
+    member.linkname = target
+    member.mode = mode
+    member.mtime = 0
+    archive.addfile(member)
+
+
+def create_legal_hardlink_fixture(
+    path: Path,
+    *,
+    link_relative: str = "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO",
+    target_relative: str = "legal/java.base/ADDITIONAL_LICENSE_INFO",
+    link_target: str | None = None,
+    include_target: bool = True,
+    link_mode: int = 0o644,
+    target_mode: int = 0o644,
+    target_is_hardlink: bool = False,
+) -> bytes:
+    root = "jdk-25.0.3+9"
+    content = b"fixture approved JDK legal metadata\n"
+    with tarfile.open(path, "x:gz") as archive:
+        add_tar_member(archive, f"{root}/", None, 0o755)
+        add_tar_member(archive, f"{root}/bin/", None, 0o755)
+        add_tar_member(
+            archive,
+            f"{root}/bin/java",
+            b"#!/usr/bin/env sh\nexit 0\n",
+            0o755,
+        )
+        if include_target and not target_is_hardlink:
+            add_tar_member(
+                archive,
+                f"{root}/{target_relative}",
+                content,
+                target_mode,
+            )
+        elif include_target:
+            add_tar_member(
+                archive,
+                f"{root}/legal/java.base/LICENSE",
+                content,
+                0o644,
+            )
+            add_hardlink_member(
+                archive,
+                f"{root}/{target_relative}",
+                f"{root}/legal/java.base/LICENSE",
+            )
+        add_hardlink_member(
+            archive,
+            f"{root}/{link_relative}",
+            link_target or f"{root}/{target_relative}",
+            link_mode,
+        )
+    return content
 
 
 def version_runner(version: str, returncode: int = 0) -> Callable[..., object]:
@@ -178,11 +258,145 @@ def main() -> int:
             "stale JDK layout",
         ) and not stale_target.exists()
 
-        link_archive = temporary / "link.tar.gz"
-        create_link_fixture(link_archive)
-        linked_member_rejected = expect_rejection(
-            lambda: preparer.validate_jdk_archive_layout(link_archive),
-            "linked archive member",
+        symbolic_link_archive = temporary / "symbolic-link.tar.gz"
+        create_link_fixture(symbolic_link_archive)
+        symbolic_link_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(symbolic_link_archive),
+            "symbolic-link archive member",
+        )
+
+        device_archive = temporary / "device.tar.gz"
+        create_special_member_fixture(device_archive)
+        device_member_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(device_archive),
+            "device archive member",
+        )
+
+        legal_archive = temporary / "legal-hardlink.tar.gz"
+        legal_content = create_legal_hardlink_fixture(legal_archive)
+        _, legal_entries = preparer.validate_jdk_archive_layout(legal_archive)
+        legal_entry = next(
+            entry
+            for entry in legal_entries
+            if entry["relative_path"]
+            == "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+        )
+        legal_runtime = temporary / "legal-hardlink/runtime/jdk-25"
+        legal_materialized = preparer.materialize_runtime_jdk(
+            legal_archive,
+            preparer.sha256_file(legal_archive),
+            legal_runtime,
+            version_runner=version_runner(preparer.APPROVED_JAVA_VERSION),
+            executable_checker=lambda _path: True,
+        )
+        legal_output = (
+            legal_runtime / "legal/jdk.jshell/ADDITIONAL_LICENSE_INFO"
+        )
+        legal_hardlink_accepted_and_materialized = all(
+            (
+                legal_entry["member_type"] == "legal_metadata_hardlink",
+                legal_entry["source_relative_path"]
+                == "legal/java.base/ADDITIONAL_LICENSE_INFO",
+                legal_output.is_file(),
+                legal_output.read_bytes() == legal_content,
+                legal_materialized[
+                    "materialized_legal_metadata_hardlink_count"
+                ]
+                == 1,
+            )
+        )
+
+        root_relative_archive = temporary / "root-relative-hardlink.tar.gz"
+        create_legal_hardlink_fixture(
+            root_relative_archive,
+            link_target="legal/java.base/ADDITIONAL_LICENSE_INFO",
+        )
+        _, root_relative_entries = preparer.validate_jdk_archive_layout(
+            root_relative_archive
+        )
+        root_relative_hardlink_accepted = any(
+            entry.get("source_relative_path")
+            == "legal/java.base/ADDITIONAL_LICENSE_INFO"
+            for entry in root_relative_entries
+            if entry["member_type"] == "legal_metadata_hardlink"
+        )
+
+        outside_legal_archive = temporary / "outside-legal-hardlink.tar.gz"
+        create_legal_hardlink_fixture(
+            outside_legal_archive,
+            link_relative="lib/ADDITIONAL_LICENSE_INFO",
+        )
+        outside_legal_hardlink_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(outside_legal_archive),
+            "hard link outside legal metadata",
+        )
+
+        traversal_target_archive = temporary / "hardlink-traversal.tar.gz"
+        create_legal_hardlink_fixture(
+            traversal_target_archive,
+            link_target="../outside",
+        )
+        hardlink_traversal_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                traversal_target_archive
+            ),
+            "hard-link traversal target",
+        )
+
+        absolute_target_archive = temporary / "hardlink-absolute.tar.gz"
+        create_legal_hardlink_fixture(
+            absolute_target_archive,
+            link_target="/legal/java.base/ADDITIONAL_LICENSE_INFO",
+        )
+        hardlink_absolute_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                absolute_target_archive
+            ),
+            "hard-link absolute target",
+        )
+
+        missing_target_archive = temporary / "hardlink-missing.tar.gz"
+        create_legal_hardlink_fixture(
+            missing_target_archive,
+            include_target=False,
+        )
+        hardlink_missing_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(missing_target_archive),
+            "missing hard-link target",
+        )
+
+        chained_target_archive = temporary / "hardlink-chain.tar.gz"
+        create_legal_hardlink_fixture(
+            chained_target_archive,
+            target_is_hardlink=True,
+        )
+        hardlink_chain_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(chained_target_archive),
+            "hard-link target chain",
+        )
+
+        executable_legal_archive = temporary / "hardlink-executable.tar.gz"
+        create_legal_hardlink_fixture(
+            executable_legal_archive,
+            link_mode=0o755,
+        )
+        executable_legal_hardlink_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                executable_legal_archive
+            ),
+            "executable legal metadata hard link",
+        )
+
+        executable_target_archive = temporary / "hardlink-target-exec.tar.gz"
+        create_legal_hardlink_fixture(
+            executable_target_archive,
+            target_mode=0o755,
+        )
+        executable_hardlink_target_rejected = expect_rejection(
+            lambda: preparer.validate_jdk_archive_layout(
+                executable_target_archive
+            ),
+            "executable legal metadata hard-link target",
         )
 
         missing_archive = temporary / "missing-java.tar.gz"
@@ -291,7 +505,31 @@ def main() -> int:
             "stale_jdk_layout_rejected_before_target_creation": (
                 stale_layout_rejected
             ),
-            "linked_archive_member_rejected": linked_member_rejected,
+            "symbolic_link_member_rejected": symbolic_link_rejected,
+            "device_member_rejected": device_member_rejected,
+            "approved_legal_hardlink_accepted_and_materialized": (
+                legal_hardlink_accepted_and_materialized
+            ),
+            "root_relative_legal_hardlink_target_accepted": (
+                root_relative_hardlink_accepted
+            ),
+            "hardlink_outside_legal_rejected": (
+                outside_legal_hardlink_rejected
+            ),
+            "hardlink_traversal_target_rejected": hardlink_traversal_rejected,
+            "hardlink_absolute_target_rejected": (
+                hardlink_absolute_target_rejected
+            ),
+            "hardlink_missing_target_rejected": (
+                hardlink_missing_target_rejected
+            ),
+            "hardlink_chain_rejected": hardlink_chain_rejected,
+            "executable_legal_hardlink_rejected": (
+                executable_legal_hardlink_rejected
+            ),
+            "executable_hardlink_target_rejected": (
+                executable_hardlink_target_rejected
+            ),
             "missing_java_rejected": missing_java_rejected,
             "non_executable_java_rejected": nonexec_java_rejected,
             "wrong_java_version_rejected": wrong_version_rejected,
@@ -315,7 +553,7 @@ def main() -> int:
                 + ", ".join(key for key, value in checks.items() if not value)
             )
         result = {
-            "schema_version": "stage8d_r1_runtime_jdk_contract_test_v1",
+            "schema_version": "stage8d_r1_runtime_jdk_contract_test_v2",
             "status": "pass",
             "approved_runtime_contract": {
                 "archive_sha256_production_lock": (

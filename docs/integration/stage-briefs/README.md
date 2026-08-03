@@ -13,7 +13,12 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md)
+- [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md)
+
+Blocked/superseded briefs:
+
+- [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md) —
+  `BLOCKED_SUPERSEDED_BY_REPAIR`; no Runner execution is authorized.
 
 Canonical review template:
 
