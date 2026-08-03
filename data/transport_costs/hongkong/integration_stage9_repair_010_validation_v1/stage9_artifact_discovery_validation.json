@@ -1,0 +1,140 @@
+{
+  "schema_version": "stage9_artifact_discovery_validation_v1",
+  "task_id": "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010",
+  "blocker_id": "STAGE9-RUNNER-SHADE-CLOSURE-002",
+  "exact_input_sha": "3237c8f8e6bacf10feaa9bb515f58612c269f3a3",
+  "failure_identity": {
+    "staging_root": "/mnt/DiskM/by/hk_stage9_3237c8_staging7",
+    "reserved_run_identity": "smoke_qsim_v1_3237c8_run7",
+    "run_started": false,
+    "package_exit_code": 0,
+    "release_performed": false,
+    "bundle_performed": false,
+    "upload_performed": false,
+    "smoke_performed": false,
+    "status": "BLOCKED_SUPERSEDED_BY_REPAIR"
+  },
+  "diagnosis": {
+    "root_cause_status": "KNOWN",
+    "root_cause": "Runner artifact discovery scanned only build_root/target and selected the thin JAR although the POM-configured root Shade JAR existed with complete dependency closure.",
+    "evidence_path": "/mnt/DiskM/by/hk_stage9_3237c8_staging7/evidence/shade_server_diagnosis_009/diagnosis.json",
+    "exact_failure_identity_matched": true,
+    "direct_failure_condition_observed": true,
+    "causal_chain_demonstrated": true,
+    "material_alternatives_checked": true,
+    "repair_hypothesis_testable": true
+  },
+  "diagnosed_artifacts": {
+    "root_shade_jar": {
+      "relative_path": "matsim-example-project-0.0.1-SNAPSHOT.jar",
+      "sha256": "54c65711a2e023cdff7986a840bcb7f81889d6f07233c94f02f50b204f2345c7",
+      "size_bytes": 300597135,
+      "zip_entry_count": 101152,
+      "exists": true,
+      "deployment_allowed": true
+    },
+    "target_thin_jar": {
+      "relative_path": "target/matsim-example-project-0.0.1-SNAPSHOT.jar",
+      "sha256_prefix": "afc0d618",
+      "size_bytes": 454252,
+      "zip_entry_count": 163,
+      "deployment_allowed": false,
+      "selected_by_failed_discovery": true
+    }
+  },
+  "pom_driven_discovery_contract": {
+    "pom_sha256": "6eb7ceb996c1222c7e24550ff10c3d68e524fcef9392422d5b4ba51e2b9c4d6e",
+    "artifact_id": "matsim-example-project",
+    "version": "0.0.1-SNAPSHOT",
+    "shade_phase": "package",
+    "shade_output_file": "${project.basedir}/${project.build.finalName}.jar",
+    "build_root_argument_required": true,
+    "deployment_relative_path": "matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "target_relative_path": "target/matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "root_path_inspected_first": true,
+    "root_regular_file_required": true,
+    "root_symlink_allowed": false,
+    "glob_selection_allowed": false,
+    "target_selection_allowed": false,
+    "size_based_selection_allowed": false,
+    "arbitrary_fat_jar_argument_allowed": false,
+    "root_absent_fails_closed": true
+  },
+  "required_discovery_evidence": [
+    "exact discovery command",
+    "absolute build root and deployment path",
+    "root JAR regular/non-symlink stat and mode",
+    "root JAR size and SHA256",
+    "root JAR member count and required-class matrix",
+    "explicit target thin-JAR stat/SHA and rejection"
+  ],
+  "required_dependency_classes": [
+    "org/matsim/core/controler/AbstractModule.class",
+    "org/matsim/core/controler/Controler.class",
+    "org/matsim/core/config/ConfigUtils.class",
+    "ch/sbb/matsim/routing/pt/raptor/SwissRailRaptorModule.class",
+    "org/duckdb/DuckDBDriver.class",
+    "com/google/inject/Guice.class"
+  ],
+  "canonical_implementation_assertions": {
+    "bundle_preparer_path": "scripts/hong_kong_single_city/run/prepare_hong_kong_matsim_server_bundle.py",
+    "bundle_preparer_sha256": "01d06f69d28b9dc034e82a2dd545a97e27c901e840f6a3d206afaefef90fc384",
+    "resolver": "resolve_deployment_jar(build_root)",
+    "resolver_selects_root_path": true,
+    "resolver_rejects_target_only": true,
+    "validator_path": "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_shaded_jar_contract.py",
+    "validator_sha256": "fb22b06229c75ee03ac9fcb97034323b213455ee9de6ab149feb1444a09dddee",
+    "root_selection_guard_present": true,
+    "target_rejection_guard_present": true,
+    "required_dependency_inventory_guard_present": true,
+    "implementation_changed_by_repair": false
+  },
+  "deterministic_contract_matrix": [
+    {
+      "case": "root regular non-symlink JAR with all required classes",
+      "expected": "accept root path for later canonical bundle resolver",
+      "result": "pass"
+    },
+    {
+      "case": "target thin JAR exists and root JAR exists",
+      "expected": "inspect root first and reject target as deployment input",
+      "result": "pass"
+    },
+    {
+      "case": "target thin JAR exists but root JAR is absent",
+      "expected": "fail closed before bundle command",
+      "result": "pass"
+    },
+    {
+      "case": "root JAR missing a required project or dependency class",
+      "expected": "fail closed before bundle command",
+      "result": "pass"
+    },
+    {
+      "case": "glob, first-match, size-based or arbitrary target selection",
+      "expected": "reject discovery method",
+      "result": "pass"
+    }
+  ],
+  "unchanged_contracts": {
+    "bundle_resolver_or_validator_changed": false,
+    "java_or_python_runtime_implementation_changed": false,
+    "matsim_config_or_locked_input_changed": false,
+    "taxi_pt_car_cost_semantics_changed": false,
+    "jdk_contract_changed": false,
+    "server_state_changed_by_executor": false,
+    "maven_executed_by_executor": false,
+    "runner_authorized": false,
+    "stage_9_execution_authorized": false,
+    "stage_10_or_later_authorized": false
+  },
+  "replacement_identity_required": {
+    "new_repair_sha": true,
+    "new_staging_root": true,
+    "new_bundle_sha": true,
+    "new_release_root": true,
+    "new_run_identity": true,
+    "staging7_or_run7_reuse_allowed": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

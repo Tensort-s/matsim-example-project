@@ -13,10 +13,13 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md)
+- [`STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md`](STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md)
 
 Blocked/superseded briefs:
 
+- [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md) —
+  its immutable wrapper-mode contract remains applicable; the later staging7
+  identity exposed a distinct Runner artifact-discovery defect after package.
 - [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md) —
   its absolute-cwd guard remains valid; the next identity exposed a distinct
   archive-to-runtime wrapper-mode mismatch before Maven.

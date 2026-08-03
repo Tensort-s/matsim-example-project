@@ -1195,3 +1195,37 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 38 — Stage 9 artifact-discovery contract
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+input_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Require POM-driven root Shade JAR discovery, complete root evidence and explicit target thin-JAR rejection before bundle."
+findings:
+  - "The diagnosed root Shade JAR existed with SHA256 54c65711a2e023cdff7986a840bcb7f81889d6f07233c94f02f50b204f2345c7, 300,597,135 bytes and 101,152 entries."
+  - "The failed discovery scanned only target/ and selected the 454,252-byte thin JAR with SHA prefix afc0d618."
+  - "The deterministic contract uses only BUILD_ROOT/matsim-example-project-0.0.1-SNAPSHOT.jar and forbids globs, target selection and size/first-match selection."
+  - "Root stat, SHA256, member count, required-class matrix and target rejection must be recorded before any canonical bundle command."
+  - "Canonical resolver/validator hashes are recorded and their implementation remains unchanged; no Maven, server, Runner, Stage 9 or Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_010_validation_v1/stage9_artifact_discovery_validation.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md"
+  - "/mnt/DiskM/by/hk_stage9_3237c8_staging7/evidence/shade_server_diagnosis_009/diagnosis.json"
+blocker:
+  blocker_id: "STAGE9-RUNNER-SHADE-CLOSURE-002"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
+required_transition: null
+```

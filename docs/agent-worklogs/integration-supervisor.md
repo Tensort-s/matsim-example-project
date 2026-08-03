@@ -1313,3 +1313,45 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push one governance-only mode-preservation repair, report only to Supervisor, and stop."
 required_transition: null
 ```
+
+## Entry 41 — Stage 9 artifact-discovery repair dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+input_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch a governance-only POM-driven root Shade JAR discovery contract; Runner and Stage 9 execution remain unauthorized."
+findings:
+  - "Staging7 package exited zero and produced the root Shade JAR, but Runner discovery scanned only build_root/target."
+  - "The root JAR is 300,597,135 bytes, has 101,152 entries and SHA256 54c65711a2e023cdff7986a840bcb7f81889d6f07233c94f02f50b204f2345c7."
+  - "Runner selected the 454,252-byte target thin JAR with SHA prefix afc0d618 and observed missing MATSim/Guice classes."
+  - "The canonical bundle resolver already selects the build-root top-level JAR and rejects target-only input; no implementation change is needed."
+  - "Staging7 and reserved run7 remain historical and forbidden for reuse; bundle, upload and smoke did not run."
+diagnostics: []
+evidence_refs:
+  - "/mnt/DiskM/by/hk_stage9_3237c8_staging7/evidence/shade_server_diagnosis_009/diagnosis.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md"
+blocker:
+  blocker_id: "STAGE9-RUNNER-SHADE-CLOSURE-002"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
+    staging_root: "/mnt/DiskM/by/hk_stage9_3237c8_staging7"
+    reserved_run_identity: "smoke_qsim_v1_3237c8_run7"
+    selected_artifact: "build_root/target/matsim-example-project-0.0.1-SNAPSHOT.jar"
+  root_cause: "Runner scanned only build_root/target and selected the thin JAR while the POM-configured root Shade JAR existed with dependency closure."
+  changed_hypothesis_required_for_retry: "Derive the exact root JAR path from POM/build-root contract, inspect it first, record stat/SHA/member inventory, and reject target/ explicitly before bundle."
+  repair_task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new repair SHA, staging, bundle, release and run identities"
+  superseded_run_identity: "source 3237c8f / staging7 / reserved run7"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push one governance-only artifact-discovery repair, report only to Supervisor, and stop."
+required_transition: null
+```
