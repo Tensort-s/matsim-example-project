@@ -525,3 +525,31 @@ hard_gate_status: "PASS"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor may close Stage 8B and issue a separate Stage 8C authorization; Reviewer does not authorize execution or Runner."
 ```
+
+## Entry 16 — Stage 8D-R1 exact-SHA review
+
+Compact archival transfer from INT-SUPERVISOR; only the supplied review facts
+are appended:
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE exact-SHA review"
+input_sha: "5f40aee6e1988b11fa1a35836065bef99b130191"
+reviewed_output_sha: "339ef046c55faf3e727a19d32234612bd6974241"
+decision: "PASS"
+findings:
+  - "The exact repair SHA received Reviewer PASS with no blockers."
+  - "The reviewed repair task is STAGE8D-R1-JDK-RUNTIME-CLOSURE for blocker STAGE9-RUNTIME-JDK-MISSING-001."
+  - "Reviewer review occurred after Supervisor formally dispatched the blocker in UNDER_REVIEW state."
+diagnostics:
+  - "The Supervisor transfer supplied no exact Reviewer timestamp or additional detailed findings; no missing facts are inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_r1_jdk_runtime_closure_validation.json"
+  - "docs/integration/stage-briefs/STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor may close the repair blocker; Reviewer does not authorize upload, Runner, server execution or Stage 9."
+required_transition: null
+```

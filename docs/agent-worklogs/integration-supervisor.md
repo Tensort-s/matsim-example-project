@@ -908,3 +908,53 @@ hard_gate_status: "REPAIR_DISPATCHED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Implement one focused repair from exact input 5f40aee6, push it, report only to Supervisor, and do not contact Reviewer or Runner."
 ```
+
+## Entry 31 — Stage 8D-R1 repair gate closure
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE gate closure"
+input_sha: "5f40aee6e1988b11fa1a35836065bef99b130191"
+output_sha_or_status: "339ef046c55faf3e727a19d32234612bd6974241"
+decision: "Close blocker STAGE9-RUNTIME-JDK-MISSING-001 after exact-SHA Reviewer PASS with no blockers."
+findings:
+  - "Supervisor formally dispatched exact repair SHA 339ef046 for review and transitioned REPAIR_DISPATCHED to UNDER_REVIEW."
+  - "Reviewer returned PASS for exact repair SHA 339ef046 with blockers=[]."
+  - "Supervisor transitioned UNDER_REVIEW to CLOSED; only the repair task is closed."
+  - "The original Stage 9 identity remains BLOCKED_SUPERSEDED_BY_REPAIR."
+  - "CLOSED does not authorize bundle upload, server run, Runner action or Stage 9."
+diagnostics:
+  - "The closure authorization supplied no exact Reviewer or closure timestamp beyond 2026-08-03; no finer timestamp is inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_r1_jdk_runtime_closure_validation.json"
+  - "docs/integration/stage-briefs/STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  status_transition:
+    - "REPAIR_DISPATCHED"
+    - "UNDER_REVIEW"
+    - "CLOSED"
+  failure_identity:
+    stage: "Stage 9 joint short smoke"
+    bundle_source_sha: "674a60258d8433bd04f868a8a447525561bd3907"
+    control_plane_sha: "9f21414fed09f36bdcb76e4f681e77be7ce53587"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2"
+    command: "scripts/run_smoke.sh"
+    required_executable: "runtime/jdk-25/bin/java"
+  repair_task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+  exact_repair_sha: "339ef046c55faf3e727a19d32234612bd6974241"
+  replacement_identity_required:
+    - "new pushed repair commit: 339ef046c55faf3e727a19d32234612bd6974241"
+    - "new bundle/release identity under separate authorization"
+    - "runtime/jdk-25/bin/java existence, executability and Java 25.0.3 preflight"
+  superseded_run_identity: "Stage9 original release/command/runtime identity"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+  stage_9_authorized: false
+blockers: []
+hard_gate_status: "PASS_CLOSED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Create one append-only closure-evidence commit; afterward wait for Supervisor verification and final read-only review."
+required_transition: null
+```

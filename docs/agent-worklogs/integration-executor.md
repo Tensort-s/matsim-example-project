@@ -868,3 +868,37 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_R1_GATE"
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact repair SHA/parent and dispatches Reviewer; Executor stops and Runner/Stage 9 remain unauthorized."
 ```
+
+## Entry 28 — Stage 8D-R1 append-only closure evidence
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE evidence closure"
+input_sha: "339ef046c55faf3e727a19d32234612bd6974241"
+output_sha_or_status: "exact pushed closure-evidence SHA supplied in the Supervisor handoff"
+decision: "Append the transferred Reviewer PASS and Supervisor repair closure without changing implementation, evidence content or current business-stage state."
+findings:
+  - "Reviewer PASS for exact repair SHA 339ef046 and blockers=[] is preserved in the Reviewer worklog."
+  - "Supervisor closure preserves blocker_id STAGE9-RUNTIME-JDK-MISSING-001 and REPAIR_DISPATCHED -> UNDER_REVIEW -> CLOSED."
+  - "Failure identity, repair_task_id, replacement identity and superseded run identity remain explicit."
+  - "Original Stage 9 remains BLOCKED_SUPERSEDED_BY_REPAIR."
+  - "CLOSED does not authorize bundle upload, server execution, Runner or Stage 9."
+diagnostics: []
+evidence_refs:
+  - "docs/agent-worklogs/integration-reviewer.md#entry-16--stage-8d-r1-exact-sha-review"
+  - "docs/agent-worklogs/integration-supervisor.md#entry-31--stage-8d-r1-repair-gate-closure"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  status: "CLOSED"
+  repair_task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+  exact_repair_sha: "339ef046c55faf3e727a19d32234612bd6974241"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+  stage_9_authorized: false
+blockers: []
+hard_gate_status: "PENDING_SUPERVISOR_VERIFICATION_AND_FINAL_READ_ONLY_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact closure-evidence SHA and dispatches final read-only review; Executor waits."
+required_transition: null
+```
