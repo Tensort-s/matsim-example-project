@@ -21,7 +21,7 @@ import tarfile
 import xml.etree.ElementTree as ET
 import zipfile
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -38,6 +38,12 @@ SUPPLY_RELATIVE = Path(
 CONFIG_NAME = "config_hong_kong_5pct_v2_activity_modechoice_50it.xml"
 SERVER_BUILD_COMMAND = "./mvnw -DskipTests package"
 MATSIM_VERSION = "2026.0"
+APPROVED_JAVA_VERSION = "25.0.3"
+APPROVED_JDK_ARCHIVE_SHA256 = (
+    "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f"
+)
+RUNTIME_JDK_RELATIVE = "runtime/jdk-25"
+RUNTIME_JAVA_RELATIVE = "runtime/jdk-25/bin/java"
 SOURCE_SNAPSHOT_SCHEMA = "hong_kong_exact_git_tree_source_snapshot_v1"
 LOCKED_INPUT_PACK_SCHEMA = "hong_kong_external_locked_input_pack_v1"
 EXTERNAL_LOCKED_INPUT_PACK_MODE = "external_locked_input_pack"
@@ -923,6 +929,218 @@ def verify_fat_jar(path: Path) -> tuple[str, list[str]]:
     return sha256_file(path), list(REQUIRED_RUNTIME_CLASSES)
 
 
+def validate_jdk_archive_layout(
+    archive_path: Path,
+) -> tuple[str, list[dict[str, Any]]]:
+    """Validate a single-root Linux JDK archive without extracting it."""
+    if not archive_path.is_file():
+        raise FileNotFoundError(archive_path)
+    entries: list[dict[str, Any]] = []
+    roots: set[str] = set()
+    relative_paths: set[str] = set()
+    with tarfile.open(archive_path, "r:gz") as archive:
+        for member in archive.getmembers():
+            raw_name = member.name.rstrip("/")
+            if (
+                not raw_name
+                or "\\" in raw_name
+                or raw_name.startswith("/")
+                or any(part in ("", ".", "..") for part in raw_name.split("/"))
+            ):
+                raise ValueError(f"Unsafe JDK archive path: {member.name!r}")
+            parts = PurePosixPath(raw_name).parts
+            roots.add(parts[0])
+            if len(parts) == 1:
+                if not member.isdir():
+                    raise ValueError("JDK archive root must be a directory")
+                continue
+            if not (member.isdir() or member.isfile()):
+                raise ValueError(
+                    f"JDK archive contains unsupported member: {member.name}"
+                )
+            relative = PurePosixPath(*parts[1:]).as_posix()
+            validate_snapshot_path(relative)
+            if relative in relative_paths:
+                raise ValueError(f"Duplicate JDK archive path: {relative}")
+            relative_paths.add(relative)
+            entries.append(
+                {
+                    "archive_name": member.name,
+                    "relative_path": relative,
+                    "is_directory": member.isdir(),
+                    "mode": stat.S_IMODE(member.mode),
+                    "size_bytes": member.size,
+                }
+            )
+    if len(roots) != 1:
+        raise ValueError("JDK archive must contain exactly one top-level directory")
+    archive_root = next(iter(roots))
+    if not archive_root.startswith("jdk-25"):
+        raise ValueError(f"Stale or unsupported JDK archive root: {archive_root}")
+    kinds = {
+        entry["relative_path"]: (
+            "directory" if entry["is_directory"] else "file"
+        )
+        for entry in entries
+    }
+    for relative in kinds:
+        for parent in PurePosixPath(relative).parents:
+            if parent == PurePosixPath("."):
+                continue
+            if kinds.get(parent.as_posix()) == "file":
+                raise ValueError(f"JDK archive file/directory collision: {relative}")
+    java_entries = [
+        entry
+        for entry in entries
+        if entry["relative_path"] == "bin/java" and not entry["is_directory"]
+    ]
+    if len(java_entries) != 1:
+        raise ValueError("JDK archive must contain exactly one bin/java")
+    if not java_entries[0]["mode"] & 0o111:
+        raise ValueError("JDK archive bin/java is not executable")
+    return archive_root, sorted(
+        entries,
+        key=lambda entry: (
+            PurePosixPath(entry["relative_path"]).as_posix().count("/"),
+            not entry["is_directory"],
+            entry["relative_path"],
+        ),
+    )
+
+
+def verify_runtime_java(
+    runtime_root: Path,
+    expected_version: str = APPROVED_JAVA_VERSION,
+    version_runner: Any = None,
+    executable_checker: Any = None,
+) -> dict[str, Any]:
+    java_path = runtime_root / "bin/java"
+    if not java_path.is_file():
+        raise FileNotFoundError(java_path)
+    java_mode = stat.S_IMODE(java_path.stat().st_mode)
+    is_executable = (
+        executable_checker(java_path)
+        if executable_checker is not None
+        else bool(java_mode & 0o111)
+    )
+    if not is_executable:
+        raise ValueError(f"Runtime Java is not executable: {java_path}")
+    runner = version_runner or subprocess.run
+    completed = runner(
+        [str(java_path), "-version"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    output = "\n".join(
+        value.strip()
+        for value in (completed.stdout or "", completed.stderr or "")
+        if value.strip()
+    )
+    if completed.returncode != 0:
+        raise ValueError(
+            f"Runtime Java version preflight failed ({completed.returncode}): "
+            f"{output}"
+        )
+    required_marker = f'version "{expected_version}"'
+    if required_marker not in output:
+        raise ValueError(
+            f"Runtime Java version mismatch; expected {required_marker!r}, "
+            f"observed {output!r}"
+        )
+    return {
+        "runtime_path": RUNTIME_JDK_RELATIVE,
+        "java_executable": RUNTIME_JAVA_RELATIVE,
+        "java_executable_mode": format(java_mode, "04o"),
+        "java_executable_check_passed": True,
+        "java_version_expected": expected_version,
+        "java_version_output": output.splitlines()[0],
+        "java_version_preflight_passed": True,
+    }
+
+
+def materialize_runtime_jdk(
+    archive_path: Path,
+    expected_archive_sha256: str,
+    runtime_root: Path,
+    expected_version: str = APPROVED_JAVA_VERSION,
+    version_runner: Any = None,
+    executable_checker: Any = None,
+) -> dict[str, Any]:
+    """Extract a verified JDK into a new, confined runtime root and preflight it."""
+    assert_new_path(runtime_root)
+    validate_sha256(expected_archive_sha256, "JDK archive SHA256")
+    archive_sha256 = sha256_file(archive_path)
+    if archive_sha256 != expected_archive_sha256:
+        raise ValueError(f"JDK checksum mismatch: {archive_sha256}")
+    archive_root, entries = validate_jdk_archive_layout(archive_path)
+    runtime_root.parent.mkdir(parents=True, exist_ok=True)
+    runtime_root.mkdir(exist_ok=False)
+    with tarfile.open(archive_path, "r:gz") as archive:
+        members = {member.name: member for member in archive.getmembers()}
+        for entry in entries:
+            target = runtime_root / Path(entry["relative_path"])
+            try:
+                target.resolve().relative_to(runtime_root.resolve())
+            except ValueError as error:
+                raise ValueError(
+                    f"JDK extraction escaped runtime root: {target}"
+                ) from error
+            if entry["is_directory"]:
+                target.mkdir(parents=True, exist_ok=True)
+                target.chmod(0o755)
+                continue
+            assert_new_path(target)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            member = members[entry["archive_name"]]
+            source = archive.extractfile(member)
+            if source is None:
+                raise ValueError(f"Cannot read JDK archive member: {member.name}")
+            with source, target.open("xb") as destination:
+                shutil.copyfileobj(source, destination)
+            target.chmod(0o755 if entry["mode"] & 0o111 else 0o644)
+    preflight = verify_runtime_java(
+        runtime_root,
+        expected_version=expected_version,
+        version_runner=version_runner,
+        executable_checker=executable_checker,
+    )
+    return {
+        "archive_sha256": archive_sha256,
+        "archive_verified_before_extraction": True,
+        "archive_top_level": archive_root,
+        "extraction_confined_to": RUNTIME_JDK_RELATIVE,
+        "unrelated_paths_overwritten_or_deleted": False,
+        "extracted_file_count": sum(
+            not entry["is_directory"] for entry in entries
+        ),
+        **preflight,
+    }
+
+
+def verify_bundle_runtime_contract(bundle_path: Path) -> dict[str, Any]:
+    if not bundle_path.is_file():
+        raise FileNotFoundError(bundle_path)
+    with tarfile.open(bundle_path, "r:*") as archive:
+        try:
+            java_member = archive.getmember(RUNTIME_JAVA_RELATIVE)
+        except KeyError as error:
+            raise ValueError(
+                f"Bundle is missing launcher-required {RUNTIME_JAVA_RELATIVE}"
+            ) from error
+        if not java_member.isfile() or not java_member.mode & 0o111:
+            raise ValueError(
+                f"Bundle runtime Java is absent or non-executable: "
+                f"{RUNTIME_JAVA_RELATIVE}"
+            )
+    return {
+        "launcher_required_executable": RUNTIME_JAVA_RELATIVE,
+        "bundle_member_present": True,
+        "bundle_member_executable": True,
+        "bundle_member_mode": format(stat.S_IMODE(java_member.mode), "04o"),
+    }
+
+
 def assert_new_path(path: Path) -> None:
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite existing path: {path}")
@@ -1084,6 +1302,18 @@ export XDG_CACHE_HOME="$ROOT/home/.cache"
 export JAVA_HOME="$ROOT/runtime/jdk-25"
 export PATH="$JAVA_HOME/bin:/usr/bin:/bin"
 export JAVA_TOOL_OPTIONS="-Djava.io.tmpdir=$ROOT/tmp -Djava.util.prefs.userRoot=$ROOT/home/.java"
+if ! test -x "$JAVA_HOME/bin/java"; then
+  printf '%s\n' "Missing or non-executable runtime Java: $JAVA_HOME/bin/java" >&2
+  exit 91
+fi
+if ! java_version_output="$("$JAVA_HOME/bin/java" -version 2>&1)"; then
+  printf '%s\n' "Runtime Java version preflight failed" >&2
+  exit 92
+fi
+case "$java_version_output" in
+  *'version "{APPROVED_JAVA_VERSION}"'*) ;;
+  *) printf '%s\n' "Unexpected runtime Java version: $java_version_output" >&2; exit 93 ;;
+esac
 set +e
 /usr/bin/time -v "$JAVA_HOME/bin/java" -Xms16g -Xmx96g \\
   -cp "$ROOT/app/matsim-example-project-0.0.1-SNAPSHOT.jar" \\
@@ -1170,14 +1400,13 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(
             f"MATSim version must be {MATSIM_VERSION}, got {args.matsim_version}"
         )
-    if not args.java_version.startswith("25"):
-        raise ValueError("The server build must use Linux JDK 25")
+    if args.java_version != APPROVED_JAVA_VERSION:
+        raise ValueError(
+            f"The server build must use Linux JDK {APPROVED_JAVA_VERSION}"
+        )
+    if args.jdk_sha256 != APPROVED_JDK_ARCHIVE_SHA256:
+        raise ValueError("JDK archive SHA256 is not the approved contract value")
     jar_hash, runtime_classes = verify_fat_jar(args.fat_jar)
-    if not args.jdk_archive.is_file():
-        raise FileNotFoundError(args.jdk_archive)
-    jdk_hash = sha256_file(args.jdk_archive)
-    if jdk_hash != args.jdk_sha256:
-        raise ValueError(f"JDK checksum mismatch: {jdk_hash}")
     current_sources, input_contract = resolve_input_contract(args)
     input_hashes = input_contract["locked_input_sha256"]
     args.staging_dir.mkdir(parents=True)
@@ -1189,7 +1418,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "input",
         "logs",
         "manifests",
-        "runtime/jdk-25",
+        "runtime",
         "runs",
         "scripts",
         "tmp",
@@ -1216,6 +1445,14 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
     }
     for relative, source in sources.items():
         copy_new(source, args.staging_dir / relative)
+
+    jdk_runtime = materialize_runtime_jdk(
+        args.jdk_archive,
+        args.jdk_sha256,
+        args.staging_dir / RUNTIME_JDK_RELATIVE,
+        expected_version=args.java_version,
+    )
+    jdk_hash = jdk_runtime["archive_sha256"]
 
     formal_plans = args.staging_dir / "input/plans_routed_5pct_v2.xml.gz"
     selected = select_smoke_person_ids(formal_plans, SMOKE_PERSON_COUNT)
@@ -1313,6 +1550,7 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
         "formal_output_interval": 10,
         "formal_run_started_by_deployment": False,
         "jdk_sha256": jdk_hash,
+        "jdk_runtime": jdk_runtime,
         "append_only_remote_policy": True,
         "stale_v1_or_pre_ferry_input_allowed": False,
     }
@@ -1336,6 +1574,11 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
             info.mode = 0o750
         elif info.name.startswith("scripts/") and info.name.endswith(".sh"):
             info.mode = 0o750
+        elif (
+            info.name.startswith(RUNTIME_JDK_RELATIVE + "/")
+            and info.mode & 0o111
+        ):
+            info.mode = 0o750
         else:
             info.mode = 0o640
         return info
@@ -1348,12 +1591,14 @@ def build_bundle(args: argparse.Namespace) -> dict[str, Any]:
                 recursive=True,
                 filter=normalize_tar_permissions,
             )
+    bundle_runtime_contract = verify_bundle_runtime_contract(args.bundle_path)
     bundle_summary = {
         **metadata,
         "staging_dir": str(args.staging_dir),
         "bundle_path": str(args.bundle_path),
         "bundle_size_bytes": args.bundle_path.stat().st_size,
         "bundle_sha256": sha256_file(args.bundle_path),
+        "bundle_runtime_contract": bundle_runtime_contract,
         "release_file_count": sum(
             path.is_file() for path in args.staging_dir.rglob("*")
         ),
@@ -1402,7 +1647,7 @@ def add_bundle_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--jdk-archive", type=Path, required=True)
     parser.add_argument(
         "--jdk-sha256",
-        default="69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+        default=APPROVED_JDK_ARCHIVE_SHA256,
     )
     parser.add_argument("--release-root", required=True)
     parser.add_argument("--staging-dir", type=Path, required=True)

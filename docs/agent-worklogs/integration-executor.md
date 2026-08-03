@@ -836,3 +836,35 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_04
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer or alter Runner/Stage 9."
 ```
+
+## Entry 27 — Stage 8D-R1 JDK runtime closure
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+input_sha: "5f40aee6e1988b11fa1a35836065bef99b130191"
+output_sha_or_status: "exact pushed SHA supplied in the Supervisor handoff"
+decision: "Close the archive-only release gap with confined JDK extraction plus executable/version checks in preparation, bundle inspection and launcher preflight."
+findings:
+  - "The approved archive SHA is checked before creating the new runtime/jdk-25 target."
+  - "Unsafe, stale, linked, missing, non-executable, wrong-version and pre-existing-target cases fail closed."
+  - "Deployment metadata records archive, extraction, executable/version and bundle-member results."
+  - "Deterministic focused checks pass, and the existing seven-input/snapshot bundle validator remains passing."
+  - "No server access/upload/run, Java model, MATSim config/input, cost semantic, Runner or Stage 9 action occurred."
+diagnostics:
+  - "Windows does not preserve Linux executable bits; the fixture injects only the post-extraction executable predicate, while production defaults and tar checks retain real mode enforcement."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_r1_jdk_runtime_closure_validation.json"
+  - "scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py"
+  - "docs/integration/stage-briefs/STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_R1_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact repair SHA/parent and dispatches Reviewer; Executor stops and Runner/Stage 9 remain unauthorized."
+```

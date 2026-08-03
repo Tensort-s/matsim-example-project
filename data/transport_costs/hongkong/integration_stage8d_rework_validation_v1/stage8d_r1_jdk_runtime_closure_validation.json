@@ -1,0 +1,89 @@
+{
+  "schema_version": "stage8d_r1_jdk_runtime_closure_validation_v1",
+  "task_id": "STAGE8D-R1-JDK-RUNTIME-CLOSURE",
+  "blocker_id": "STAGE9-RUNTIME-JDK-MISSING-001",
+  "exact_input_sha": "5f40aee6e1988b11fa1a35836065bef99b130191",
+  "input_parent_sha": "fb06546f806819020ad40e751dad26cabfa718af",
+  "status": "implementation_validated_pending_exact_sha_review",
+  "runtime_contract": {
+    "approved_jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "approved_java_version": "25.0.3",
+    "release_runtime_path": "runtime/jdk-25",
+    "launcher_required_executable": "runtime/jdk-25/bin/java",
+    "archive_only_release_accepted": false,
+    "archive_hash_verified_before_extraction": true,
+    "extraction_requires_new_target": true,
+    "extraction_rejects_absolute_parent_symlink_hardlink_device_and_stale_root_members": true,
+    "extraction_preserves_unrelated_paths": true,
+    "java_executable_preflight_required": true,
+    "java_version_preflight_required": true,
+    "bundle_member_presence_and_executable_mode_preflight_required": true,
+    "launcher_repeats_executable_and_version_preflight": true,
+    "deployment_manifest_fields": [
+      "jdk_sha256",
+      "jdk_runtime.archive_sha256",
+      "jdk_runtime.archive_verified_before_extraction",
+      "jdk_runtime.archive_top_level",
+      "jdk_runtime.extraction_confined_to",
+      "jdk_runtime.runtime_path",
+      "jdk_runtime.java_executable",
+      "jdk_runtime.java_executable_check_passed",
+      "jdk_runtime.java_version_expected",
+      "jdk_runtime.java_version_output",
+      "jdk_runtime.java_version_preflight_passed",
+      "bundle_runtime_contract.launcher_required_executable",
+      "bundle_runtime_contract.bundle_member_present",
+      "bundle_runtime_contract.bundle_member_executable"
+    ]
+  },
+  "deterministic_validation": {
+    "python_interpreter": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe",
+    "py_compile": "pass",
+    "focused_validator": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_runtime_jdk_contract.py",
+      "status": "pass",
+      "checks_passed": 19,
+      "checks_failed": 0,
+      "valid_fixture_uses_injected_platform_executable_check": true,
+      "production_default_requires_real_filesystem_executable_mode": true,
+      "negative_cases": [
+        "wrong archive hash rejected before target creation",
+        "unsafe archive path rejected before target creation",
+        "linked archive member rejected",
+        "stale JDK root rejected before target creation",
+        "missing bin/java rejected",
+        "non-executable archive bin/java rejected",
+        "wrong java -version rejected",
+        "pre-existing runtime target rejected and preserved",
+        "bundle missing runtime Java rejected",
+        "bundle non-executable runtime Java rejected"
+      ]
+    },
+    "existing_bundle_contract_validator": {
+      "command": "F:\\Matsim\\matsim-example-project\\.venv_geo311\\Scripts\\python.exe scripts/hong_kong_single_city/run/validate_hong_kong_matsim_server_bundle_contract.py",
+      "status": "passed",
+      "locked_input_count": 7,
+      "stale_active_defaults": [],
+      "server_access_performed": false
+    }
+  },
+  "scope_guards": {
+    "java_model_changed": false,
+    "matsim_config_or_input_changed": false,
+    "cost_or_economic_semantics_changed": false,
+    "server_access_or_upload_performed": false,
+    "runner_authorized": false,
+    "stage9_run_authorized_or_performed": false
+  },
+  "blocker_transition": {
+    "status": "REPAIR_DISPATCHED",
+    "repair_task_id": "STAGE8D-R1-JDK-RUNTIME-CLOSURE",
+    "superseded_stage_status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+    "replacement_identity_required": [
+      "new pushed repair commit",
+      "new bundle/release identity after separate authorization",
+      "runtime/jdk-25/bin/java existence, executability and Java 25.0.3 preflight"
+    ]
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_R1_GATE"
+}

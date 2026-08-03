@@ -863,3 +863,48 @@ hard_gate_status: "CONTROL_PROTOCOL_04_GOVERNANCE_WRITE_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused governance-only commit from fb06546f and report only to Supervisor."
 ```
+
+## Entry 30 — Stage 8D-R1 JDK runtime closure dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+input_sha: "5f40aee6e1988b11fa1a35836065bef99b130191"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch the bounded runtime-JDK dependency-closure repair; Stage 9 is superseded and Runner remains unauthorized."
+findings:
+  - "blocker_id=STAGE9-RUNTIME-JDK-MISSING-001; root cause is known."
+  - "The approved archive existed, but the release omitted launcher-required runtime/jdk-25/bin/java."
+  - "repair_task_id=STAGE8D-R1-JDK-RUNTIME-CLOSURE and repair_owner=INT-EXECUTOR."
+  - "Replacement identity requires a new repair commit, later new bundle/release, and Java existence/executable/25.0.3 preflight."
+  - "Stage 9 original status is BLOCKED_SUPERSEDED_BY_REPAIR; no diagnosis stage is needed."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    stage: "Stage 9 joint short smoke"
+    bundle_source_sha: "674a60258d8433bd04f868a8a447525561bd3907"
+    control_plane_sha: "9f21414fed09f36bdcb76e4f681e77be7ce53587"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2"
+    command: "scripts/run_smoke.sh"
+    required_executable: "runtime/jdk-25/bin/java"
+  root_cause: "Approved JDK archive was present, but the uploaded release did not materialize runtime/jdk-25/bin/java required by the launcher."
+  changed_hypothesis_required_for_retry: "Bundle preparation extracts the approved archive into runtime/jdk-25 and verifies executable/version before release acceptance."
+  repair_task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new repair commit; later new bundle/release; executable Java 25.0.3 preflight"
+  superseded_run_identity: "Stage9 original release/command/runtime identity"
+  missing_dispatch_escalation:
+    emitted: true
+    emitted_at: "2026-08-03"
+    escalation_id: "MISSING_REPAIR_DISPATCH-STAGE9-RUNTIME-JDK-MISSING-001"
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Implement one focused repair from exact input 5f40aee6, push it, report only to Supervisor, and do not contact Reviewer or Runner."
+```

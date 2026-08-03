@@ -250,6 +250,10 @@ is complete. It records:
   sidecar SHA256, exact verification command/result, plus a bundled copy of
   the locked-input manifest;
 - approved JDK archive SHA256;
+- extracted runtime-JDK root, launcher executable, executable-mode check and
+  exact Java-version preflight result;
+- final bundle-member presence and executable-mode proof for
+  `runtime/jdk-25/bin/java`;
 - release root, staging path, bundle path, bundle SHA256, size and file count;
 - timestamps and explicit `server_upload_performed=false` /
   `server_run_performed=false` flags.
@@ -296,3 +300,32 @@ not access the server or infer any path.
 
 This was preparation/upload evidence only. No MATSim/QSim/Stage 9 run,
 iteration, event, cost or score was produced.
+
+## Stage 8D-R1 runtime-JDK closure
+
+The original Stage 9 release identity is historical and superseded: it
+contained the approved JDK archive but not the launcher-required extracted
+`runtime/jdk-25/bin/java`. Blocker
+`STAGE9-RUNTIME-JDK-MISSING-001` therefore dispatched bounded repair task
+`STAGE8D-R1-JDK-RUNTIME-CLOSURE`; it does not authorize a Stage 9 retry.
+
+For every newly prepared release, the script now verifies the approved archive
+SHA256 before creating the runtime target. It validates the complete tar
+layout, accepts only one JDK 25 root with regular files/directories and an
+executable `bin/java`, then extracts into a new `runtime/jdk-25` without
+overwriting or deleting unrelated paths. Absolute/traversal paths, links,
+devices, collisions, stale JDK roots and pre-existing targets fail closed.
+
+The extracted executable must pass both filesystem executability and exact
+`java -version` marker `version "25.0.3"`. The prepared tar retains the Java
+executable bit and is inspected for the same launcher-required member. The
+worker repeats these checks before any MATSim invocation. Archive-only bundle
+acceptance is no longer possible.
+
+Deployment metadata and its sidecar manifest record the archive SHA, archive
+root, confined extraction path, extracted file count, executable path/mode,
+version output/result, and final bundle-member result. Deterministic local
+validation is recorded in
+[`stage8d_r1_jdk_runtime_closure_validation.json`](../data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_r1_jdk_runtime_closure_validation.json).
+No server access, upload, Runner action or Stage 9 execution occurred during
+this repair.
