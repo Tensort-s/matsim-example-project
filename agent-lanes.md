@@ -25,6 +25,7 @@ and evidence are read from these canonical paths:
 - [Protocol 02/03 schema consistency](docs/integration/stage-briefs/CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md)
 - [Atomic gate transition and non-recursive closure](docs/integration/stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
 - [Post-failure diagnosis and automatic dispatch](docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
+- [Diagnosis confidence and resource budget](docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
 - [Current stage](docs/integration/CURRENT_STAGE.md)
 - [Hub-and-spoke messaging protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
 - [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
@@ -35,7 +36,9 @@ budgets, evidence-by-reference rules, canonical delta-only review protocol,
 mandatory blocker-to-repair transition and their synchronized Reviewer/state
 schemas, atomic gate transition and non-recursive closure invariants, plus the
 post-failure read-only diagnosis and automatic technical-dispatch rules. The
-templates apply those rules without changing lane authority. The current-stage
+confidence gates and default resource budget make those diagnoses
+machine-checkable and bounded. The templates apply those rules without
+changing lane authority. The current-stage
 file identifies the latest valid Supervisor gate and active or explicit idle
 state.
 These links do not change any lane identity, authority or write scope below.

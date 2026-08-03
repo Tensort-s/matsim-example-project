@@ -1101,3 +1101,30 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
 required_transition: null
 ```
+
+## Entry 35 — Protocol 07 diagnosis confidence and budget
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
+input_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+output_sha_or_status: "exact pushed governance SHA supplied in the Supervisor handoff"
+decision: "Close Protocol 06 and make post-failure root-cause confidence and diagnosis resource limits machine-checkable."
+findings:
+  - "KNOWN requires exact identity, direct condition, demonstrated causality, checked alternatives and a testable repair hypothesis all true."
+  - "PARTIAL covers incomplete evidence or budget exhaustion; UNKNOWN covers symptom-only or equally plausible explanations."
+  - "Default diagnosis budget is 30 minutes, 30 commands, six roots and 30 MB, with recursive server scan and mutation forbidden."
+  - "Budget exhaustion stops and reports missing evidence; follow-up diagnosis requires a new task, scope, budget and rationale."
+  - "No runtime/model/config/input/bundle/server change or Runner/Stage 9/Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#diagnosis-confidence-and-resource-budget"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
+required_transition: null
+```

@@ -7,15 +7,15 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-PROTOCOL06-POST-FAILURE-DISPATCH-001"
-  exact_input_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+  transition_id: "AGT-20260803-PROTOCOL07-DIAGNOSIS-CONFIDENCE-BUDGET-001"
+  exact_input_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
   closed_task:
-    task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
-    previous_status: "UNDER_REVIEW"
+    task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+    previous_status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
     final_status: "PASS_CLOSED"
-    reviewed_output_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+    reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
     reviewer_verdict: "PASS"
-    reviewer_verdict_reference: "docs/agent-worklogs/integration-supervisor.md#entry-37--protocol-06-atomic-repair-closure-and-dispatch"
+    reviewer_verdict_reference: "docs/agent-worklogs/integration-supervisor.md#entry-38--protocol-07-atomic-protocol-06-closure-and-dispatch"
     supervisor_gate: "PASS_CLOSED"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
@@ -23,11 +23,11 @@ atomic_gate_transition:
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
     source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
   blocker:
-    blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
-    previous_status: "UNDER_REVIEW"
-    final_status: "CLOSED"
+    blocker_id: null
+    previous_status: null
+    final_status: null
   next_active_task:
-    task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+    task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
     status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
     owner: "INT-SUPERVISOR"
   owner: "INT-SUPERVISOR"
@@ -38,19 +38,16 @@ atomic_gate_transition:
   stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-37--protocol-06-atomic-repair-closure-and-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-34--protocol-06-post-failure-diagnosis-policy"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-38--protocol-07-atomic-protocol-06-closure-and-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-35--protocol-07-diagnosis-confidence-and-budget"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
-  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
-  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
-  blocker_status: "CLOSED"
-  repair_status: "PASS_CLOSED"
-  repair_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  task_status: "PASS_CLOSED"
+  reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
   reviewer_verdict: "PASS"
   supervisor_gate: "PASS_CLOSED"
-  superseded_stage_9_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
 
 superseded_stage9_task:
   task_id: "STAGE9-JOINT-SHORT-SMOKE"
@@ -91,12 +88,15 @@ closed_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   owner: "INT-SUPERVISOR"
-  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
+  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
 
 protocol_06:
+  status: "PASS_CLOSED"
+  reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+  reviewer_verdict: "PASS"
   canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
   worked_example: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md#worked-example-thin-jar-failure"
   post_failure_state: "POST_FAILURE_READ_ONLY_DIAGNOSIS"
@@ -109,6 +109,23 @@ protocol_06:
   research_semantic_next_action: "ESCALATED_TO_USER"
   automatic_repair_authorizes_runner: false
   identical_failed_identity_retry_allowed: false
+
+protocol_07:
+  canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
+  worked_example: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md#worked-example-thin-jar-evidence-chain"
+  known_requires_all_confidence_gates: true
+  exception_or_stack_trace_alone_proves_known: false
+  supervisor_may_promote_without_new_evidence: false
+  diagnosis_budget:
+    wall_clock_minutes_max: 30
+    shell_commands_max: 30
+    filesystem_roots_max: 6
+    evidence_output_mb_max: 30
+    full_server_recursive_scan_allowed: false
+    existing_state_mutation_allowed: false
+  budget_exhaustion_action: "STOP_AND_REPORT_MISSING_EVIDENCE"
+  partial_or_unknown_direct_repair_allowed: false
+  automatic_dispatch_authorizes_runner_or_retry: false
 
 runtime_contract:
   deployment_jar: "<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar"
@@ -132,7 +149,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -140,11 +157,11 @@ control_transition_review:
 
 ## Canonical interpretation
 
-The shaded-JAR repair at exact SHA `a72f8ca...` is Reviewer `PASS`, Supervisor
-`PASS_CLOSED`, and blocker `STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001` is
-`CLOSED`. Release3/run3 remains historical `BLOCKED_SUPERSEDED_BY_REPAIR`.
-Protocol 06 is the active governance transition pending one final read-only
-review.
+Protocol 06 at exact SHA `e12f81b...` is Reviewer `PASS` and Supervisor
+`PASS_CLOSED`. Protocol 07 is the active governance transition pending one
+final read-only review. It makes root-cause status objective and bounds every
+automatic read-only diagnosis. The Stage 9 blocker remains closed and
+release3/run3 remains historical `BLOCKED_SUPERSEDED_BY_REPAIR`.
 
 Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later

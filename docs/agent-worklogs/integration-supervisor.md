@@ -1194,3 +1194,35 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push the single Protocol 06 atomic governance transition, then stop for one read-only review."
 required_transition: null
 ```
+
+## Entry 38 — Protocol 07 atomic Protocol 06 closure and dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
+input_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+output_sha_or_status: "ATOMIC_GOVERNANCE_TRANSITION_DISPATCHED"
+decision: "Consume Protocol 06 Reviewer PASS, close Protocol 06, and dispatch machine-checkable diagnosis confidence and resource budgets."
+findings:
+  - "Protocol 06 exact SHA e12f81b27c8a70f373654ca46dac1cb7ef17bb5e received Reviewer PASS and is PASS_CLOSED."
+  - "KNOWN now requires five independently recorded Boolean evidence gates; an exception or stack trace alone is insufficient."
+  - "Every automatic diagnosis has 30-minute, 30-command, six-root and 30-MB evidence limits with no full-server scan or mutation."
+  - "Budget exhaustion stops diagnosis and reports missing evidence; PARTIAL/UNKNOWN dispatch diagnosis rather than repair."
+  - "Runner, Stage 9 execution and Stage 10 or later remain unauthorized."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md#machine-checkable-diagnosis-confidence"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md#default-read-only-diagnosis-budget"
+closed_task:
+  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+  reviewer_verdict: "PASS"
+  final_status: "PASS_CLOSED"
+blockers: []
+hard_gate_status: "AUTHORIZED_GOVERNANCE_ATOMIC_TRANSITION"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push the single Protocol 07 atomic governance transition, then stop for one read-only review."
+required_transition: null
+```

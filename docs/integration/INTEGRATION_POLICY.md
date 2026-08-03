@@ -300,6 +300,72 @@ canonical schema and thin-JAR worked example are in
    closure is atomic with a substantive policy, activation, repair, diagnosis
    or other control-plane transition.
 
+## Diagnosis confidence and resource budget
+
+CONTROL-PROTOCOL-07 makes Protocol 06 root-cause status and diagnosis scope
+machine-checkable. Its canonical schemas and thin-JAR evidence-chain example
+are in
+[`stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md`](stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md).
+
+Every post-failure handoff records:
+
+```yaml
+diagnosis_confidence:
+  exact_failure_identity_matched: true | false
+  direct_failure_condition_observed: true | false
+  causal_chain_demonstrated: true | false
+  material_alternatives_checked: true | false
+  repair_hypothesis_testable: true | false
+  root_cause_status: KNOWN | PARTIAL | UNKNOWN
+diagnosis_budget:
+  wall_clock_minutes_max: 30
+  shell_commands_max: 30
+  filesystem_roots_max: 6
+  evidence_output_mb_max: 30
+  full_server_recursive_scan_allowed: false
+  existing_state_mutation_allowed: false
+diagnosis_budget_result:
+  elapsed_minutes: number
+  commands_used: number
+  roots_inspected: number
+  evidence_output_bytes: number
+  budget_exhausted: true | false
+  missing_evidence: []
+```
+
+1. `KNOWN` requires all five confidence Booleans to be `true`. A first
+   exception, stack trace, symptom or correlation is insufficient. The exact
+   failure identity, directly observed condition, demonstrated causal chain,
+   checked material alternatives and bounded testable repair hypothesis are
+   all Hard Gates.
+2. `PARTIAL` applies to a plausible but incomplete causal chain, unchecked
+   material alternatives, a repair hypothesis without a decisive metric, or
+   budget exhaustion before sufficient evidence. `UNKNOWN` applies when no
+   verifiable direct cause exists, only symptoms are known, or multiple
+   material explanations remain equally plausible.
+3. Supervisor cannot promote `PARTIAL` or `UNKNOWN` to `KNOWN` without new
+   evidence satisfying all five gates.
+4. Inspection is limited to the failed release/run, directly referenced
+   staging/build roots, deployment-manifest paths and current
+   command/classpath/config/input paths. A recursive scan of all
+   `/mnt/DiskM/by` is prohibited.
+5. Evidence uses paths, SHA256, size, permissions, short log excerpts, member
+   summaries and structured JSON. Large archives, JARs, inputs, outputs or
+   complete logs are not copied unless a later diagnosis task explicitly
+   authorizes them.
+6. Runner stops when any budget limit is reached and reports missing evidence;
+   it never enlarges scope itself. `KNOWN` dispatches a bounded Executor
+   repair. `PARTIAL` dispatches a more specific bounded diagnosis. `UNKNOWN`
+   dispatches a task that narrows the question or changes evidence source.
+   Research/policy questions transition to `ESCALATED_TO_USER`.
+7. For each `PARTIAL` or `UNKNOWN` result Supervisor may create exactly one
+   follow-up diagnosis task. It has a new task ID, explicit missing evidence,
+   new scope and budget, and a reason that evidence could change the
+   conclusion. The same commands and scope are not repeated.
+8. Automatic dispatch never authorizes Runner, retry, Stage 9 execution or a
+   later stage. Existing state remains immutable and no closure-only follow-up
+   commit is created.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |
