@@ -1074,3 +1074,30 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 34 — Protocol 06 post-failure diagnosis policy
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+input_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+output_sha_or_status: "exact pushed governance SHA supplied in the Supervisor handoff"
+decision: "Atomically close the reviewed shaded-JAR repair and adopt post-failure read-only diagnosis with Supervisor automatic technical dispatch."
+findings:
+  - "CURRENT_STAGE closes the repair and blocker while preserving release3/run3 as BLOCKED_SUPERSEDED_BY_REPAIR."
+  - "Runner must stop on failure and may perform only bounded read-only diagnosis plus new append-only evidence capture."
+  - "KNOWN ordinary technical defects dispatch bounded Executor repair; PARTIAL/UNKNOWN dispatch diagnosis; research semantics escalate to the user."
+  - "Automatic repair does not authorize Runner, and replacement execution requires a separate exact-SHA authorization and new identity."
+  - "No runtime/model/config/input/bundle/server change or action occurred."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#post-failure-read-only-diagnosis-and-automatic-dispatch"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
+required_transition: null
+```

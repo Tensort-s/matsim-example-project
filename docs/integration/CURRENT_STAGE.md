@@ -7,15 +7,15 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE9-SHADED-JAR-CLOSURE-005"
-  exact_input_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+  transition_id: "AGT-20260803-PROTOCOL06-POST-FAILURE-DISPATCH-001"
+  exact_input_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
   closed_task:
-    task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
-    previous_status: "PASS_CLOSED"
+    task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+    previous_status: "UNDER_REVIEW"
     final_status: "PASS_CLOSED"
-    reviewed_output_sha: "339ef046c55faf3e727a19d32234612bd6974241"
+    reviewed_output_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
     reviewer_verdict: "PASS"
-    reviewer_verdict_reference: "docs/agent-worklogs/integration-reviewer.md#entry-16--stage-8d-r1-exact-sha-review"
+    reviewer_verdict_reference: "docs/agent-worklogs/integration-supervisor.md#entry-37--protocol-06-atomic-repair-closure-and-dispatch"
     supervisor_gate: "PASS_CLOSED"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
@@ -24,30 +24,32 @@ atomic_gate_transition:
     source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
   blocker:
     blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
-    previous_status: "OPEN"
-    final_status: "REPAIR_DISPATCHED"
+    previous_status: "UNDER_REVIEW"
+    final_status: "CLOSED"
   next_active_task:
-    task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
-    status: "ACTIVE"
-    owner: "INT-EXECUTOR"
+    task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+    status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
+    owner: "INT-SUPERVISOR"
   owner: "INT-SUPERVISOR"
   repository_writer: "INT-EXECUTOR"
   runner_authorized: false
-  stage_9_authorized: true
+  stage_9_authorized: false
   stage_9_execution_authorized: false
+  stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-36--stage-9-shaded-jar-dependency-closure-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-33--stage-9-shaded-jar-dependency-closure"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-37--protocol-06-atomic-repair-closure-and-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-34--protocol-06-post-failure-diagnosis-policy"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
-  task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
-  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
   blocker_status: "CLOSED"
   repair_status: "PASS_CLOSED"
-  repair_sha: "339ef046c55faf3e727a19d32234612bd6974241"
-  closure_evidence_sha: "c12a80fe8bca7a945eaaf39d00149fb3dd7838d4"
+  repair_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+  reviewer_verdict: "PASS"
+  supervisor_gate: "PASS_CLOSED"
   superseded_stage_9_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
 
 superseded_stage9_task:
@@ -60,9 +62,9 @@ superseded_stage9_task:
   failure: "NoClassDefFoundError org/matsim/core/controler/AbstractModule"
   brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
 
-active_blocker:
+closed_blocker:
   blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
-  status: "REPAIR_DISPATCHED"
+  status: "CLOSED"
   failure_identity:
     source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
     bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
@@ -74,6 +76,8 @@ active_blocker:
   changed_hypothesis_required_for_retry: "Derive only the build-root top-level Shade JAR, verify project and dependency classes, enforce built/release/bundle SHA equality, and class-load every required class with final release Java before MATSim startup."
   repair_task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
   repair_owner: "INT-EXECUTOR"
+  repair_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+  reviewer_verdict: "PASS"
   replacement_identity_required:
     - "new pushed repair source SHA"
     - "new bundle SHA built from the deterministic root Shade JAR"
@@ -87,10 +91,24 @@ active_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
-  status: "ACTIVE"
-  owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md"
+  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
+  owner: "INT-SUPERVISOR"
+  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
+
+protocol_06:
+  canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
+  worked_example: "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md#worked-example-thin-jar-failure"
+  post_failure_state: "POST_FAILURE_READ_ONLY_DIAGNOSIS"
+  root_cause_status_values:
+    - "KNOWN"
+    - "PARTIAL"
+    - "UNKNOWN"
+  known_technical_defect_next_action: "CREATE_BOUNDED_EXECUTOR_REPAIR"
+  partial_or_unknown_next_action: "CREATE_BOUNDED_READ_ONLY_DIAGNOSIS"
+  research_semantic_next_action: "ESCALATED_TO_USER"
+  automatic_repair_authorizes_runner: false
+  identical_failed_identity_retry_allowed: false
 
 runtime_contract:
   deployment_jar: "<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar"
@@ -104,9 +122,9 @@ runtime_contract:
 execution_authority:
   authority_source: "INT-SUPERVISOR"
   runner_authorized: false
-  stage_9_authorized: true
+  stage_9_authorized: false
   stage_9_execution_authorized: false
-  bounded_repair_authorized: true
+  bounded_repair_authorized: false
   repair_commit_accessed_server: false
   repair_commit_built_or_uploaded_bundle: false
   repair_commit_started_smoke: false
@@ -114,7 +132,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -122,19 +140,18 @@ control_transition_review:
 
 ## Canonical interpretation
 
-The Stage 9 release3/run3 identity is historical and superseded after failing
-on a thin-JAR dependency gap. The active task only repairs deterministic Maven
-Shade artifact selection, dependency-class validation, SHA continuity and the
-pre-MATSim class-loading contract. The approved JDK 25.0.3, locked inputs,
-model, config and cost semantics remain unchanged.
+The shaded-JAR repair at exact SHA `a72f8ca...` is Reviewer `PASS`, Supervisor
+`PASS_CLOSED`, and blocker `STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001` is
+`CLOSED`. Release3/run3 remains historical `BLOCKED_SUPERSEDED_BY_REPAIR`.
+Protocol 06 is the active governance transition pending one final read-only
+review.
 
-Runner and Stage 9 execution are unauthorized during this repair. No server,
+Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
 work is authorized.
 
 ## Next action
 
-Executor pushes one focused repair commit and reports only to Supervisor.
-Supervisor verifies its exact SHA, parent and scope before one read-only review.
-Any later attempt requires a separate authorization and new source, bundle,
-release and run identities.
+Executor pushes this one atomic governance commit and reports only to
+Supervisor. Supervisor verifies its exact SHA, parent and scope before one
+read-only review. Reviewer `PASS` creates no closure-only follow-up commit.

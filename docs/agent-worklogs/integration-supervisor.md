@@ -1158,3 +1158,39 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement one focused dependency-closure repair, push it, report only to Supervisor, and stop."
 required_transition: null
 ```
+
+## Entry 37 — Protocol 06 atomic repair closure and dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+input_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+output_sha_or_status: "ATOMIC_GOVERNANCE_TRANSITION_DISPATCHED"
+decision: "Consume Reviewer PASS, close the shaded-JAR repair/blocker, and dispatch Protocol 06 governance with Runner and Stage 9 execution unauthorized."
+findings:
+  - "Reviewer returned PASS for exact repair SHA a72f8cac53b5798cc8468c1297db82dd1aed633c."
+  - "Repair STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005 is PASS_CLOSED."
+  - "Blocker STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001 transitions UNDER_REVIEW to CLOSED."
+  - "Release3/run3 remains historical BLOCKED_SUPERSEDED_BY_REPAIR and cannot be repeated."
+  - "Protocol 06 adds post-failure read-only diagnosis and Supervisor automatic technical dispatch without authorizing a run."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md#consumed-repair-gate"
+  - "data/transport_costs/hongkong/integration_stage9_repair_005_validation_v1/stage9_shaded_jar_dependency_closure_validation.json#hard_gate_status"
+blocker:
+  blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
+  previous_status: "UNDER_REVIEW"
+  final_status: "CLOSED"
+  repair_task_id: "STAGE9-REPAIR-SHADED-JAR-DEPENDENCY-CLOSURE-005"
+  repair_sha: "a72f8cac53b5798cc8468c1297db82dd1aed633c"
+  reviewer_verdict: "PASS"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "AUTHORIZED_GOVERNANCE_ATOMIC_TRANSITION"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push the single Protocol 06 atomic governance transition, then stop for one read-only review."
+required_transition: null
+```

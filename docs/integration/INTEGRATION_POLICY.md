@@ -258,6 +258,48 @@ atomic_gate_transition:
    history but are superseded as a prospective workflow pattern by this
    protocol.
 
+## Post-failure read-only diagnosis and automatic dispatch
+
+CONTROL-PROTOCOL-06 extends the blocker and atomic-transition protocols. Its
+canonical schema and thin-JAR worked example are in
+[`stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md).
+
+1. A nonzero Runner exit or Hard Gate failure immediately stops the run,
+   modification and retry and enters `POST_FAILURE_READ_ONLY_DIAGNOSIS`.
+   Runner may read stdout/stderr/logs/manifests; inspect JAR/ZIP/TAR members,
+   command, classpath, version, path and mode metadata; calculate SHA256 and
+   size; compare build/bundle/release/run artifacts; verify locked config/input
+   presence and hashes; and write one new append-only evidence JSON under a new
+   evidence directory.
+2. During diagnosis Runner does not modify, replace, move or delete existing
+   files; install software or change the environment; modify Git; change a
+   command and rerun; clean failed directories; authorize Executor; or close a
+   blocker.
+3. The Runner handoff includes `task_id`, `stage_id`, `source_sha`,
+   `run_identity`, `root_cause_status` (`KNOWN`, `PARTIAL` or `UNKNOWN`), a
+   concise `root_cause`, `evidence_refs`, nullable `repair_hypothesis`,
+   `rerun_performed: false`, `existing_state_modified: false`,
+   `hard_gate_status`, and `handoff_to: INT-SUPERVISOR`.
+4. Supervisor automatically dispatches a `KNOWN` ordinary technical defect as
+   a bounded Executor repair. This includes classpath/JAR/dependency/packaging,
+   compilation/Guice/path/manifest, hash/mode/deployment/server compatibility,
+   log/config-read and other non-research runtime defects. `PARTIAL` or
+   `UNKNOWN` creates a bounded read-only diagnosis: Runner owns server-evidence
+   work and Executor owns repository-evidence work.
+5. Economic or behavioral semantics, cost policy, demand/capacity,
+   missing-data treatment or research interpretation is not an automatic
+   technical repair and transitions to `ESCALATED_TO_USER`.
+6. Automatic repair never authorizes Runner. A repair requires an exact pushed
+   SHA and independent Reviewer `PASS`; a replacement run requires a separate
+   exact-SHA Supervisor Runner authorization plus a new source, bundle, release
+   and run identity. Identical failed identities are never repeated.
+7. Supervisor-only dispatch/gate authority, Executor-only Git write authority,
+   Reviewer read-only authority, Runner's explicitly authorized execution and
+   read-only diagnosis boundary, and Supervisor-only handoffs remain unchanged.
+8. No verdict-only or closure-only follow-up commit is allowed. Any committed
+   closure is atomic with a substantive policy, activation, repair, diagnosis
+   or other control-plane transition.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |
