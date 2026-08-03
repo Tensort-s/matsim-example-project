@@ -958,3 +958,40 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Create one append-only closure-evidence commit; afterward wait for Supervisor verification and final read-only review."
 required_transition: null
 ```
+
+## Entry 32 — CONTROL-PROTOCOL-05 atomic gate transition
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-05-ATOMIC-GATE-TRANSITION"
+input_sha: "c12a80fe8bca7a945eaaf39d00149fb3dd7838d4"
+output_sha_or_status: "AUTHORIZED_ATOMIC_CONTROL_PLANE_TRANSITION"
+decision: "Atomically reconcile canonical state with the already PASS_CLOSED JDK repair and adopt non-recursive closure governance."
+findings:
+  - "Repair task STAGE8D-R1-JDK-RUNTIME-CLOSURE is closed at reviewed SHA 339ef046c55faf3e727a19d32234612bd6974241."
+  - "Closure evidence SHA is c12a80fe8bca7a945eaaf39d00149fb3dd7838d4."
+  - "Blocker STAGE9-RUNTIME-JDK-MISSING-001 is CLOSED; original Stage 9 remains BLOCKED_SUPERSEDED_BY_REPAIR."
+  - "Canonical active task becomes explicit idle with no owner; Runner and Stage 9 remain unauthorized."
+  - "This transition receives one final read-only review; PASS causes no verdict-only or closure-only follow-up commit."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#atomic_gate_transition"
+  - "docs/integration/INTEGRATION_POLICY.md#atomic-gate-transition-and-non-recursive-closure"
+  - "docs/agent-worklogs/integration-reviewer.md#entry-16--stage-8d-r1-exact-sha-review"
+atomic_gate_transition:
+  transition_id: "AGT-20260803-STAGE8D-R1-CLOSE-001"
+  closed_task: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
+  blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
+  blocker_final_status: "CLOSED"
+  next_active_task: null
+  owner: "INT-SUPERVISOR"
+  runner_authorized: false
+  stage_9_authorized: false
+  verdict_only_followup_commit_allowed: false
+blockers: []
+hard_gate_status: "ATOMIC_GATE_TRANSITION_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one atomic governance commit from exact input c12a80f, then stop for one final read-only review."
+required_transition: null
+```

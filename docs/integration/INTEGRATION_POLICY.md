@@ -183,6 +183,81 @@ schemas and worked example are in
 14. Supervisor-only dispatch/gate authority and Executor-only integration-write
     authority remain unchanged throughout the transition.
 
+## Atomic gate transition and non-recursive closure
+
+CONTROL-PROTOCOL-05 governs every prospective stage, repair, diagnosis,
+blocker, supersession and activation transition. Its canonical transition
+brief and schema are in
+[`stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md`](stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md).
+
+1. A formal state transition is one bounded atomic commit. In that transaction
+   it synchronizes `CURRENT_STAGE.md`, the Supervisor gate, the received
+   Reviewer-verdict reference, the Executor transition record, necessary
+   brief/index status, the previous task's final state, and the next active
+   task or explicit idle state.
+2. `CURRENT_STAGE.md` is canonical current state. Worklogs are append-only audit
+   history. The current-state file must equal the latest valid committed
+   Supervisor gate transition; a mismatch is a hard failure. Audit entries may
+   be appended in the atomic commit but never justify a later verdict-only
+   archive commit.
+3. A commit is prohibited when its sole or primary purpose is Reviewer PASS,
+   Supervisor closure, a final-review result, prior-closure acknowledgment, or
+   recording that an earlier closure passed. A commit containing a verdict or
+   closure must also make the canonical state transition, authorize/start a
+   new substantive task, or perform another substantive control-plane
+   transition.
+4. One-final-review is mandatory: atomic transition commit -> Supervisor exact
+   SHA/parent verification -> one Reviewer read-only review -> Reviewer
+   `PASS`/`BLOCKED` -> Supervisor consumes the verdict in the real-time
+   workflow -> stop. `PASS` creates no follow-up commit and is not re-reviewed.
+5. Every atomic transition includes one machine-checkable
+   `atomic_gate_transition` record with this minimum schema:
+
+```yaml
+atomic_gate_transition:
+  transition_id: stable_unique_id
+  exact_input_sha: full_git_sha
+  closed_task:
+    task_id: string
+    previous_status: string
+    final_status: string
+    reviewed_output_sha: full_git_sha
+    reviewer_verdict: PASS_or_BLOCKED
+    reviewer_verdict_reference: path#entry
+    supervisor_gate: string
+  blocker:
+    blocker_id: string_or_null
+    previous_status: string_or_null
+    final_status: string_or_null
+  next_active_task:
+    task_id: string_or_null
+    status: string
+    owner: lane_id_or_null
+  owner: INT-SUPERVISOR
+  repository_writer: INT-EXECUTOR
+  runner_authorized: false
+  stage_9_authorized: false
+  canonical_state_updated: true
+  audit_records_appended: [path#entry]
+  verdict_only_followup_commit_allowed: false
+```
+
+6. A closure or supersession commit is invalid unless it updates canonical
+   state, prior-task final state, blocker state when applicable, owner and
+   authority, next active/idle task, and necessary evidence references in one
+   transaction.
+7. The no-verdict-only-commit, one-final-review, no-stale-active-task and
+   no-auto-run invariants are Hard Gates. A closed/superseded task cannot remain
+   active; a `PASS`, `CLOSED` or idle state never authorizes Runner, upload,
+   deployment, retry or the next stage.
+8. A Reviewer `BLOCKED` on the atomic commit returns to Supervisor under the
+   existing blocker-to-repair protocol. It does not authorize Executor rework.
+   A Reviewer `PASS` is consumed without a Git write. The next repository
+   commit requires a new substantive Supervisor authorization.
+9. Historical verdict-only or closure-only commits remain preserved as audit
+   history but are superseded as a prospective workflow pattern by this
+   protocol.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |

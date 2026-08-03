@@ -902,3 +902,37 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact closure-evidence SHA and dispatches final read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 29 — CONTROL-PROTOCOL-05 atomic gate transition
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-05-ATOMIC-GATE-TRANSITION"
+input_sha: "c12a80fe8bca7a945eaaf39d00149fb3dd7838d4"
+output_sha_or_status: "exact pushed atomic-transition SHA supplied in the Supervisor handoff"
+decision: "Synchronize canonical repair closure, explicit idle state, atomic schema and non-recursive review rules in one governance commit."
+findings:
+  - "CURRENT_STAGE now matches the PASS_CLOSED Supervisor gate and CLOSED blocker instead of stale REPAIR_DISPATCHED state."
+  - "Last closed repair and its 339ef046 repair SHA plus c12a80f closure-evidence SHA remain explicit."
+  - "Active task and owner are null pending a new Supervisor authorization."
+  - "Runner and Stage 9 remain unauthorized; no new bundle, upload or smoke run occurred."
+  - "The final review verdict is consumed in real time and cannot create a follow-up verdict/closure commit."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#atomic_gate_transition"
+  - "docs/integration/INTEGRATION_POLICY.md#atomic-gate-transition-and-non-recursive-closure"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md"
+atomic_gate_transition:
+  transition_id: "AGT-20260803-STAGE8D-R1-CLOSE-001"
+  canonical_state_updated: true
+  audit_records_appended:
+    - "docs/agent-worklogs/integration-supervisor.md#entry-32--control-protocol-05-atomic-gate-transition"
+    - "docs/agent-worklogs/integration-executor.md#entry-29--control-protocol-05-atomic-gate-transition"
+  verdict_only_followup_commit_allowed: false
+blockers: []
+hard_gate_status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact atomic-transition SHA and dispatches one final Reviewer review; Executor stops."
+required_transition: null
+```
