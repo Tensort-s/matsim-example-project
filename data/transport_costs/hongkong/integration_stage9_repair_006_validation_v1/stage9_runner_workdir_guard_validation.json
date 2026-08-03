@@ -1,0 +1,110 @@
+{
+  "schema_version": "stage9_runner_workdir_guard_validation_v1",
+  "task_id": "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006",
+  "blocker_id": "STAGE9-RUNNER-WORKDIR-001",
+  "exact_input_sha": "e58861e4f79eb5aa18c8ac286d0173987bcef237",
+  "failure_identity": {
+    "staging_root": "/mnt/DiskM/by/hk_stage9_e58861_staging5",
+    "snapshot_build_root": "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root",
+    "runner_cwd": "/home/by",
+    "command": "./mvnw --version",
+    "failure": "/bin/bash: ./mvnw: No such file or directory",
+    "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+    "package_performed": false,
+    "bundle_performed": false,
+    "upload_performed": false,
+    "smoke_performed": false
+  },
+  "diagnosis_evidence": {
+    "path": "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json",
+    "executor_server_access_performed": false
+  },
+  "diagnosis_confidence": {
+    "exact_failure_identity_matched": true,
+    "direct_failure_condition_observed": true,
+    "causal_chain_demonstrated": true,
+    "material_alternatives_checked": true,
+    "repair_hypothesis_testable": true,
+    "root_cause_status": "KNOWN"
+  },
+  "root_cause": "Runner invoked the relative Maven wrapper command from /home/by instead of the exact snapshot build_root that contained mvnw.",
+  "wrapper_identity": {
+    "source": "Git object e58861e4f79eb5aa18c8ac286d0173987bcef237:mvnw",
+    "git_mode": "100755",
+    "git_blob_sha1": "19529ddf8c6eaa08c5c75ff80652d21ce4b72f8c",
+    "sha256": "7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad",
+    "size_bytes": 10665,
+    "expected_runtime_mode": "755"
+  },
+  "command_contract": {
+    "build_root_must_be_absolute": true,
+    "allowed_root_pattern": "/mnt/DiskM/by/*/build_root",
+    "explicit_cd_required": true,
+    "pwd_p_must_equal_resolved_build_root": true,
+    "wrapper_relative_command_after_cd": "./mvnw",
+    "wrapper_checks_before_build": [
+      "regular file",
+      "not symbolic link",
+      "executable",
+      "SHA256 match",
+      "mode 755"
+    ],
+    "ordered_commands": [
+      "./mvnw --version",
+      "./mvnw -DskipTests package"
+    ],
+    "arbitrary_or_home_cwd_allowed": false
+  },
+  "deterministic_guard_tests": {
+    "wrong_cwd_rejection": {
+      "cwd": "/home/by",
+      "resolved_wrapper": "/home/by/mvnw",
+      "accepted": false,
+      "reason": "cwd does not equal the authorized absolute snapshot build_root"
+    },
+    "correct_cwd_acceptance": {
+      "cwd": "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root",
+      "resolved_wrapper": "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root/mvnw",
+      "accepted": true,
+      "conditions": "absolute root, exact cwd, regular executable wrapper, Git-anchored SHA256 and mode"
+    },
+    "missing_wrapper_rejected": true,
+    "non_executable_wrapper_rejected": true,
+    "symlink_wrapper_rejected": true,
+    "wrong_sha_rejected": true,
+    "wrong_mode_rejected": true,
+    "maven_package_executed_by_executor": false,
+    "server_or_stage9_run_performed_by_executor": false
+  },
+  "validation": {
+    "method": "Read-only exact Git-object wrapper identity plus static command-template ordering and fail-closed contract assertions",
+    "wrong_cwd_rejection": "pass",
+    "correct_cwd_acceptance": "pass",
+    "wrapper_git_identity": "pass",
+    "preflight_before_maven_order": "pass",
+    "current_stage_yaml_parse": "pass",
+    "protocol_07_unchanged": true,
+    "bundle_preparation_script_unchanged": true,
+    "maven_or_server_execution_performed": false
+  },
+  "replacement_identity_required": {
+    "new_repair_sha": true,
+    "new_staging_root": true,
+    "new_bundle_sha": true,
+    "new_release_root": true,
+    "new_run_identity": true,
+    "staging5_or_prior_identity_reuse_allowed": false
+  },
+  "unchanged_contracts": {
+    "protocol_07_confidence_and_budget": true,
+    "java_model_or_cost_semantics_changed": false,
+    "matsim_config_or_locked_input_changed": false,
+    "bundle_preparation_script_changed": false,
+    "jdk_contract_changed": false,
+    "server_state_changed_by_executor": false,
+    "runner_authorized": false,
+    "stage_9_execution_authorized": false,
+    "stage_10_or_later_authorized": false
+  },
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+}

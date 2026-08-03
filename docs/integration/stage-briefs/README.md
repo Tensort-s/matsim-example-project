@@ -13,7 +13,7 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md`](CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
+- [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md)
 
 Blocked/superseded briefs:
 

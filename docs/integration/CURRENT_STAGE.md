@@ -7,29 +7,31 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-PROTOCOL07-DIAGNOSIS-CONFIDENCE-BUDGET-001"
-  exact_input_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+  transition_id: "AGT-20260803-STAGE9-RUNNER-WORKDIR-GUARD-006"
+  exact_input_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
   closed_task:
-    task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
-    previous_status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
-    final_status: "PASS_CLOSED"
-    reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
-    reviewer_verdict: "PASS"
-    reviewer_verdict_reference: "docs/agent-worklogs/integration-supervisor.md#entry-38--protocol-07-atomic-protocol-06-closure-and-dispatch"
-    supervisor_gate: "PASS_CLOSED"
+    task_id: "STAGE9-JOINT-SHORT-SMOKE"
+    previous_status: "AUTHORIZED_PRE_BUILD_ATTEMPT"
+    final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+    reviewed_output_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    reviewer_verdict: "BLOCKED"
+    reviewer_verdict_reference: "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json"
+    verdict_source: "INT-RUNNER failure diagnosis accepted by INT-SUPERVISOR"
+    supervisor_gate: "BLOCKED_SUPERSEDED_BY_REPAIR"
   superseded_task:
     task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "RUN_BLOCKED_RUNTIME_DEPENDENCY_MISSING"
+    previous_status: "AUTHORIZED_PRE_BUILD_ATTEMPT"
     final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
+    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
   blocker:
-    blocker_id: null
-    previous_status: null
-    final_status: null
+    blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+    previous_status: "OPEN"
+    final_status: "REPAIR_DISPATCHED"
   next_active_task:
-    task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
-    status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
-    owner: "INT-SUPERVISOR"
+    task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+    status: "ACTIVE"
+    owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
   repository_writer: "INT-EXECUTOR"
   runner_authorized: false
@@ -38,8 +40,8 @@ atomic_gate_transition:
   stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-38--protocol-07-atomic-protocol-06-closure-and-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-35--protocol-07-diagnosis-confidence-and-budget"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-39--stage-9-runner-workdir-guard-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-36--stage-9-runner-workdir-guard"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -52,11 +54,15 @@ last_closed_task:
 superseded_stage9_task:
   task_id: "STAGE9-JOINT-SHORT-SMOKE"
   status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  source_sha: "c129c18fe5996ef38740c454f7f0482c4ffe4695"
-  bundle_sha256: "0f4ab65801f7e1e6e2cec55e4a9e77c8e95caae1af7a57133fef4430b35dbe45"
-  release_root: "/mnt/DiskM/by/hk_multimodal_cost_c129c1_stage9_release3"
-  run_identity: "smoke_qsim_v1_c129c1_run3"
-  failure: "NoClassDefFoundError org/matsim/core/controler/AbstractModule"
+  source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+  staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
+  runner_cwd: "/home/by"
+  command: "./mvnw --version"
+  failure: "/bin/bash: ./mvnw: No such file or directory"
+  package_performed: false
+  bundle_performed: false
+  upload_performed: false
+  smoke_performed: false
   brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
 
 closed_blocker:
@@ -88,10 +94,43 @@ closed_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
-  status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
-  owner: "INT-SUPERVISOR"
-  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
+  task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  status: "ACTIVE"
+  owner: "INT-EXECUTOR"
+  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md"
+
+active_blocker:
+  blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
+    snapshot_build_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root"
+    runner_cwd: "/home/by"
+    command: "./mvnw --version"
+    failure: "/bin/bash: ./mvnw: No such file or directory"
+  root_cause: "Runner invoked the relative Maven wrapper from /home/by instead of the exact snapshot build_root containing executable mvnw."
+  diagnosis_confidence:
+    exact_failure_identity_matched: true
+    direct_failure_condition_observed: true
+    causal_chain_demonstrated: true
+    material_alternatives_checked: true
+    repair_hypothesis_testable: true
+    root_cause_status: "KNOWN"
+  changed_hypothesis_required_for_retry: "Every wrapper/build command must use an absolute snapshot build_root, cd there first, and record pwd plus wrapper path, SHA256 and mode before Maven."
+  repair_task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required:
+    - "new pushed repair SHA"
+    - "new staging root; never reuse /mnt/DiskM/by/hk_stage9_e58861_staging5"
+    - "new bundle and release identity"
+    - "new run identity"
+  superseded_run_identity:
+    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
+    command: "./mvnw --version from /home/by"
+  diagnosis_evidence: "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json"
+  runner_authorized: false
 
 protocol_06:
   status: "PASS_CLOSED"
@@ -141,7 +180,7 @@ execution_authority:
   runner_authorized: false
   stage_9_authorized: false
   stage_9_execution_authorized: false
-  bounded_repair_authorized: false
+  bounded_repair_authorized: true
   repair_commit_accessed_server: false
   repair_commit_built_or_uploaded_bundle: false
   repair_commit_started_smoke: false
@@ -149,7 +188,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "CONTROL-PROTOCOL-07-DIAGNOSIS-CONFIDENCE-AND-BUDGET"
+  task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -157,11 +196,12 @@ control_transition_review:
 
 ## Canonical interpretation
 
-Protocol 06 at exact SHA `e12f81b...` is Reviewer `PASS` and Supervisor
-`PASS_CLOSED`. Protocol 07 is the active governance transition pending one
-final read-only review. It makes root-cause status objective and bounds every
-automatic read-only diagnosis. The Stage 9 blocker remains closed and
-release3/run3 remains historical `BLOCKED_SUPERSEDED_BY_REPAIR`.
+Protocol 07 classified the staging5 cwd omission as a `KNOWN` ordinary
+technical defect. The failed Stage 9 attempt is
+`BLOCKED_SUPERSEDED_BY_REPAIR`; package, bundle, upload and smoke did not run.
+The active bounded repair adds only the absolute build-root command and
+preflight contract. Earlier release3/run3 evidence remains preserved in the
+closed dependency blocker and append-only worklogs.
 
 Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
@@ -169,6 +209,7 @@ work is authorized.
 
 ## Next action
 
-Executor pushes this one atomic governance commit and reports only to
+Executor pushes this one bounded governance repair commit and reports only to
 Supervisor. Supervisor verifies its exact SHA, parent and scope before one
-read-only review. Reviewer `PASS` creates no closure-only follow-up commit.
+read-only review. Any later Stage 9 attempt requires a separate authorization
+and new source, staging, bundle, release and run identities.

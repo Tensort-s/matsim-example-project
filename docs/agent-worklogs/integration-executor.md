@@ -1128,3 +1128,36 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
 required_transition: null
 ```
+
+## Entry 36 — Stage 9 Runner workdir guard
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+input_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+output_sha_or_status: "exact pushed repair SHA supplied in the Supervisor handoff"
+decision: "Require an absolute snapshot build_root, explicit cd, and cwd/wrapper identity evidence before any Maven command."
+findings:
+  - "Exact-tree mvnw is mode 100755, SHA256 7e6e5d26712efd78140f2f63dafe8d17028f6c5c97ac1f746a043110b7a1d9ad and 10,665 bytes."
+  - "The command template rejects /home/by or arbitrary cwd and accepts only pwd -P equal to the resolved absolute build_root."
+  - "Wrapper regular-file, non-symlink, executable, SHA and mode checks precede --version and package."
+  - "Wrong-cwd rejection and correct-cwd acceptance are recorded in structured deterministic evidence."
+  - "No Maven package, server access, bundle/upload/smoke, Runner contact or Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_repair_006_validation_v1/stage9_runner_workdir_guard_validation.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md"
+blocker:
+  blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
+required_transition: null
+```

@@ -1226,3 +1226,47 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push the single Protocol 07 atomic governance transition, then stop for one read-only review."
 required_transition: null
 ```
+
+## Entry 39 — Stage 9 Runner workdir-guard dispatch
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+input_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+output_sha_or_status: "REPAIR_DISPATCHED_TO_INT_EXECUTOR"
+decision: "Dispatch an explicit snapshot build-root cwd and Maven-wrapper identity guard; Runner and Stage 9 execution remain unauthorized."
+findings:
+  - "The staging5 snapshot contained build_root/mvnw, but Runner invoked ./mvnw --version from /home/by."
+  - "Protocol 07 confidence gates are all true and classify the ordinary technical root cause as KNOWN."
+  - "The failure occurred before package, bundle, upload or smoke execution."
+  - "The repair must record pwd and wrapper path, SHA256 and mode before either Maven command."
+  - "A later attempt requires new repair SHA, staging, bundle, release and run identities; staging5 is preserved."
+diagnostics: []
+evidence_refs:
+  - "/mnt/DiskM/by/hk_stage9_e58861_staging5/evidence/diagnosis_stage9_workdir_omission.json"
+  - "docs/integration/stage-briefs/STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md"
+blocker:
+  blocker_id: "STAGE9-RUNNER-WORKDIR-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "e58861e4f79eb5aa18c8ac286d0173987bcef237"
+    staging_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5"
+    snapshot_build_root: "/mnt/DiskM/by/hk_stage9_e58861_staging5/build_root"
+    runner_cwd: "/home/by"
+    command: "./mvnw --version"
+    failure: "/bin/bash: ./mvnw: No such file or directory"
+  root_cause: "The relative wrapper command was launched from /home/by instead of the exact snapshot build_root."
+  changed_hypothesis_required_for_retry: "Use an absolute snapshot build_root, cd before all wrapper commands, and verify cwd plus wrapper path/mode/SHA before build."
+  repair_task_id: "STAGE9-REPAIR-RUNNER-WORKDIR-GUARD-006"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: "new repair SHA, staging, bundle, release and run identities"
+  superseded_run_identity: "source e58861e / staging5 / ./mvnw --version from /home/by"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "REPAIR_DISPATCHED"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push one governance-only workdir-guard repair, report only to Supervisor, and stop."
+required_transition: null
+```
