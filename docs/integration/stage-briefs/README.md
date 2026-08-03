@@ -13,7 +13,7 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md`](CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
+- [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md)
 
 Canonical review template:
 

@@ -936,3 +936,38 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact atomic-transition SHA and dispatches one final Reviewer review; Executor stops."
 required_transition: null
 ```
+
+## Entry 30 — Stage 9 activation atomic transition
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-ACTIVATE-ATOMIC-GATE"
+input_sha: "9c66fa772cf128fdcf208a5e3171bd7fbd3444d5"
+output_sha_or_status: "exact pushed activation SHA supplied in the Supervisor handoff"
+decision: "Atomically move canonical state from idle to Stage 9 activation and publish the bounded joint-short-smoke runtime contract."
+findings:
+  - "CURRENT_STAGE activates STAGE9-JOINT-SHORT-SMOKE with INT-RUNNER as prospective owner."
+  - "Runner remains unauthorized pending a separate Supervisor instruction naming the exact pushed activation SHA."
+  - "The new brief requires a new bundle/release/run identity and forbids reuse of the 674a6025 release."
+  - "The smoke is limited to the prepared lastIteration=0 configuration with locked v2/Ferry Core inputs."
+  - "No build, upload, server access, smoke, formal run, calibration or Stage 10+ action occurred."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#atomic_gate_transition"
+  - "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
+atomic_gate_transition:
+  transition_id: "AGT-20260803-STAGE9-ACTIVATE-001"
+  canonical_state_updated: true
+  audit_records_appended:
+    - "docs/agent-worklogs/integration-supervisor.md#entry-33--stage-9-activation-atomic-transition"
+    - "docs/agent-worklogs/integration-executor.md#entry-30--stage-9-activation-atomic-transition"
+  runner_authorized: false
+  stage_9_authorized: true
+  verdict_only_followup_commit_allowed: false
+blockers: []
+hard_gate_status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact activation SHA and dispatches one final Reviewer review; Executor stops."
+required_transition: null
+```

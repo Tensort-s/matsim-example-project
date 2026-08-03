@@ -7,11 +7,11 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE8D-R1-CLOSE-001"
-  exact_input_sha: "c12a80fe8bca7a945eaaf39d00149fb3dd7838d4"
+  transition_id: "AGT-20260803-STAGE9-ACTIVATE-001"
+  exact_input_sha: "9c66fa772cf128fdcf208a5e3171bd7fbd3444d5"
   closed_task:
     task_id: "STAGE8D-R1-JDK-RUNTIME-CLOSURE"
-    previous_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE_8D_R1_GATE"
+    previous_status: "PASS_CLOSED"
     final_status: "PASS_CLOSED"
     reviewed_output_sha: "339ef046c55faf3e727a19d32234612bd6974241"
     reviewer_verdict: "PASS"
@@ -19,21 +19,20 @@ atomic_gate_transition:
     supervisor_gate: "PASS_CLOSED"
   blocker:
     blocker_id: "STAGE9-RUNTIME-JDK-MISSING-001"
-    previous_status: "REPAIR_DISPATCHED"
-    review_status: "UNDER_REVIEW"
+    previous_status: "CLOSED"
     final_status: "CLOSED"
   next_active_task:
-    task_id: null
-    status: "AWAITING_SUPERVISOR_AUTHORIZATION"
-    owner: null
+    task_id: "STAGE9-JOINT-SHORT-SMOKE"
+    status: "ACTIVATED_AWAITING_SEPARATE_RUNNER_INSTRUCTION"
+    owner: "INT-RUNNER"
   owner: "INT-SUPERVISOR"
   repository_writer: "INT-EXECUTOR"
   runner_authorized: false
-  stage_9_authorized: false
+  stage_9_authorized: true
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-32--control-protocol-05-atomic-gate-transition"
-    - "docs/agent-worklogs/integration-executor.md#entry-29--control-protocol-05-atomic-gate-transition"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-33--stage-9-activation-atomic-transition"
+    - "docs/agent-worklogs/integration-executor.md#entry-30--stage-9-activation-atomic-transition"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -44,25 +43,33 @@ last_closed_task:
   repair_sha: "339ef046c55faf3e727a19d32234612bd6974241"
   closure_evidence_sha: "c12a80fe8bca7a945eaaf39d00149fb3dd7838d4"
   superseded_stage_9_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  evidence:
-    - "data/transport_costs/hongkong/integration_stage8d_rework_validation_v1/stage8d_r1_jdk_runtime_closure_validation.json"
-    - "docs/integration/stage-briefs/STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md"
 
 active_task:
-  task_id: null
-  status: "AWAITING_SUPERVISOR_AUTHORIZATION"
-  owner: null
+  task_id: "STAGE9-JOINT-SHORT-SMOKE"
+  status: "ACTIVATED_AWAITING_SEPARATE_RUNNER_INSTRUCTION"
+  owner: "INT-RUNNER"
+  brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
+
+runtime_identity_contract:
+  source_commit: "EXACT_PUSHED_ACTIVATION_SHA_FROM_SEPARATE_SUPERVISOR_RUN_INSTRUCTION"
+  required_ancestor: "339ef046c55faf3e727a19d32234612bd6974241"
+  superseded_release_root: "/mnt/DiskM/by/hk_multimodal_cost_674a6025_stage8d_build2"
+  reuse_superseded_release_or_run: false
+  new_bundle_release_run_identity_required: true
 
 execution_authority:
   authority_source: "INT-SUPERVISOR"
   runner_authorized: false
-  stage_9_authorized: false
-  no_new_bundle_built: true
-  no_new_bundle_uploaded: true
-  no_new_smoke_run: true
+  runner_authorization_condition: "separate exact-SHA Supervisor Stage 9 run instruction"
+  stage_9_authorized: true
+  activation_commit_built_bundle: false
+  activation_commit_uploaded_bundle: false
+  activation_commit_started_smoke: false
+  formal_50it_authorized: false
+  stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "CONTROL-PROTOCOL-05-ATOMIC-GATE-TRANSITION"
+  task_id: "STAGE9-ACTIVATE-ATOMIC-GATE"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -70,15 +77,18 @@ control_transition_review:
 
 ## Canonical interpretation
 
-The JDK repair and its blocker are closed. The original Stage 9 run identity
-remains `BLOCKED_SUPERSEDED_BY_REPAIR`; closing the repair does not reactivate
-or authorize it. No active task or owner exists until a new formal Supervisor
-authorization. No new production bundle was built or uploaded and no new
-smoke run occurred in this transition.
+Stage 9 is activated as the next task, but Runner execution remains blocked
+until Supervisor issues a separate instruction naming the exact pushed
+activation SHA and run identity. The repaired JDK task and blocker remain
+closed. The original Stage 9 release/run identity remains superseded and may
+not be reused.
+
+This activation commit performs no build, upload or smoke. It authorizes no
+formal 50-iteration, calibration, Stage 10 or later work.
 
 ## Next action
 
-Supervisor verifies the atomic-transition commit's exact SHA, parent and
-scope, then dispatches one final read-only Reviewer review. Supervisor consumes
-the verdict in the real-time workflow and stops. No verdict-only or
-closure-only follow-up commit is allowed.
+Supervisor verifies the activation commit's exact SHA, parent and scope, then
+dispatches one final read-only Reviewer review. After consuming the verdict,
+Supervisor may issue a separate exact-SHA Stage 9 Runner instruction. Executor
+stops; no verdict-only or closure-only follow-up commit is allowed.

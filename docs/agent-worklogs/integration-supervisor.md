@@ -995,3 +995,37 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one atomic governance commit from exact input c12a80f, then stop for one final read-only review."
 required_transition: null
 ```
+
+## Entry 33 — Stage 9 activation atomic transition
+
+```yaml
+timestamp: "2026-08-03 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-ACTIVATE-ATOMIC-GATE"
+input_sha: "9c66fa772cf128fdcf208a5e3171bd7fbd3444d5"
+output_sha_or_status: "AUTHORIZED_ATOMIC_STAGE9_ACTIVATION"
+decision: "Activate Stage 9 Joint Short Smoke canonically while withholding Runner execution until a separate exact-SHA instruction."
+findings:
+  - "The pre-transition canonical state is idle/AWAITING_SUPERVISOR_AUTHORIZATION with the JDK repair PASS_CLOSED."
+  - "Stage 9 becomes the active task with INT-RUNNER as prospective runtime owner."
+  - "stage_9_authorized=true, but runner_authorized=false until a separate Supervisor run instruction."
+  - "The future run must use the exact pushed activation SHA, a new repaired bundle/release/run identity and the seven locked v2/Ferry Core inputs."
+  - "This activation performs no build, upload, smoke, formal 50-iteration, calibration or Stage 10+ action."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/CURRENT_STAGE.md#atomic_gate_transition"
+  - "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
+atomic_gate_transition:
+  transition_id: "AGT-20260803-STAGE9-ACTIVATE-001"
+  prior_active_task: null
+  next_active_task: "STAGE9-JOINT-SHORT-SMOKE"
+  next_owner: "INT-RUNNER"
+  runner_authorized: false
+  stage_9_authorized: true
+  verdict_only_followup_commit_allowed: false
+blockers: []
+hard_gate_status: "STAGE9_ACTIVATED__RUNNER_INSTRUCTION_PENDING"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one atomic Stage 9 activation commit from exact input 9c66fa7 and stop; do not contact Reviewer or Runner."
+required_transition: null
+```
