@@ -784,3 +784,29 @@ hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_02
 handoff_to: "INT-SUPERVISOR"
 next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer or alter Stage 9."
 ```
+
+## Entry 25 — CONTROL-PROTOCOL-03 blocker-to-repair transition
+
+```yaml
+timestamp: "2026-08-03T15:17:40+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-03_BLOCKER_TO_REPAIR"
+input_sha: "d5625084f157809d8d335b6b221ac7b334b99364"
+output_sha_or_status: "exact pushed SHA recorded in the Supervisor handoff"
+decision: "Encode the mandatory blocker state machine, repair/diagnosis dispatch, heartbeat handling and replacement-identity contract as governance only."
+findings:
+  - "Policy now requires CREATE_REPAIR_STAGE or CREATE_DIAGNOSIS_STAGE instead of repeating a BLOCKED heartbeat."
+  - "The new brief defines stable blocker fields, five supported states and structured Reviewer required_transition."
+  - "Repair briefs require bounded scope, exact identity, evidence, stop conditions and Runner false."
+  - "The worked Stage 9/JDK example covers OPEN through CLOSED or escalation without authorizing Stage 9."
+  - "No runtime, model, config, input, bundle, server or Runner path changed."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#blocker-to-repair-state-transition"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md"
+  - "agent-lanes.md#canonical-control-plane-sources"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_CONTROL_PROTOCOL_03_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action: "Supervisor verifies the exact pushed governance SHA; Executor stops and does not contact Reviewer, Runner or Stage 9."
+```

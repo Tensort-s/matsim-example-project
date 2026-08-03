@@ -107,6 +107,48 @@ submission and verdict shape is
     is read-only, Runner is inactive unless Supervisor explicitly authorizes an
     exact execution, and Supervisor alone aggregates messages and gates stages.
 
+## Blocker-to-repair state transition
+
+CONTROL-PROTOCOL-03 extends the lean delta-only review protocol. Its canonical
+schemas and worked example are in
+[`stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md`](stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md).
+
+1. Every technical blocker has one stable, unique `blocker_id` and records:
+   `status`, `failure_identity`, `root_cause`,
+   `changed_hypothesis_required_for_retry`, `repair_task_id`, `repair_owner`,
+   `replacement_identity_required`, and `superseded_run_identity`.
+2. Supported blocker states are `OPEN`, `REPAIR_DISPATCHED`, `UNDER_REVIEW`,
+   `CLOSED`, and `ESCALATED_TO_USER`. State changes are append-only audit
+   events; earlier records are not rewritten.
+3. For a technical `BLOCKED` result with a known root cause and an executable,
+   verifiable repair, Supervisor's next effective action is
+   `CREATE_REPAIR_STAGE`. If the root cause is unknown, the next effective
+   action is `CREATE_DIAGNOSIS_STAGE`. Repeating the blocker heartbeat is not a
+   valid next action.
+4. Once Supervisor issues the repair or diagnosis stage, the prior active stage
+   becomes `BLOCKED_SUPERSEDED_BY_REPAIR` (or
+   `BLOCKED_SUPERSEDED_BY_DIAGNOSIS`) and is no longer the active task.
+5. Heartbeats are keyed by `blocker_id`. The same blocker at
+   `REPAIR_DISPATCHED` or `UNDER_REVIEW` is silently deduplicated. The same
+   blocker at `OPEN` with no `repair_task_id` emits exactly one
+   `MISSING_REPAIR_DISPATCH` escalation to Supervisor and is not silently
+   deduplicated.
+6. Reviewer `next_action` contains `required_transition` with `action`,
+   `blocker_id`, `owner`, `repair_owner`, and `runner_authorized`. Reviewer
+   reports it only to Supervisor; it is not itself execution authority.
+7. A repair-stage brief supplies a new `task_id`, exact input SHA, allowed
+   paths, objective, hard gates, evidence, stop conditions, replacement run
+   identity requirements, and `runner_authorized: false`. Only a later,
+   separate Supervisor dispatch may authorize Runner.
+8. A new directory alone never changes a failed identity. A retry authorization
+   proves at least one related identity changed: commit, bundle, config, input,
+   command, runtime environment, or verified dependency-closure repair.
+9. `CLOSED` requires reviewed repair evidence and Supervisor gate closure.
+   A blocker requiring model-policy or user authority transitions to
+   `ESCALATED_TO_USER`, not an inferred technical repair.
+10. Supervisor-only dispatch/gate authority and Executor-only integration-write
+    authority remain unchanged throughout the transition.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |

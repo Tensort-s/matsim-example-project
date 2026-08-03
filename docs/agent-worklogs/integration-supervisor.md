@@ -813,3 +813,28 @@ hard_gate_status: "CONTROL_PROTOCOL_02_GOVERNANCE_WRITE_AUTHORIZED"
 handoff_to: "INT-EXECUTOR"
 next_action: "Push one focused governance-only commit from 9f21414f and report only to Supervisor."
 ```
+
+## Entry 28 — CONTROL-PROTOCOL-03 authorization
+
+```yaml
+timestamp: "2026-08-03T15:17:40+08:00"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-03_BLOCKER_TO_REPAIR"
+input_sha: "d5625084f157809d8d335b6b221ac7b334b99364"
+output_sha_or_status: "AUTHORIZED_GOVERNANCE_ONLY"
+decision: "Authorize a mandatory blocker-to-repair transition so deduplicated BLOCKED heartbeats cannot silently stall the workflow."
+findings:
+  - "Known executable technical repairs require CREATE_REPAIR_STAGE; unknown causes require CREATE_DIAGNOSIS_STAGE."
+  - "A dispatched repair supersedes the blocked stage as the active task."
+  - "Stable blocker fields, five states, structured Reviewer transitions and repair-stage requirements are mandatory."
+  - "OPEN blockers missing repair dispatch escalate once; already dispatched/reviewing blockers deduplicate silently."
+  - "Stage 9 and Runner remain unauthorized and unchanged."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#blocker-to-repair-state-transition"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md"
+blockers: []
+hard_gate_status: "CONTROL_PROTOCOL_03_GOVERNANCE_WRITE_AUTHORIZED"
+handoff_to: "INT-EXECUTOR"
+next_action: "Push one focused governance-only commit from d5625084 and report only to Supervisor."
+```
