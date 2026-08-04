@@ -17,6 +17,13 @@ Current candidate:
   Supervisor-dispatched stage-end review. Runner, Stage 9 execution, and Stage
   10 or later remain unauthorized.
 
+Active substantive stage:
+
+- [`STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md`](STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md) —
+  task `STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE`, exact input
+  `48686c03f46372e4aed2bc9bd1bdeb1796a34fbe`; test-only directed Taxi/PT/Car
+  coverage. Runner and Stage 11 remain unauthorized.
+
 ## Deprecated noncanonical protocols
 
 Protocols 05–08 have status `DEPRECATED_NON_CANONICAL`, prospective authority

@@ -1,0 +1,97 @@
+{
+  "stage_id": "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE",
+  "input_sha": "48686c03f46372e4aed2bc9bd1bdeb1796a34fbe",
+  "fixture_id": "stage10-directed-multimodal-cost-v1",
+  "deterministic": true,
+  "random_sampling": false,
+  "production_population_or_config_used": false,
+  "server_run": false,
+  "test_command": ".\\mvnw.cmd '-Dtest=HongKongDirectedMultimodalCostCoverageTest' test",
+  "compile_command": ".\\mvnw.cmd -DskipTests compile",
+  "compile_result": "BUILD SUCCESS",
+  "test_result": {
+    "exit_code": 0,
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "test_harness_paths": [
+    "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java",
+    "src/test/java/org/matsim/project/hongkong/pt/HongKongDirectedPtFixture.java",
+    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java"
+  ],
+  "test_harness_sha256": {
+    "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java": "42750a0664cba398e39c894a016214033bb4203887d5da6b8fdebc51696674d3",
+    "src/test/java/org/matsim/project/hongkong/pt/HongKongDirectedPtFixture.java": "b4c41841083c5a2908f449ad9ef09b59d02753989c47cf70cf5b9b94c98ed473",
+    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java": "b9f45c4d0a9cb7d2d4d28043e99c92ae8659b7c4a12295f07f9742d136d7f010"
+  },
+  "directed_subset": {
+    "person_id": "stage10-directed-001",
+    "plan_legs": [
+      {
+        "ordinal": 0,
+        "mode": "taxi",
+        "routing_mode": "taxi",
+        "distance_m": 2500.0,
+        "taxi_type": "urban_taxi",
+        "expected_fee_hkd": 35.3,
+        "expected_score": -1.765,
+        "expected_money_events_emitted": 0
+      },
+      {
+        "ordinal": 1,
+        "mode": "pt",
+        "routing_mode": "pt",
+        "route_layer": "mtr_domestic",
+        "expected_fee_hkd": 4.9,
+        "expected_score": -9.8,
+        "expected_money_events_emitted": 0
+      },
+      {
+        "ordinal": 2,
+        "mode": "car",
+        "routing_mode": "car",
+        "distance_m": 1000.0,
+        "component": "fuel_or_electricity",
+        "expected_fee_hkd": 2.5,
+        "expected_score": -5.0,
+        "expected_money_events_emitted": 0,
+        "fixed_ownership_included": false
+      }
+    ],
+    "leg_counts": {
+      "taxi": 1,
+      "pt": 1,
+      "car": 1,
+      "routing_mode_taxi": 1,
+      "taxi_to_ride": 0
+    },
+    "expected_total_fee_hkd": 42.7,
+    "expected_total_custom_score": -16.565
+  },
+  "exactly_once": {
+    "leg_callback_is_only_charge_path": true,
+    "money_event_callback_is_inert": true,
+    "trip_callback_is_inert": true,
+    "money_events_emitted": 0,
+    "duplicate_taxi_leg_fails_closed": true,
+    "duplicate_pt_leg_fails_closed": true,
+    "duplicate_car_leg_fails_closed": true,
+    "nonfinite_values": 0,
+    "unresolved_values_filled_as_zero": false
+  },
+  "semantic_invariants": {
+    "taxi_native_routing_preserved": true,
+    "pt_and_car_use_locked_interfaces": true,
+    "fixed_vehicle_ownership_per_leg": false,
+    "production_model_or_cost_semantics_changed": false,
+    "production_input_or_config_changed": false,
+    "stage11_or_runner_authorized": false
+  },
+  "hard_gate_status": "PASS_CANDIDATE_PENDING_STAGE_END_REVIEW",
+  "coverage_limitations": [
+    "This is a deterministic component-level directed subset, not a Hong Kong production MATSim run.",
+    "Taxi, PT and Car paths are exercised through the canonical composed scoring function; no population-level mode-share claim is made."
+  ]
+}

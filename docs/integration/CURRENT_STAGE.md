@@ -10,19 +10,20 @@ and append-only worklogs.
 
 ```yaml
 stage:
-  stage_id: "STAGE9-JOINT-SHORT-SMOKE"
-  formal_state: "PASS_CLOSED"
-  source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
-  closure_control_sha: "e9bc965721b7842c7bfaaeb549ee08de038454c4"
-  run_identity: "smoke_qsim_v1_4c61a0_run8"
-  reviewer_verdict: "PASS"
+  stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+  formal_state: "RUNNING"
+  source_sha: "48686c03f46372e4aed2bc9bd1bdeb1796a34fbe"
+  closure_control_sha: null
+  run_identity: null
+  reviewer_verdict: null
   evidence:
-    binding: "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
-    final_audit: "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
-    server_diagnosis_path: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8/evidence/diagnosis_run8_evidence_verification_011/diagnosis.json"
-    server_diagnosis_sha256: "a72234de370376a1c7b3554f68b96e950f233d319889808afd86c2ff78203e46"
+    directed_validation: "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
+    stage_brief: "docs/integration/stage-briefs/STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md"
 
-active_task: null
+active_task:
+  task_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+  owner: "INT-EXECUTOR"
+  objective: "Deterministically trigger Taxi, PT and Car costs in one bounded test subset and prove exactly-once charging."
 active_blocker: null
 
 coverage_debt:
@@ -50,6 +51,15 @@ coverage_debt:
     - "any claim that a later candidate exercised Taxi runtime fare and exactly-once behavior"
     - "any freeze or formal-run gate whose stated acceptance requires Taxi runtime coverage"
 
+stage10_coverage:
+  fixture_id: "stage10-directed-multimodal-cost-v1"
+  person_id: "stage10-directed-001"
+  taxi_legs: 1
+  pt_legs: 1
+  car_legs: 1
+  expected_total_fee_hkd: 42.7
+  exactly_once_negative_test: "duplicate taxi/PT/Car experienced legs fail closed"
+
 review_policy:
   default: "STAGE_END_ONLY"
   intermediate_review_default: "NO_INTERMEDIATE_REVIEW"
@@ -72,14 +82,14 @@ authority:
   reviewer_is_read_only: true
   runner_has_no_git_writes: true
   runner_authorized: false
+  stage10_implementation_authorized: true
+  stage11_or_later_authorized: false
   stage_9_execution_authorized: false
-  stage_10_or_later_authorized: false
   user_controls_research_economic_behavioral_policy_semantics: true
 
-next_action: "AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION"
+next_action: "Executor pushes the deterministic candidate and stops for one Protocol 09 stage-end review"
 ```
 
-Stage 9 remains `PASS_CLOSED`; Protocol 09 consolidation does not reopen or run
-it. Taxi coverage debt remains explicit and non-blocking for the closed smoke,
-while preventing unsupported future coverage claims. No Runner, Stage 9,
-Stage 10, server, bundle, release, or run action is authorized.
+Stage 9 remains `PASS_CLOSED`; Stage 10 is now `RUNNING` as a test-only,
+deterministic coverage task. No Runner, server, bundle, release, or Stage 11
+action is authorized.

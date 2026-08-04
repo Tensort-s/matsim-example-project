@@ -1423,3 +1423,52 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatches one stage-end review; Executor stops."
 required_transition: null
 ```
+
+## Entry 44 — Stage 10 deterministic multimodal cost coverage candidate
+
+```yaml
+timestamp: "2026-08-04T22:25:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+input_sha: "48686c03f46372e4aed2bc9bd1bdeb1796a34fbe"
+output_sha_or_status: "pending_push"
+decision: "Implement one deterministic test-only selected plan that triggers Taxi, PT and Car canonical cost paths and rejects duplicate charges."
+findings:
+  - "The directed fixture contains one mode=taxi,routingMode=taxi leg, one mode=pt,routingMode=pt leg and one mode=car,routingMode=car leg in one fixed plan."
+  - "Predeclared fees are Taxi 35.3 HKD, PT 4.9 HKD and Car fuel_or_electricity 2.5 HKD; expected total is 42.7 HKD and expected custom score is -16.565."
+  - "The canonical composed scoring factory is exercised; event, money and trip callbacks are inert and duplicate Taxi/PT/Car leg callbacks fail closed."
+  - "No production model, cost semantic, config, input, bundle, release, server or Runner state changed."
+diagnostics:
+  - "Maven emitted existing parent-version, MATSim/Java25 and deprecated ScoringFunction callback warnings; none changed the test result."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
+  - "docs/integration/stage-briefs/STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md"
+  - "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java"
+executor_self_check:
+  stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+  exact_input_sha: "48686c03f46372e4aed2bc9bd1bdeb1796a34fbe"
+  branch: "integration/hk-multimodal-cost-v1"
+  changed_paths_within_allowlist: true
+  compilation: "PASS via focused Maven test compile"
+  required_tests: "PASS: 2 tests"
+  negative_tests: "PASS: duplicate Taxi/PT/Car leg callbacks fail closed"
+  validators: "PASS: expected-fee manifest, mode/routing counts, finite-score and inert callback assertions"
+  taxi_leg_count: 1
+  taxi_routing_mode_taxi_count: 1
+  pt_leg_count: 1
+  car_leg_count: 1
+  expected_observed_fee_table:
+    taxi: {expected_hkd: 35.3, observed_hkd: 35.3, exactly_once: true}
+    pt: {expected_hkd: 4.9, observed_hkd: 4.9, exactly_once: true}
+    car_fuel_or_electricity: {expected_hkd: 2.5, observed_hkd: 2.5, exactly_once: true}
+  duplicate_charge_negative_test: "PASS"
+  semantic_contract_changed: false
+  protected_refs_unchanged: true
+  worktree_before_push: "clean except allowlisted candidate paths"
+  unresolved_items: []
+hard_gate_status: "PENDING_SINGLE_STAGE_END_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Push one substantive candidate and stop; Supervisor dispatches the sole Protocol 09 stage-end review."
+runner_authorized: false
+stage11_or_later_authorized: false
+```
