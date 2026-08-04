@@ -1511,3 +1511,49 @@ next_action_summary: "Run focused tests and checks, push one repair candidate, t
 runner_authorized: false
 stage11_or_later_authorized: false
 ```
+
+## Entry 46 — Stage 11 joint stability control-plane candidate
+
+```yaml
+timestamp: "2026-08-04T23:40:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE11-JOINT-STABILITY-5-10-ITERATIONS"
+input_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
+output_sha_or_status: "exact pushed candidate SHA supplied in the Supervisor handoff"
+decision: "Synchronize Stage 10 PASS_CLOSED and publish the auditable two-identity Stage 11 execution contract without server execution or calibration."
+findings:
+  - "Stage 10 closure records one directed Taxi/PT/Car leg each, directly observed 35.3/4.9/2.5 HKD, total 42.7 HKD, and passing exactly-once negative tests."
+  - "Stage 11 defines separate immutable 5- and 10-iteration staging/release/run identities, late-bound to the exact reviewed Stage 11 candidate whose sole parent is 3ed98c4b8b34491a3c6f9fdf3517812323baed76."
+  - "The contract locks Java 25.0.3, Maven wrapper 3.9.8, MATSim 2026.0, the root Shade JAR/dependency closure, SHA continuity, and all seven v2/Ferry Core input hashes."
+  - "Hard Gates separate exact identities, iterations 0..5/0..10, output completeness, unique exactly-once components and finite/null/fixed-ownership rules from Diagnostics and Trends."
+  - "No runtime/model/config/input semantic, server, build, bundle, release, run, Runner, calibration, or Stage 12 action occurred."
+diagnostics:
+  - "Existing Maven parent-version, Java native-access and Unsafe warnings remained non-blocking during local compile/test."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+  - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
+  - "docs/integration/CURRENT_STAGE.md"
+executor_self_check:
+  stage_id: "STAGE11-JOINT-STABILITY-5-10-ITERATIONS"
+  exact_input_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
+  branch: "integration/hk-multimodal-cost-v1"
+  worktree: "F:/Matsim/worktrees/hk-cost-integration"
+  changed_paths:
+    - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
+    - "docs/integration/CURRENT_STAGE.md"
+    - "docs/integration/stage-briefs/README.md"
+    - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+    - "docs/agent-worklogs/integration-executor.md"
+  compile: {required: true, command: ".\\mvnw.cmd -DskipTests compile", result: "PASS_BUILD_SUCCESS"}
+  tests: {required: true, commands: [".\\mvnw.cmd '-Dtest=HongKongDirectedMultimodalCostCoverageTest' test"], result: "PASS_2_TESTS_0_FAILURES_0_ERRORS_0_SKIPS"}
+  negative_tests: {required: true, commands: ["HongKongDirectedMultimodalCostCoverageTest duplicate Taxi/PT/Car leg callbacks"], result: "PASS_FAIL_CLOSED"}
+  validators: {commands: ["Stage 11 JSON/schema and CURRENT_STAGE assertions", "seven authoritative input SHA256 checks", "Markdown link resolution", "JSON/YAML parse", "allowlist/diff/conflict/protected-ref checks"], result: "PASS"}
+  semantic_contract: "UNCHANGED"
+  unresolved_items: []
+blockers: []
+hard_gate_status: "PENDING_SINGLE_STAGE_END_REVIEW_AND_SUPERVISOR_STAGE11_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor separately authorize Runner."
+runner_authorized: false
+stage12_or_later_authorized: false
+```

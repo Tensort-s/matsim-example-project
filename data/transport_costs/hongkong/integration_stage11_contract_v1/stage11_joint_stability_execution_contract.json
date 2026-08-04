@@ -1,0 +1,271 @@
+{
+  "schema_version": "hong_kong_stage11_joint_stability_execution_contract_v1",
+  "task_id": "STAGE11-JOINT-STABILITY-5-10-ITERATIONS",
+  "contract_status": "READY_CANDIDATE_NOT_AUTHORIZED_FOR_EXECUTION",
+  "exact_input_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+  "review_base_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+  "runtime_model_baseline_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+  "stage10_closure": {
+    "stage_id": "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE",
+    "reviewed_output_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+    "reviewer_verdict": "PASS",
+    "final_status": "PASS_CLOSED",
+    "directed_leg_counts": {
+      "taxi": 1,
+      "taxi_routing_mode": 1,
+      "pt": 1,
+      "car": 1
+    },
+    "direct_observed_cost_hkd": {
+      "taxi": 35.3,
+      "pt": 4.9,
+      "car": 2.5,
+      "total": 42.7
+    },
+    "exactly_once_negative_tests": "PASS",
+    "evidence_path": "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
+  },
+  "source_identity": {
+    "runner_source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA}",
+    "runner_source_sha8": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}",
+    "required_parent_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+    "required_branch": "integration/hk-multimodal-cost-v1",
+    "required_parent_count": 1,
+    "runtime_semantic_delta_from_parent_allowed": false,
+    "binding_rule": "The later Supervisor exact Runner authorization must replace both placeholders with the reviewed pushed Stage 11 candidate and prove its sole parent and governance-only delta."
+  },
+  "locked_toolchain": {
+    "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "java_version": "25.0.3",
+    "runtime_java_relative_path": "runtime/jdk-25/bin/java",
+    "maven_version": "3.9.8",
+    "matsim_version": "2026.0",
+    "maven_version_command": "cd ${BUILD_ROOT} && ./mvnw --version",
+    "build_command": "cd ${BUILD_ROOT} && ./mvnw -DskipTests package"
+  },
+  "locked_inputs": [
+    {
+      "role": "production_config",
+      "repository_data_path": "matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+      "pack_path": "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
+      "sha256": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c"
+    },
+    {
+      "role": "v2_plans",
+      "repository_data_path": "matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/plans_routed_5pct_v2.xml.gz",
+      "pack_path": "input/plans_routed_5pct_v2.xml.gz",
+      "sha256": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea"
+    },
+    {
+      "role": "v2_facilities",
+      "repository_data_path": "matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/facilities_5pct_v2.xml.gz",
+      "pack_path": "input/facilities_5pct_v2.xml.gz",
+      "sha256": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e"
+    },
+    {
+      "role": "private_vehicles",
+      "repository_data_path": "matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/privateVehicles_5pct.xml.gz",
+      "pack_path": "input/privateVehicles_5pct.xml.gz",
+      "sha256": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994"
+    },
+    {
+      "role": "ferry_core_network",
+      "repository_data_path": "transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz",
+      "pack_path": "input/network.xml.gz",
+      "sha256": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95"
+    },
+    {
+      "role": "ferry_core_schedule",
+      "repository_data_path": "transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitSchedule_5pct.xml.gz",
+      "pack_path": "input/transitSchedule_5pct.xml.gz",
+      "sha256": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed"
+    },
+    {
+      "role": "ten_percent_transit_vehicles",
+      "repository_data_path": "transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/transitVehicles_10pct.xml.gz",
+      "pack_path": "input/transitVehicles_10pct.xml.gz",
+      "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    }
+  ],
+  "artifact_contract": {
+    "resolver": "${BUILD_ROOT}/matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "release_path": "app/matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "forbidden_resolvers": [
+      "${BUILD_ROOT}/target/matsim-example-project-0.0.1-SNAPSHOT.jar",
+      "target/*.jar",
+      "glob_first_match",
+      "largest_jar_guess",
+      "existing_server_jar"
+    ],
+    "required_runtime_classes": [
+      "org/matsim/project/hongkong/taxi/HongKongTaxiFareScoringComponentFactory.class",
+      "org/matsim/project/hongkong/pt/HongKongPtFareScoringComponentFactory.class",
+      "org/matsim/project/hongkong/car/HongKongCarEnergyScoringComponentFactory.class",
+      "org/matsim/project/hongkong/car/HongKongCarTollScoringComponentFactory.class",
+      "org/matsim/project/hongkong/car/HongKongCarParkingScoringComponentFactory.class",
+      "org/matsim/project/hongkong/car/HongKongCarMarginalCostScoringComponentFactory.class",
+      "org/matsim/project/hongkong/scoring/HongKongMultimodalScoringFunctionFactory.class"
+    ],
+    "required_dependency_classes": [
+      "org/matsim/core/controler/AbstractModule.class",
+      "org/matsim/core/controler/Controler.class",
+      "org/matsim/core/config/ConfigUtils.class",
+      "ch/sbb/matsim/routing/pt/raptor/SwissRailRaptorModule.class",
+      "org/duckdb/DuckDBDriver.class",
+      "com/google/inject/Guice.class"
+    ],
+    "sha_continuity": "built_root_shade_jar_sha256 == bundled_app_jar_sha256 == released_app_jar_sha256"
+  },
+  "execution_contract_template": {
+    "source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA}",
+    "working_directory": "${RUN_ROOT}",
+    "java_command": "${RELEASE_ROOT}/runtime/jdk-25/bin/java",
+    "tool_version_commands": [
+      "${RELEASE_ROOT}/runtime/jdk-25/bin/java -version",
+      "cd ${BUILD_ROOT} && ./mvnw --version",
+      "read MATSim version 2026.0 from exact POM/deployment manifest"
+    ],
+    "build_command": "cd ${BUILD_ROOT} && ./mvnw -DskipTests package",
+    "artifact_resolver": "${BUILD_ROOT}/matsim-example-project-0.0.1-SNAPSHOT.jar",
+    "bundle_command": "python3 ${REVIEWED_PREPARATION_SCRIPT} build-bundle --source-identity-mode snapshot --source-commit-sha ${SOURCE_SHA} --source-root ${BUILD_ROOT} --source-snapshot ${SOURCE_SNAPSHOT} --source-snapshot-manifest ${SOURCE_MANIFEST} --source-snapshot-manifest-sha256 ${SOURCE_MANIFEST_SHA256} --data-root-mode external_locked_input_pack --data-root ${LOCKED_INPUT_PACK_ROOT} --locked-input-pack-manifest ${LOCKED_INPUT_PACK_MANIFEST} --locked-input-pack-manifest-sha256 ${LOCKED_INPUT_PACK_MANIFEST_SHA256} --build-root ${BUILD_ROOT} --jdk-archive ${APPROVED_JDK_ARCHIVE} --jdk-sha256 69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f --release-root ${RELEASE_ROOT} --staging-dir ${BUNDLE_STAGING_DIR} --bundle-path ${BUNDLE_PATH} --deployment-manifest ${DEPLOYMENT_MANIFEST} --build-command './mvnw -DskipTests package' --java-version 25.0.3 --maven-version 3.9.8 --matsim-version 2026.0",
+    "release_root": "${NEW_RELEASE_ROOT}",
+    "run_command": "cd ${RUN_ROOT} && /usr/bin/time -v ${RELEASE_ROOT}/runtime/jdk-25/bin/java -Xms16g -Xmx96g -cp ${RELEASE_ROOT}/app/matsim-example-project-0.0.1-SNAPSHOT.jar org.matsim.project.RunHongKong5Pct ${DERIVED_RUN_CONFIG} unused --simulate",
+    "required_preconditions": [
+      "exact source snapshot/tree/inventory and extracted-root verification PASS",
+      "exact seven-file external locked-input pack verification PASS",
+      "new staging, bundle, manifest, release and run paths are absent",
+      "approved JDK archive hash and extracted Java 25.0.3 executable PASS",
+      "root Shade JAR and all required classes PASS",
+      "built/bundle/release JAR SHA continuity PASS",
+      "release SHA256SUMS and class-loading preflight PASS",
+      "derived config normalized delta contains only allowlisted execution/output fields"
+    ],
+    "hard_gates": [
+      "zero process exit",
+      "all required iteration boundaries complete",
+      "complete output/event/log/config/inventory evidence",
+      "unique Taxi/PT/Car owners and exactly-once ordinal charges",
+      "no fixed ownership per leg",
+      "no unresolved numeric zero",
+      "all money/cost/score values finite",
+      "protected refs and locked inputs unchanged"
+    ],
+    "diagnostics_only": [
+      "iteration and phase durations",
+      "peak RSS and warnings",
+      "event/score/cost distributions",
+      "stuck/abort cause distribution",
+      "zero Taxi production coverage when hard gates otherwise remain complete"
+    ],
+    "forbidden_fallbacks": [
+      "system Maven or Java",
+      "target thin JAR or ambiguous JAR selection",
+      "v1 or pre-Ferry input",
+      "unmanifested server data or old release",
+      "config semantic mutation",
+      "existing directory reuse or overwrite",
+      "automatic repair or unchanged rerun"
+    ]
+  },
+  "derived_config_contract": {
+    "source": "${RELEASE_ROOT}/config/config_formal_50it.xml",
+    "destination": "${RUN_ROOT}/config_stage11_${HORIZON}it.xml",
+    "allowed_parameter_values": {
+      "controller.firstIteration": 0,
+      "controller.lastIteration": "${HORIZON}",
+      "controller.outputDirectory": "${RUN_ROOT}/output",
+      "controller.overwriteFiles": "failIfDirectoryExists",
+      "controller.writeEventsInterval": 1,
+      "controller.writePlansInterval": 1,
+      "controller.writeSnapshotsInterval": 0
+    },
+    "all_other_parameters_unchanged": true,
+    "all_seven_input_references_unchanged": true,
+    "required_evidence": [
+      "source config SHA256",
+      "derived config SHA256",
+      "exact derivation command",
+      "normalized XML parameter diff",
+      "effective first/last iteration and output directory"
+    ]
+  },
+  "run_contracts": [
+    {
+      "horizon": 5,
+      "required_completed_iterations": [0, 1, 2, 3, 4, 5],
+      "identity": "joint_stability_5it_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_run1",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_5it_staging1",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_stage11_5it_release1",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_5it_run1",
+      "result_status": "NOT_RUN_NOT_AUTHORIZED",
+      "result_evidence": null
+    },
+    {
+      "horizon": 10,
+      "required_completed_iterations": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "identity": "joint_stability_10it_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_run1",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_10it_staging1",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_stage11_10it_release1",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_10it_run1",
+      "result_status": "NOT_RUN_NOT_AUTHORIZED",
+      "result_evidence": null
+    }
+  ],
+  "required_per_run_evidence_fields": [
+    "source_sha_parent_tree_inventory",
+    "snapshot_archive_manifest_hashes",
+    "locked_pack_manifest_and_seven_hashes",
+    "java_maven_matsim_versions",
+    "build_bundle_release_run_commands",
+    "root_jar_sha_and_required_classes",
+    "built_bundle_release_jar_sha_continuity",
+    "release_checksum_inventory",
+    "derived_config_source_hash_derived_hash_and_diff",
+    "staging_release_run_identity",
+    "process_pid_exit_and_elapsed_resources",
+    "completed_iteration_boundaries",
+    "output_and_event_inventory",
+    "taxi_leg_and_routing_mode_taxi_counts",
+    "pt_and_car_leg_counts",
+    "component_charge_and_duplicate_suppression_counts",
+    "fixed_ownership_leg_count",
+    "unresolved_zero_fill_count",
+    "nonfinite_money_cost_score_count",
+    "stuck_abort_counts_and_causes",
+    "coverage_limitations"
+  ],
+  "required_cross_run_trend_fields": [
+    "iteration_duration_by_iteration",
+    "events_by_iteration",
+    "score_summary_by_iteration",
+    "cost_summary_by_iteration_and_component",
+    "stuck_abort_by_iteration_and_cause",
+    "component_counts_by_iteration",
+    "duplicate_suppression_by_iteration",
+    "output_completeness_by_iteration"
+  ],
+  "coverage_rule": {
+    "actual_mode_counts_required": true,
+    "taxi_zero_is_diagnostic_and_coverage_limitation": true,
+    "taxi_zero_may_be_claimed_as_runtime_coverage": false,
+    "stage10_directed_proof_remains_separate": true
+  },
+  "semantic_boundary": {
+    "calibration_performed": false,
+    "production_runtime_changed": false,
+    "cost_or_behavioral_semantics_changed": false,
+    "asc_or_utility_changed": false,
+    "demand_capacity_supply_changed": false,
+    "missing_data_policy_changed": false,
+    "production_input_bytes_changed": false
+  },
+  "authority": {
+    "runner_authorized": false,
+    "stage12_or_later_authorized": false,
+    "server_access_performed_by_executor": false,
+    "build_bundle_release_run_performed_by_executor": false,
+    "next_action": "Supervisor verifies the exact pushed candidate and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor issue a separate exact Runner contract."
+  },
+  "result_placeholders_are_not_evidence": true,
+  "unresolved_items": []
+}

@@ -9,20 +9,21 @@ Together with [`../INTEGRATION_POLICY.md`](../INTEGRATION_POLICY.md),
 [`../../../agent-lanes.md`](../../../agent-lanes.md), and the Supervisor exact
 execution contract, it is the only prospective control-plane source.
 
-Current candidate:
-
-- [`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md) —
-  task `CONTROL-PROTOCOL-09-CANONICAL-CONSOLIDATION-AND-FAILURE-OWNERSHIP`,
-  exact input `16398c7883945bc82cdf521b727c6ef502273e79`, ready for one
-  Supervisor-dispatched stage-end review. Runner, Stage 9 execution, and Stage
-  10 or later remain unauthorized.
-
 Active substantive stage:
 
+- [`STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md`](STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md) —
+  task `STAGE11-JOINT-STABILITY-5-10-ITERATIONS`, exact input/review base
+  `3ed98c4b8b34491a3c6f9fdf3517812323baed76`; control-plane candidate for
+  separate 5- and 10-iteration joint stability identities. Runner, server
+  execution, calibration, and Stage 12 or later remain unauthorized.
+
+Most recently closed stage:
+
 - [`STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md`](STAGE_10_DETERMINISTIC_MULTIMODAL_COST_COVERAGE.md) —
-  task `STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE`, exact input
-  `48686c03f46372e4aed2bc9bd1bdeb1796a34fbe`; test-only directed Taxi/PT/Car
-  coverage. Runner and Stage 11 remain unauthorized.
+  `PASS_CLOSED` at reviewed output
+  `3ed98c4b8b34491a3c6f9fdf3517812323baed76`; the directed fixture directly
+  observed Taxi/PT/Car costs and exactly-once negative tests. It remains a
+  component-level proof, not a production server run.
 
 ## Deprecated noncanonical protocols
 
