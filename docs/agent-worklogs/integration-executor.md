@@ -1256,3 +1256,39 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
 required_transition: null
 ```
+
+## Entry 40 — Stage 9 run8 evidence binding
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+input_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
+output_sha_or_status: "exact pushed evidence-binding SHA supplied in the Supervisor handoff"
+decision: "Publish a compact source-labelled binding to the immutable run8 diagnosis and atomically move the evidence blocker to pending independent review."
+findings:
+  - "The pushed JSON binds source/tree, staging, release, run identity and diagnosis path/SHA without copying raw logs or inventing untransferred digests."
+  - "Transferred hard-gate facts record 420/0 release checksums, exit 0, lastIteration 0, population 7716, events 48287273 and nonfinite score count 0."
+  - "The seven v2/Ferry Core input hashes and approved JDK archive hash are explicit; remaining exact artifact digests stay bound by the immutable diagnosis SHA."
+  - "Protocol 08 is consumed as PASS_CLOSED; Protocol 07 remains PASS_CLOSED; repair 010 and blocker 002 remain unchanged."
+  - "No server access, rerun, Runner authorization, Stage 9 execution, Stage 9 PASS or Stage 10 action occurred."
+diagnostics:
+  - "stuckAndAbort 74 is preserved as Diagnostic: Hong Kong person 11, bus 11, GMB 52, all at 108000 seconds without cause attribute."
+  - "Taxi fare and exactly-once charging were not exercised: taxi legs/routingMode 0, modeDetail taxi persons 47, money/cost events 0."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
+  - "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blocker:
+  blocker_id: "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_RUN8_EVIDENCE_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact pushed binding SHA and dispatches one read-only review; Executor stops."
+required_transition: null
+```

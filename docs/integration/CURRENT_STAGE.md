@@ -7,29 +7,33 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260804-CONTROL-PROTOCOL-08"
-  transition_kind: "GOVERNANCE_ONLY_NO_TASK_CLOSURE"
-  exact_input_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+  transition_id: "AGT-20260804-STAGE9-RUN8-EVIDENCE-BINDING-012"
+  transition_kind: "SUBSTANTIVE_GOVERNANCE_AND_EVIDENCE_REPAIR"
+  exact_input_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
   closed_task:
-    task_id: null
-    previous_status: null
-    final_status: null
-    reviewed_output_sha: null
-    reviewer_verdict: null
-    reviewer_verdict_reference: null
-    supervisor_gate: "GOVERNANCE_TRANSITION_ONLY__NO_STAGE9_GATE"
-  preserved_pending_task:
-    task_id: "STAGE9-JOINT-SHORT-SMOKE-RUN8-EVIDENCE"
-    status: "AWAITING_INDEPENDENT_REVIEW"
-    source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
-    evidence_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
-    overall_stage_9_pass_declared: false
-  blocker:
-    blocker_id: null
-    previous_status: null
-    final_status: null
-  next_active_task:
     task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+    previous_status: "PENDING_INDEPENDENT_REVIEW"
+    final_status: "PASS_CLOSED"
+    reviewed_output_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
+    reviewer_verdict: "PASS"
+    reviewer_verdict_reference: "INT-SUPERVISOR transferred Protocol 08 PASS in the STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012 authorization"
+    supervisor_gate: "PASS_CLOSED"
+  superseded_task:
+    task_id: "STAGE9-JOINT-SHORT-SMOKE-RUN8-EVIDENCE"
+    previous_status: "AWAITING_INDEPENDENT_REVIEW"
+    final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+    source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+    staging_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_4c61a0_stage9_release8"
+    run_identity: "smoke_qsim_v1_4c61a0_run8"
+    execution_exit_code: 0
+    supersession_scope: "EVIDENCE_REVIEW_ONLY"
+  blocker:
+    blocker_id: "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001"
+    previous_status: "OPEN"
+    final_status: "REPAIR_DISPATCHED"
+  next_active_task:
+    task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
     status: "PENDING_INDEPENDENT_REVIEW"
     owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
@@ -40,27 +44,45 @@ atomic_gate_transition:
   stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-42--protocol-08-governance-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-39--protocol-08-execution-contract-and-server-read-policy"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-43--stage-9-run8-evidence-binding-repair-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-40--stage-9-run8-evidence-binding"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
-  task_id: "CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH"
+  task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
   task_status: "PASS_CLOSED"
-  reviewed_output_sha: "e12f81b27c8a70f373654ca46dac1cb7ef17bb5e"
+  reviewed_output_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
   reviewer_verdict: "PASS"
   supervisor_gate: "PASS_CLOSED"
 
 stage9_run8_evidence:
   source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
-  evidence_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
-  review_status: "AWAITING_INDEPENDENT_REVIEW"
+  source_git_tree_sha: "125a329d0d9a9414b89a90dc89a1d81530f2fe30"
+  staging_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+  release_root: "/mnt/DiskM/by/hk_multimodal_cost_4c61a0_stage9_release8"
+  run_identity: "smoke_qsim_v1_4c61a0_run8"
+  execution_exit_code: 0
+  evidence_review_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  binding_repair_status: "PENDING_INDEPENDENT_REVIEW"
+  server_diagnosis_path: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8/evidence/diagnosis_run8_evidence_verification_011/diagnosis.json"
+  server_diagnosis_sha256: "a72234de370376a1c7b3554f68b96e950f233d319889808afd86c2ff78203e46"
+  pushed_binding: "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
   overall_stage_9_pass_declared: false
-  evidence_mutated_by_protocol_08: false
+  evidence_or_run_mutated_by_binding_repair: false
   future_runner_authorized: false
   stage_9_execution_authorized: false
   stage_10_or_later_authorized: false
-  brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
+  brief: "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+
+preserved_artifact_discovery_repair_010:
+  task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+  task_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_REPAIR_GATE"
+  blocker_id: "STAGE9-RUNNER-SHADE-CLOSURE-002"
+  blocker_status: "REPAIR_DISPATCHED"
+  closure_recorded: false
+  canonical_contract_unchanged: true
+  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md"
+  evidence: "data/transport_costs/hongkong/integration_stage9_repair_010_validation_v1/stage9_artifact_discovery_validation.json"
 
 closed_blocker:
   blocker_id: "STAGE9-RUNTIME-DEPENDENCY-CLASSPATH-001"
@@ -91,12 +113,37 @@ closed_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+  task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
   status: "PENDING_INDEPENDENT_REVIEW"
   owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
+  brief: "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
 
-active_blocker: null
+active_blocker:
+  blocker_id: "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity:
+    source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+    staging_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_4c61a0_stage9_release8"
+    run_identity: "smoke_qsim_v1_4c61a0_run8"
+    execution_exit_code: 0
+    evidence_failure: "Exact run8 server evidence was not bound to a pushed source-labelled record for independent exact-SHA review."
+  root_cause: "The immutable Runner diagnosis existed only at a server path and its compact identity, hard-gate facts, diagnostics and limitations were absent from pushed control-plane evidence."
+  changed_hypothesis_required_for_retry: "Bind the immutable diagnosis path and SHA, exact run identity, transferred checks and explicit Taxi-not-exercised limitation in a committed structured summary without rerun or server mutation."
+  repair_task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required:
+    - "new pushed evidence-binding SHA"
+    - "same immutable run8 source, staging, release and run identity"
+    - "one independent exact-SHA review of the pushed binding"
+  superseded_run_identity:
+    source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+    staging_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+    release_root: "/mnt/DiskM/by/hk_multimodal_cost_4c61a0_stage9_release8"
+    run_identity: "smoke_qsim_v1_4c61a0_run8"
+    reuse_or_rerun_allowed: false
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
 
 protocol_06:
   status: "PASS_CLOSED"
@@ -116,6 +163,7 @@ protocol_06:
   identical_failed_identity_retry_allowed: false
 
 protocol_07:
+  status: "PASS_CLOSED"
   canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
   worked_example: "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md#worked-example-thin-jar-evidence-chain"
   known_requires_all_confidence_gates: true
@@ -154,7 +202,10 @@ artifact_discovery_contract:
 
 protocol_08:
   canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
-  status: "PENDING_INDEPENDENT_REVIEW"
+  status: "PASS_CLOSED"
+  reviewed_output_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
+  reviewer_verdict: "PASS"
+  closure_consumed_by_task: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
   execution_contract_fields:
     - "source_sha"
     - "working_directory"
@@ -190,8 +241,9 @@ execution_authority:
   runner_authorized: false
   stage_9_authorized: false
   stage_9_execution_authorized: false
-  bounded_repair_authorized: false
-  governance_transition_authorized: true
+  bounded_repair_authorized: true
+  authorized_repair_task: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+  governance_transition_authorized: false
   protocol_08_commit_accessed_server: false
   protocol_08_commit_built_or_uploaded_bundle: false
   protocol_08_commit_started_smoke: false
@@ -200,7 +252,7 @@ execution_authority:
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+  task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -208,15 +260,21 @@ control_transition_review:
 
 ## Canonical interpretation
 
-Protocol 08 is the active governance task pending one independent review. It
-defines complete Runner execution contracts, narrowly gated preflight
-correction, boundary-aware failure classification and bounded Supervisor
-server-read verification. The server-read policy is not platform permission;
-actual SSH/tool capability remains external and pending unless verified.
+Protocol 08 is `PASS_CLOSED`. This atomic transition consumes that verdict
+while performing the substantive run8 evidence-binding repair; it is not a
+closure-only commit. Protocol 07 remains `PASS_CLOSED`.
 
-Run8 evidence under `/mnt/DiskM/by/hk_stage9_4c61a0_staging8` is preserved as
-`AWAITING_INDEPENDENT_REVIEW`. This transition declares no overall Stage 9
-PASS and performs no server evidence review.
+Runner diagnosis 011 is bound by exact server path and SHA256 to the pushed
+structured summary. Run8 keeps its exact source, staging, release and run
+identity. Its process exited zero, but the prior evidence-review task is
+`BLOCKED_SUPERSEDED_BY_REPAIR` and the binding remains
+`PENDING_INDEPENDENT_REVIEW`. The 74 stuck records are Diagnostic. Zero Taxi
+legs and zero money/cost events mean Taxi fare and exactly-once charging were
+not exercised, so this transition declares no overall Stage 9 PASS.
+
+Artifact-discovery repair 010 and blocker
+`STAGE9-RUNNER-SHADE-CLOSURE-002` retain their prior pending/
+`REPAIR_DISPATCHED` statuses. This task does not close them.
 
 Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
@@ -224,7 +282,7 @@ work is authorized.
 
 ## Next action
 
-Executor pushes this one bounded governance transition commit and reports only to
-Supervisor. Supervisor verifies its exact SHA, parent and scope before one
-read-only review. No follow-up run, Stage 9 gate or Stage 10 action is allowed
-without a later explicit Supervisor decision.
+Executor pushes this one bounded evidence/governance repair and reports only
+to Supervisor. Supervisor verifies its exact SHA, parent and scope before one
+read-only review. No rerun, Stage 9 execution, Stage 9 final gate or Stage 10
+action is allowed without a later explicit Supervisor decision.

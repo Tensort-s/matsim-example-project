@@ -13,13 +13,15 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
+- [`STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md`](STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md) —
+  binds immutable run8 diagnosis evidence to a pushed structured summary;
+  pending independent review, with no Stage 9 PASS or rerun authorization.
 
 Blocked/superseded briefs:
 
 - [`STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md`](STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md) —
-  its POM-driven root-JAR discovery contract remains canonical; run8 evidence
-  is awaiting independent review and no overall Stage 9 PASS is declared.
+  its POM-driven root-JAR discovery contract remains canonical; its prior
+  review/gate status and blocker remain unchanged by the run8 binding repair.
 - [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md) —
   its immutable wrapper-mode contract remains applicable; the later staging7
   identity exposed a distinct Runner artifact-discovery defect after package.
@@ -47,6 +49,7 @@ Canonical review template:
 
 Closed briefs:
 
+- [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
 - [`CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
 - [`STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md`](STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md)
 - [`STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md`](STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md)

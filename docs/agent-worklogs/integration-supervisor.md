@@ -1382,3 +1382,38 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push the single Protocol 08 governance transition, then stop for one read-only review."
 required_transition: null
 ```
+
+## Entry 43 — Stage 9 run8 evidence-binding repair dispatch
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+input_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
+output_sha_or_status: "BOUNDED_EVIDENCE_REPAIR_DISPATCHED"
+decision: "Consume Protocol 08 PASS and bind immutable run8 diagnosis evidence into pushed control-plane proof without rerun or server mutation."
+findings:
+  - "Run8 identity is source 4c61a02e562830e248ce7178132e8609f53decde, staging8, release8 and smoke_qsim_v1_4c61a0_run8."
+  - "Runner diagnosis 011 attests matching source/tree/input-pack/root-JAR/bundle/release/JDK identities, 420 release checksums OK, exit 0, lastIteration 0, population 7716, events 48287273 and zero non-finite scores."
+  - "stuckAndAbort 74 comprises 11 Hong Kong persons, 11 bus and 52 GMB entities at 108000 seconds without cause attributes; this remains Diagnostic."
+  - "Zero Taxi legs/routingMode taxi and zero money/cost events mean Taxi fare and exactly-once charging were not exercised."
+  - "Artifact-discovery repair 010 and blocker STAGE9-RUNNER-SHADE-CLOSURE-002 remain at their prior pending/REPAIR_DISPATCHED statuses."
+diagnostics:
+  - "Run8 server diagnosis path: /mnt/DiskM/by/hk_stage9_4c61a0_staging8/evidence/diagnosis_run8_evidence_verification_011/diagnosis.json; SHA256 a72234de370376a1c7b3554f68b96e950f233d319889808afd86c2ff78203e46."
+evidence_refs:
+  - "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+  - "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
+  - "docs/integration/CURRENT_STAGE.md"
+blocker:
+  blocker_id: "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001"
+  status: "REPAIR_DISPATCHED"
+  repair_task_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012"
+  repair_owner: "INT-EXECUTOR"
+  superseded_stage_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
+  runner_authorized: false
+blockers: []
+hard_gate_status: "AUTHORIZED_BOUNDED_EVIDENCE_REPAIR"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Commit and push the bounded run8 evidence binding, then stop for one independent exact-SHA review."
+required_transition: null
+```

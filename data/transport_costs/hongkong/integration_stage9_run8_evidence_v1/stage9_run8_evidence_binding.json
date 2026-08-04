@@ -1,0 +1,102 @@
+{
+  "schema_version": "hong_kong_stage9_run8_evidence_binding_v1",
+  "task_id": "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012",
+  "blocker_id": "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001",
+  "binding_commit_input_sha": "b32bef0398ebe44187c088c22e2b5276fa260ac0",
+  "binding_status": "PENDING_INDEPENDENT_REVIEW",
+  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_RUN8_EVIDENCE_GATE",
+  "overall_stage9_pass_declared": false,
+  "run_identity": {
+    "source_sha": "4c61a02e562830e248ce7178132e8609f53decde",
+    "source_git_tree_sha": "125a329d0d9a9414b89a90dc89a1d81530f2fe30",
+    "staging_root": "/mnt/DiskM/by/hk_stage9_4c61a0_staging8",
+    "release_root": "/mnt/DiskM/by/hk_multimodal_cost_4c61a0_stage9_release8",
+    "run_identity": "smoke_qsim_v1_4c61a0_run8",
+    "identity_reused_or_changed_by_binding": false
+  },
+  "evidence_provenance": {
+    "authority": "INT-SUPERVISOR transferred INT-RUNNER read-only diagnosis 011 facts",
+    "server_diagnosis_path": "/mnt/DiskM/by/hk_stage9_4c61a0_staging8/evidence/diagnosis_run8_evidence_verification_011/diagnosis.json",
+    "server_diagnosis_sha256": "a72234de370376a1c7b3554f68b96e950f233d319889808afd86c2ff78203e46",
+    "server_attestation_kind": "POST_FAILURE_READ_ONLY_DIAGNOSIS",
+    "pushed_control_plane_summary_path": "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json",
+    "raw_logs_copied_into_git": false,
+    "server_files_modified_by_executor": false,
+    "rerun_performed_by_executor": false,
+    "server_access_performed_by_executor": false
+  },
+  "hash_and_release_integrity": {
+    "source_sha_match": true,
+    "source_tree_match": true,
+    "locked_input_pack_match": true,
+    "root_shade_jar_match": true,
+    "bundle_match": true,
+    "release_match": true,
+    "jdk_archive_match": true,
+    "release_sha256sums": {
+      "ok": 420,
+      "failed": 0
+    },
+    "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
+    "locked_input_sha256": {
+      "config/config_hong_kong_5pct_v2_activity_modechoice_50it.xml": "75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c",
+      "input/plans_routed_5pct_v2.xml.gz": "c73ee48e792e7aebd55b7a2691664ae7f3f4f27d307aef2a6bf58263b3aaafea",
+      "input/facilities_5pct_v2.xml.gz": "74775533a7022b248d37197dbc94d27f239239aca386df75c7a391cc277ef10e",
+      "input/privateVehicles_5pct.xml.gz": "5a48b2afe404afaa6864a465c527277605a276e54cd879d3971261186938c994",
+      "input/network.xml.gz": "dfc696442913a6d16a1ca1be7e5a332ec5762012190ed43a38f05493905ddc95",
+      "input/transitSchedule_5pct.xml.gz": "eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed",
+      "input/transitVehicles_10pct.xml.gz": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
+    },
+    "compact_binding_note": "Exact source-snapshot, locked-pack-manifest, root-Shade-JAR, bundle and release digest values remain in the immutable server diagnosis bound above; the transferred handoff attested their matches but did not transfer those digest strings, so this pushed summary does not invent or duplicate them."
+  },
+  "toolchain": {
+    "java_version": "25.0.3",
+    "matsim_version": "2026.0"
+  },
+  "hard_gate_evidence": {
+    "process_exit_code": 0,
+    "controller_last_iteration": 0,
+    "population_person_count": 7716,
+    "events_count": 48287273,
+    "nonfinite_score_count": 0,
+    "release_checksum_closure": true,
+    "source_artifact_input_jdk_identity_match_attested": true,
+    "independent_reviewer_verdict_received": false
+  },
+  "diagnostics": {
+    "stuck_and_abort_total": 74,
+    "stuck_and_abort_by_entity": {
+      "hong_kong_person": 11,
+      "bus": 11,
+      "gmb": 52
+    },
+    "stuck_time_seconds": 108000,
+    "cause_attribute_present": false,
+    "classification": "DIAGNOSTIC_NOT_AUTOMATIC_HARD_GATE"
+  },
+  "coverage_limitations": {
+    "taxi_leg_count": 0,
+    "taxi_routing_mode_count": 0,
+    "mode_detail_taxi_person_count": 47,
+    "money_or_cost_event_count": 0,
+    "taxi_route_fare_exercised": false,
+    "taxi_exactly_once_charge_exercised": false,
+    "interpretation": "This run subset did not exercise Taxi fare or exactly-once behavior; it cannot by itself close Taxi-specific Stage 9 coverage or establish overall Stage 9 PASS."
+  },
+  "authority_boundary": {
+    "runner_authorized": false,
+    "stage9_execution_authorized": false,
+    "stage10_or_later_authorized": false,
+    "rerun_authorized": false,
+    "server_mutation_authorized": false
+  },
+  "blocker_transition": {
+    "previous_status": "OPEN",
+    "status": "REPAIR_DISPATCHED",
+    "superseded_task_status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+    "repair_task_id": "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012",
+    "repair_owner": "INT-EXECUTOR",
+    "failure_identity": "Run8 server evidence was not bound to a pushed source-labelled control-plane record for exact-SHA independent review.",
+    "changed_hypothesis_required_for_retry": "Commit a compact binding to the immutable diagnosis path/SHA, exact run identity, transferred hard-gate facts, diagnostics and explicit Taxi coverage limitation without rerunning or mutating run8."
+  }
+}
