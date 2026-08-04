@@ -7,31 +7,30 @@ Supervisor gate, not a queue of historical worklog events.
 
 ```yaml
 atomic_gate_transition:
-  transition_id: "AGT-20260803-STAGE9-ARTIFACT-DISCOVERY-010"
-  exact_input_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
+  transition_id: "AGT-20260804-CONTROL-PROTOCOL-08"
+  transition_kind: "GOVERNANCE_ONLY_NO_TASK_CLOSURE"
+  exact_input_sha: "4c61a02e562830e248ce7178132e8609f53decde"
   closed_task:
-    task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "AUTHORIZED_BUILD_ATTEMPT"
-    final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    reviewed_output_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
-    reviewer_verdict: "BLOCKED"
-    reviewer_verdict_reference: "/mnt/DiskM/by/hk_stage9_3237c8_staging7/evidence/shade_server_diagnosis_009/diagnosis.json"
-    verdict_source: "INT-RUNNER read-only diagnosis accepted by INT-SUPERVISOR"
-    supervisor_gate: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  superseded_task:
-    task_id: "STAGE9-JOINT-SHORT-SMOKE"
-    previous_status: "AUTHORIZED_BUILD_ATTEMPT"
-    final_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-    source_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
-    staging_root: "/mnt/DiskM/by/hk_stage9_3237c8_staging7"
-    reserved_run_identity: "smoke_qsim_v1_3237c8_run7"
+    task_id: null
+    previous_status: null
+    final_status: null
+    reviewed_output_sha: null
+    reviewer_verdict: null
+    reviewer_verdict_reference: null
+    supervisor_gate: "GOVERNANCE_TRANSITION_ONLY__NO_STAGE9_GATE"
+  preserved_pending_task:
+    task_id: "STAGE9-JOINT-SHORT-SMOKE-RUN8-EVIDENCE"
+    status: "AWAITING_INDEPENDENT_REVIEW"
+    source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+    evidence_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+    overall_stage_9_pass_declared: false
   blocker:
-    blocker_id: "STAGE9-RUNNER-SHADE-CLOSURE-002"
-    previous_status: "OPEN"
-    final_status: "REPAIR_DISPATCHED"
+    blocker_id: null
+    previous_status: null
+    final_status: null
   next_active_task:
-    task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
-    status: "ACTIVE"
+    task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+    status: "PENDING_INDEPENDENT_REVIEW"
     owner: "INT-EXECUTOR"
   owner: "INT-SUPERVISOR"
   repository_writer: "INT-EXECUTOR"
@@ -41,8 +40,8 @@ atomic_gate_transition:
   stage_10_or_later_authorized: false
   canonical_state_updated: true
   audit_records_appended:
-    - "docs/agent-worklogs/integration-supervisor.md#entry-41--stage-9-artifact-discovery-repair-dispatch"
-    - "docs/agent-worklogs/integration-executor.md#entry-38--stage-9-artifact-discovery-contract"
+    - "docs/agent-worklogs/integration-supervisor.md#entry-42--protocol-08-governance-dispatch"
+    - "docs/agent-worklogs/integration-executor.md#entry-39--protocol-08-execution-contract-and-server-read-policy"
   verdict_only_followup_commit_allowed: false
 
 last_closed_task:
@@ -52,17 +51,15 @@ last_closed_task:
   reviewer_verdict: "PASS"
   supervisor_gate: "PASS_CLOSED"
 
-superseded_stage9_task:
-  task_id: "STAGE9-JOINT-SHORT-SMOKE"
-  status: "BLOCKED_SUPERSEDED_BY_REPAIR"
-  source_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
-  staging_root: "/mnt/DiskM/by/hk_stage9_3237c8_staging7"
-  reserved_run_identity: "smoke_qsim_v1_3237c8_run7"
-  failure: "artifact discovery scanned only build_root/target and selected the thin JAR although the POM-configured root Shade JAR existed"
-  package_performed: true
-  bundle_performed: false
-  upload_performed: false
-  smoke_performed: false
+stage9_run8_evidence:
+  source_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+  evidence_root: "/mnt/DiskM/by/hk_stage9_4c61a0_staging8"
+  review_status: "AWAITING_INDEPENDENT_REVIEW"
+  overall_stage_9_pass_declared: false
+  evidence_mutated_by_protocol_08: false
+  future_runner_authorized: false
+  stage_9_execution_authorized: false
+  stage_10_or_later_authorized: false
   brief: "docs/integration/stage-briefs/STAGE_09_JOINT_SHORT_SMOKE.md"
 
 closed_blocker:
@@ -94,45 +91,12 @@ closed_blocker:
   runner_authorized: false
 
 active_task:
-  task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
-  status: "ACTIVE"
+  task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+  status: "PENDING_INDEPENDENT_REVIEW"
   owner: "INT-EXECUTOR"
-  brief: "docs/integration/stage-briefs/STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md"
+  brief: "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
 
-active_blocker:
-  blocker_id: "STAGE9-RUNNER-SHADE-CLOSURE-002"
-  status: "REPAIR_DISPATCHED"
-  failure_identity:
-    source_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
-    staging_root: "/mnt/DiskM/by/hk_stage9_3237c8_staging7"
-    reserved_run_identity: "smoke_qsim_v1_3237c8_run7"
-    root_shade_jar_sha256: "54c65711a2e023cdff7986a840bcb7f81889d6f07233c94f02f50b204f2345c7"
-    root_shade_jar_size_bytes: 300597135
-    root_shade_jar_entry_count: 101152
-    selected_target_thin_sha256_prefix: "afc0d618"
-    failure: "Runner discovery selected target thin JAR and reported missing MATSim/Guice classes"
-  root_cause: "Runner artifact discovery scanned only build_root/target and selected the thin JAR even though the POM-configured root Shade JAR existed with dependency closure."
-  diagnosis_confidence:
-    exact_failure_identity_matched: true
-    direct_failure_condition_observed: true
-    causal_chain_demonstrated: true
-    material_alternatives_checked: true
-    repair_hypothesis_testable: true
-    root_cause_status: "KNOWN"
-  changed_hypothesis_required_for_retry: "Artifact discovery must derive and inspect the exact build-root top-level JAR first, record stat/SHA/member inventory, reject target/ explicitly, and fail closed before bundle on missing dependency closure."
-  repair_task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
-  repair_owner: "INT-EXECUTOR"
-  replacement_identity_required:
-    - "new pushed repair SHA"
-    - "new staging root; never reuse /mnt/DiskM/by/hk_stage9_3237c8_staging7"
-    - "new bundle and release identity"
-    - "new run identity; never reuse smoke_qsim_v1_3237c8_run7"
-  superseded_run_identity:
-    source_sha: "3237c8f8e6bacf10feaa9bb515f58612c269f3a3"
-    staging_root: "/mnt/DiskM/by/hk_stage9_3237c8_staging7"
-    reserved_run_identity: "smoke_qsim_v1_3237c8_run7"
-  diagnosis_evidence: "/mnt/DiskM/by/hk_stage9_3237c8_staging7/evidence/shade_server_diagnosis_009/diagnosis.json"
-  runner_authorized: false
+active_blocker: null
 
 protocol_06:
   status: "PASS_CLOSED"
@@ -188,20 +152,55 @@ artifact_discovery_contract:
   root_absent_or_dependency_incomplete_action: "FAIL_CLOSED_BEFORE_BUNDLE"
   canonical_resolver_unchanged: true
 
+protocol_08:
+  canonical_source: "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
+  status: "PENDING_INDEPENDENT_REVIEW"
+  execution_contract_fields:
+    - "source_sha"
+    - "working_directory"
+    - "java_command"
+    - "tool_version_commands"
+    - "build_command"
+    - "artifact_resolver"
+    - "bundle_command"
+    - "release_root"
+    - "run_command"
+    - "required_preconditions"
+    - "hard_gates"
+    - "diagnostics_only"
+    - "forbidden_fallbacks"
+  contract_priority: "SUPERVISOR_EXACT > STAGE_BRIEF > REPOSITORY_CANONICAL > RUNNER_EXPERIENCE"
+  explicit_conflict_action: "CONTRACT_CONFLICT"
+  preflight_correction_requires_zero_started_or_modified_state: true
+  canonical_maven_wrapper_required: true
+  system_maven_required: false
+  supervisor_server_read_policy_defined: true
+  supervisor_server_read_actual_capability_granted_by_docs: false
+  supervisor_server_read_external_capability_status: "PENDING_UNLESS_VERIFIABLY_PRESENT"
+  supervisor_server_read_budget:
+    wall_clock_minutes_max: 15
+    commands_max: 20
+    filesystem_roots_max: 4
+    returned_text_mb_max: 10
+    full_root_recursive_scan_allowed: false
+    state_mutation_allowed: false
+
 execution_authority:
   authority_source: "INT-SUPERVISOR"
   runner_authorized: false
   stage_9_authorized: false
   stage_9_execution_authorized: false
-  bounded_repair_authorized: true
-  repair_commit_accessed_server: false
-  repair_commit_built_or_uploaded_bundle: false
-  repair_commit_started_smoke: false
+  bounded_repair_authorized: false
+  governance_transition_authorized: true
+  protocol_08_commit_accessed_server: false
+  protocol_08_commit_built_or_uploaded_bundle: false
+  protocol_08_commit_started_smoke: false
+  supervisor_server_read_actual_capability_granted: false
   formal_50it_authorized: false
   stage_10_or_later_authorized: false
 
 control_transition_review:
-  task_id: "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010"
+  task_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
   status: "PENDING_ONE_FINAL_READ_ONLY_REVIEW"
   one_final_review_only: true
   pass_followup_commit_allowed: false
@@ -209,13 +208,15 @@ control_transition_review:
 
 ## Canonical interpretation
 
-Protocol 07 follow-up diagnosis classified the staging7 artifact-discovery
-defect as `KNOWN`. Maven package completed and the root Shade JAR existed, but
-Runner scanned only `target/` and selected the thin JAR. The attempt is
-`BLOCKED_SUPERSEDED_BY_REPAIR`; bundle, upload and smoke did not run. The
-active bounded repair changes only the Runner governance contract: discovery
-is POM-driven, inspects the root JAR first, records dependency evidence and
-rejects `target/` explicitly. The already-canonical resolver remains unchanged.
+Protocol 08 is the active governance task pending one independent review. It
+defines complete Runner execution contracts, narrowly gated preflight
+correction, boundary-aware failure classification and bounded Supervisor
+server-read verification. The server-read policy is not platform permission;
+actual SSH/tool capability remains external and pending unless verified.
+
+Run8 evidence under `/mnt/DiskM/by/hk_stage9_4c61a0_staging8` is preserved as
+`AWAITING_INDEPENDENT_REVIEW`. This transition declares no overall Stage 9
+PASS and performs no server evidence review.
 
 Runner and Stage 9 execution remain unauthorized. No server,
 bundle, release, smoke, formal 50-iteration, calibration, Stage 10 or later
@@ -223,7 +224,7 @@ work is authorized.
 
 ## Next action
 
-Executor pushes this one bounded governance repair commit and reports only to
+Executor pushes this one bounded governance transition commit and reports only to
 Supervisor. Supervisor verifies its exact SHA, parent and scope before one
-read-only review. Any later Stage 9 attempt requires a separate authorization
-and new source, staging, bundle, release and run identities.
+read-only review. No follow-up run, Stage 9 gate or Stage 10 action is allowed
+without a later explicit Supervisor decision.

@@ -1229,3 +1229,30 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact repair SHA and dispatches one read-only review; Executor waits."
 required_transition: null
 ```
+
+## Entry 39 — Protocol 08 execution contract and server-read policy
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+input_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+output_sha_or_status: "exact pushed governance SHA supplied in the Supervisor handoff"
+decision: "Adopt complete Runner execution contracts, narrowly gated preflight correction, failure routing and bounded non-authorizing Supervisor server reads."
+findings:
+  - "The execution template contains all thirteen required command, path, precondition, gate, diagnostic and fallback fields."
+  - "Preflight correction requires seven zero-start/zero-mutation gates and permits only wrapper, approved Java path, cwd or canonical resolver correction."
+  - "Failure routing separates informational probes, prerequisites, build, bundle, deployment, runtime and model-semantic boundaries."
+  - "Supervisor read verification is restricted to four named roots, 15 minutes, 20 commands and 10 MB with no mutation or full-root scan."
+  - "Run8 remains awaiting independent review; no Stage 9 PASS, Runner authorization, server access or Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#execution-contract-safe-preflight-correction-and-supervisor-server-read"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact governance SHA and dispatches one read-only review; Executor stops."
+required_transition: null
+```

@@ -26,6 +26,7 @@ and evidence are read from these canonical paths:
 - [Atomic gate transition and non-recursive closure](docs/integration/stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
 - [Post-failure diagnosis and automatic dispatch](docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
 - [Diagnosis confidence and resource budget](docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
+- [Execution contract and Supervisor server-read verification](docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
 - [Current stage](docs/integration/CURRENT_STAGE.md)
 - [Hub-and-spoke messaging protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
 - [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
@@ -37,10 +38,13 @@ mandatory blocker-to-repair transition and their synchronized Reviewer/state
 schemas, atomic gate transition and non-recursive closure invariants, plus the
 post-failure read-only diagnosis and automatic technical-dispatch rules. The
 confidence gates and default resource budget make those diagnoses
-machine-checkable and bounded. The templates apply those rules without
-changing lane authority. The current-stage
-file identifies the latest valid Supervisor gate and active or explicit idle
-state.
+machine-checkable and bounded. Protocol 08 defines complete Runner execution
+contracts, pre-build contract-preserving corrections, failure routing, and a
+bounded read-only Supervisor evidence-verification policy. That policy does
+not grant actual SSH/platform capability and does not change any lane's write
+scope. The templates apply those rules without changing lane authority. The
+current-stage file identifies the latest valid Supervisor gate and active or
+explicit idle state.
 These links do not change any lane identity, authority or write scope below.
 
 ## Authority and evidence boundary

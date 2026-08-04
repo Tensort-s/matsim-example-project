@@ -366,6 +366,112 @@ diagnosis_budget_result:
    later stage. Existing state remains immutable and no closure-only follow-up
    commit is created.
 
+## Execution contract, safe preflight correction and Supervisor server read
+
+CONTROL-PROTOCOL-08 defines the canonical prospective execution contract,
+failure routing and bounded Supervisor server-evidence verification. Its full
+schema is in
+[`stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md).
+
+Every Runner authorization contains this complete machine-checkable contract:
+
+```yaml
+execution_contract:
+  source_sha: full_pushed_sha
+  working_directory: absolute_path
+  java_command: absolute_or_canonical_command
+  tool_version_commands: [commands]
+  build_command: exact_command
+  artifact_resolver: exact_rule_or_command
+  bundle_command: exact_command
+  release_root: new_absolute_path
+  run_command: exact_command
+  required_preconditions: [checks]
+  hard_gates: [gates]
+  diagnostics_only: [checks]
+  forbidden_fallbacks: [fallbacks]
+```
+
+1. Contract priority is: Supervisor exact contract > current stage brief >
+   repository canonical contract > Runner general experience. An explicit
+   conflict is `CONTRACT_CONFLICT` and stops execution. When Supervisor omits
+   a detail and exactly one repository rule is canonical, Runner uses that
+   rule and records its path; ambiguity stops for Supervisor direction.
+2. `CONTRACT_PRESERVING_PREFLIGHT_CORRECTION` is allowed only when all fields
+   below are true:
+
+```yaml
+preflight_correction_gate:
+  build_started: false
+  bundle_created: false
+  release_created: false
+  smoke_started: false
+  existing_state_modified: false
+  canonical_replacement_command_exists: true
+  task_semantics_changed: false
+```
+
+   It may correct only a wrapper command, the approved Java absolute path, the
+   required working directory, or the canonical artifact resolver. It never
+   installs software, edits `PATH`, substitutes a tool/JDK, changes config,
+   input or build parameters, or acts after build, bundle, release or smoke
+   begins. It keeps the same staging/release/run identity and records original
+   command, replacement command, canonical basis and zero-mutation proof.
+3. The canonical Hong Kong Maven commands are `./mvnw --version` and
+   `./mvnw -DskipTests package`; system Maven is not required. The deployment
+   artifact is `<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar`.
+   `target/` thin JARs and glob, first-match or size-based selection are
+   forbidden.
+4. Failures are classified by boundary: `INFORMATIONAL_PROBE`,
+   `REQUIRED_PRECONDITION`, `BUILD`, `BUNDLE`, `DEPLOYMENT`, `RUNTIME`, or
+   `MODEL_SEMANTIC`. A nonzero informational probe is recorded as a diagnostic
+   unless it defeats a named precondition. Required-precondition and later
+   technical failures stop the identity. A `KNOWN` ordinary technical defect
+   dispatches bounded repair; `PARTIAL`/`UNKNOWN` dispatches bounded diagnosis;
+   research, economic, behavioral, cost or missing-data semantics transitions
+   to `ESCALATED_TO_USER`.
+5. `SUPERVISOR_SERVER_READ_VERIFICATION` is repository policy for bounded
+   read-only evidence checks; it does not grant SSH, tool or platform
+   capability. Actual access must be independently present and verifiable.
+   Scope is limited to exact `/mnt/DiskM/by` staging, release, run and evidence
+   roots named by Runner or `CURRENT_STAGE.md`, plus manifest-linked paths.
+6. Allowed checks are `ls`, `stat`, bounded `find`, `cat`, `head`, `tail`,
+   `grep`, `sha256sum`, `jar tf`, `tar tf`, `unzip -l`, and bounded JSON, YAML,
+   XML or log reading. Full-root recursion is prohibited.
+7. Supervisor server read never creates, modifies, replaces, chmods, copies,
+   moves, deletes or cleans a file; runs Maven, Java, bundle or MATSim; installs
+   tools or changes environment; controls processes; accesses outside
+   `/mnt/DiskM/by`; or authorizes a lane, run or stage.
+8. The default read budget is 15 minutes, 20 commands, four roots and 10 MB of
+   returned text, with `full_root_recursive_scan_allowed: false` and
+   `state_mutation_allowed: false`. Budget exhaustion stops and reports missing
+   evidence. Expansion requires a new bounded diagnosis task.
+9. Every verification appends or returns this compact audit record; it never
+   creates execution authority:
+
+```yaml
+supervisor_server_read_verification:
+  source_sha: full_pushed_sha
+  exact_roots: [absolute_paths]
+  checks: [bounded_read_checks]
+  findings: []
+  budget_used:
+    elapsed_minutes: number
+    commands_used: number
+    roots_inspected: number
+    returned_text_bytes: number
+    budget_exhausted: true_or_false
+    missing_evidence: []
+  state_modified: false
+  build_or_run_started: false
+  handoff_to: INT-SUPERVISOR
+```
+
+10. Supervisor remains sole dispatcher/gate owner, Executor sole Git writer,
+    Reviewer read-only, and Runner no-Git and unable to self-authorize. A
+    correction, verification, diagnosis or `PASS` does not itself authorize a
+    retry or later stage and does not create a verdict-only closure commit.
+
 ## Canonical control-plane sources
 
 | Purpose | Canonical source |

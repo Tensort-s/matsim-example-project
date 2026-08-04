@@ -1355,3 +1355,30 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Implement and push one governance-only artifact-discovery repair, report only to Supervisor, and stop."
 required_transition: null
 ```
+
+## Entry 42 — Protocol 08 governance dispatch
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-08-EXECUTION-CONTRACT-AND-SUPERVISOR-SERVER-READ"
+input_sha: "4c61a02e562830e248ce7178132e8609f53decde"
+output_sha_or_status: "ATOMIC_GOVERNANCE_TRANSITION_DISPATCHED"
+decision: "Canonicalize complete Runner execution contracts, safe preflight correction, failure routing and bounded Supervisor server-read verification without authorizing execution."
+findings:
+  - "Every future Runner authorization must instantiate the complete execution_contract field set and obey canonical priority."
+  - "Contract-preserving preflight correction is limited to four canonical technical corrections before any build/output/state change."
+  - "Hong Kong Maven uses the wrapper; root Shade JAR selection is canonical and target/glob/first-match selection is forbidden."
+  - "Supervisor server read is bounded evidence verification policy only and does not itself grant SSH/platform/tool capability."
+  - "Run8 evidence under /mnt/DiskM/by/hk_stage9_4c61a0_staging8 awaits independent review; no Stage 9 PASS or Stage 10 authorization is declared."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#execution-contract-safe-preflight-correction-and-supervisor-server-read"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
+  - "docs/integration/CURRENT_STAGE.md#current-integration-stage"
+blockers: []
+hard_gate_status: "AUTHORIZED_GOVERNANCE_ATOMIC_TRANSITION"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Implement and push the single Protocol 08 governance transition, then stop for one read-only review."
+required_transition: null
+```
