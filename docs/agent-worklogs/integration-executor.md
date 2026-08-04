@@ -1292,3 +1292,32 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact pushed binding SHA and dispatches one read-only review; Executor stops."
 required_transition: null
 ```
+
+## Entry 41 — Stage 9 final evidence audit and closure
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE9-RUN8-EVIDENCE-REVIEW-AND-CLOSURE"
+input_sha: "101afd5beb6d1351448aea406608119d2f4ba869"
+output_sha_or_status: "exact pushed final audit/closure SHA supplied in the Supervisor handoff"
+decision: "Consume Reviewer PASS and publish one substantive final audit plus synchronized Stage 9 PASS_CLOSED transition."
+findings:
+  - "The reviewed evidence-binding SHA and parent, immutable diagnosis path/SHA and exact run8 source/staging/release/run identity are retained."
+  - "Protocol 07 and Protocol 08 are PASS_CLOSED; repair 010 is PASS_CLOSED and blocker 002 is CLOSED."
+  - "Stage 9 is PASS_CLOSED; active_task and active_blocker are null; the next state awaits a separate Stage 10 decision."
+  - "The structured final audit keeps all supplied checksum, iteration, population, event and finite-score facts without inventing untransferred digests."
+  - "No server access, rerun, Runner authorization, future Stage 9 execution or Stage 10 action occurred."
+diagnostics:
+  - "The 74 stuck records remain Diagnostic with the exact 11/11/52 distribution and 108000-second/no-cause boundary."
+  - "Taxi fare and exactly-once behavior were not exercised; the closure makes no Taxi behavioral-coverage claim beyond run8."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
+  - "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blockers: []
+hard_gate_status: "PENDING_SUPERVISOR_EXACT_SHA_VERIFICATION__STAGE9_PASS_CLOSED_IN_ATOMIC_STATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact pushed closure SHA; canonical next state remains AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION."
+required_transition: null
+```

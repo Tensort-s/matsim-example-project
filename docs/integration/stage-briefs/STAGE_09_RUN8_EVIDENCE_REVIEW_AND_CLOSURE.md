@@ -1,18 +1,21 @@
-# Stage 9 run8 evidence review and closure contract
+# Stage 9 run8 final evidence audit and closure
 
 ## Control identity
 
-- Task ID: `STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012`
+- Task ID: `STAGE9-RUN8-EVIDENCE-REVIEW-AND-CLOSURE`
 - Blocker ID: `STAGE9-RUN8-EVIDENCE-UNVERIFIED-001`
-- Exact input SHA: `b32bef0398ebe44187c088c22e2b5276fa260ac0`
+- Exact input SHA: `101afd5beb6d1351448aea406608119d2f4ba869`
+- Reviewed evidence-binding parent: `b32bef0398ebe44187c088c22e2b5276fa260ac0`
+- Reviewer verdict for exact input: `PASS`
 - Repair owner/writer: `INT-EXECUTOR`
 - Gate owner: `INT-SUPERVISOR`
 - Runner authorized: `false`
 - Stage 9 execution authorized: `false`
 - Stage 10 or later authorized: `false`
 
-This is a bounded evidence/governance repair. It does not rerun or modify
-run8. Stable evidence and review rules remain in
+This is the final substantive evidence audit and one-time atomic closure. It
+consumes the exact-SHA Reviewer PASS, synchronizes the final control state and
+does not rerun or modify run8. Stable evidence and review rules remain in
 [`INTEGRATION_POLICY.md`](../INTEGRATION_POLICY.md), and canonical state is in
 [`CURRENT_STAGE.md`](../CURRENT_STAGE.md).
 
@@ -29,8 +32,9 @@ The binding applies only to this immutable identity:
 | run identity | `smoke_qsim_v1_4c61a0_run8` |
 
 No new staging, release or run identity is created. The run process exited
-zero; `BLOCKED_SUPERSEDED_BY_REPAIR` applies to the incomplete evidence-review
-task, not to a claim that MATSim returned nonzero.
+zero. The former `BLOCKED_SUPERSEDED_BY_REPAIR` state applied to the incomplete
+evidence-review task, not to a claim that MATSim returned nonzero; the reviewed
+binding now closes that evidence blocker.
 
 ## Evidence binding
 
@@ -66,8 +70,10 @@ Reported execution facts are:
 - non-finite score count: 0;
 - Java: 25.0.3; MATSim: 2026.0.
 
-These are pending independent review. This brief does not declare Stage 9
-PASS or close the evidence blocker.
+Reviewer returned `PASS` for exact pushed binding SHA
+`101afd5beb6d1351448aea406608119d2f4ba869`, whose parent is
+`b32bef0398ebe44187c088c22e2b5276fa260ac0`. The final audit consumes that
+verdict and records Stage 9 as `PASS_CLOSED`.
 
 ## Diagnostics and coverage limitations
 
@@ -78,28 +84,32 @@ hard gate.
 
 The run subset contains zero Taxi legs, zero `routingMode=taxi` legs, 47
 persons with `modeDetail=taxi`, and zero money/cost events. Taxi route fare and
-exactly-once charging were therefore not exercised. This limitation prevents
-run8 alone from proving Taxi-specific coverage or overall Stage 9 PASS; it is
-not silently reclassified as successful Taxi evidence.
+exactly-once charging were therefore not exercised. The accepted Stage 9
+technical closure does not turn that absence into Taxi behavioral evidence;
+no Taxi behavioral-coverage claim is made beyond this run.
 
 ## Blocker transition and next gate
 
-`STAGE9-RUN8-EVIDENCE-UNVERIFIED-001` transitions from `OPEN` to
-`REPAIR_DISPATCHED`; the former evidence-review task becomes
-`BLOCKED_SUPERSEDED_BY_REPAIR`. This commit supplies the repair and remains
-`PENDING_INDEPENDENT_REVIEW`.
+The final synchronized state is:
 
-Protocol 08 is consumed as `PASS_CLOSED`. Protocol 07 remains `PASS_CLOSED`.
-Artifact-discovery repair 010 remains pending its previously recorded gate,
-and blocker `STAGE9-RUNNER-SHADE-CLOSURE-002` remains `REPAIR_DISPATCHED`;
-neither is closed by this task.
+| record | exact reviewed identity | final status |
+|---|---|---|
+| Protocol 07 | `e58861e4f79eb5aa18c8ac286d0173987bcef237` | `PASS_CLOSED` |
+| artifact-discovery repair 010 | `4c61a02e562830e248ce7178132e8609f53decde` | `PASS_CLOSED` |
+| blocker `STAGE9-RUNNER-SHADE-CLOSURE-002` | repair 010 | `CLOSED` |
+| Protocol 08 | `b32bef0398ebe44187c088c22e2b5276fa260ac0` | `PASS_CLOSED` |
+| run8 evidence binding | `101afd5beb6d1351448aea406608119d2f4ba869` | Reviewer `PASS` |
+| Stage 9 joint short smoke | `smoke_qsim_v1_4c61a0_run8` | `PASS_CLOSED` |
+| blocker `STAGE9-RUN8-EVIDENCE-UNVERIFIED-001` | reviewed binding | `CLOSED` |
 
-Supervisor verifies the pushed SHA and dispatches one read-only review. No
-verdict-only or closure-only follow-up is planned. Runner, rerun, Stage 9
-execution and Stage 10 or later remain unauthorized.
+`active_task` and `active_blocker` are null. The next state is
+`AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION`. Runner, rerun, future Stage 9
+execution and Stage 10 or later remain unauthorized. No verdict-only or
+closure-only follow-up commit is permitted.
 
 ## Stop conditions
 
-Stop on identity mismatch, unsupported hash inference, raw-log fabrication,
-server access or mutation, rerun request, runtime/model/config/input change,
-protected-ref change, historical-worklog rewrite or any Stage 10 action.
+This closure stops after one pushed atomic-transition commit. Stop on identity
+mismatch, unsupported hash inference, raw-log fabrication, server access or
+mutation, rerun request, runtime/model/config/input change, protected-ref
+change, historical-worklog rewrite or any Stage 10 action.

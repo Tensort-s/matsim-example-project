@@ -3,9 +3,9 @@
   "task_id": "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012",
   "blocker_id": "STAGE9-RUN8-EVIDENCE-UNVERIFIED-001",
   "binding_commit_input_sha": "b32bef0398ebe44187c088c22e2b5276fa260ac0",
-  "binding_status": "PENDING_INDEPENDENT_REVIEW",
-  "hard_gate_status": "PENDING_INDEPENDENT_REVIEW_AND_SUPERVISOR_STAGE9_RUN8_EVIDENCE_GATE",
-  "overall_stage9_pass_declared": false,
+  "binding_status": "PASS_CLOSED",
+  "hard_gate_status": "PASS_CLOSED",
+  "overall_stage9_pass_declared": true,
   "run_identity": {
     "source_sha": "4c61a02e562830e248ce7178132e8609f53decde",
     "source_git_tree_sha": "125a329d0d9a9414b89a90dc89a1d81530f2fe30",
@@ -20,6 +20,10 @@
     "server_diagnosis_sha256": "a72234de370376a1c7b3554f68b96e950f233d319889808afd86c2ff78203e46",
     "server_attestation_kind": "POST_FAILURE_READ_ONLY_DIAGNOSIS",
     "pushed_control_plane_summary_path": "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json",
+    "reviewed_binding_sha": "101afd5beb6d1351448aea406608119d2f4ba869",
+    "reviewed_binding_parent_sha": "b32bef0398ebe44187c088c22e2b5276fa260ac0",
+    "reviewer_verdict": "PASS",
+    "reviewer_pass_reference": "INT-SUPERVISOR transferred exact-SHA Reviewer PASS in the STAGE9-RUN8-EVIDENCE-REVIEW-AND-CLOSURE authorization",
     "raw_logs_copied_into_git": false,
     "server_files_modified_by_executor": false,
     "rerun_performed_by_executor": false,
@@ -61,7 +65,8 @@
     "nonfinite_score_count": 0,
     "release_checksum_closure": true,
     "source_artifact_input_jdk_identity_match_attested": true,
-    "independent_reviewer_verdict_received": false
+    "independent_reviewer_verdict_received": true,
+    "independent_reviewer_verdict": "PASS"
   },
   "diagnostics": {
     "stuck_and_abort_total": 74,
@@ -81,7 +86,8 @@
     "money_or_cost_event_count": 0,
     "taxi_route_fare_exercised": false,
     "taxi_exactly_once_charge_exercised": false,
-    "interpretation": "This run subset did not exercise Taxi fare or exactly-once behavior; it cannot by itself close Taxi-specific Stage 9 coverage or establish overall Stage 9 PASS."
+    "taxi_behavioral_coverage_claimed": false,
+    "interpretation": "This run subset did not exercise Taxi fare or exactly-once behavior. Stage 9 technical closure follows the exact-SHA Reviewer PASS, but no Taxi behavioral-coverage claim is made beyond this run."
   },
   "authority_boundary": {
     "runner_authorized": false,
@@ -92,11 +98,50 @@
   },
   "blocker_transition": {
     "previous_status": "OPEN",
-    "status": "REPAIR_DISPATCHED",
+    "intermediate_status": "REPAIR_DISPATCHED",
+    "status": "CLOSED",
     "superseded_task_status": "BLOCKED_SUPERSEDED_BY_REPAIR",
     "repair_task_id": "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012",
     "repair_owner": "INT-EXECUTOR",
     "failure_identity": "Run8 server evidence was not bound to a pushed source-labelled control-plane record for exact-SHA independent review.",
-    "changed_hypothesis_required_for_retry": "Commit a compact binding to the immutable diagnosis path/SHA, exact run identity, transferred hard-gate facts, diagnostics and explicit Taxi coverage limitation without rerunning or mutating run8."
+    "changed_hypothesis_required_for_retry": "Commit a compact binding to the immutable diagnosis path/SHA, exact run identity, transferred hard-gate facts, diagnostics and explicit Taxi coverage limitation without rerunning or mutating run8.",
+    "reviewed_repair_sha": "101afd5beb6d1351448aea406608119d2f4ba869",
+    "reviewer_verdict": "PASS",
+    "supervisor_gate": "PASS_CLOSED"
+  },
+  "final_atomic_audit": {
+    "task_id": "STAGE9-RUN8-EVIDENCE-REVIEW-AND-CLOSURE",
+    "exact_input_sha": "101afd5beb6d1351448aea406608119d2f4ba869",
+    "protocol_07": {
+      "reviewed_sha": "e58861e4f79eb5aa18c8ac286d0173987bcef237",
+      "final_status": "PASS_CLOSED"
+    },
+    "artifact_discovery_repair": {
+      "task_id": "STAGE9-REPAIR-ARTIFACT-DISCOVERY-010",
+      "repair_sha": "4c61a02e562830e248ce7178132e8609f53decde",
+      "final_status": "PASS_CLOSED"
+    },
+    "artifact_discovery_blocker": {
+      "blocker_id": "STAGE9-RUNNER-SHADE-CLOSURE-002",
+      "final_status": "CLOSED"
+    },
+    "protocol_08": {
+      "reviewed_sha": "b32bef0398ebe44187c088c22e2b5276fa260ac0",
+      "final_status": "PASS_CLOSED"
+    },
+    "stage_9": {
+      "task_id": "STAGE9-JOINT-SHORT-SMOKE",
+      "run_identity": "smoke_qsim_v1_4c61a0_run8",
+      "reviewed_evidence_sha": "101afd5beb6d1351448aea406608119d2f4ba869",
+      "final_status": "PASS_CLOSED"
+    },
+    "active_task": null,
+    "active_blocker": null,
+    "runner_authorized": false,
+    "stage9_execution_authorized": false,
+    "stage10_or_later_authorized": false,
+    "next_state": "AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION",
+    "rerun_performed": false,
+    "server_access_or_mutation_performed_by_executor": false
   }
 }

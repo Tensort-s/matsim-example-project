@@ -553,3 +553,29 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor may close the repair blocker; Reviewer does not authorize upload, Runner, server execution or Stage 9."
 required_transition: null
 ```
+
+## Entry 17 — Stage 9 run8 evidence-binding exact-SHA review
+
+Compact archival transfer from INT-SUPERVISOR; only the supplied review facts
+are appended:
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai (Supervisor-transferred; exact Reviewer timestamp not supplied)"
+session_id: "019fb38f-1c8c-7d62-9dc4-7ea5d0b5192e"
+stage_id: "STAGE9-REPAIR-RUN8-EVIDENCE-BINDING-012 exact-SHA review"
+input_sha: "b32bef0398ebe44187c088c22e2b5276fa260ac0"
+reviewed_output_sha: "101afd5beb6d1351448aea406608119d2f4ba869"
+decision: "PASS"
+findings:
+  - "Reviewer PASS applies exactly to output 101afd5beb6d1351448aea406608119d2f4ba869 with parent b32bef0398ebe44187c088c22e2b5276fa260ac0."
+diagnostics:
+  - "The Supervisor transfer supplied no exact Reviewer timestamp or additional findings; none are inferred."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
+  - "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+blockers: []
+hard_gate_status: "PASS"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor may consume the PASS in the one-time Stage 9 final audit/closure transition; Reviewer authorizes no Runner or Stage 10 action."
+required_transition: null
+```

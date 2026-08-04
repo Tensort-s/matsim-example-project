@@ -13,23 +13,18 @@ historical evidence. A new authorization adds a new brief and updates
 
 Current brief:
 
-- [`STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md`](STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md) —
-  binds immutable run8 diagnosis evidence to a pushed structured summary;
-  pending independent review, with no Stage 9 PASS or rerun authorization.
+- None. Stage 9 is `PASS_CLOSED`; canonical state is
+  `AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION`. Runner and Stage 10 remain
+  unauthorized.
 
 Blocked/superseded briefs:
 
-- [`STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md`](STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md) —
-  its POM-driven root-JAR discovery contract remains canonical; its prior
-  review/gate status and blocker remain unchanged by the run8 binding repair.
 - [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md) —
   its immutable wrapper-mode contract remains applicable; the later staging7
   identity exposed a distinct Runner artifact-discovery defect after package.
 - [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md) —
   its absolute-cwd guard remains valid; the next identity exposed a distinct
   archive-to-runtime wrapper-mode mismatch before Maven.
-- [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md) —
-  `BLOCKED_SUPERSEDED_BY_REPAIR`; no Runner execution is authorized.
 - [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md) —
   superseded after diagnosis proved the approved member is a symlink rather
   than the assumed hard link.
@@ -49,6 +44,9 @@ Canonical review template:
 
 Closed briefs:
 
+- [`STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md`](STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md)
+- [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md)
+- [`STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md`](STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md)
 - [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
 - [`CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
 - [`STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md`](STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md)

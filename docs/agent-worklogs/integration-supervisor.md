@@ -1417,3 +1417,32 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Commit and push the bounded run8 evidence binding, then stop for one independent exact-SHA review."
 required_transition: null
 ```
+
+## Entry 44 — Stage 9 final evidence audit and closure
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE9-RUN8-EVIDENCE-REVIEW-AND-CLOSURE"
+input_sha: "101afd5beb6d1351448aea406608119d2f4ba869"
+output_sha_or_status: "FINAL_ATOMIC_AUDIT_AND_CLOSURE_AUTHORIZED"
+decision: "Consume exact-SHA Reviewer PASS, publish the final run8 audit and atomically close Stage 9 without rerun or Runner authorization."
+findings:
+  - "Reviewer PASS applies exactly to 101afd5beb6d1351448aea406608119d2f4ba869 with parent b32bef0398ebe44187c088c22e2b5276fa260ac0."
+  - "Protocol 07, artifact-discovery repair 010 and Protocol 08 must finish PASS_CLOSED; artifact blocker STAGE9-RUNNER-SHADE-CLOSURE-002 must finish CLOSED."
+  - "Stage 9 joint short smoke closes PASS_CLOSED on immutable run identity smoke_qsim_v1_4c61a0_run8."
+  - "The final audit retains 420/0 checksums, exit 0, lastIteration 0, population 7716, events 48287273 and zero non-finite scores."
+  - "Active task/blocker become null; next state is AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION with Runner and Stage 10 unauthorized."
+diagnostics:
+  - "stuckAndAbort 74 remains Diagnostic: 11 Hong Kong persons, 11 bus and 52 GMB at 108000 seconds without cause attribute."
+  - "Taxi legs/routingMode and money/cost events are zero; Taxi fare/exactly-once was not exercised and no extra Taxi behavioral coverage is claimed."
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage9_run8_evidence_v1/stage9_run8_evidence_binding.json"
+  - "docs/integration/stage-briefs/STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blockers: []
+hard_gate_status: "AUTHORIZED_FINAL_EVIDENCE_AUDIT_AND_ATOMIC_STAGE9_CLOSURE"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one final audit/closure commit, report exact SHA to Supervisor and stop; do not contact Runner or Reviewer."
+required_transition: null
+```
