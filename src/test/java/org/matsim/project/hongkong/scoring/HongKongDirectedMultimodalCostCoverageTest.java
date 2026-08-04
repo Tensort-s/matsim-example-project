@@ -28,6 +28,7 @@ import org.matsim.project.hongkong.pt.HongKongDirectedPtFixture;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentFactory;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareCalculator;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentFactory;
+import org.matsim.project.hongkong.taxi.HongKongDirectedTaxiFixture;
 import org.matsim.project.hongkong.taxi.HongKongTaxiLegAttributes;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 
@@ -123,6 +124,10 @@ class HongKongDirectedMultimodalCostCoverageTest {
 						.calculate(TAXI_DISTANCE_M, "urban_taxi")
 						.fareHkd(),
 				0.0);
+		assertEquals(
+				EXPECTED_TAXI_FARE_HKD,
+				HongKongDirectedTaxiFixture.observedFareHkd(person),
+				0.0);
 		assertEquals(EXPECTED_CUSTOM_SCORE, scoring.getScore(), 0.0);
 
 		// Events, money and trip callbacks are intentionally inert for all three
@@ -149,6 +154,10 @@ class HongKongDirectedMultimodalCostCoverageTest {
 				() -> scoring.handleLeg(legs.get(2)));
 		StringBuilder explanation = new StringBuilder();
 		scoring.explainScore(explanation);
+		assertTrue(explanation.toString().contains("consumedTaxiLegs=1"));
+		assertTrue(explanation.toString().contains("score=-1.765"));
+		assertTrue(explanation.toString().contains("chargedFareHkd=4.9"));
+		assertTrue(explanation.toString().contains("chargedEnergyHkd=2.5"));
 		assertTrue(explanation.toString().contains("moneyEventsEmitted=0"));
 		assertTrue(explanation.toString().contains("tripCallbackCharges=0"));
 		assertFalse(explanation.toString().contains("NaN"));

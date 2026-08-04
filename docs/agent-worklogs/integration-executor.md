@@ -1472,3 +1472,42 @@ next_action_summary: "Push one substantive candidate and stop; Supervisor dispat
 runner_authorized: false
 stage11_or_later_authorized: false
 ```
+
+## Entry 45 — Stage 10 evidence-gap repair candidate
+
+```yaml
+timestamp: "2026-08-04T22:43:00+08:00"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+input_sha: "04590caa80e277febc7d01f655c49f48c317833c"
+output_sha_or_status: "pending_push"
+decision: "Repair the Stage-end evidence gap by directly asserting Taxi fee from the actual selected-plan route context and Taxi component explanation while preserving the original directed fixture."
+findings:
+  - "The existing explanation assertions for consumedTaxiLegs=1, chargedFareHkd=4.9 and chargedEnergyHkd=2.5 are retained."
+  - "HongKongDirectedTaxiFixture.observedFareHkd reads the actual selected-plan Taxi route context and directly observes 35.3 HKD; the component explanation also asserts score=-1.765."
+  - "No production implementation, model, cost semantic, config, input, server, bundle, release or run change occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
+  - "src/test/java/org/matsim/project/hongkong/taxi/HongKongDirectedTaxiFixture.java"
+executor_self_check:
+  stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
+  exact_input_sha: "04590caa80e277febc7d01f655c49f48c317833c"
+  changed_paths_within_allowlist: true
+  compilation: "PASS via focused Maven test compile"
+  required_tests: "PENDING_REPAIR_TEST_RUN"
+  negative_tests: "retained duplicate Taxi/PT/Car fail-closed assertions"
+  direct_observed_fee_assertions:
+    taxi_hkd: 35.3
+    pt_hkd: 4.9
+    car_hkd: 2.5
+    total_hkd: 42.7
+  semantic_contract_changed: false
+  protected_refs_unchanged: true
+  unresolved_items: []
+hard_gate_status: "PENDING_REPAIR_VALIDATION_AND_SINGLE_STAGE_END_REVIEW"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Run focused tests and checks, push one repair candidate, then stop for the sole Stage-end review."
+runner_authorized: false
+stage11_or_later_authorized: false
+```

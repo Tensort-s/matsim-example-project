@@ -19,12 +19,14 @@
   "test_harness_paths": [
     "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java",
     "src/test/java/org/matsim/project/hongkong/pt/HongKongDirectedPtFixture.java",
-    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java"
+    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java",
+    "src/test/java/org/matsim/project/hongkong/taxi/HongKongDirectedTaxiFixture.java"
   ],
   "test_harness_sha256": {
-    "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java": "42750a0664cba398e39c894a016214033bb4203887d5da6b8fdebc51696674d3",
+    "src/test/java/org/matsim/project/hongkong/scoring/HongKongDirectedMultimodalCostCoverageTest.java": "13a5cc667e3663990449e5bbc8589ea93a91721625fbf4798782419145c1671c",
     "src/test/java/org/matsim/project/hongkong/pt/HongKongDirectedPtFixture.java": "b4c41841083c5a2908f449ad9ef09b59d02753989c47cf70cf5b9b94c98ed473",
-    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java": "b9f45c4d0a9cb7d2d4d28043e99c92ae8659b7c4a12295f07f9742d136d7f010"
+    "src/test/java/org/matsim/project/hongkong/car/HongKongDirectedCarFixture.java": "b9f45c4d0a9cb7d2d4d28043e99c92ae8659b7c4a12295f07f9742d136d7f010",
+    "src/test/java/org/matsim/project/hongkong/taxi/HongKongDirectedTaxiFixture.java": "589e198cb84a72492434963615fae542d2c7eb319c7636b1e650df12b6c335e7"
   },
   "directed_subset": {
     "person_id": "stage10-directed-001",
@@ -72,6 +74,7 @@
   },
   "exactly_once": {
     "leg_callback_is_only_charge_path": true,
+    "taxi_leg_observed_fee_direct_assertion": true,
     "money_event_callback_is_inert": true,
     "trip_callback_is_inert": true,
     "money_events_emitted": 0,

@@ -65,6 +65,11 @@ production runtime/model or cost semantics. A substantive candidate is pushed
 once for the single Protocol 09 stage-end review; this brief itself does not
 authorize Runner or a MATSim execution.
 
+The Taxi fee is directly observed from the selected-plan route context through
+the test-only `HongKongDirectedTaxiFixture` bridge and is also asserted in the
+component explanation (`score=-1.765`), rather than inferred only from the
+aggregate multimodal score or static manifest.
+
 ```yaml
 stage_id: "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE"
 input_sha: "48686c03f46372e4aed2bc9bd1bdeb1796a34fbe"
