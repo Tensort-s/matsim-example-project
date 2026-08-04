@@ -185,6 +185,10 @@ schemas and worked example are in
 
 ## Atomic gate transition and non-recursive closure
 
+> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. This material is
+> preserved for audit and retained protections; Protocol 09 controls the
+> prospective stage loop, formal states and review cadence.
+
 CONTROL-PROTOCOL-05 governs every prospective stage, repair, diagnosis,
 blocker, supersession and activation transition. Its canonical transition
 brief and schema are in
@@ -260,6 +264,9 @@ atomic_gate_transition:
 
 ## Post-failure read-only diagnosis and automatic dispatch
 
+> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. The read-only
+> diagnosis and no-rerun protections remain valid under Protocol 09.
+
 CONTROL-PROTOCOL-06 extends the blocker and atomic-transition protocols. Its
 canonical schema and thin-JAR worked example are in
 [`stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md).
@@ -301,6 +308,10 @@ canonical schema and thin-JAR worked example are in
    or other control-plane transition.
 
 ## Diagnosis confidence and resource budget
+
+> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. The
+> `KNOWN/PARTIAL/UNKNOWN` evidence gates and budgets remain valid under
+> Protocol 09.
 
 CONTROL-PROTOCOL-07 makes Protocol 06 root-cause status and diagnosis scope
 machine-checkable. Its canonical schemas and thin-JAR evidence-chain example
@@ -367,6 +378,11 @@ diagnosis_budget_result:
    commit is created.
 
 ## Execution contract, safe preflight correction and Supervisor server read
+
+> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. Execution-contract,
+> preflight-correction and bounded server-read protections remain valid; the
+> older detailed failure labels are historical and map prospectively to
+> Protocol 09 `INFORMATIONAL`, `TECHNICAL` or `SEMANTIC`.
 
 CONTROL-PROTOCOL-08 defines the canonical prospective execution contract,
 failure routing and bounded Supervisor server-evidence verification. Its full
@@ -471,6 +487,158 @@ supervisor_server_read_verification:
     Reviewer read-only, and Runner no-Git and unable to self-authorize. A
     correction, verification, diagnosis or `PASS` does not itself authorize a
     retry or later stage and does not create a verdict-only closure commit.
+
+## Lean stage-end review protocol
+
+Protocol 09 is the prospective default. Its canonical template is
+[`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md).
+Protocols 05–08 remain preserved as
+`HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`; their protections survive,
+but their intermediate events no longer expand `CURRENT_STAGE.md`.
+
+### Default loop and lane authority
+
+The default stage loop is:
+
+```text
+Supervisor defines objective and Hard Gates
+-> Executor implements and self-checks
+-> explicitly authorized Runner builds/deploys/runs and emits final evidence
+-> Reviewer performs one independent stage-end review
+-> Supervisor decides PASS_CLOSED or BLOCKED
+```
+
+Supervisor is the sole dispatcher and gate owner. Executor is the sole Git
+writer. Runner has no Git writes or self-authorization. Reviewer is read-only.
+User direction controls research, economic, behavioral, missing-data and cost
+semantics. Executor or Runner self-checks never replace Reviewer.
+
+### Executor internal correction and self-check
+
+Ordinary technical corrections may be completed internally before the single
+candidate push, without intermediate or repair-by-repair review, only when the
+original objective and allowlist remain unchanged, Hard Gates are not
+weakened, tests/validators are not deleted or relaxed, model/cost semantics do
+not change, scope does not expand and no server run occurs. Ambiguity stops and
+is reported.
+
+Before push, every candidate has this structured check:
+
+```yaml
+executor_self_check:
+  stage_id: string
+  exact_input_sha: full_sha
+  branch: integration/hk-multimodal-cost-v1
+  worktree: F:/Matsim/worktrees/hk-cost-integration
+  changed_paths: []
+  compile: {required: boolean, command: string_or_null, result: string}
+  tests: {required: boolean, commands: [], result: string}
+  negative_tests: {required: boolean, commands: [], result: string}
+  validators: {commands: [], result: string}
+  diff_check: PASS_or_FAIL
+  conflict_check: PASS_or_FAIL
+  protected_refs: PASS_or_FAIL
+  semantic_contract: UNCHANGED_or_explained
+  unresolved_items: []
+```
+
+After push, Executor reports exact output and parent SHAs, branch,
+local/tracking/remote equality, ahead/behind `0/0`, and clean worktree.
+
+### Runner execution and self-check
+
+Only an exact Supervisor authorization activates Runner. The canonical flow is
+`preflight -> build -> artifact validation -> bundle -> release -> runtime
+preflight -> run -> structured evidence`. `runner_self_check` verifies source,
+locked inputs, toolchain, root Shade JAR, bundle/release/run identities, SHA
+continuity, class loading, required iteration, output completeness, non-finite
+values, Diagnostics and coverage.
+
+```yaml
+runner_self_check:
+  source_sha: full_sha
+  locked_inputs: {result: PASS_or_FAIL, evidence_refs: []}
+  toolchain: {result: PASS_or_FAIL, versions: {}, evidence_refs: []}
+  root_shade_jar: {result: PASS_or_FAIL, sha256: string_or_null, evidence_refs: []}
+  bundle: {result: PASS_or_FAIL, identity: string_or_null, sha256: string_or_null}
+  release: {result: PASS_or_FAIL, identity: string_or_null, evidence_refs: []}
+  run_identity: string_or_null
+  sha_continuity: PASS_or_FAIL
+  class_loading: PASS_or_FAIL
+  iteration_completion: PASS_or_FAIL
+  output_completeness: PASS_or_FAIL
+  nonfinite_values: {count: number, result: PASS_or_FAIL}
+  diagnostics: []
+  coverage_limitations: []
+  unresolved_items: []
+```
+
+`CONTRACT_PRESERVING_PREFLIGHT_CORRECTION` remains available only before build,
+bundle, release and run when existing state is unchanged, one canonical
+replacement exists, task semantics do not change and no new identity is
+created. It is not a retry. Once execution starts, a technical failure stops
+and enters bounded read-only diagnosis; Runner cannot modify, repair or rerun.
+
+### One stage-end review
+
+Default Reviewer policy is `STAGE_END_ONLY`. No intermediate implementation,
+repair, protocol, evidence-binding or closure commit is reviewed by default.
+After Supervisor verifies the final candidate SHA and parent, one review covers
+the complete substantive delta since prior `PASS_CLOSED`, final candidate,
+`executor_self_check`, `runner_self_check` and final evidence, Hard Gates,
+Diagnostics, coverage limitations, evidence-generator trustworthiness and
+model/cost invariants.
+
+```yaml
+stage_end_review:
+  reviewed_stage: string
+  reviewed_candidate_sha: full_sha
+  reviewed_run_identity: string_or_null
+  decision: PASS | BLOCKED
+  findings: []
+  coverage_limitations: []
+  blockers: []
+  evidence_refs: []
+  handoff_to: INT-SUPERVISOR
+```
+
+Reviewer does not dispatch, write, close stages or authorize Runner, retry or
+next stage. Supervisor consumes `PASS` directly. Verdict-only and closure-only
+follow-up commits are prohibited.
+
+### Targeted review exception
+
+Default is `NO_INTERMEDIATE_REVIEW`; no more than one targeted review is
+allowed in a stage. Supervisor may dispatch one narrow question only for:
+
+- model/cost/economic/behavioral semantic change;
+- weakened or removed Hard Gate;
+- validator or evidence-generator change;
+- destructive or protected-ref operation;
+- unresolved architecture or Supervisor scope uncertainty; or
+- a high-cost formal run with an unreviewed high-risk change.
+
+Targeted review never replaces stage-end review or authorizes progress.
+
+### Failure classes and formal states
+
+Only `INFORMATIONAL`, `TECHNICAL`, and `SEMANTIC` are canonical failure
+classes. Informational findings are safely corrected or diagnosed within
+scope. Technical failure stops and enters bounded read-only diagnosis:
+`KNOWN` routes to bounded repair; `PARTIAL`/`UNKNOWN` routes to further
+diagnosis. Semantic failure escalates to the user.
+
+Only `READY`, `RUNNING`, `BLOCKED`, and `PASS_CLOSED` are formal stage states.
+Diagnosis, repair, targeted review, evidence binding and handoffs are worklog
+events rather than long-lived canonical stage states.
+
+### Retained invariants
+
+Protocol 09 does not weaken exact source/artifact/bundle/release/run
+traceability, immutable run directories, no implicit rerun, semantic
+escalation, validators, diagnosis confidence/budget, execution contracts,
+bounded Supervisor server-read verification or lane authority. Validator PASS
+is not Stage PASS, and self-check is not independent review.
 
 ## Canonical control-plane sources
 

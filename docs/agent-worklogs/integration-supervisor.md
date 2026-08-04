@@ -1446,3 +1446,30 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one final audit/closure commit, report exact SHA to Supervisor and stop; do not contact Runner or Reviewer."
 required_transition: null
 ```
+
+## Entry 45 — Protocol 09 lean stage-end review dispatch
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-09-LEAN-STAGE-END-REVIEW"
+input_sha: "e9bc965721b7842c7bfaaeb549ee08de038454c4"
+output_sha_or_status: "GOVERNANCE_CANDIDATE_AUTHORIZED"
+decision: "Establish one independent stage-end review as the default, with bounded self-correction, structured Executor/Runner self-checks and at most one narrow high-risk targeted review."
+findings:
+  - "The default loop is Supervisor objective/gates, Executor implementation/self-check, explicitly authorized Runner execution/evidence, one Reviewer stage-end review, then Supervisor PASS_CLOSED or BLOCKED."
+  - "Ordinary technical corrections inside the original scope require no intermediate or repair-by-repair review and cannot weaken gates or semantics."
+  - "Runner retains exact execution contracts, pre-build correction limits, read-only post-failure diagnosis and no self-rerun authority."
+  - "Only INFORMATIONAL, TECHNICAL and SEMANTIC failure classes and READY, RUNNING, BLOCKED and PASS_CLOSED formal states remain canonical."
+  - "CURRENT_STAGE becomes compact; Protocols 05–08 remain preserved historical detail consolidated by Protocol 09."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-stage-end-review-protocol"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blockers: []
+hard_gate_status: "AUTHORIZED_GOVERNANCE_CANDIDATE_ONLY"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one substantive Protocol 09 candidate, report exact SHA/self-check to Supervisor and stop; Supervisor later dispatches one stage-end review."
+required_transition: null
+```

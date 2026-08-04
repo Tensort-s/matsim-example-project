@@ -1321,3 +1321,52 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies the exact pushed closure SHA; canonical next state remains AWAITING_USER_OR_SUPERVISOR_STAGE10_DECISION."
 required_transition: null
 ```
+
+## Entry 42 — Protocol 09 lean stage-end review candidate
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-09-LEAN-STAGE-END-REVIEW"
+input_sha: "e9bc965721b7842c7bfaaeb549ee08de038454c4"
+output_sha_or_status: "exact pushed governance candidate SHA supplied in the Supervisor handoff"
+decision: "Publish the Protocol 09 stage-end-only governance candidate and compact CURRENT_STAGE without changing runtime or lane authority."
+findings:
+  - "Policy and brief define the default stage loop, Executor internal correction/self-check and Runner execution/self-check."
+  - "Reviewer defaults to STAGE_END_ONLY; targeted review is limited to one narrow high-risk question and never replaces final review."
+  - "Failure classes are INFORMATIONAL/TECHNICAL/SEMANTIC; formal states are READY/RUNNING/BLOCKED/PASS_CLOSED."
+  - "CURRENT_STAGE keeps Stage 9 closure, idle authority and an OPEN_NON_BLOCKING Taxi runtime coverage debt."
+  - "Protocols 05–08 remain linked and marked historical detail consolidated by Protocol 09."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#lean-stage-end-review-protocol"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+  - "docs/integration/CURRENT_STAGE.md"
+executor_self_check:
+  stage_id: "CONTROL-PROTOCOL-09-LEAN-STAGE-END-REVIEW"
+  exact_input_sha: "e9bc965721b7842c7bfaaeb549ee08de038454c4"
+  branch: "integration/hk-multimodal-cost-v1"
+  worktree: "F:/Matsim/worktrees/hk-cost-integration"
+  changed_paths:
+    - "agent-lanes.md"
+    - "docs/integration/INTEGRATION_POLICY.md"
+    - "docs/integration/CURRENT_STAGE.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+    - "docs/integration/stage-briefs/README.md"
+    - "docs/agent-worklogs/integration-supervisor.md"
+    - "docs/agent-worklogs/integration-executor.md"
+  compile: {required: false, command: null, result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  tests: {required: false, commands: [], result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  negative_tests: {required: false, commands: [], result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  validators: {commands: ["YAML code-block parse", "Markdown link resolution", "CURRENT_STAGE assertions"], result: "PASS"}
+  diff_check: "PASS"
+  conflict_check: "PASS"
+  protected_refs: "PASS"
+  semantic_contract: "UNCHANGED"
+  unresolved_items: []
+blockers: []
+hard_gate_status: "PENDING_INDEPENDENT_STAGE_END_REVIEW_AND_SUPERVISOR_PROTOCOL09_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatches one stage-end review; Executor stops."
+required_transition: null
+```
