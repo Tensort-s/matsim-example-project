@@ -1,5 +1,12 @@
 # CONTROL-PROTOCOL-06 — Post-failure diagnosis and automatic dispatch
 
+> **Status:** `DEPRECATED_NON_CANONICAL`
+> **Prospective authority:** `NONE`
+> **Canonical replacement:** [Protocol 09](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md)
+> **Use:** historical audit and rationale only. Do not use this document for
+> dispatch, current state, review cadence, diagnosis ownership, execution, or
+> authorization.
+
 ## Control identity
 
 - Task ID: `CONTROL-PROTOCOL-06-POST-FAILURE-DIAGNOSIS-AUTO-DISPATCH`

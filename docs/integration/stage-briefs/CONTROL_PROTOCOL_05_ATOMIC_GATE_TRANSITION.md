@@ -1,5 +1,12 @@
 # CONTROL-PROTOCOL-05 — Atomic gate transition and non-recursive closure
 
+> **Status:** `DEPRECATED_NON_CANONICAL`
+> **Prospective authority:** `NONE`
+> **Canonical replacement:** [Protocol 09](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md)
+> **Use:** historical audit and rationale only. Do not use this document for
+> dispatch, current state, review cadence, diagnosis ownership, execution, or
+> authorization.
+
 | Field | Value |
 |---|---|
 | Task ID | `CONTROL-PROTOCOL-05-ATOMIC-GATE-TRANSITION` |

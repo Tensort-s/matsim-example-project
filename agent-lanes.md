@@ -17,38 +17,23 @@ session history. Never delete earlier worklog history.
 ## Canonical control-plane sources
 
 Future cross-session messages carry only the active-stage delta. Stable rules
-and evidence are read from these canonical paths:
+and evidence are read prospectively only from these canonical sources:
 
 - [Integration policy](docs/integration/INTEGRATION_POLICY.md)
-- [Lean delta-only review protocol and template](docs/integration/stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md)
-- [Blocker-to-repair transition protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md)
-- [Protocol 02/03 schema consistency](docs/integration/stage-briefs/CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md)
-- [Atomic gate transition and non-recursive closure](docs/integration/stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
-- [Post-failure diagnosis and automatic dispatch](docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
-- [Diagnosis confidence and resource budget](docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
-- [Execution contract and Supervisor server-read verification](docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
-- [Lean stage-end review protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md)
 - [Current stage](docs/integration/CURRENT_STAGE.md)
-- [Hub-and-spoke messaging protocol](docs/integration/stage-briefs/CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
-- [Stage 4A lean-protocol brief](docs/integration/stage-briefs/STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
-- [Stage-brief index](docs/integration/stage-briefs/README.md)
+- [Self-contained Protocol 09](docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md)
+- the current Supervisor exact execution contract delivered in the authorized
+  real-time instruction.
 
-The policy defines the compact command/worklog schemas, lane-specific output
-budgets, evidence-by-reference rules, canonical delta-only review protocol,
-mandatory blocker-to-repair transition and their synchronized Reviewer/state
-schemas, atomic gate transition and non-recursive closure invariants, plus the
-post-failure read-only diagnosis and automatic technical-dispatch rules. The
-confidence gates and default resource budget make those diagnoses
-machine-checkable and bounded. Protocol 08 defines complete Runner execution
-contracts, pre-build contract-preserving corrections, failure routing, and a
-bounded read-only Supervisor evidence-verification policy. That policy does
-not grant actual SSH/platform capability and does not change any lane's write
-scope. The templates apply those rules without changing lane authority. The
-current-stage file identifies compact current facts rather than repeating
-historical state. Protocol 09 consolidates Protocols 05–08 as preserved
-historical detail and makes one independent stage-end review the default;
-self-checks do not replace Reviewer and lane authority remains unchanged.
-These links do not change any lane identity, authority or write scope below.
+Protocol 09 normalizes every valid prospective rule for lane authority,
+identity, execution contracts, preflight correction, failure ownership,
+diagnosis confidence/budgets, evidence, review cadence and nonrecursive close.
+Protocols 05–08 and all earlier protocol briefs are historical audit/rationale
+only, have prospective authority `NONE`, and must not be used for dispatch,
+current state, review cadence, diagnosis ownership, execution, or
+authorization. The [stage-brief index](docs/integration/stage-briefs/README.md)
+keeps those historical links without making them canonical. This consolidation
+does not change any lane identity, authority, or write scope.
 
 ## Authority and evidence boundary
 
@@ -130,23 +115,21 @@ replanning, and iteration duration across iterations or experiments.
 ## Standard stage loop
 
 ```text
-Supervisor Brief
-  -> Executor implement/test/commit/push
-  -> Executor sends exact SHA/evidence/handoff to Supervisor
-  -> Supervisor dispatches exact-SHA review to Reviewer
-  -> Reviewer sends verdict/evidence/blockers/handoff to Supervisor
-  -> if BLOCKED: Supervisor decides and issues bounded Executor rework
-  -> if PASS and a run is needed: Supervisor authorizes Runner
-  -> Runner executes exact SHA and sends Evidence Handoff to Supervisor
-  -> Supervisor authorizes any evidence commit to Executor
-  -> Executor commits/pushes and reports only to Supervisor
-  -> Supervisor dispatches any required re-review
-  -> Supervisor advances the stage
+Supervisor objective + Hard Gates + review base
+  -> Executor implementation/self-check/final candidate
+  -> Supervisor pre-run gate
+  -> explicitly authorized Runner execution/evidence, when required
+  -> one final candidate
+  -> one independent stage-end Reviewer review
+  -> Supervisor PASS_CLOSED or BLOCKED
 ```
 
-No lane creates a commit merely to record a verdict that is already under
-review. Transferred handoffs are appended during the next otherwise-authorized
-write, preventing recursive log-only review cycles.
+Protocol 09 defines the complete prospective flow. No intermediate or
+repair-by-repair review occurs by default; one targeted high-risk review may be
+Supervisor-dispatched under its narrow exception and never replaces stage-end
+review. No lane creates a verdict-only or closure-only commit. Supervisor
+consumes Reviewer PASS in real time, and neither PASS nor closure authorizes a
+run or next stage.
 
 ## Model-policy escalation boundary
 

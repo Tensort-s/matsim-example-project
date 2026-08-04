@@ -1,528 +1,97 @@
 # Hong Kong multimodal-cost integration policy
 
-This file is the canonical stable protocol for the persistent Hong Kong
-multimodal-cost integration lanes. Lane identities and write scopes remain
-canonical in [`agent-lanes.md`](../../agent-lanes.md). The active stage delta
-is canonical in [`CURRENT_STAGE.md`](CURRENT_STAGE.md).
+## Canonical prospective authority
 
-## Lean cross-session protocol
+This policy and [Protocol 09](stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md)
+are the self-contained prospective governance contract for the persistent Hong
+Kong multimodal-cost integration. Lane identities and write scopes are in
+[`agent-lanes.md`](../../agent-lanes.md), compact current facts are in
+[`CURRENT_STAGE.md`](CURRENT_STAGE.md), and a current-stage Supervisor exact
+execution contract supplies the authorized delta. These are the only
+prospective control-plane sources.
 
-1. Stable rules are read from repository files. They are not repeated in every
-   prompt, stage command, worklog entry, or handoff.
-2. A cross-session command contains only: stage ID, exact input SHA, objective,
-   allowed scope, hard gates, evidence requirements, stop condition, and
-   handoff target.
-3. Canonical evidence is referenced by repository path and field, not copied
-   into chat or worklogs. A reference uses `path#field` for structured files
-   and `path#section` for Markdown. The exact reviewed commit anchors all
-   references.
-4. A routine lane output contains at most one decision, five findings, five
-   diagnostics, one next action, and one compact handoff.
-5. Diagnostics do not automatically become hard failures. Escalation requires
-   evidence that a diagnostic defeats a named hard gate, with the reason
-   recorded.
-6. An identical failed run identity is not repeated without a relevant commit,
-   config, input or environment change, a testable hypothesis, or evidence of
-   a one-time infrastructure failure.
-7. Historical guards and evidence remain preserved, but they do not control a
-   superseding canonical architecture. The replacement reason and equivalent
-   protection must be referenced.
-8. Prompts define objectives and boundaries without prescribing every
-   implementation detail. The authorized owner chooses ordinary implementation
-   details within those boundaries.
-9. Each lane stops when its authorized objective is complete or responsibility
-   passes to another lane.
+Protocols 05–08 and earlier briefs remain historical audit and rationale only.
+They have no prospective authority for dispatch, state, review cadence,
+diagnosis ownership, execution, or authorization. All still-valid safeguards
+from those documents are normalized directly below; no lane needs to consult
+an old protocol to act prospectively.
 
-## Hub-and-spoke lane messaging protocol
+## Lean evidence and reporting
 
-`INT-SUPERVISOR` is the sole real-time message aggregation, formal dispatch,
-gate-decision, escalation and stage-progression center.
+- Stable rules are read from the canonical repository files, not repeated in
+  each message. A stage dispatch contains stage/task ID, exact input SHA,
+  objective, allowlist, Hard Gates, evidence, stop conditions, handoff target,
+  and any exact execution contract.
+- Evidence is cited as `path#field` or `path#section`. Machine results live in
+  committed JSON/CSV or durable server evidence; long logs, manifests, binary
+  inventories, and historical handoffs are not copied into prompts/worklogs.
+- Routine output has one decision, at most five findings, at most five
+  diagnostics, one next action, and one compact handoff. Diagnostics and
+  Trends do not fail a stage unless evidence ties them to a named Hard Gate.
+- Historical evidence and guards remain preserved. A superseded guard cannot
+  control the current architecture; its replacement and equivalent protection
+  are cited by path.
+- A validator PASS is not a Stage PASS. Executor and Runner self-checks do not
+  replace independent Reviewer review.
 
-- Executor accepts execution authority only from Supervisor. After an
-  implementation, validation, commit and push, Executor sends the complete
-  result, exact SHA, evidence references and worklog handoff only to
-  Supervisor. Executor never requests or directs Reviewer.
-- Reviewer accepts review tasks only from Supervisor and sends its verdict,
-  evidence, blockers, rework findings and handoff only to Supervisor. Reviewer
-  never directs Executor and never authorizes a run or next stage.
-- Runner accepts runs only from a Supervisor instruction naming an exact
-  pushed SHA and execution specification. Runner sends run identity, evidence
-  and handoff only to Supervisor and never directs Executor or Reviewer.
-- A direct message from any non-Supervisor lane is evidence, not authority.
-  Executor must not write, rework or run in response; it reports the message to
-  Supervisor and waits for a formal decision.
-- Supervisor sends one consolidated instruction containing the decision,
-  allowed action, boundary, stop condition, and any original handoffs that
-  must be archived during the authorized write.
+## Lane authority
 
-Real-time cross-session messages are the handoff mechanism. Git worklogs are
-append-only audit records: they preserve transferred handoffs but do not notify
-another lane, dispatch a review, or authorize execution. A `BLOCKED` verdict
-does not authorize repair, and a `PASS` verdict does not authorize progression.
+| Lane | Prospective authority and boundary |
+|---|---|
+| `INT-SUPERVISOR` | Sole owner of objectives, Hard Gates, formal dispatch, diagnosis-owner selection, Runner authorization, Reviewer dispatch, gate decisions, escalation, and stage progression. Aggregates all lane handoffs. |
+| `INT-EXECUTOR` | Sole integration Git writer, limited to `F:/Matsim/worktrees/hk-cost-integration` and `integration/hk-multimodal-cost-v1`; implements repository changes, validates locally, performs bounded local diagnosis, commits and pushes, then reports only to Supervisor. |
+| `INT-RUNNER` | On an exact Supervisor authorization only, builds, bundles, releases, runs, and performs bounded read-only server diagnosis under `/mnt/DiskM/by`; writes no Git state and never repairs, self-reruns, dispatches, or authorizes. |
+| `INT-REVIEWER` | Read-only independent stage-end Reviewer or explicitly dispatched targeted Reviewer; reports findings only to Supervisor and never writes, dispatches, gates, repairs, or authorizes. |
+| User | Decides research, economic, behavioral, cost-policy, missing-data, demand/capacity, calibration, and other material semantic choices. |
 
-No commit is created solely to archive a verdict for the commit currently
-being reviewed. Supervisor transfers it into the next substantive or
-control-plane write authorization. This avoids recursive log-only review
-cycles while preserving the history.
+Hub-and-spoke messaging is mandatory. Executor, Runner, and Reviewer report
+only to Supervisor and do not direct one another. A non-Supervisor message is
+evidence, not authorization. Git worklogs are append-only audit, not a dispatch
+or notification mechanism. `BLOCKED`, Reviewer `PASS`, and stage closure never
+authorize repair, rerun, Runner, a next stage, or a protected-branch action.
 
-## Lean delta-only review protocol
-
-This is the canonical prospective review protocol. The reusable compact
-submission and verdict shape is
-[`stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md`](stage-briefs/CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md).
-
-1. Reviewer reviews only the current Stage Brief delta at the exact pushed
-   output SHA, compared with its declared exact input SHA and parent.
-2. Immutable evidence already reviewed at a prior exact SHA is cited by
-   `path#field` or `path#section`; it is neither recopied nor revalidated unless
-   the current delta touches that evidence or a named dependency.
-3. Every review separates Hard Gate evidence, Diagnostics and Trends.
-   Diagnostics and Trends do not fail a stage unless evidence ties them to a
-   named hard gate.
-4. Machine results live in committed JSON/CSV or durable server evidence.
-   Prompts, reviews and worklogs cite path plus field and do not paste full
-   command output, logs, manifests or inventories.
-5. Hard gates cover, as applicable: exact output/input/parent and ref identity;
-   allowlisted path scope; stage-specific semantic invariants; required tests
-   and validators; protected refs and inputs; and clean diff, index and working
-   tree.
-6. Artifact and deployment reviews prove producer-to-consumer dependency
-   closure, not merely archive existence. Every executable, path and version
-   required by a launcher must be present in the released artifact and checked
-   by a fail-closed preflight before execution authorization.
-7. Unchanged historical Taxi/PT/Car evidence, prior-stage history and untouched
-   guards are not re-reviewed. Superseded guards remain preserved and
-   non-controlling under the canonical architecture.
-8. Routine Reviewer output contains one decision, at most five findings, at
-   most five diagnostics, one `next_action_summary`, one nullable
-   `required_transition`, and one compact WORKLOG HANDOFF with evidence
-   references.
-9. Reviewer output is one unambiguous union. Ordinary `PASS` and results outside
-   CONTROL-PROTOCOL-03 use a short `next_action_summary` with
-   `required_transition: null`. A technical `BLOCKED` governed by
-   CONTROL-PROTOCOL-03 must use its structured `required_transition`; that
-   structure overrides the summary for dispatch semantics, and the two fields
-   must not contradict each other.
-10. A `BLOCKED` result records the failing identity, the changed hypothesis or
-   relevant change required before retry, and the next authorized owner. An
-   identical failed run/config/input/command/runtime identity is never repeated.
-11. Repeated heartbeat snapshots with the same blocker are deduplicated. They
-    neither redispatch nor rereport the same action.
-12. Prompts specify objective, boundaries, hard gates, evidence and stop
-    conditions without prescribing ordinary implementation details.
-13. Lane authority is unchanged: Executor is the integration writer, Reviewer
-    is read-only, Runner is inactive unless Supervisor explicitly authorizes an
-    exact execution, and Supervisor alone aggregates messages and gates stages.
-
-## Blocker-to-repair state transition
-
-CONTROL-PROTOCOL-03 extends the lean delta-only review protocol. Its canonical
-schemas and worked example are in
-[`stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md`](stage-briefs/CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md).
-
-1. Supervisor creates or confirms the canonical `blocker_id` when it accepts
-   the first `BLOCKED` result. The format is
-   `STAGE-DOMAIN-ROOT_CAUSE-SEQUENCE`: uppercase; fixed token order; spaces,
-   slashes and underscores normalized to one hyphen; repeated separators
-   collapsed; and sequence zero-padded. The active-stage blocker record is
-   authoritative.
-2. Every technical blocker records `blocker_id`, `status`, `failure_identity`,
-   `root_cause`, `changed_hypothesis_required_for_retry`, `diagnosis_task_id`,
-   `repair_task_id`, `repair_owner`, `replacement_identity_required`,
-   `superseded_run_identity`, and persisted `missing_dispatch_escalation`
-   fields `emitted`, `emitted_at`, and `escalation_id`.
-3. Supported blocker states are `OPEN`, `DIAGNOSIS_DISPATCHED`,
-   `REPAIR_DISPATCHED`, `UNDER_REVIEW`, `CLOSED`, and `ESCALATED_TO_USER`.
-   State changes are append-only audit events; earlier records are not
-   rewritten.
-4. For a technical `BLOCKED` result with a known root cause and an executable,
-   verifiable repair, Supervisor's next effective action is
-   `CREATE_REPAIR_STAGE`. If the root cause is unknown, the next effective
-   action is `CREATE_DIAGNOSIS_STAGE`. Repeating the blocker heartbeat is not a
-   valid next action.
-5. Unknown cause transitions `OPEN -> DIAGNOSIS_DISPATCHED`. A diagnosis result
-   never directly authorizes a rerun; Supervisor must issue a repair stage,
-   producing `DIAGNOSIS_DISPATCHED -> REPAIR_DISPATCHED`. A known cause may
-   transition directly `OPEN -> REPAIR_DISPATCHED`.
-6. A diagnosis or repair dispatch changes the prior stage to
-   `BLOCKED_SUPERSEDED_BY_DIAGNOSIS` or `BLOCKED_SUPERSEDED_BY_REPAIR` and makes
-   the new bounded task active.
-7. The first repeated `OPEN` heartbeat with no diagnosis/repair task emits one
-   `MISSING_REPAIR_DISPATCH` and atomically persists
-   `missing_dispatch_escalation.emitted: true`, `emitted_at`, and a stable
-   `escalation_id` in the append-only worklog. Further identical heartbeats are
-   deduplicated. Only a substantive root-cause or failure-identity change, or a
-   formal dispatch state change, permits a new audit event; dispatch does not
-   reset the exactly-once escalation fields.
-8. Heartbeats deduplicate by canonical `blocker_id` plus failure identity.
-   Case, separator, token-order, timestamp, directory, log-path, or attempt
-   differences are non-substantive and reuse the ID. A new ID is created only
-   for a substantively different root-cause class or failure identity. A
-   diagnosis refining `UNKNOWN` within the same observed causal class keeps the
-   existing ID. A repaired replacement identity remains attached to the same
-   blocker unless a new attempt fails with a substantively different cause.
-9. For technical `BLOCKED`, Reviewer sets the CONTROL-PROTOCOL-02
-   `required_transition` fields `action`, `blocker_id`, `owner`,
-   `repair_owner`, and `runner_authorized`. It reports PASS/BLOCKED and evidence
-   only to Supervisor; the transition request is not execution authority.
-10. A repair-stage brief supplies a new `task_id`, exact input SHA, allowed
-   paths, objective, hard gates, evidence, stop conditions, replacement run
-   identity requirements, and `runner_authorized: false`. Only a later,
-   separate Supervisor dispatch may authorize Runner.
-11. Executor push does not set `UNDER_REVIEW`; the blocker remains
-    `REPAIR_DISPATCHED` pending verification. Supervisor verifies exact output
-    SHA and parent, formally dispatches Reviewer, and only then records
-    `UNDER_REVIEW`. Reviewer cannot close the blocker. Only Supervisor records
-    `CLOSED` after consuming the verdict.
-12. A new directory alone never changes a failed identity. A retry authorization
-   proves at least one related identity changed: commit, bundle, config, input,
-   command, runtime environment, or verified dependency-closure repair.
-13. `CLOSED` requires reviewed repair evidence and Supervisor gate closure.
-   A blocker requiring model-policy or user authority transitions to
-   `ESCALATED_TO_USER`, not an inferred technical repair.
-14. Supervisor-only dispatch/gate authority and Executor-only integration-write
-    authority remain unchanged throughout the transition.
-
-## Atomic gate transition and non-recursive closure
-
-> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. This material is
-> preserved for audit and retained protections; Protocol 09 controls the
-> prospective stage loop, formal states and review cadence.
-
-CONTROL-PROTOCOL-05 governs every prospective stage, repair, diagnosis,
-blocker, supersession and activation transition. Its canonical transition
-brief and schema are in
-[`stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md`](stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md).
-
-1. A formal state transition is one bounded atomic commit. In that transaction
-   it synchronizes `CURRENT_STAGE.md`, the Supervisor gate, the received
-   Reviewer-verdict reference, the Executor transition record, necessary
-   brief/index status, the previous task's final state, and the next active
-   task or explicit idle state.
-2. `CURRENT_STAGE.md` is canonical current state. Worklogs are append-only audit
-   history. The current-state file must equal the latest valid committed
-   Supervisor gate transition; a mismatch is a hard failure. Audit entries may
-   be appended in the atomic commit but never justify a later verdict-only
-   archive commit.
-3. A commit is prohibited when its sole or primary purpose is Reviewer PASS,
-   Supervisor closure, a final-review result, prior-closure acknowledgment, or
-   recording that an earlier closure passed. A commit containing a verdict or
-   closure must also make the canonical state transition, authorize/start a
-   new substantive task, or perform another substantive control-plane
-   transition.
-4. One-final-review is mandatory: atomic transition commit -> Supervisor exact
-   SHA/parent verification -> one Reviewer read-only review -> Reviewer
-   `PASS`/`BLOCKED` -> Supervisor consumes the verdict in the real-time
-   workflow -> stop. `PASS` creates no follow-up commit and is not re-reviewed.
-5. Every atomic transition includes one machine-checkable
-   `atomic_gate_transition` record with this minimum schema:
-
-```yaml
-atomic_gate_transition:
-  transition_id: stable_unique_id
-  exact_input_sha: full_git_sha
-  closed_task:
-    task_id: string
-    previous_status: string
-    final_status: string
-    reviewed_output_sha: full_git_sha
-    reviewer_verdict: PASS_or_BLOCKED
-    reviewer_verdict_reference: path#entry
-    supervisor_gate: string
-  blocker:
-    blocker_id: string_or_null
-    previous_status: string_or_null
-    final_status: string_or_null
-  next_active_task:
-    task_id: string_or_null
-    status: string
-    owner: lane_id_or_null
-  owner: INT-SUPERVISOR
-  repository_writer: INT-EXECUTOR
-  runner_authorized: false
-  stage_9_authorized: false
-  canonical_state_updated: true
-  audit_records_appended: [path#entry]
-  verdict_only_followup_commit_allowed: false
-```
-
-6. A closure or supersession commit is invalid unless it updates canonical
-   state, prior-task final state, blocker state when applicable, owner and
-   authority, next active/idle task, and necessary evidence references in one
-   transaction.
-7. The no-verdict-only-commit, one-final-review, no-stale-active-task and
-   no-auto-run invariants are Hard Gates. A closed/superseded task cannot remain
-   active; a `PASS`, `CLOSED` or idle state never authorizes Runner, upload,
-   deployment, retry or the next stage.
-8. A Reviewer `BLOCKED` on the atomic commit returns to Supervisor under the
-   existing blocker-to-repair protocol. It does not authorize Executor rework.
-   A Reviewer `PASS` is consumed without a Git write. The next repository
-   commit requires a new substantive Supervisor authorization.
-9. Historical verdict-only or closure-only commits remain preserved as audit
-   history but are superseded as a prospective workflow pattern by this
-   protocol.
-
-## Post-failure read-only diagnosis and automatic dispatch
-
-> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. The read-only
-> diagnosis and no-rerun protections remain valid under Protocol 09.
-
-CONTROL-PROTOCOL-06 extends the blocker and atomic-transition protocols. Its
-canonical schema and thin-JAR worked example are in
-[`stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md).
-
-1. A nonzero Runner exit or Hard Gate failure immediately stops the run,
-   modification and retry and enters `POST_FAILURE_READ_ONLY_DIAGNOSIS`.
-   Runner may read stdout/stderr/logs/manifests; inspect JAR/ZIP/TAR members,
-   command, classpath, version, path and mode metadata; calculate SHA256 and
-   size; compare build/bundle/release/run artifacts; verify locked config/input
-   presence and hashes; and write one new append-only evidence JSON under a new
-   evidence directory.
-2. During diagnosis Runner does not modify, replace, move or delete existing
-   files; install software or change the environment; modify Git; change a
-   command and rerun; clean failed directories; authorize Executor; or close a
-   blocker.
-3. The Runner handoff includes `task_id`, `stage_id`, `source_sha`,
-   `run_identity`, `root_cause_status` (`KNOWN`, `PARTIAL` or `UNKNOWN`), a
-   concise `root_cause`, `evidence_refs`, nullable `repair_hypothesis`,
-   `rerun_performed: false`, `existing_state_modified: false`,
-   `hard_gate_status`, and `handoff_to: INT-SUPERVISOR`.
-4. Supervisor automatically dispatches a `KNOWN` ordinary technical defect as
-   a bounded Executor repair. This includes classpath/JAR/dependency/packaging,
-   compilation/Guice/path/manifest, hash/mode/deployment/server compatibility,
-   log/config-read and other non-research runtime defects. `PARTIAL` or
-   `UNKNOWN` creates a bounded read-only diagnosis: Runner owns server-evidence
-   work and Executor owns repository-evidence work.
-5. Economic or behavioral semantics, cost policy, demand/capacity,
-   missing-data treatment or research interpretation is not an automatic
-   technical repair and transitions to `ESCALATED_TO_USER`.
-6. Automatic repair never authorizes Runner. A repair requires an exact pushed
-   SHA and independent Reviewer `PASS`; a replacement run requires a separate
-   exact-SHA Supervisor Runner authorization plus a new source, bundle, release
-   and run identity. Identical failed identities are never repeated.
-7. Supervisor-only dispatch/gate authority, Executor-only Git write authority,
-   Reviewer read-only authority, Runner's explicitly authorized execution and
-   read-only diagnosis boundary, and Supervisor-only handoffs remain unchanged.
-8. No verdict-only or closure-only follow-up commit is allowed. Any committed
-   closure is atomic with a substantive policy, activation, repair, diagnosis
-   or other control-plane transition.
-
-## Diagnosis confidence and resource budget
-
-> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. The
-> `KNOWN/PARTIAL/UNKNOWN` evidence gates and budgets remain valid under
-> Protocol 09.
-
-CONTROL-PROTOCOL-07 makes Protocol 06 root-cause status and diagnosis scope
-machine-checkable. Its canonical schemas and thin-JAR evidence-chain example
-are in
-[`stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md`](stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md).
-
-Every post-failure handoff records:
-
-```yaml
-diagnosis_confidence:
-  exact_failure_identity_matched: true | false
-  direct_failure_condition_observed: true | false
-  causal_chain_demonstrated: true | false
-  material_alternatives_checked: true | false
-  repair_hypothesis_testable: true | false
-  root_cause_status: KNOWN | PARTIAL | UNKNOWN
-diagnosis_budget:
-  wall_clock_minutes_max: 30
-  shell_commands_max: 30
-  filesystem_roots_max: 6
-  evidence_output_mb_max: 30
-  full_server_recursive_scan_allowed: false
-  existing_state_mutation_allowed: false
-diagnosis_budget_result:
-  elapsed_minutes: number
-  commands_used: number
-  roots_inspected: number
-  evidence_output_bytes: number
-  budget_exhausted: true | false
-  missing_evidence: []
-```
-
-1. `KNOWN` requires all five confidence Booleans to be `true`. A first
-   exception, stack trace, symptom or correlation is insufficient. The exact
-   failure identity, directly observed condition, demonstrated causal chain,
-   checked material alternatives and bounded testable repair hypothesis are
-   all Hard Gates.
-2. `PARTIAL` applies to a plausible but incomplete causal chain, unchecked
-   material alternatives, a repair hypothesis without a decisive metric, or
-   budget exhaustion before sufficient evidence. `UNKNOWN` applies when no
-   verifiable direct cause exists, only symptoms are known, or multiple
-   material explanations remain equally plausible.
-3. Supervisor cannot promote `PARTIAL` or `UNKNOWN` to `KNOWN` without new
-   evidence satisfying all five gates.
-4. Inspection is limited to the failed release/run, directly referenced
-   staging/build roots, deployment-manifest paths and current
-   command/classpath/config/input paths. A recursive scan of all
-   `/mnt/DiskM/by` is prohibited.
-5. Evidence uses paths, SHA256, size, permissions, short log excerpts, member
-   summaries and structured JSON. Large archives, JARs, inputs, outputs or
-   complete logs are not copied unless a later diagnosis task explicitly
-   authorizes them.
-6. Runner stops when any budget limit is reached and reports missing evidence;
-   it never enlarges scope itself. `KNOWN` dispatches a bounded Executor
-   repair. `PARTIAL` dispatches a more specific bounded diagnosis. `UNKNOWN`
-   dispatches a task that narrows the question or changes evidence source.
-   Research/policy questions transition to `ESCALATED_TO_USER`.
-7. For each `PARTIAL` or `UNKNOWN` result Supervisor may create exactly one
-   follow-up diagnosis task. It has a new task ID, explicit missing evidence,
-   new scope and budget, and a reason that evidence could change the
-   conclusion. The same commands and scope are not repeated.
-8. Automatic dispatch never authorizes Runner, retry, Stage 9 execution or a
-   later stage. Existing state remains immutable and no closure-only follow-up
-   commit is created.
-
-## Execution contract, safe preflight correction and Supervisor server read
-
-> Status: `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`. Execution-contract,
-> preflight-correction and bounded server-read protections remain valid; the
-> older detailed failure labels are historical and map prospectively to
-> Protocol 09 `INFORMATIONAL`, `TECHNICAL` or `SEMANTIC`.
-
-CONTROL-PROTOCOL-08 defines the canonical prospective execution contract,
-failure routing and bounded Supervisor server-evidence verification. Its full
-schema is in
-[`stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md).
-
-Every Runner authorization contains this complete machine-checkable contract:
-
-```yaml
-execution_contract:
-  source_sha: full_pushed_sha
-  working_directory: absolute_path
-  java_command: absolute_or_canonical_command
-  tool_version_commands: [commands]
-  build_command: exact_command
-  artifact_resolver: exact_rule_or_command
-  bundle_command: exact_command
-  release_root: new_absolute_path
-  run_command: exact_command
-  required_preconditions: [checks]
-  hard_gates: [gates]
-  diagnostics_only: [checks]
-  forbidden_fallbacks: [fallbacks]
-```
-
-1. Contract priority is: Supervisor exact contract > current stage brief >
-   repository canonical contract > Runner general experience. An explicit
-   conflict is `CONTRACT_CONFLICT` and stops execution. When Supervisor omits
-   a detail and exactly one repository rule is canonical, Runner uses that
-   rule and records its path; ambiguity stops for Supervisor direction.
-2. `CONTRACT_PRESERVING_PREFLIGHT_CORRECTION` is allowed only when all fields
-   below are true:
-
-```yaml
-preflight_correction_gate:
-  build_started: false
-  bundle_created: false
-  release_created: false
-  smoke_started: false
-  existing_state_modified: false
-  canonical_replacement_command_exists: true
-  task_semantics_changed: false
-```
-
-   It may correct only a wrapper command, the approved Java absolute path, the
-   required working directory, or the canonical artifact resolver. It never
-   installs software, edits `PATH`, substitutes a tool/JDK, changes config,
-   input or build parameters, or acts after build, bundle, release or smoke
-   begins. It keeps the same staging/release/run identity and records original
-   command, replacement command, canonical basis and zero-mutation proof.
-3. The canonical Hong Kong Maven commands are `./mvnw --version` and
-   `./mvnw -DskipTests package`; system Maven is not required. The deployment
-   artifact is `<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar`.
-   `target/` thin JARs and glob, first-match or size-based selection are
-   forbidden.
-4. Failures are classified by boundary: `INFORMATIONAL_PROBE`,
-   `REQUIRED_PRECONDITION`, `BUILD`, `BUNDLE`, `DEPLOYMENT`, `RUNTIME`, or
-   `MODEL_SEMANTIC`. A nonzero informational probe is recorded as a diagnostic
-   unless it defeats a named precondition. Required-precondition and later
-   technical failures stop the identity. A `KNOWN` ordinary technical defect
-   dispatches bounded repair; `PARTIAL`/`UNKNOWN` dispatches bounded diagnosis;
-   research, economic, behavioral, cost or missing-data semantics transitions
-   to `ESCALATED_TO_USER`.
-5. `SUPERVISOR_SERVER_READ_VERIFICATION` is repository policy for bounded
-   read-only evidence checks; it does not grant SSH, tool or platform
-   capability. Actual access must be independently present and verifiable.
-   Scope is limited to exact `/mnt/DiskM/by` staging, release, run and evidence
-   roots named by Runner or `CURRENT_STAGE.md`, plus manifest-linked paths.
-6. Allowed checks are `ls`, `stat`, bounded `find`, `cat`, `head`, `tail`,
-   `grep`, `sha256sum`, `jar tf`, `tar tf`, `unzip -l`, and bounded JSON, YAML,
-   XML or log reading. Full-root recursion is prohibited.
-7. Supervisor server read never creates, modifies, replaces, chmods, copies,
-   moves, deletes or cleans a file; runs Maven, Java, bundle or MATSim; installs
-   tools or changes environment; controls processes; accesses outside
-   `/mnt/DiskM/by`; or authorizes a lane, run or stage.
-8. The default read budget is 15 minutes, 20 commands, four roots and 10 MB of
-   returned text, with `full_root_recursive_scan_allowed: false` and
-   `state_mutation_allowed: false`. Budget exhaustion stops and reports missing
-   evidence. Expansion requires a new bounded diagnosis task.
-9. Every verification appends or returns this compact audit record; it never
-   creates execution authority:
-
-```yaml
-supervisor_server_read_verification:
-  source_sha: full_pushed_sha
-  exact_roots: [absolute_paths]
-  checks: [bounded_read_checks]
-  findings: []
-  budget_used:
-    elapsed_minutes: number
-    commands_used: number
-    roots_inspected: number
-    returned_text_bytes: number
-    budget_exhausted: true_or_false
-    missing_evidence: []
-  state_modified: false
-  build_or_run_started: false
-  handoff_to: INT-SUPERVISOR
-```
-
-10. Supervisor remains sole dispatcher/gate owner, Executor sole Git writer,
-    Reviewer read-only, and Runner no-Git and unable to self-authorize. A
-    correction, verification, diagnosis or `PASS` does not itself authorize a
-    retry or later stage and does not create a verdict-only closure commit.
-
-## Lean stage-end review protocol
-
-Protocol 09 is the prospective default. Its canonical template is
-[`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md).
-Protocols 05–08 remain preserved as
-`HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`; their protections survive,
-but their intermediate events no longer expand `CURRENT_STAGE.md`.
-
-### Default loop and lane authority
-
-The default stage loop is:
+## Default stage flow and formal states
 
 ```text
-Supervisor defines objective and Hard Gates
--> Executor implements and self-checks
--> explicitly authorized Runner builds/deploys/runs and emits final evidence
--> Reviewer performs one independent stage-end review
--> Supervisor decides PASS_CLOSED or BLOCKED
+Supervisor objective + Hard Gates + activation review_base_sha
+  -> Executor implementation, internal correction, executor_self_check, push
+  -> Supervisor pre-run gate
+  -> exact Runner authorization and execution evidence, when required
+  -> one final candidate
+  -> one independent stage-end Reviewer review
+  -> Supervisor PASS_CLOSED or BLOCKED
 ```
 
-Supervisor is the sole dispatcher and gate owner. Executor is the sole Git
-writer. Runner has no Git writes or self-authorization. Reviewer is read-only.
-User direction controls research, economic, behavioral, missing-data and cost
-semantics. Executor or Runner self-checks never replace Reviewer.
+There is no repair-by-repair, evidence-binding, closure, or intermediate review
+by default. The only formal Stage states are `READY`, `RUNNING`, `BLOCKED`, and
+`PASS_CLOSED`. Diagnosis, repair, dispatch, handoff, and review labels are
+append-only worklog events, not canonical long-lived Stage states.
 
-### Executor internal correction and self-check
+## Exact identity, immutability, and nonrecursive closure
 
-Ordinary technical corrections may be completed internally before the single
-candidate push, without intermediate or repair-by-repair review, only when the
-original objective and allowlist remain unchanged, Hard Gates are not
-weakened, tests/validators are not deleted or relaxed, model/cost semantics do
-not change, scope does not expand and no server run occurs. Ambiguity stops and
-is reported.
+- Every task starts from an exact pushed input SHA. Runner may execute only the
+  exact Supervisor-authorized pushed SHA.
+- Source, artifact, bundle, release, and run identities and SHA continuity are
+  recorded end to end. Failed staging/release/run directories remain immutable
+  and are never overwritten, cleaned, or reused.
+- An identical failed commit/bundle/config/input/command/runtime identity is
+  never rerun unchanged. A new run requires a relevant changed hypothesis and
+  new staging, release, and run identities; a new directory alone is not a
+  changed hypothesis.
+- Reviewer PASS is consumed in real time by Supervisor. No commit may exist
+  solely or primarily to record a verdict, closure, prior closure, or final
+  review result. A protocol is never created solely to close another protocol.
+- A substantive transition may update canonical state and audit together, but
+  PASS produces no verdict-only or closure-only follow-up commit.
 
-Before push, every candidate has this structured check:
+## Executor internal correction and self-check
+
+Executor may correct an ordinary local technical defect before its single
+candidate push only when it stays within the original objective and allowlist,
+weakens/deletes/relaxes no Hard Gate/test/validator, changes no model/cost/
+economic/behavioral/missing-data semantic, expands no scope, performs no server
+run, touches no protected ref, and leaves no unresolved ambiguity. Otherwise
+Executor stops and reports to Supervisor.
 
 ```yaml
 executor_self_check:
@@ -540,59 +109,198 @@ executor_self_check:
   protected_refs: PASS_or_FAIL
   semantic_contract: UNCHANGED_or_explained
   unresolved_items: []
+executor_post_push:
+  output_sha: full_sha
+  parent_sha: full_sha
+  local_tracking_remote_equal: boolean
+  ahead: 0
+  behind: 0
+  worktree_clean: boolean
 ```
 
-After push, Executor reports exact output and parent SHAs, branch,
-local/tracking/remote equality, ahead/behind `0/0`, and clean worktree.
+Repository/local implementation, test, packaging-contract, or evidence-
+generator defects belong to Executor unless Supervisor selects another owner
+for a cross-boundary diagnosis. Executor never diagnoses the same failure in
+parallel with Runner.
 
-### Runner execution and self-check
+## Supervisor pre-run gate
 
-Only an exact Supervisor authorization activates Runner. The canonical flow is
-`preflight -> build -> artifact validation -> bundle -> release -> runtime
-preflight -> run -> structured evidence`. `runner_self_check` verifies source,
-locked inputs, toolchain, root Shade JAR, bundle/release/run identities, SHA
-continuity, class loading, required iteration, output completeness, non-finite
-values, Diagnostics and coverage.
+Before any Runner authorization, Supervisor records:
 
 ```yaml
-runner_self_check:
-  source_sha: full_sha
-  locked_inputs: {result: PASS_or_FAIL, evidence_refs: []}
-  toolchain: {result: PASS_or_FAIL, versions: {}, evidence_refs: []}
-  root_shade_jar: {result: PASS_or_FAIL, sha256: string_or_null, evidence_refs: []}
-  bundle: {result: PASS_or_FAIL, identity: string_or_null, sha256: string_or_null}
-  release: {result: PASS_or_FAIL, identity: string_or_null, evidence_refs: []}
-  run_identity: string_or_null
-  sha_continuity: PASS_or_FAIL
-  class_loading: PASS_or_FAIL
-  iteration_completion: PASS_or_FAIL
-  output_completeness: PASS_or_FAIL
-  nonfinite_values: {count: number, result: PASS_or_FAIL}
-  diagnostics: []
-  coverage_limitations: []
-  unresolved_items: []
+supervisor_pre_run_gate:
+  candidate_sha_verified: true_or_false
+  executor_self_check_received: true_or_false
+  required_checks_passed: true_or_false
+  unresolved_items_empty: true_or_false
+  semantic_issue_present: true_or_false
+  execution_contract_complete: true_or_false
+  new_run_identity_reserved: true_or_false
+  decision: AUTHORIZE_RUN | BLOCK
 ```
 
-`CONTRACT_PRESERVING_PREFLIGHT_CORRECTION` remains available only before build,
-bundle, release and run when existing state is unchanged, one canonical
-replacement exists, task semantics do not change and no new identity is
-created. It is not a retry. Once execution starts, a technical failure stops
-and enters bounded read-only diagnosis; Runner cannot modify, repair or rerun.
+Only `AUTHORIZE_RUN` with all required positive fields true and
+`semantic_issue_present=false` permits the exact separately named Runner task.
 
-### One stage-end review
+## Runner execution contract
 
-Default Reviewer policy is `STAGE_END_ONLY`. No intermediate implementation,
-repair, protocol, evidence-binding or closure commit is reviewed by default.
-After Supervisor verifies the final candidate SHA and parent, one review covers
-the complete substantive delta since prior `PASS_CLOSED`, final candidate,
-`executor_self_check`, `runner_self_check` and final evidence, Hard Gates,
-Diagnostics, coverage limitations, evidence-generator trustworthiness and
-model/cost invariants.
+Every Runner authorization instantiates all fields:
+
+```yaml
+execution_contract:
+  source_sha: full_sha
+  working_directory: absolute_path
+  java_command: absolute_or_canonical_command
+  tool_version_commands: []
+  build_command: command
+  artifact_resolver: deterministic_rule
+  bundle_command: command
+  release_root: new_absolute_path
+  run_command: command
+  required_preconditions: []
+  hard_gates: []
+  diagnostics_only: []
+  forbidden_fallbacks: []
+```
+
+Priority is Supervisor exact contract, then current stage brief, then this
+Protocol 09 policy, then lane experience. Explicit inconsistency is
+`CONTRACT_CONFLICT`: stop and report to Supervisor. A Supervisor omission with
+one unambiguous Protocol 09 rule uses that canonical rule.
+
+The Hong Kong Maven commands are exactly `./mvnw --version` and
+`./mvnw -DskipTests package`, executed from the verified snapshot build root.
+The deployment artifact is the canonical root Shade JAR
+`<build_root>/matsim-example-project-0.0.1-SNAPSHOT.jar`. The `target/` thin
+JAR, glob/first-match selection, and size guessing are forbidden. Required
+project, MATSim, Guice, Raptor, and DuckDB classes and SHA continuity through
+bundle/release are fail-closed preconditions.
+
+Runner sequence is preflight, build, artifact validation, bundle, release,
+runtime preflight, run, and final structured evidence. Runner self-checks
+source/inputs/toolchain, root Shade JAR, bundle/release/run identities, hashes,
+class loading, iterations, outputs, finite values, diagnostics, and coverage.
+
+## Contract-preserving preflight correction
+
+`CONTRACT_PRESERVING_PREFLIGHT_CORRECTION` is allowed only when all seven gates
+are true:
+
+1. `build_started=false`;
+2. `bundle_created=false`;
+3. `release_created=false`;
+4. `smoke_started=false`;
+5. `existing_state_modified=false`;
+6. `canonical_replacement_command_exists=true`;
+7. `task_semantics_changed=false`.
+
+It may correct only the wrapper command, approved Java absolute path, required
+working directory, or canonical artifact resolver. It cannot change identity,
+install tools, alter `PATH`, substitute JDK/tool versions, change config/input/
+build parameters, mutate state, or occur after build/bundle/release/run begins.
+It records original and replacement commands, canonical basis, and zero-
+mutation proof. It is not a formal retry and creates no new identity.
+
+## Failure classification and diagnosis ownership
+
+| Failure class/boundary | Required route and owner |
+|---|---|
+| `INFORMATIONAL` | Correct or record safely within existing scope; it is not automatically a Stage blocker. |
+| `TECHNICAL` repository/local | Executor bounded local diagnosis/repair after Supervisor dispatch. |
+| `TECHNICAL` server precondition/build/bundle/deployment/runtime | Runner stops and performs bounded read-only diagnosis; Runner never repairs or reruns. |
+| Cross-boundary, ambiguous identity/evidence/access, or `CONTRACT_CONFLICT` | Supervisor selects exactly one diagnosis owner and prevents duplicate Executor+Runner diagnosis. |
+| `SEMANTIC` research/economic/behavioral/cost/missing-data/demand/capacity | Stop and escalate to User. |
+
+Reviewer may identify missing evidence but never generates or repairs it.
+After execution begins, any nonzero exit or Hard Gate failure stops mutation and
+retry and enters `POST_FAILURE_READ_ONLY_DIAGNOSIS`.
+
+```yaml
+runner_technical_diagnosis:
+  task_id: string
+  stage_id: string
+  source_sha: full_sha
+  run_identity: string
+  boundary: PRECONDITION | BUILD | BUNDLE | DEPLOYMENT | RUNTIME
+  root_cause_status: KNOWN | PARTIAL | UNKNOWN
+  root_cause: concise_statement_or_null
+  observations: []
+  causal_chain: []
+  material_alternatives_checked: []
+  missing_evidence: []
+  repair_hypothesis: bounded_testable_change_or_null
+  evidence_refs: []
+  state_modified: false
+  rerun_performed: false
+  recommended_action: CREATE_REPAIR | CREATE_DIAGNOSIS | ESCALATE_TO_USER
+  handoff_to: INT-SUPERVISOR
+```
+
+`KNOWN` is valid only when all five booleans are true:
+
+```yaml
+diagnosis_confidence:
+  exact_failure_identity_matched: true
+  direct_failure_condition_observed: true
+  causal_chain_demonstrated: true
+  material_alternatives_checked: true
+  repair_hypothesis_testable: true
+  root_cause_status: KNOWN
+```
+
+A first exception, stack trace, or correlation alone never proves `KNOWN`.
+Missing causal proof, alternatives, or a measurable repair yields `PARTIAL`;
+symptoms without a verifiable direct cause or equally plausible alternatives
+yield `UNKNOWN`. Supervisor cannot upgrade `PARTIAL/UNKNOWN` without new
+evidence. `KNOWN` ordinary technical defects lead to a bounded Executor repair;
+`PARTIAL/UNKNOWN` lead to a new bounded diagnosis with a new task ID, missing
+evidence, changed scope/budget, and why that evidence may change the conclusion.
+The same commands and scope are not repeated unchanged.
+
+## Read-only diagnosis budgets
+
+Runner post-failure diagnosis defaults to:
+
+```yaml
+diagnosis_budget:
+  wall_clock_minutes_max: 30
+  shell_commands_max: 30
+  filesystem_roots_max: 6
+  evidence_output_mb_max: 30
+  full_server_recursive_scan_allowed: false
+  existing_state_mutation_allowed: false
+```
+
+Scope is restricted to the failed release/run roots, directly referenced
+staging/build roots, manifest-linked paths, and command/classpath/config/input
+paths. It may read bounded metadata, hashes, permissions, concise logs, member
+inventories, and structured files. It cannot scan all `/mnt/DiskM/by`, copy
+large logs/binaries, install tools, change environment/Git/commands, mutate or
+clean state, or rerun. Budget exhaustion requires
+`STOP_AND_REPORT_MISSING_EVIDENCE` with elapsed minutes, commands, roots,
+evidence bytes, `budget_exhausted=true`, and missing evidence.
+
+Supervisor server-read verification is an evidence check, not repository-
+granted SSH/platform permission. It is limited to exact `/mnt/DiskM/by` roots
+named by Runner/canonical state or manifest, 15 minutes, 20 commands, four
+roots, and 10 MB returned text. Bounded `ls/stat/find`, concise text reads,
+SHA256, and JAR/TAR/ZIP inventories are allowed; full-root recursion, mutation,
+execution, installation, process control, cleanup, path escape, and any lane or
+stage authorization are forbidden. Exhaustion stops and reports missing
+evidence; expansion needs a new bounded diagnosis task.
+
+## Reviewer stage-end policy
+
+Default is `STAGE_END_ONLY`. At activation, Supervisor locks
+`review_base_sha`; the final pushed candidate is `review_head_sha`.
 
 ```yaml
 stage_end_review:
   reviewed_stage: string
-  reviewed_candidate_sha: full_sha
+  review_base_sha: full_sha
+  review_head_sha: full_sha
+  run_source_sha: full_sha_or_null
+  reviewed_range: review_base_sha..review_head_sha
   reviewed_run_identity: string_or_null
   decision: PASS | BLOCKED
   findings: []
@@ -602,140 +310,62 @@ stage_end_review:
   handoff_to: INT-SUPERVISOR
 ```
 
-Reviewer does not dispatch, write, close stages or authorize Runner, retry or
-next stage. Supervisor consumes `PASS` directly. Verdict-only and closure-only
-follow-up commits are prohibited.
+The review covers the full substantive delta, Executor/Runner self-checks,
+final evidence, stage Hard Gates, diagnostics, evidence-generator
+trustworthiness, coverage debt, and model/cost semantic invariants. Reviewer
+does not dispatch, write, gate, close, authorize, or replace missing evidence.
 
-### Targeted review exception
+Default targeted policy is `NO_INTERMEDIATE_REVIEW`. Supervisor may dispatch
+at most one targeted review per stage, answering one narrow question, only for
+a model/cost/economic/behavioral semantic change; weakened/removed Hard Gate;
+validator/evidence-generator change; destructive/protected-ref operation;
+unresolved architecture; Supervisor scope uncertainty; or high-cost formal run
+with an unreviewed high-risk change. It neither authorizes progress nor replaces
+stage-end review. A second high-risk issue requires stage split or user/Supervisor
+escalation; it is never silently skipped.
 
-Default is `NO_INTERMEDIATE_REVIEW`; no more than one targeted review is
-allowed in a stage. Supervisor may dispatch one narrow question only for:
+## Model-policy and protected boundaries
 
-- model/cost/economic/behavioral semantic change;
-- weakened or removed Hard Gate;
-- validator or evidence-generator change;
-- destructive or protected-ref operation;
-- unresolved architecture or Supervisor scope uncertainty; or
-- a high-cost formal run with an unreviewed high-risk change.
+User direction is mandatory before changing monetary utility, ASC range or
+target, fare/parking/car-rate economic meaning, transfer policy, non-random
+missing-data treatment or imputation, mode definitions, demand/capacity/supply,
+calibration objectives, destructive Git, master merge, or choosing between
+materially different research interpretations. Master and feature branches
+remain protected. No historical evidence is deleted or rewritten.
 
-Targeted review never replaces stage-end review or authorizes progress.
-
-### Failure classes and formal states
-
-Only `INFORMATIONAL`, `TECHNICAL`, and `SEMANTIC` are canonical failure
-classes. Informational findings are safely corrected or diagnosed within
-scope. Technical failure stops and enters bounded read-only diagnosis:
-`KNOWN` routes to bounded repair; `PARTIAL`/`UNKNOWN` routes to further
-diagnosis. Semantic failure escalates to the user.
-
-Only `READY`, `RUNNING`, `BLOCKED`, and `PASS_CLOSED` are formal stage states.
-Diagnosis, repair, targeted review, evidence binding and handoffs are worklog
-events rather than long-lived canonical stage states.
-
-### Retained invariants
-
-Protocol 09 does not weaken exact source/artifact/bundle/release/run
-traceability, immutable run directories, no implicit rerun, semantic
-escalation, validators, diagnosis confidence/budget, execution contracts,
-bounded Supervisor server-read verification or lane authority. Validator PASS
-is not Stage PASS, and self-check is not independent review.
-
-## Canonical control-plane sources
-
-| Purpose | Canonical source |
-|---|---|
-| Lane identity, authority and write scope | [`agent-lanes.md`](../../agent-lanes.md) |
-| Stable integration policy | this file |
-| Active stage and exact input | [`CURRENT_STAGE.md`](CURRENT_STAGE.md) |
-| Stage-specific delta | [`stage-briefs/`](stage-briefs/README.md) |
-| Append-only lane history | [`docs/agent-worklogs/`](../agent-worklogs/) |
-| Technical evidence | Stage-specific paths referenced from `CURRENT_STAGE.md` or the compact handoff |
-
-If sources appear inconsistent, the most recent formal Supervisor instruction
-anchored to an exact pushed commit controls execution. Repository policy,
-current-stage and brief files remain canonical stable context. The discrepancy
-is reported to Supervisor and recorded as a diagnostic or blocker without
-rewriting history.
-
-## Compact stage-command schema
-
-```yaml
-stage_id: string
-exact_input_sha: full_git_sha
-objective: one_bounded_outcome
-allowed_scope: [paths_or_actions]
-hard_gates: [stage_specific_gates]
-evidence_required: [path_or_field_references]
-stop_condition: one_compact_boundary
-handoff_target: lane_id
-```
-
-Stable lane rules, standard Git restrictions, diagnostic classification,
-unchanged-run prohibition, and escalation boundaries are referenced to this
-policy and `agent-lanes.md`; they are not copied into the command.
-
-## Evidence-by-reference rules
-
-- Reference committed evidence as `path#field` or `path#section`.
-- Include an exact SHA when the evidence is reviewed across sessions.
-- Report a compact value only when it is needed to decide the current gate.
-- Do not paste manifests, long test logs, inventories, historical handoffs, or
-  validator output when a canonical path and field exist.
-- Raw execution logs may remain local diagnostics when durable committed
-  summaries and independent checks cover the hard gate.
-- Missing, uncommitted, ambiguous, or non-reproducible evidence is identified
-  explicitly; it is never represented by an inferred value.
-
-## Compact future worklog schema
-
-New entries append this schema without editing any historical entry:
+## Append-only audit schema and output budgets
 
 ```yaml
 timestamp: ISO-8601
 session_id: actual_session_id
 stage_id: string
-input_sha: full_git_sha
-output_sha_or_status: full_git_sha_or_pending
+input_sha: full_sha
+output_sha_or_status: full_sha_or_pending
 decision: one_or_null
-findings: []        # maximum 5
-diagnostics: []     # maximum 5; non-blocking unless tied to a hard gate
-evidence_refs: []   # path#field or path#section
+findings: []
+diagnostics: []
+evidence_refs: []
 blockers: []
 hard_gate_status: string
 handoff_to: lane_id
-next_action: one_action
+next_action_summary: one_action
 ```
 
-Source SHAs, stable policies, large count tables, and earlier observations are
-referenced rather than recopied. Corrections are new entries; history is never
-rewritten.
+Corrections append a new entry; historical text is never edited. Routine
+cross-session budgets are Supervisor 700 tokens, Executor 800, Runner 600, and
+Reviewer 600. Safety stops may exceed them only for new facts needed to explain
+the stop.
 
-## Lane-specific routine output budgets
+## Historical noncanonical appendix
 
-The structural limits above are mandatory. These token budgets are defaults
-for routine cross-session outputs; evidence remains in repository files.
+The following remain immutable audit/rationale with status
+`DEPRECATED_NON_CANONICAL`, prospective authority `NONE`, and canonical
+replacement Protocol 09:
 
-| Lane | Routine cross-session output budget |
-|---|---:|
-| INT-SUPERVISOR | 700 tokens for one stage delta or gate decision |
-| INT-EXECUTOR | 800 tokens for one implementation/evidence handoff |
-| INT-RUNNER | 600 tokens for one exact-SHA run evidence handoff |
-| INT-REVIEWER | 600 tokens for one exact-SHA review decision |
+- [Protocol 05](stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
+- [Protocol 06](stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
+- [Protocol 07](stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
+- [Protocol 08](stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
 
-A safety stop or user model-policy escalation may exceed the token budget only
-for the new facts needed to explain the stop. Stable context is still
-referenced, not repeated.
-
-## Gate, run and historical boundaries
-
-- Hard Gate, Diagnostic and Trend meanings remain those in
-  [`agent-lanes.md`](../../agent-lanes.md). A warning is not promoted by
-  repetition or volume.
-- A failed run keeps its full identity and evidence. A new directory alone is
-  not a relevant change and does not authorize a rerun.
-- Historical/legacy/superseded guards remain traceable. A new canonical
-  contract identifies the replacement and equivalent protection by path.
-- Model-policy escalation boundaries, protected branches, sole-writer
-  authority, and the Supervisor-centered hub-and-spoke loop remain unchanged.
-- No lane continues into another stage, run, or responsibility without the
-  required formal Supervisor dispatch.
+Do not use those files for prospective dispatch, state, review cadence,
+diagnosis ownership, execution, or authorization.

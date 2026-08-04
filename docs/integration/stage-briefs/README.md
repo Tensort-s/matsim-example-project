@@ -1,70 +1,52 @@
 # Integration stage briefs
 
-Stage briefs contain only the current-stage delta. Stable rules, lane
-authority, output budgets and worklog schema are referenced from:
+## Prospective canonical governance
 
-- [`../INTEGRATION_POLICY.md`](../INTEGRATION_POLICY.md)
-- [`../../../agent-lanes.md`](../../../agent-lanes.md)
-- [`../CURRENT_STAGE.md`](../CURRENT_STAGE.md)
+All valid prospective governance rules are normalized into the self-contained
+[`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md).
+Together with [`../INTEGRATION_POLICY.md`](../INTEGRATION_POLICY.md),
+[`../CURRENT_STAGE.md`](../CURRENT_STAGE.md),
+[`../../../agent-lanes.md`](../../../agent-lanes.md), and the Supervisor exact
+execution contract, it is the only prospective control-plane source.
 
-Naming uses `STAGE_<ID>_<SHORT_NAME>.md`. Closed briefs remain immutable
-historical evidence. A new authorization adds a new brief and updates
-`CURRENT_STAGE.md`; it does not rewrite an earlier brief.
-
-Current brief:
+Current candidate:
 
 - [`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md) —
-  governance-only candidate pending Supervisor exact-SHA verification and one
-  stage-end review. Stage 9 remains `PASS_CLOSED`; Runner and Stage 10 remain
-  unauthorized.
+  task `CONTROL-PROTOCOL-09-CANONICAL-CONSOLIDATION-AND-FAILURE-OWNERSHIP`,
+  exact input `16398c7883945bc82cdf521b727c6ef502273e79`, ready for one
+  Supervisor-dispatched stage-end review. Runner, Stage 9 execution, and Stage
+  10 or later remain unauthorized.
 
-Blocked/superseded briefs:
+## Deprecated noncanonical protocols
 
-- [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md) —
-  its immutable wrapper-mode contract remains applicable; the later staging7
-  identity exposed a distinct Runner artifact-discovery defect after package.
-- [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md) —
-  its absolute-cwd guard remains valid; the next identity exposed a distinct
-  archive-to-runtime wrapper-mode mismatch before Maven.
-- [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md) —
-  superseded after diagnosis proved the approved member is a symlink rather
-  than the assumed hard link.
-- [`STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md`](STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md) —
-  JDK closure preserved; the later Stage 9 identity exposed an unrelated thin
-  versus shaded JAR dependency-closure blocker.
+Protocols 05–08 have status `DEPRECATED_NON_CANONICAL`, prospective authority
+`NONE`, and canonical replacement Protocol 09. They remain historical audit and
+rationale only. Do not use them for dispatch, state, review cadence, diagnosis
+ownership, execution, or authorization.
 
-Canonical review template:
+- [`CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md`](CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md)
+- [`CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
+- [`CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md`](CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md)
+- [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
 
-- [`CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md`](CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md) —
-  prospective default: `STAGE_END_ONLY`, with at most one narrow high-risk
-  targeted review per stage.
+Protocols 01–04 and Stage 4A also remain historical audit evidence; no earlier
+brief has prospective authority after Protocol 09 consolidation.
 
-Historical detail consolidated by Protocol 09:
+## Historical stage evidence
 
-- [`CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md`](CONTROL_PROTOCOL_02_LEAN_DELTA_REVIEW.md)
-- [`CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md`](CONTROL_PROTOCOL_03_BLOCKER_TO_REPAIR.md)
-- [`CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md`](CONTROL_PROTOCOL_04_PROTOCOL_02_03_SCHEMA_CONSISTENCY.md)
-- [`CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md`](CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md) — `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`
-- [`CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md) — `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`
-- [`CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md`](CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md) — `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`
-- [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md) — `HISTORICAL_DETAIL__CONSOLIDATED_BY_PROTOCOL_09`
-
-Closed briefs:
+Closed, blocked, and superseded briefs remain immutable evidence. Important
+Stage 9 records include:
 
 - [`STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md`](STAGE_09_RUN8_EVIDENCE_REVIEW_AND_CLOSURE.md)
 - [`STAGE_09_JOINT_SHORT_SMOKE.md`](STAGE_09_JOINT_SHORT_SMOKE.md)
 - [`STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md`](STAGE_09_REPAIR_ARTIFACT_DISCOVERY_010.md)
-- [`CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md`](CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md)
-- [`CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md`](CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md)
+- [`STAGE_09_REPAIR_MODE_PRESERVATION_007.md`](STAGE_09_REPAIR_MODE_PRESERVATION_007.md)
+- [`STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md`](STAGE_09_REPAIR_RUNNER_WORKDIR_GUARD_006.md)
 - [`STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md`](STAGE_09_REPAIR_SHADED_JAR_DEPENDENCY_CLOSURE_005.md)
-- [`STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md`](STAGE_08D_R1_JDK_RUNTIME_CLOSURE.md)
-- [`STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md`](STAGE_08D_SERVER_BUNDLE_PREPARATION_REWORK.md)
-- [`STAGE_08C_CAR_DESTINATION_PARKING_RUNTIME.md`](STAGE_08C_CAR_DESTINATION_PARKING_RUNTIME.md)
-- [`STAGE_08B_CAR_CONFIRMED_TOLL_RUNTIME.md`](STAGE_08B_CAR_CONFIRMED_TOLL_RUNTIME.md)
-- [`STAGE_08A_CAR_ENERGY_RUNTIME.md`](STAGE_08A_CAR_ENERGY_RUNTIME.md)
-- [`STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md`](STAGE_07_PT_FARE_RUNTIME_LAYERED_INTEGRATION.md)
-- [`CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md`](CONTROL_PROTOCOL_01_HUB_AND_SPOKE.md)
-- [`STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md`](STAGE_06_PT_ITINERARY_STUCK_GOVERNANCE.md)
-- [`STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md`](STAGE_05_COMPOSABLE_SCORING_TAXI_MIGRATION.md)
-- [`STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md`](STAGE_04_COMPLETENESS_BOUNDARY_AUDIT.md)
-- [`STAGE_04A_LEAN_PROTOCOL_MIGRATION.md`](STAGE_04A_LEAN_PROTOCOL_MIGRATION.md)
+- [`STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md`](STAGE_09_REPAIR_JDK_LEGAL_SYMLINK_004.md)
+- [`STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md`](STAGE_09_REPAIR_JDK_ARCHIVE_MEMBERS_001.md)
+
+Earlier closed integration stages remain available in this directory and Git
+history. Naming remains `STAGE_<ID>_<SHORT_NAME>.md`; a new substantive stage
+brief supplies only its delta against Protocol 09 and updates `CURRENT_STAGE.md`
+when authorized. Historical briefs are not rewritten to create new authority.

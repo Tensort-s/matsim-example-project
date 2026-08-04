@@ -1370,3 +1370,56 @@ handoff_to: "INT-SUPERVISOR"
 next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatches one stage-end review; Executor stops."
 required_transition: null
 ```
+
+## Entry 43 — Protocol 09 canonical consolidation candidate
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "CONTROL-PROTOCOL-09-CANONICAL-CONSOLIDATION-AND-FAILURE-OWNERSHIP"
+input_sha: "16398c7883945bc82cdf521b727c6ef502273e79"
+output_sha_or_status: "exact pushed governance candidate SHA supplied in the Supervisor handoff"
+decision: "Publish one self-contained Protocol 09 governance candidate with unique prospective authority and explicit failure ownership."
+findings:
+  - "Policy and Protocol 09 directly encode lane authority, stage-end flow, four formal states, exact identities, nonrecursive close, Runner contract/preflight gates, diagnosis ownership/confidence/budgets, review schema and Supervisor pre-run gate."
+  - "Protocols 05-08 have prominent DEPRECATED_NON_CANONICAL banners; their prior content remains historical and non-controlling."
+  - "Agent registry and brief index identify only Protocol 09 canonical governance; CURRENT_STAGE removes old protocols from canonical invariants."
+  - "Stage 9 remains PASS_CLOSED and idle; Taxi runtime coverage debt remains OPEN_NON_BLOCKING with explicit future closure criteria."
+  - "No implementation, model, cost, config, input, server, bundle, release, run, Runner, or Stage 10 action occurred."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#canonical-prospective-authority"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+  - "docs/integration/CURRENT_STAGE.md"
+executor_self_check:
+  stage_id: "CONTROL-PROTOCOL-09-CANONICAL-CONSOLIDATION-AND-FAILURE-OWNERSHIP"
+  exact_input_sha: "16398c7883945bc82cdf521b727c6ef502273e79"
+  branch: "integration/hk-multimodal-cost-v1"
+  worktree: "F:/Matsim/worktrees/hk-cost-integration"
+  changed_paths:
+    - "agent-lanes.md"
+    - "docs/integration/INTEGRATION_POLICY.md"
+    - "docs/integration/CURRENT_STAGE.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_05_ATOMIC_GATE_TRANSITION.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_06_POST_FAILURE_DIAGNOSIS_AUTO_DISPATCH.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_07_DIAGNOSIS_CONFIDENCE_AND_BUDGET.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_08_EXECUTION_CONTRACT_AND_SUPERVISOR_SERVER_READ.md"
+    - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+    - "docs/integration/stage-briefs/README.md"
+    - "docs/agent-worklogs/integration-supervisor.md"
+    - "docs/agent-worklogs/integration-executor.md"
+  compile: {required: false, command: null, result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  tests: {required: false, commands: [], result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  negative_tests: {required: false, commands: [], result: "NOT_REQUIRED_GOVERNANCE_ONLY"}
+  validators: {commands: ["YAML code-block parse", "Markdown link resolution", "Protocol 09 schema assertions", "CURRENT_STAGE assertions", "deprecation-banner assertions", "append-only worklog prefix check"], result: "PASS"}
+  diff_check: "PASS"
+  conflict_check: "PASS"
+  protected_refs: "PASS"
+  semantic_contract: "UNCHANGED"
+  unresolved_items: []
+blockers: []
+hard_gate_status: "PENDING_SINGLE_STAGE_END_REVIEW_AND_SUPERVISOR_PROTOCOL09_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatches one stage-end review; Executor stops."
+required_transition: null
+```

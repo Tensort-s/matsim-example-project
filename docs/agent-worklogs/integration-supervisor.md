@@ -1473,3 +1473,30 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one substantive Protocol 09 candidate, report exact SHA/self-check to Supervisor and stop; Supervisor later dispatches one stage-end review."
 required_transition: null
 ```
+
+## Entry 46 — Protocol 09 canonical consolidation and failure ownership dispatch
+
+```yaml
+timestamp: "2026-08-04 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "CONTROL-PROTOCOL-09-CANONICAL-CONSOLIDATION-AND-FAILURE-OWNERSHIP"
+input_sha: "16398c7883945bc82cdf521b727c6ef502273e79"
+output_sha_or_status: "GOVERNANCE_CONSOLIDATION_CANDIDATE_AUTHORIZED"
+decision: "Normalize every valid prospective control-plane rule into self-contained Protocol 09 and remove prospective authority from Protocols 05-08."
+findings:
+  - "Prospective canonical sources are agent-lanes, Integration Policy, Current Stage, self-contained Protocol 09, and the Supervisor exact execution contract."
+  - "Protocol 09 directly defines lane authority, stage-end flow, exact execution identity, nonrecursive close, execution/preflight contracts, failure ownership, diagnosis confidence/budgets, and review/pre-run schemas."
+  - "Protocols 05-08 remain historical audit/rationale with status DEPRECATED_NON_CANONICAL and prospective authority NONE."
+  - "Stage 9 remains PASS_CLOSED with run8 identity unchanged and Taxi coverage debt OPEN_NON_BLOCKING."
+  - "The consolidation authorizes no Runner, Stage 9 execution, Stage 10, server action, or semantic change."
+diagnostics: []
+evidence_refs:
+  - "docs/integration/INTEGRATION_POLICY.md#canonical-prospective-authority"
+  - "docs/integration/stage-briefs/CONTROL_PROTOCOL_09_LEAN_STAGE_END_REVIEW.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blockers: []
+hard_gate_status: "AUTHORIZED_GOVERNANCE_CONSOLIDATION_CANDIDATE_ONLY"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one substantive governance candidate and report exact SHA/self-check only to Supervisor; Supervisor dispatches one stage-end review."
+required_transition: null
+```
