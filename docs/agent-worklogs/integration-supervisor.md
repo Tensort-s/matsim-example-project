@@ -1500,3 +1500,38 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one substantive governance candidate and report exact SHA/self-check only to Supervisor; Supervisor dispatches one stage-end review."
 required_transition: null
 ```
+
+## Entry 47 — Stage 11 contract-derivation repair dispatch
+
+```yaml
+timestamp: "2026-08-05 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+input_sha: "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea"
+output_sha_or_status: "BOUNDED_REPAIR_AUTHORIZED"
+decision: "Authorize one control-plane repair for deterministic XML config derivation, verified numeric PID evidence and replacement run identities; Runner and Stage 12 remain unauthorized."
+findings:
+  - "The failed identity joint_stability_5it_c6a0cdc8_run1 used an invalid controller regex boundary and malformed probe path, producing incomplete evidence."
+  - "Root cause is a KNOWN ordinary technical contract defect; no model, config-input or cost-semantic issue is indicated."
+  - "The repair must fail closed before Java on source-config SHA, derived XML, normalized controller-only diff, required paths and numeric PID evidence."
+  - "Both c6a0cdc8 5- and 10-iteration identities and their staging/release/run roots are immutable and may not be reused or overwritten."
+  - "Replacement 5- and 10-iteration identities must be derived from the exact reviewed repair SHA."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
+  - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blocker:
+  blocker_id: "STAGE11-RUNNER-CONTRACT-DERIVATION-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity: "joint_stability_5it_c6a0cdc8_run1"
+  root_cause_status: "KNOWN"
+  repair_task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: true
+  runner_authorized: false
+hard_gate_status: "AUTHORIZED_BOUNDED_STAGE11_CONTRACT_REPAIR"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one substantive repair candidate and stop for Supervisor verification and one Stage-end review; do not contact Runner or Reviewer."
+required_transition: null
+```

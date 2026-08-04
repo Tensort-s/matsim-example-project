@@ -1,10 +1,25 @@
 {
-  "schema_version": "hong_kong_stage11_joint_stability_execution_contract_v1",
+  "schema_version": "hong_kong_stage11_joint_stability_execution_contract_v2",
   "task_id": "STAGE11-JOINT-STABILITY-5-10-ITERATIONS",
-  "contract_status": "READY_CANDIDATE_NOT_AUTHORIZED_FOR_EXECUTION",
+  "repair_task_id": "STAGE11-REPAIR-CONTRACT-DERIVATION-001",
+  "contract_status": "BLOCKED_REPAIR_CANDIDATE_NOT_AUTHORIZED_FOR_EXECUTION",
   "exact_input_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+  "repair_input_sha": "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea",
   "review_base_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
   "runtime_model_baseline_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+  "active_blocker": {
+    "blocker_id": "STAGE11-RUNNER-CONTRACT-DERIVATION-001",
+    "status": "REPAIR_DISPATCHED",
+    "failure_identity": "joint_stability_5it_c6a0cdc8_run1",
+    "root_cause_status": "KNOWN",
+    "root_cause": "The Runner command used an invalid controller-regex boundary and a malformed probe path, so config derivation was not deterministic and the process evidence was incomplete.",
+    "changed_hypothesis_required_for_retry": "Parse the source config as XML, require one controller module and one occurrence of every allowlisted parameter, prove an exact normalized controller-only delta, and accept process identity only from a verified positive numeric PID captured from the launched Java process.",
+    "repair_task_id": "STAGE11-REPAIR-CONTRACT-DERIVATION-001",
+    "repair_owner": "INT-EXECUTOR",
+    "replacement_identity_required": true,
+    "superseded_run_identity": "joint_stability_5it_c6a0cdc8_run1",
+    "runner_authorized": false
+  },
   "stage10_closure": {
     "stage_id": "STAGE10-DETERMINISTIC-MULTIMODAL-COST-COVERAGE",
     "reviewed_output_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
@@ -26,13 +41,13 @@
     "evidence_path": "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
   },
   "source_identity": {
-    "runner_source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA}",
-    "runner_source_sha8": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}",
-    "required_parent_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
+    "runner_source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA}",
+    "runner_source_sha8": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}",
+    "required_parent_sha": "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea",
     "required_branch": "integration/hk-multimodal-cost-v1",
     "required_parent_count": 1,
     "runtime_semantic_delta_from_parent_allowed": false,
-    "binding_rule": "The later Supervisor exact Runner authorization must replace both placeholders with the reviewed pushed Stage 11 candidate and prove its sole parent and governance-only delta."
+    "binding_rule": "The later Supervisor exact Runner authorization must replace both placeholders with the reviewed pushed Stage 11 repair candidate, prove its sole parent is c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea, and prove its delta is limited to the authorized contract/control-plane repair."
   },
   "locked_toolchain": {
     "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
@@ -117,7 +132,7 @@
     "sha_continuity": "built_root_shade_jar_sha256 == bundled_app_jar_sha256 == released_app_jar_sha256"
   },
   "execution_contract_template": {
-    "source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA}",
+    "source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA}",
     "working_directory": "${RUN_ROOT}",
     "java_command": "${RELEASE_ROOT}/runtime/jdk-25/bin/java",
     "tool_version_commands": [
@@ -138,7 +153,8 @@
       "root Shade JAR and all required classes PASS",
       "built/bundle/release JAR SHA continuity PASS",
       "release SHA256SUMS and class-loading preflight PASS",
-      "derived config normalized delta contains only allowlisted execution/output fields"
+      "derived config XML parse, source SHA, required paths and normalized controller-only delta gate PASS before Java starts",
+      "positive numeric PID capture and read-back verification PASS before process monitoring"
     ],
     "hard_gates": [
       "zero process exit",
@@ -170,6 +186,22 @@
   "derived_config_contract": {
     "source": "${RELEASE_ROOT}/config/config_formal_50it.xml",
     "destination": "${RUN_ROOT}/config_stage11_${HORIZON}it.xml",
+    "derivation_engine": "Python standard-library xml.etree.ElementTree; regex, line-oriented replacement and text-boundary matching are forbidden",
+    "deterministic_derivation_algorithm": [
+      "verify the source is a regular non-symlink file and its SHA256 equals the release-manifest config SHA256",
+      "parse the source XML and require exactly one direct config/module element with name=controller",
+      "within that controller require exactly one direct param element for each allowlisted name and reject missing or duplicate params",
+      "copy the parsed tree in memory and change only the value attribute of the seven allowlisted controller params",
+      "write UTF-8 XML with LF line endings to an absent destination using fail-if-exists semantics",
+      "reparse the derived XML and build sorted maps keyed by module-name plus param-name for source and destination",
+      "emit a normalized JSON diff sorted by key and require its changed-key set exactly equals the allowlist and every before/after value matches the contract",
+      "require every non-allowlisted module/param value and every input-file reference to be identical",
+      "record the exact derivation command, source SHA256, derived SHA256 and normalized-diff SHA256"
+    ],
+    "selection_cardinality": {
+      "controller_module": 1,
+      "each_allowlisted_controller_param": 1
+    },
     "allowed_parameter_values": {
       "controller.firstIteration": 0,
       "controller.lastIteration": "${HORIZON}",
@@ -181,6 +213,25 @@
     },
     "all_other_parameters_unchanged": true,
     "all_seven_input_references_unchanged": true,
+    "forbidden_methods": [
+      "regular expression replacement",
+      "line-oriented replacement",
+      "first-match controller or param selection",
+      "adding a missing controller or param",
+      "editing any non-controller module"
+    ],
+    "pre_java_start_gate": {
+      "source_config_sha_matches_release_manifest": true,
+      "source_and_derived_are_regular_non_symlink_files": true,
+      "derived_config_reparse_passed": true,
+      "controller_and_parameter_cardinality_passed": true,
+      "normalized_changed_keys_equal_allowlist": true,
+      "normalized_before_after_values_match_contract": true,
+      "all_seven_input_paths_exist_and_hash_match": true,
+      "all_non_allowlisted_values_unchanged": true,
+      "all_required_paths_are_absolute_under_new_identity_roots": true,
+      "gate_rule": "Every field must be true and the gate record must be written before the Java process is started; otherwise stop without launch."
+    },
     "required_evidence": [
       "source config SHA256",
       "derived config SHA256",
@@ -189,24 +240,79 @@
       "effective first/last iteration and output directory"
     ]
   },
+  "process_identity_contract": {
+    "launch_count": 1,
+    "pid_capture_source": "the shell background-process identifier $! from the exact Java command launched once",
+    "pid_validation_regex": "^[1-9][0-9]*$",
+    "required_checks_before_monitoring": [
+      "captured PID is a positive decimal integer and greater than 1",
+      "PID evidence path is the exact new run-root path declared by the Supervisor contract",
+      "PID file is created with fail-if-exists semantics",
+      "PID file contains only the decimal PID plus one LF and reads back to the captured value",
+      "kill -0 against the numeric PID succeeds immediately after capture, otherwise record terminal exit and stop"
+    ],
+    "forbidden_pid_values": [
+      "$!",
+      "${pid}",
+      "${PID}",
+      "pid=$!",
+      "empty",
+      "zero",
+      "negative",
+      "non-numeric"
+    ],
+    "forbidden_probe_paths": [
+      "relative path",
+      "literal unexpanded shell placeholder",
+      "path outside the exact new run root",
+      "path belonging to a superseded identity"
+    ],
+    "required_evidence": [
+      "exact launch command",
+      "numeric PID",
+      "PID capture and read-back check",
+      "absolute PID/log/exit-code paths",
+      "terminal exit code and elapsed-resource record"
+    ]
+  },
+  "superseded_identities": [
+    {
+      "horizon": 5,
+      "identity": "joint_stability_5it_c6a0cdc8_run1",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_c6a0cdc8_5it_staging1",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_c6a0cdc8_stage11_5it_release1",
+      "run_root": "/mnt/DiskM/by/hk_stage11_c6a0cdc8_5it_run1",
+      "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+      "reuse_or_overwrite_allowed": false
+    },
+    {
+      "horizon": 10,
+      "identity": "joint_stability_10it_c6a0cdc8_run1",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_staging1",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_c6a0cdc8_stage11_10it_release1",
+      "run_root": "/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_run1",
+      "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+      "reuse_or_overwrite_allowed": false
+    }
+  ],
   "run_contracts": [
     {
       "horizon": 5,
       "required_completed_iterations": [0, 1, 2, 3, 4, 5],
-      "identity": "joint_stability_5it_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_run1",
-      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_5it_staging1",
-      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_stage11_5it_release1",
-      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_5it_run1",
+      "identity": "joint_stability_5it_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_repair1_run2",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_5it_repair1_staging2",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_stage11_5it_repair1_release2",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_5it_repair1_run2",
       "result_status": "NOT_RUN_NOT_AUTHORIZED",
       "result_evidence": null
     },
     {
       "horizon": 10,
       "required_completed_iterations": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      "identity": "joint_stability_10it_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_run1",
-      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_10it_staging1",
-      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_stage11_10it_release1",
-      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_CANDIDATE_SHA8}_10it_run1",
+      "identity": "joint_stability_10it_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_repair1_run2",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_10it_repair1_staging2",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_stage11_10it_repair1_release2",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_10it_repair1_run2",
       "result_status": "NOT_RUN_NOT_AUTHORIZED",
       "result_evidence": null
     }
@@ -264,7 +370,7 @@
     "stage12_or_later_authorized": false,
     "server_access_performed_by_executor": false,
     "build_bundle_release_run_performed_by_executor": false,
-    "next_action": "Supervisor verifies the exact pushed candidate and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor issue a separate exact Runner contract."
+    "next_action": "Supervisor verifies the exact pushed repair candidate and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor issue a separate exact Runner contract with both replacement identities fully bound."
   },
   "result_placeholders_are_not_evidence": true,
   "unresolved_items": []

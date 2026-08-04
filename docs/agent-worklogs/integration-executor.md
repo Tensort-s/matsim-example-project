@@ -1557,3 +1557,57 @@ next_action_summary: "Supervisor verifies exact candidate SHA/parent and dispatc
 runner_authorized: false
 stage12_or_later_authorized: false
 ```
+
+## Entry 47 — Stage 11 deterministic contract repair candidate
+
+```yaml
+timestamp: "2026-08-05 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+input_sha: "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea"
+output_sha_or_status: "exact pushed repair candidate SHA supplied in the Supervisor handoff"
+decision: "Replace ambiguous regex derivation and incomplete process evidence with exact-cardinality XML validation, a pre-Java normalized-diff gate, verified numeric PID capture and two new SHA-bound replacement identities."
+findings:
+  - "The structured contract now rejects regex, line-oriented and first-match config edits; it requires exactly one controller module and one occurrence of every allowlisted parameter."
+  - "A persisted pre-run gate requires source SHA, derived XML reparse, exact normalized controller-only delta, seven path/hash checks and unchanged non-allowlisted values before Java starts."
+  - "PID evidence accepts only a positive decimal PID captured from the exact one-time Java launch, written/read back at the exact new run-root path; literal placeholders fail closed."
+  - "The old c6a0cdc8 5- and 10-iteration identities are BLOCKED_SUPERSEDED_BY_REPAIR and immutable; replacement patterns are bound to the exact reviewed repair SHA and use repair1/run2 roots."
+  - "No Java/Python runtime, MATSim production config/input, model/cost semantic, server, Runner or Stage 12 action occurred."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
+  - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+  - "docs/integration/CURRENT_STAGE.md"
+executor_self_check:
+  exact_parent: "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea"
+  branch: "integration/hk-multimodal-cost-v1"
+  changed_paths_within_allowlist: true
+  compile: "PASS via .\\mvnw.cmd -DskipTests compile"
+  required_tests: "PASS 2/2 via .\\mvnw.cmd '-Dtest=HongKongDirectedMultimodalCostCoverageTest' test"
+  negative_tests: "PASS duplicate Taxi/PT/Car callbacks fail closed in the directed suite"
+  contract_json: "PASS"
+  current_stage_yaml: "PASS"
+  source_config_sha256: "PASS 75f9c8e82b6fee4141d3544c931309ca23abce76fe6d170c840acb007e1b115c"
+  source_xml_cardinality: "PASS one controller and one of each seven allowlisted params"
+  pid_guard_fixtures: "PASS 2 accepted and 9 rejected"
+  markdown_links: "PASS"
+  git_diff_check: "PASS"
+  conflict_markers: "PASS"
+  historical_worklog_prefixes: "PASS append-only"
+  model_runtime_config_input_semantics: "UNCHANGED"
+  hard_gates_weakened: false
+  unresolved_items: []
+blocker:
+  blocker_id: "STAGE11-RUNNER-CONTRACT-DERIVATION-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity: "joint_stability_5it_c6a0cdc8_run1"
+  changed_hypothesis_required_for_retry: "Exact-cardinality XML controller edits, normalized-diff/path/hash preflight and numeric PID verification close the observed contract failure."
+  repair_task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: true
+hard_gate_status: "PENDING_SINGLE_STAGE_END_REVIEW_AND_SUPERVISOR_STAGE11_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA/parent and dispatches one Stage-end Reviewer; Runner and replacement execution remain unauthorized."
+runner_authorized: false
+stage12_or_later_authorized: false
+```

@@ -11,10 +11,11 @@ append-only worklogs.
 ```yaml
 stage:
   stage_id: "STAGE11-JOINT-STABILITY-5-10-ITERATIONS"
-  formal_state: "READY"
-  source_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
+  formal_state: "BLOCKED"
+  source_sha: "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea"
+  runtime_model_baseline_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
   review_base_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
-  objective: "Prepare two separately authorized, immutable 5- and 10-iteration joint stability identities without calibration or model change."
+  objective: "Repair deterministic config derivation and process-identity evidence before allocating two replacement 5- and 10-iteration joint stability identities."
   brief: "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
   structured_contract: "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
 
@@ -33,21 +34,36 @@ previous_stage:
   evidence: "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
 
 active_task:
-  task_id: "STAGE11-JOINT-STABILITY-5-10-ITERATIONS"
+  task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
   owner: "INT-EXECUTOR"
-  status: "CONTROL_PLANE_CANDIDATE_PENDING_STAGE_END_REVIEW"
-active_blocker: null
+  status: "ACTIVE_REPAIR_CANDIDATE"
+active_blocker:
+  blocker_id: "STAGE11-RUNNER-CONTRACT-DERIVATION-001"
+  status: "REPAIR_DISPATCHED"
+  failure_identity: "joint_stability_5it_c6a0cdc8_run1"
+  root_cause_status: "KNOWN"
+  root_cause: "Invalid controller-regex boundary and malformed probe path caused nondeterministic config derivation and incomplete process evidence."
+  changed_hypothesis_required_for_retry: "Use exact-cardinality XML controller edits plus a normalized-diff pre-run gate and accept only a verified positive numeric PID captured from the exact Java launch."
+  repair_task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: true
+  superseded_run_identity: "joint_stability_5it_c6a0cdc8_run1"
+  runner_authorized: false
 
 planned_run_identities:
-  source_binding: "The later Supervisor contract binds the exact reviewed Stage 11 candidate SHA whose sole parent is 3ed98c4b8b34491a3c6f9fdf3517812323baed76."
+  source_binding: "The later Supervisor contract binds the exact reviewed repair SHA whose sole parent is c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea."
   five_iteration:
     last_iteration: 5
-    identity_pattern: "joint_stability_5it_{authorized_source_sha8}_run1"
+    identity_pattern: "joint_stability_5it_{authorized_repair_sha8}_repair1_run2"
     new_staging_release_run_required: true
   ten_iteration:
     last_iteration: 10
-    identity_pattern: "joint_stability_10it_{authorized_source_sha8}_run1"
+    identity_pattern: "joint_stability_10it_{authorized_repair_sha8}_repair1_run2"
     new_staging_release_run_required: true
+  superseded_identities:
+    - "joint_stability_5it_c6a0cdc8_run1"
+    - "joint_stability_10it_c6a0cdc8_run1"
+  superseded_identity_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
   prior_run_or_release_reuse_allowed: false
 
 coverage_contract:
@@ -79,9 +95,9 @@ authority:
   calibration_authorized: false
   server_access_performed_by_executor: false
 
-next_action: "Supervisor verifies the exact candidate then dispatches one Stage-end Reviewer; after Reviewer PASS, Supervisor may issue a separate exact Runner contract."
+next_action: "Executor pushes one bounded repair candidate; Supervisor verifies its exact SHA/parent and dispatches one Stage-end Reviewer. Runner and replacement execution remain unauthorized."
 ```
 
-Stage 10 is synchronized as `PASS_CLOSED`; Stage 11 is `READY` only as a
-control-plane candidate. No server access, build, bundle, release, run,
-calibration, Runner authorization, or Stage 12 action is created here.
+Stage 10 remains synchronized as `PASS_CLOSED`; Stage 11 is `BLOCKED` while the
+bounded contract repair is active. No server access, build, bundle, release,
+run, calibration, Runner authorization, or Stage 12 action is created here.

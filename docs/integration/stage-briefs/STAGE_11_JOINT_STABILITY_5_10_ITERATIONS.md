@@ -7,23 +7,33 @@
 | Task ID | `STAGE11-JOINT-STABILITY-5-10-ITERATIONS` |
 | Exact input / review base | `3ed98c4b8b34491a3c6f9fdf3517812323baed76` |
 | Runtime/model baseline | `3ed98c4b8b34491a3c6f9fdf3517812323baed76` |
+| Repair task | `STAGE11-REPAIR-CONTRACT-DERIVATION-001` |
+| Exact repair input / required parent | `c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea` |
+| Active blocker | `STAGE11-RUNNER-CONTRACT-DERIVATION-001` (`REPAIR_DISPATCHED`) |
 | Candidate owner | `INT-EXECUTOR` |
 | Runner authorized by this candidate | `false` |
 | Stage 12 or later authorized | `false` |
 
-This candidate synchronizes the realtime Stage 10 `PASS_CLOSED` decision and
-defines a complete, auditable execution contract for two later server runs.
-It does not contact the server, build, bundle, release, run, calibrate, or
-authorize Runner. After one Protocol 09 stage-end review, Supervisor may issue
-a separate exact-SHA Runner contract.
+The first candidate synchronized the realtime Stage 10 `PASS_CLOSED` decision
+and defined the two-run contract. The first 5-iteration attempt
+`joint_stability_5it_c6a0cdc8_run1` then stopped on a known ordinary technical
+contract defect: an invalid controller-regex boundary and a malformed probe
+path made config derivation non-deterministic and left incomplete process
+evidence. This bounded repair replaces regex editing with a self-validating XML
+contract, requires verified numeric PID capture, and allocates two new run
+identities. It does not treat the incomplete attempt as Stage 11 evidence.
 
-The later Runner `source_sha` is the exact pushed Stage 11 candidate selected
-by Supervisor. That candidate must have sole parent `3ed98c4…`; its allowlisted
-governance/evidence delta must leave the runtime/model tree semantically
-unchanged. Thus the executed repository identity remains exact while the
-adopted runtime/model baseline remains traceable to `3ed98c4…`. A commit cannot
-embed its own SHA, so the exact candidate and its eight-character token are
-late-bound only by the subsequent Supervisor contract.
+This repair candidate does not contact the server, build, bundle, release,
+run, calibrate, or authorize Runner. After one Protocol 09 stage-end review,
+Supervisor may issue a separate exact-SHA Runner contract.
+
+The later Runner `source_sha` is the exact pushed repair candidate selected by
+Supervisor. That repair candidate must have sole parent `c6a0cdc8…`; its
+allowlisted contract/control-plane delta must leave the runtime/model tree
+semantically unchanged, while the adopted runtime/model baseline remains
+traceable to `3ed98c4…`. A commit cannot embed its own SHA, so the exact repair
+SHA and eight-character token are late-bound only by the subsequent Supervisor
+contract.
 
 ## Stage 10 closure consumed
 
@@ -45,15 +55,29 @@ utility, fare/cost parameters, demand, capacity, supply, route choice,
 replanning policy, or missing-data treatment. It is not calibration and does
 not authorize Stage 12.
 
-## Two immutable run identities
+## Superseded and replacement run identities
 
-The subsequent Supervisor contract replaces `{SOURCE_SHA}` and `{SHA8}` with
-the exact reviewed Stage 11 candidate. All paths must be absent before use.
+The following failed or allocated `c6a0cdc8` identities are immutable evidence
+and are `BLOCKED_SUPERSEDED_BY_REPAIR`; neither their directories nor partial
+outputs may be reused, overwritten, cleaned, or treated as replacement runs:
+
+- `joint_stability_5it_c6a0cdc8_run1`, staging
+  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_5it_staging1`, release
+  `/mnt/DiskM/by/hk_multimodal_cost_c6a0cdc8_stage11_5it_release1`, run root
+  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_5it_run1`;
+- `joint_stability_10it_c6a0cdc8_run1`, staging
+  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_staging1`, release
+  `/mnt/DiskM/by/hk_multimodal_cost_c6a0cdc8_stage11_10it_release1`, run root
+  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_run1`.
+
+The subsequent Supervisor contract replaces `{REPAIR_SHA}` and `{REPAIR_SHA8}`
+with the exact reviewed repair candidate. Every replacement path must be absent
+before use.
 
 | Horizon | Staging root | Release root | Run root / identity |
 |---|---|---|---|
-| 5 | `/mnt/DiskM/by/hk_stage11_{SHA8}_5it_staging1` | `/mnt/DiskM/by/hk_multimodal_cost_{SHA8}_stage11_5it_release1` | `/mnt/DiskM/by/hk_stage11_{SHA8}_5it_run1` / `joint_stability_5it_{SHA8}_run1` |
-| 10 | `/mnt/DiskM/by/hk_stage11_{SHA8}_10it_staging1` | `/mnt/DiskM/by/hk_multimodal_cost_{SHA8}_stage11_10it_release1` | `/mnt/DiskM/by/hk_stage11_{SHA8}_10it_run1` / `joint_stability_10it_{SHA8}_run1` |
+| 5 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair1_staging2` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_5it_repair1_release2` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair1_run2` / `joint_stability_5it_{REPAIR_SHA8}_repair1_run2` |
+| 10 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair1_staging2` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_10it_repair1_release2` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair1_run2` / `joint_stability_10it_{REPAIR_SHA8}_repair1_run2` |
 
 The two identities have separate source-snapshot/build, locked-input-pack,
 bundle, deployment-manifest, release, derived-config, output, log, PID/exit,
@@ -118,9 +142,10 @@ exact source snapshot + tree verification
   -> deterministic root Shade JAR validation
   -> build-bundle into the identity's new staging/bundle/manifest/release
   -> release SHA256SUMS + runtime Java/class-loading preflight
-  -> derive one new run-root config from the release formal config
-  -> verify the config delta allowlist and record source/derived SHA256
+  -> derive one new run-root config with the XML-parser contract below
+  -> pass source-SHA/path/reparse/normalized-diff pre-run gate
   -> launch exact Java/JAR/config command once
+  -> capture and verify one positive numeric PID at the exact run-root path
   -> wait for terminal exit and capture immutable structured evidence
 ```
 
@@ -133,49 +158,86 @@ The derived config changes only execution/output controls:
 - output intervals may be `1` for complete per-iteration evidence;
 - all other parameters and all seven input references remain unchanged.
 
-The exact config derivation command, source/derived config hashes and normalized
-XML parameter diff are evidence. The run command is the release's exact
+Config derivation is never a regular-expression or line-edit operation. Runner
+uses Python standard-library `xml.etree.ElementTree` (or a later Supervisor
+command implementing exactly the same repository-contained structured
+contract), requires exactly one direct `controller` module and exactly one
+direct parameter for every allowlisted key, and refuses missing or duplicate
+keys. It changes only the seven `value` attributes listed above, writes an
+absent UTF-8/LF destination, reparses it, and compares sorted
+`module-name/param-name` maps. The normalized JSON diff must contain exactly
+the seven allowlisted keys and their contracted before/after values; every
+other parameter and every input reference must be value-equivalent.
+First-match selection, adding a missing key, and editing another module fail
+closed.
+
+Before Java starts, one persisted gate must prove: source config is a regular
+non-symlink file whose SHA matches the release manifest; derived config is a
+regular non-symlink file and reparses; controller/parameter cardinalities are
+exact; normalized changed keys and before/after values match; all seven input
+paths exist and hashes match; all non-allowlisted values are unchanged; and
+all identity paths are absolute under the new staging/release/run roots. The
+exact derivation command, source/derived/diff SHA256 values and effective
+controller values are required evidence. Any false or missing field stops
+before Java launch.
+
+The run command is the release's exact
 `runtime/jdk-25/bin/java`, `-Xms16g -Xmx96g`, the release root Shade JAR,
 `org.matsim.project.RunHongKong5Pct`, the derived config, `unused --simulate`,
 and `/usr/bin/time -v`, executed once from the new run root. No system Java,
 system Maven, `PATH` fallback, altered heap, alternate main class, or command
 retry is permitted.
 
+The background Java command may be launched only once. Runner captures the
+shell `$!` value immediately and accepts it only when it matches
+`^[1-9][0-9]*$` and is greater than one. The PID evidence file is created with
+fail-if-exists semantics at the exact absolute new run-root path, contains only
+that decimal PID plus LF, and reads back identically; `kill -0` must succeed
+immediately after capture or the terminal exit is recorded and the identity
+stops. Literal `$!`, `${pid}`, `${PID}`, `pid=$!`, empty/zero/negative/non-
+numeric values, relative paths, unexpanded placeholders, and paths outside the
+new run root or inside a superseded identity all fail closed.
+
 ## Hard Gates
 
-1. Candidate parent is exact `3ed98c4…`; branch, ancestry, local/tracking/
-   remote refs, protected refs, and clean worktree are proven. Later Runner
-   source equals the exact reviewed Stage 11 candidate and has this runtime
-   baseline as its sole parent.
+1. Repair-candidate parent is exact `c6a0cdc8…`; branch, ancestry,
+   local/tracking/remote refs, protected refs, and clean worktree are proven.
+   Later Runner source equals the exact reviewed Stage 11 repair candidate and
+   retains runtime/model baseline `3ed98c4…` without semantic change.
 2. Both identities independently prove exact source tree, approved Java
    `25.0.3`, Maven wrapper, root Shade JAR/dependency closure, and built →
    bundle → release SHA continuity. The target thin JAR fails closed.
 3. All seven locked v2/Ferry Core paths and hashes match exactly; historical
    v1/pre-Ferry inputs and fallbacks are absent.
-4. The five-iteration identity exits zero and completes every iteration
+4. Config derivation uses the deterministic XML contract, with exact
+   controller/param cardinality and a source-SHA/path/reparse/normalized-diff
+   gate completed before Java starts. Regex or line replacement is forbidden.
+   Process evidence contains the verified positive numeric PID and exact
+   absolute probe paths; literal shell placeholders fail closed.
+5. The five-iteration identity exits zero and completes every iteration
    boundary `0..5`; the ten-iteration identity exits zero and completes `0..10`.
    Each has complete logs, events, scores, plans/outputs, exit code, timings,
    config hash, and output inventory evidence.
-5. Taxi, PT and Car have one canonical component owner and exactly one charge
+6. Taxi, PT and Car have one canonical component owner and exactly one charge
    per experienced ordinal. Duplicate callbacks/charges fail closed. Fixed ownership
    never enters a leg; unresolved is never numeric zero; all
    money/cost/score values are finite.
-6. Evidence records actual Taxi legs and `routingMode=taxi`, PT legs, and Car
+7. Evidence records actual Taxi legs and `routingMode=taxi`, PT legs, and Car
    legs for both runs. A zero production Taxi count is an explicit coverage
    limitation/Diagnostic and cannot be presented as Stage 11 Taxi runtime
    coverage; Stage 10 directed proof remains separate.
-7. A structured 5-versus-10 trend table records iteration duration, event
+8. A structured 5-versus-10 trend table records iteration duration, event
    count, score/cost summaries, stuck/abort, component/charge counts, duplicate
    suppression, non-finite count, and output completeness. Diagnostics/Trends
    do not become Hard Gate failures without a named violated invariant.
-8. No Taxi/PT/Car production code, scoring/cost semantic, utility, ASC,
+9. No Taxi/PT/Car production code, scoring/cost semantic, utility, ASC,
    calibration, demand, capacity, supply, missing-data policy, locked input,
    old server directory, or protected ref changes. Only the allowlisted
    temporary execution-horizon/output config delta is permitted.
-9. Executor candidate checks compile, focused and negative exactly-once tests,
+10. Executor candidate checks compile, focused and negative exactly-once tests,
    structured validators, links, diff/conflict, allowlist, protected refs,
    clean status and post-push equality with `unresolved_items=[]`.
-10. Runner is unauthorized by this candidate. Stage 12 calibration and every
+11. Runner is unauthorized by this candidate. Stage 12 calibration and every
     later stage remain unauthorized.
 
 ## Hard Gate evidence versus Diagnostics and Trends
@@ -214,7 +276,8 @@ self-repair or unchanged rerun is authorized.
 
 ## Candidate next action
 
-Executor pushes this governance/evidence-schema candidate and reports only to
-Supervisor. Supervisor verifies exact SHA/parent and dispatches one stage-end
-Reviewer. Only after Reviewer PASS may Supervisor issue a separate exact
-Runner contract; this brief itself starts nothing.
+Executor pushes this contract/control-plane repair candidate and reports only
+to Supervisor. Supervisor verifies exact SHA/parent and dispatches one
+stage-end Reviewer. Only after Reviewer PASS may Supervisor issue a separate
+exact Runner contract that binds both replacement identities; this brief
+itself starts nothing.
