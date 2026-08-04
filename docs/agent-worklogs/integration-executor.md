@@ -1611,3 +1611,54 @@ next_action_summary: "Supervisor verifies the exact repair SHA/parent and dispat
 runner_authorized: false
 stage12_or_later_authorized: false
 ```
+
+## Entry 48 — Stage 11 canonical locked-hash repair candidate
+
+```yaml
+timestamp: "2026-08-05 Asia/Shanghai"
+session_id: "019fb38f-c992-74f1-9894-c6009784a697"
+stage_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
+input_sha: "68110deb400482a67c66b71e714a5725b7a12fef"
+output_sha_or_status: "exact pushed repair candidate SHA supplied in the Supervisor handoff"
+decision: "Replace hand-transcribed expected input hashes with one exact-source, machine-validated seven-row registry and allocate repair2/run3 identities bound to this candidate."
+findings:
+  - "canonical_locked_input_registry.rows is the sole source of truth with seven unique roles and normalized pack paths; manual literal overrides are forbidden."
+  - "Canonical rows SHA is 0bc63a4dca7b4ca7b5b5583e55610299848d3597e833560a5186a404200ab659 and derived expected-map SHA is dc4e8e5fb3bfa882a223fba0e7162a27e4d6fdb820c3922b011d6c325d803ca5."
+  - "Facilities retains the correct canonical SHA ending ef10e; all seven authoritative local copies rehashed exactly."
+  - "Missing, duplicate, extra, malformed or mismatched rows stop before config or Java and require registry/expected/actual map SHA plus per-path mismatch evidence."
+  - "All c6a0cdc8 and 68110deb identities are immutable; replacement 5/10 iteration patterns use the exact candidate SHA and repair2/run3 roots."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json#canonical_locked_input_registry"
+  - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+  - "docs/integration/CURRENT_STAGE.md"
+executor_self_check:
+  exact_parent: "68110deb400482a67c66b71e714a5725b7a12fef"
+  branch: "integration/hk-multimodal-cost-v1"
+  changed_paths_within_allowlist: true
+  contract_json_and_registry_hashes: "PASS"
+  registry_positive_validation: "PASS seven rows, unique roles/paths, normalized paths and 64-hex hashes"
+  registry_negative_fixtures: "PASS missing, duplicate, malformed hash and unsafe path rejected; mismatch details preserved"
+  authoritative_input_hashes: "PASS 7/7"
+  current_stage_yaml: "PASS"
+  markdown_links: "PASS"
+  git_diff_check: "PASS"
+  conflict_markers: "PASS"
+  historical_worklog_prefixes: "PASS append-only"
+  model_runtime_config_input_cost_semantics: "UNCHANGED"
+  hard_gates_weakened: false
+  unresolved_items: []
+blocker:
+  blocker_id: "STAGE11-RUNNER-INPUT-HASH-LITERAL-002"
+  status: "REPAIR_DISPATCHED"
+  failure_identity: "joint_stability_5it_68110deb_repair1_run2"
+  changed_hypothesis_required_for_retry: "Mechanically derived exact-source registry maps remove literal transcription and fail closed on every set/path/hash mismatch."
+  repair_task_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: true
+hard_gate_status: "PENDING_SINGLE_STAGE_END_REVIEW_AND_SUPERVISOR_STAGE11_REPAIR_GATE"
+handoff_to: "INT-SUPERVISOR"
+next_action_summary: "Supervisor verifies the exact repair SHA/parent and dispatches one Stage-end Reviewer; Runner and replacement execution remain unauthorized."
+runner_authorized: false
+stage12_or_later_authorized: false
+```

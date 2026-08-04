@@ -1,23 +1,23 @@
 {
-  "schema_version": "hong_kong_stage11_joint_stability_execution_contract_v2",
+  "schema_version": "hong_kong_stage11_joint_stability_execution_contract_v3",
   "task_id": "STAGE11-JOINT-STABILITY-5-10-ITERATIONS",
-  "repair_task_id": "STAGE11-REPAIR-CONTRACT-DERIVATION-001",
+  "repair_task_id": "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002",
   "contract_status": "BLOCKED_REPAIR_CANDIDATE_NOT_AUTHORIZED_FOR_EXECUTION",
   "exact_input_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
-  "repair_input_sha": "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea",
+  "repair_input_sha": "68110deb400482a67c66b71e714a5725b7a12fef",
   "review_base_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
   "runtime_model_baseline_sha": "3ed98c4b8b34491a3c6f9fdf3517812323baed76",
   "active_blocker": {
-    "blocker_id": "STAGE11-RUNNER-CONTRACT-DERIVATION-001",
+    "blocker_id": "STAGE11-RUNNER-INPUT-HASH-LITERAL-002",
     "status": "REPAIR_DISPATCHED",
-    "failure_identity": "joint_stability_5it_c6a0cdc8_run1",
+    "failure_identity": "joint_stability_5it_68110deb_repair1_run2",
     "root_cause_status": "KNOWN",
-    "root_cause": "The Runner command used an invalid controller-regex boundary and a malformed probe path, so config derivation was not deterministic and the process evidence was incomplete.",
-    "changed_hypothesis_required_for_retry": "Parse the source config as XML, require one controller module and one occurrence of every allowlisted parameter, prove an exact normalized controller-only delta, and accept process identity only from a verified positive numeric PID captured from the launched Java process.",
-    "repair_task_id": "STAGE11-REPAIR-CONTRACT-DERIVATION-001",
+    "root_cause": "The Runner input preflight hardcoded a facilities SHA256 missing its final e while the canonical locked-input pack manifest was correct; this is a literal transcription defect, not input corruption.",
+    "changed_hypothesis_required_for_retry": "Read all seven expected path/SHA256 pairs mechanically from the canonical registry in this exact authorized source contract, reject missing/duplicate/malformed rows, and compare canonical expected and actual maps before config derivation or Java launch.",
+    "repair_task_id": "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002",
     "repair_owner": "INT-EXECUTOR",
     "replacement_identity_required": true,
-    "superseded_run_identity": "joint_stability_5it_c6a0cdc8_run1",
+    "superseded_run_identity": "joint_stability_5it_68110deb_repair1_run2",
     "runner_authorized": false
   },
   "stage10_closure": {
@@ -41,13 +41,13 @@
     "evidence_path": "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
   },
   "source_identity": {
-    "runner_source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA}",
-    "runner_source_sha8": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}",
-    "required_parent_sha": "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea",
+    "runner_source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA}",
+    "runner_source_sha8": "${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}",
+    "required_parent_sha": "68110deb400482a67c66b71e714a5725b7a12fef",
     "required_branch": "integration/hk-multimodal-cost-v1",
     "required_parent_count": 1,
     "runtime_semantic_delta_from_parent_allowed": false,
-    "binding_rule": "The later Supervisor exact Runner authorization must replace both placeholders with the reviewed pushed Stage 11 repair candidate, prove its sole parent is c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea, and prove its delta is limited to the authorized contract/control-plane repair."
+    "binding_rule": "The later Supervisor exact Runner authorization must replace both placeholders with the reviewed pushed Stage 11 hash-repair candidate, prove its sole parent is 68110deb400482a67c66b71e714a5725b7a12fef, and prove its delta is limited to the authorized contract/control-plane repair."
   },
   "locked_toolchain": {
     "jdk_archive_sha256": "69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f",
@@ -58,7 +58,24 @@
     "maven_version_command": "cd ${BUILD_ROOT} && ./mvnw --version",
     "build_command": "cd ${BUILD_ROOT} && ./mvnw -DskipTests package"
   },
-  "locked_inputs": [
+  "canonical_locked_input_registry": {
+    "registry_id": "hong_kong_stage11_v2_ferry_core_locked_inputs_v1",
+    "registry_status": "SOLE_SOURCE_OF_TRUTH",
+    "registry_path": "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json#canonical_locked_input_registry.rows",
+    "required_source_binding": "Read this registry from the exact Supervisor-authorized pushed source SHA; hand-entered path or SHA256 constants in Runner commands are forbidden.",
+    "row_count": 7,
+    "unique_key": "pack_path",
+    "sha256_pattern": "^[0-9a-f]{64}$",
+    "path_rules": [
+      "pack_path is normalized POSIX-relative and contains no empty, dot or dot-dot segment",
+      "resolved build/bundle/release/run path is absolute and remains inside its exact declared data root",
+      "each pack_path occurs exactly once and each role occurs exactly once"
+    ],
+    "canonicalization": "Sort rows by pack_path; serialize the rows array as UTF-8 JSON with sorted object keys, no insignificant whitespace and ensure_ascii=false.",
+    "registry_rows_sha256": "0bc63a4dca7b4ca7b5b5583e55610299848d3597e833560a5186a404200ab659",
+    "expected_map_canonicalization": "From the validated rows derive [{path: pack_path, sha256: sha256}] sorted by path; serialize as UTF-8 JSON with sorted object keys, no insignificant whitespace and ensure_ascii=false.",
+    "expected_map_sha256": "dc4e8e5fb3bfa882a223fba0e7162a27e4d6fdb820c3922b011d6c325d803ca5",
+    "rows": [
     {
       "role": "production_config",
       "repository_data_path": "matsim_agents/hongkong/typical_weekday_5pct_v2_activity_modechoice/config_hong_kong_5pct_v2_activity_modechoice_50it.xml",
@@ -101,7 +118,28 @@
       "pack_path": "input/transitVehicles_10pct.xml.gz",
       "sha256": "16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429"
     }
-  ],
+    ],
+    "runtime_resolution_contract": {
+      "read_from_authorized_source_sha": true,
+      "exact_row_set_and_cardinality_required": 7,
+      "missing_duplicate_extra_or_malformed_row_action": "STOP_BEFORE_CONFIG_OR_JAVA",
+      "manual_literal_override_allowed": false,
+      "comparison_roots": [
+        "build locked-input pack",
+        "bundle staged inputs",
+        "released inputs",
+        "run config referenced inputs"
+      ],
+      "required_evidence": [
+        "authorized source SHA and registry path",
+        "registry rows SHA256",
+        "derived expected-map SHA256",
+        "actual-map SHA256 for each comparison root",
+        "per-path missing/extra/expected/actual mismatch details"
+      ],
+      "gate_rule": "All set/cardinality/path/hash checks and every expected-versus-actual map comparison must pass before config derivation or Java launch."
+    }
+  },
   "artifact_contract": {
     "resolver": "${BUILD_ROOT}/matsim-example-project-0.0.1-SNAPSHOT.jar",
     "release_path": "app/matsim-example-project-0.0.1-SNAPSHOT.jar",
@@ -132,7 +170,7 @@
     "sha_continuity": "built_root_shade_jar_sha256 == bundled_app_jar_sha256 == released_app_jar_sha256"
   },
   "execution_contract_template": {
-    "source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA}",
+    "source_sha": "${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA}",
     "working_directory": "${RUN_ROOT}",
     "java_command": "${RELEASE_ROOT}/runtime/jdk-25/bin/java",
     "tool_version_commands": [
@@ -147,7 +185,8 @@
     "run_command": "cd ${RUN_ROOT} && /usr/bin/time -v ${RELEASE_ROOT}/runtime/jdk-25/bin/java -Xms16g -Xmx96g -cp ${RELEASE_ROOT}/app/matsim-example-project-0.0.1-SNAPSHOT.jar org.matsim.project.RunHongKong5Pct ${DERIVED_RUN_CONFIG} unused --simulate",
     "required_preconditions": [
       "exact source snapshot/tree/inventory and extracted-root verification PASS",
-      "exact seven-file external locked-input pack verification PASS",
+      "canonical seven-row registry SHA and mechanically derived expected-map SHA verification PASS",
+      "build/bundle/release/run actual-map set, cardinality, path and SHA comparisons against the canonical registry PASS",
       "new staging, bundle, manifest, release and run paths are absent",
       "approved JDK archive hash and extracted Java 25.0.3 executable PASS",
       "root Shade JAR and all required classes PASS",
@@ -293,26 +332,44 @@
       "run_root": "/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_run1",
       "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
       "reuse_or_overwrite_allowed": false
+    },
+    {
+      "horizon": 5,
+      "identity": "joint_stability_5it_68110deb_repair1_run2",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_68110deb_5it_repair1_staging2",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_68110deb_stage11_5it_repair1_release2",
+      "run_root": "/mnt/DiskM/by/hk_stage11_68110deb_5it_repair1_run2",
+      "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+      "reuse_or_overwrite_allowed": false
+    },
+    {
+      "horizon": 10,
+      "identity": "joint_stability_10it_68110deb_repair1_run2",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_68110deb_10it_repair1_staging2",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_68110deb_stage11_10it_repair1_release2",
+      "run_root": "/mnt/DiskM/by/hk_stage11_68110deb_10it_repair1_run2",
+      "status": "BLOCKED_SUPERSEDED_BY_REPAIR",
+      "reuse_or_overwrite_allowed": false
     }
   ],
   "run_contracts": [
     {
       "horizon": 5,
       "required_completed_iterations": [0, 1, 2, 3, 4, 5],
-      "identity": "joint_stability_5it_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_repair1_run2",
-      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_5it_repair1_staging2",
-      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_stage11_5it_repair1_release2",
-      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_5it_repair1_run2",
+      "identity": "joint_stability_5it_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_repair2_run3",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_5it_repair2_staging3",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_stage11_5it_repair2_release3",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_5it_repair2_run3",
       "result_status": "NOT_RUN_NOT_AUTHORIZED",
       "result_evidence": null
     },
     {
       "horizon": 10,
       "required_completed_iterations": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      "identity": "joint_stability_10it_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_repair1_run2",
-      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_10it_repair1_staging2",
-      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_stage11_10it_repair1_release2",
-      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_REPAIR_SHA8}_10it_repair1_run2",
+      "identity": "joint_stability_10it_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_repair2_run3",
+      "staging_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_10it_repair2_staging3",
+      "release_root": "/mnt/DiskM/by/hk_multimodal_cost_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_stage11_10it_repair2_release3",
+      "run_root": "/mnt/DiskM/by/hk_stage11_${SUPERVISOR_AUTHORIZED_STAGE11_HASH_REPAIR_SHA8}_10it_repair2_run3",
       "result_status": "NOT_RUN_NOT_AUTHORIZED",
       "result_evidence": null
     }
@@ -320,7 +377,8 @@
   "required_per_run_evidence_fields": [
     "source_sha_parent_tree_inventory",
     "snapshot_archive_manifest_hashes",
-    "locked_pack_manifest_and_seven_hashes",
+    "canonical_registry_sha_expected_map_sha_actual_map_shas_and_mismatch_details",
+    "locked_pack_manifest_and_seven_hashes_derived_from_registry",
     "java_maven_matsim_versions",
     "build_bundle_release_run_commands",
     "root_jar_sha_and_required_classes",
@@ -370,7 +428,7 @@
     "stage12_or_later_authorized": false,
     "server_access_performed_by_executor": false,
     "build_bundle_release_run_performed_by_executor": false,
-    "next_action": "Supervisor verifies the exact pushed repair candidate and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor issue a separate exact Runner contract with both replacement identities fully bound."
+    "next_action": "Supervisor verifies the exact pushed canonical-hash repair candidate and dispatches one Stage-end Reviewer; only after Reviewer PASS may Supervisor issue a separate exact Runner contract with both repair2/run3 replacement identities fully bound."
   },
   "result_placeholders_are_not_evidence": true,
   "unresolved_items": []

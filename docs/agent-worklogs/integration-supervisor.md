@@ -1535,3 +1535,38 @@ handoff_to: "INT-EXECUTOR"
 next_action_summary: "Push one substantive repair candidate and stop for Supervisor verification and one Stage-end review; do not contact Runner or Reviewer."
 required_transition: null
 ```
+
+## Entry 48 — Stage 11 canonical locked-hash repair dispatch
+
+```yaml
+timestamp: "2026-08-05 Asia/Shanghai"
+session_id: "019fb38e-0963-7f01-9461-ba84c9aa6378"
+stage_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
+input_sha: "68110deb400482a67c66b71e714a5725b7a12fef"
+output_sha_or_status: "BOUNDED_REPAIR_AUTHORIZED"
+decision: "Make the checked-in seven-input registry the only expected path/hash source and replace every prior Stage 11 identity with new repair-SHA-bound identities."
+findings:
+  - "joint_stability_5it_68110deb_repair1_run2 stopped because Runner hand-transcribed the facilities SHA without its final e."
+  - "The canonical locked-pack manifest remained correct; root cause is a KNOWN ordinary technical contract defect, not input corruption or semantic change."
+  - "Runner must derive exactly seven unique normalized path/SHA rows mechanically from the authorized-source registry; hand-entered literals are forbidden."
+  - "Registry, expected-map and build/bundle/release/run actual-map hashes plus mismatch details are required before config or Java."
+  - "All c6a0cdc8 and 68110deb Stage 11 identities are immutable and superseded; Runner and Stage 12 remain unauthorized."
+diagnostics: []
+evidence_refs:
+  - "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json#canonical_locked_input_registry"
+  - "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
+  - "docs/integration/CURRENT_STAGE.md"
+blocker:
+  blocker_id: "STAGE11-RUNNER-INPUT-HASH-LITERAL-002"
+  status: "REPAIR_DISPATCHED"
+  failure_identity: "joint_stability_5it_68110deb_repair1_run2"
+  root_cause_status: "KNOWN"
+  repair_task_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
+  repair_owner: "INT-EXECUTOR"
+  replacement_identity_required: true
+  runner_authorized: false
+hard_gate_status: "AUTHORIZED_BOUNDED_STAGE11_CANONICAL_HASH_REPAIR"
+handoff_to: "INT-EXECUTOR"
+next_action_summary: "Push one substantive canonical-hash repair candidate and stop for Supervisor verification and one Stage-end review."
+required_transition: null
+```

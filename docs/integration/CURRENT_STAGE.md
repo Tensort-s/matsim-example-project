@@ -12,10 +12,10 @@ append-only worklogs.
 stage:
   stage_id: "STAGE11-JOINT-STABILITY-5-10-ITERATIONS"
   formal_state: "BLOCKED"
-  source_sha: "c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea"
+  source_sha: "68110deb400482a67c66b71e714a5725b7a12fef"
   runtime_model_baseline_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
   review_base_sha: "3ed98c4b8b34491a3c6f9fdf3517812323baed76"
-  objective: "Repair deterministic config derivation and process-identity evidence before allocating two replacement 5- and 10-iteration joint stability identities."
+  objective: "Repair canonical seven-input hash resolution so all expected paths and hashes are mechanically derived before allocating new 5- and 10-iteration identities."
   brief: "docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md"
   structured_contract: "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json"
 
@@ -34,37 +34,48 @@ previous_stage:
   evidence: "data/transport_costs/hongkong/integration_stage10_validation_v1/stage10_directed_multimodal_cost_coverage_validation.json"
 
 active_task:
-  task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+  task_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
   owner: "INT-EXECUTOR"
   status: "ACTIVE_REPAIR_CANDIDATE"
 active_blocker:
-  blocker_id: "STAGE11-RUNNER-CONTRACT-DERIVATION-001"
+  blocker_id: "STAGE11-RUNNER-INPUT-HASH-LITERAL-002"
   status: "REPAIR_DISPATCHED"
-  failure_identity: "joint_stability_5it_c6a0cdc8_run1"
+  failure_identity: "joint_stability_5it_68110deb_repair1_run2"
   root_cause_status: "KNOWN"
-  root_cause: "Invalid controller-regex boundary and malformed probe path caused nondeterministic config derivation and incomplete process evidence."
-  changed_hypothesis_required_for_retry: "Use exact-cardinality XML controller edits plus a normalized-diff pre-run gate and accept only a verified positive numeric PID captured from the exact Java launch."
-  repair_task_id: "STAGE11-REPAIR-CONTRACT-DERIVATION-001"
+  root_cause: "Runner preflight hand-transcribed a facilities SHA missing the final e; the canonical pack manifest remained correct."
+  changed_hypothesis_required_for_retry: "Read and validate all seven path/SHA pairs mechanically from the exact-source canonical registry, then compare canonical expected and actual maps before config or Java."
+  repair_task_id: "STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002"
   repair_owner: "INT-EXECUTOR"
   replacement_identity_required: true
-  superseded_run_identity: "joint_stability_5it_c6a0cdc8_run1"
+  superseded_run_identity: "joint_stability_5it_68110deb_repair1_run2"
   runner_authorized: false
 
 planned_run_identities:
-  source_binding: "The later Supervisor contract binds the exact reviewed repair SHA whose sole parent is c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea."
+  source_binding: "The later Supervisor contract binds the exact reviewed canonical-hash repair SHA whose sole parent is 68110deb400482a67c66b71e714a5725b7a12fef."
   five_iteration:
     last_iteration: 5
-    identity_pattern: "joint_stability_5it_{authorized_repair_sha8}_repair1_run2"
+    identity_pattern: "joint_stability_5it_{authorized_hash_repair_sha8}_repair2_run3"
     new_staging_release_run_required: true
   ten_iteration:
     last_iteration: 10
-    identity_pattern: "joint_stability_10it_{authorized_repair_sha8}_repair1_run2"
+    identity_pattern: "joint_stability_10it_{authorized_hash_repair_sha8}_repair2_run3"
     new_staging_release_run_required: true
   superseded_identities:
     - "joint_stability_5it_c6a0cdc8_run1"
     - "joint_stability_10it_c6a0cdc8_run1"
+    - "joint_stability_5it_68110deb_repair1_run2"
+    - "joint_stability_10it_68110deb_repair1_run2"
   superseded_identity_status: "BLOCKED_SUPERSEDED_BY_REPAIR"
   prior_run_or_release_reuse_allowed: false
+
+canonical_locked_input_registry:
+  path: "data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_joint_stability_execution_contract.json#canonical_locked_input_registry.rows"
+  status: "SOLE_SOURCE_OF_TRUTH"
+  row_count: 7
+  registry_rows_sha256: "0bc63a4dca7b4ca7b5b5583e55610299848d3597e833560a5186a404200ab659"
+  expected_map_sha256: "dc4e8e5fb3bfa882a223fba0e7162a27e4d6fdb820c3922b011d6c325d803ca5"
+  manual_path_or_hash_literals_allowed: false
+  mismatch_action: "STOP_BEFORE_CONFIG_OR_JAVA"
 
 coverage_contract:
   stage10_directed_multimodal_proof: "PASS_CLOSED"
@@ -95,7 +106,7 @@ authority:
   calibration_authorized: false
   server_access_performed_by_executor: false
 
-next_action: "Executor pushes one bounded repair candidate; Supervisor verifies its exact SHA/parent and dispatches one Stage-end Reviewer. Runner and replacement execution remain unauthorized."
+next_action: "Executor pushes one canonical-hash repair candidate; Supervisor verifies its exact SHA/parent and dispatches one Stage-end Reviewer. Runner and replacement execution remain unauthorized."
 ```
 
 Stage 10 remains synchronized as `PASS_CLOSED`; Stage 11 is `BLOCKED` while the

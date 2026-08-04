@@ -7,9 +7,9 @@
 | Task ID | `STAGE11-JOINT-STABILITY-5-10-ITERATIONS` |
 | Exact input / review base | `3ed98c4b8b34491a3c6f9fdf3517812323baed76` |
 | Runtime/model baseline | `3ed98c4b8b34491a3c6f9fdf3517812323baed76` |
-| Repair task | `STAGE11-REPAIR-CONTRACT-DERIVATION-001` |
-| Exact repair input / required parent | `c6a0cdc86e9f49c9566f592b8fdb926183c3d4ea` |
-| Active blocker | `STAGE11-RUNNER-CONTRACT-DERIVATION-001` (`REPAIR_DISPATCHED`) |
+| Repair task | `STAGE11-REPAIR-CANONICAL-LOCKED-HASH-002` |
+| Exact repair input / required parent | `68110deb400482a67c66b71e714a5725b7a12fef` |
+| Active blocker | `STAGE11-RUNNER-INPUT-HASH-LITERAL-002` (`REPAIR_DISPATCHED`) |
 | Candidate owner | `INT-EXECUTOR` |
 | Runner authorized by this candidate | `false` |
 | Stage 12 or later authorized | `false` |
@@ -23,12 +23,20 @@ evidence. This bounded repair replaces regex editing with a self-validating XML
 contract, requires verified numeric PID capture, and allocates two new run
 identities. It does not treat the incomplete attempt as Stage 11 evidence.
 
+The replacement attempt `joint_stability_5it_68110deb_repair1_run2` then stopped
+at input preflight because its Runner command hand-transcribed the facilities
+SHA without the final `e`; the canonical pack manifest remained correct. This
+is a known ordinary technical execution-contract defect, not input corruption
+or semantic change. The current bounded repair makes the checked-in seven-row
+registry the only source of expected paths and hashes and forbids handwritten
+hash literals.
+
 This repair candidate does not contact the server, build, bundle, release,
 run, calibrate, or authorize Runner. After one Protocol 09 stage-end review,
 Supervisor may issue a separate exact-SHA Runner contract.
 
 The later Runner `source_sha` is the exact pushed repair candidate selected by
-Supervisor. That repair candidate must have sole parent `c6a0cdc8…`; its
+Supervisor. That repair candidate must have sole parent `68110deb…`; its
 allowlisted contract/control-plane delta must leave the runtime/model tree
 semantically unchanged, while the adopted runtime/model baseline remains
 traceable to `3ed98c4…`. A commit cannot embed its own SHA, so the exact repair
@@ -68,7 +76,15 @@ outputs may be reused, overwritten, cleaned, or treated as replacement runs:
 - `joint_stability_10it_c6a0cdc8_run1`, staging
   `/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_staging1`, release
   `/mnt/DiskM/by/hk_multimodal_cost_c6a0cdc8_stage11_10it_release1`, run root
-  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_run1`.
+  `/mnt/DiskM/by/hk_stage11_c6a0cdc8_10it_run1`;
+- `joint_stability_5it_68110deb_repair1_run2`, staging
+  `/mnt/DiskM/by/hk_stage11_68110deb_5it_repair1_staging2`, release
+  `/mnt/DiskM/by/hk_multimodal_cost_68110deb_stage11_5it_repair1_release2`, run
+  root `/mnt/DiskM/by/hk_stage11_68110deb_5it_repair1_run2`;
+- `joint_stability_10it_68110deb_repair1_run2`, staging
+  `/mnt/DiskM/by/hk_stage11_68110deb_10it_repair1_staging2`, release
+  `/mnt/DiskM/by/hk_multimodal_cost_68110deb_stage11_10it_repair1_release2`, run
+  root `/mnt/DiskM/by/hk_stage11_68110deb_10it_repair1_run2`.
 
 The subsequent Supervisor contract replaces `{REPAIR_SHA}` and `{REPAIR_SHA8}`
 with the exact reviewed repair candidate. Every replacement path must be absent
@@ -76,8 +92,8 @@ before use.
 
 | Horizon | Staging root | Release root | Run root / identity |
 |---|---|---|---|
-| 5 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair1_staging2` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_5it_repair1_release2` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair1_run2` / `joint_stability_5it_{REPAIR_SHA8}_repair1_run2` |
-| 10 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair1_staging2` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_10it_repair1_release2` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair1_run2` / `joint_stability_10it_{REPAIR_SHA8}_repair1_run2` |
+| 5 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair2_staging3` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_5it_repair2_release3` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_5it_repair2_run3` / `joint_stability_5it_{REPAIR_SHA8}_repair2_run3` |
+| 10 | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair2_staging3` | `/mnt/DiskM/by/hk_multimodal_cost_{REPAIR_SHA8}_stage11_10it_repair2_release3` | `/mnt/DiskM/by/hk_stage11_{REPAIR_SHA8}_10it_repair2_run3` / `joint_stability_10it_{REPAIR_SHA8}_repair2_run3` |
 
 The two identities have separate source-snapshot/build, locked-input-pack,
 bundle, deployment-manifest, release, derived-config, output, log, PID/exit,
@@ -120,9 +136,27 @@ transit-vehicle, existing server bundle, or unmanifested fallback is allowed.
 | `input/transitSchedule_5pct.xml.gz` | `eb92e6c7b3c2746313be92b8c88d51bc645d1db3c6605d1f4b472f27c9896aed` |
 | `input/transitVehicles_10pct.xml.gz` | `16a6b89f77d3827ded06641869bf4e4c5168fb718356c1fe04e9f9249fdd7429` |
 
+The sole machine-readable source of these values is
+`canonical_locked_input_registry.rows` in the structured Stage 11 contract.
+It contains exactly seven rows keyed uniquely by normalized `pack_path`; roles
+are also unique and every SHA must match `^[0-9a-f]{64}$`. The canonical rows
+SHA is
+`0bc63a4dca7b4ca7b5b5583e55610299848d3597e833560a5186a404200ab659`;
+the canonical derived `{path,sha256}` expected-map SHA is
+`dc4e8e5fb3bfa882a223fba0e7162a27e4d6fdb820c3922b011d6c325d803ca5`.
+
+Runner reads the registry from the exact Supervisor-authorized source SHA,
+validates its schema/set/cardinality/path/hash rules, mechanically derives the
+expected map, then compares build-pack, bundle, release and run-config actual
+maps. It records registry SHA, expected-map SHA, each actual-map SHA and any
+missing/extra/mismatched path. Missing, duplicate, extra, malformed or unequal
+rows stop before config derivation or Java. A Runner command may not repeat or
+override any individual expected path/hash literal.
+
 The canonical authoritative-data copies were rehashed locally during candidate
 validation and matched all seven values. Runner must independently verify its
-manifest-bound external pack before each build/bundle/release.
+manifest-bound external pack through this registry contract before each
+build/bundle/release.
 
 ## Execution contract
 
@@ -135,7 +169,8 @@ For each horizon, Runner follows:
 
 ```text
 exact source snapshot + tree verification
-  -> exact seven-file pack verification
+  -> parse exact-source canonical seven-row registry and verify its SHA
+  -> derive expected map mechanically; verify pack/bundle/release/run maps
   -> cd verified build_root
   -> ./mvnw --version
   -> ./mvnw -DskipTests package
@@ -200,15 +235,19 @@ new run root or inside a superseded identity all fail closed.
 
 ## Hard Gates
 
-1. Repair-candidate parent is exact `c6a0cdc8…`; branch, ancestry,
+1. Repair-candidate parent is exact `68110deb…`; branch, ancestry,
    local/tracking/remote refs, protected refs, and clean worktree are proven.
    Later Runner source equals the exact reviewed Stage 11 repair candidate and
    retains runtime/model baseline `3ed98c4…` without semantic change.
 2. Both identities independently prove exact source tree, approved Java
    `25.0.3`, Maven wrapper, root Shade JAR/dependency closure, and built →
    bundle → release SHA continuity. The target thin JAR fails closed.
-3. All seven locked v2/Ferry Core paths and hashes match exactly; historical
-   v1/pre-Ferry inputs and fallbacks are absent.
+3. Exactly seven unique v2/Ferry Core rows are parsed mechanically from the
+   authorized-source canonical registry. Registry and expected-map hashes,
+   normalized paths, SHA format and build/bundle/release/run actual-map hashes
+   all pass. Missing/duplicate/extra/mismatched rows and handwritten hash
+   overrides fail closed before config or Java; historical v1/pre-Ferry inputs
+   and fallbacks are absent.
 4. Config derivation uses the deterministic XML contract, with exact
    controller/param cardinality and a source-SHA/path/reparse/normalized-diff
    gate completed before Java starts. Regex or line replacement is forbidden.
