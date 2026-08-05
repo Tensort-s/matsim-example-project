@@ -112,16 +112,14 @@ class HongKongTaxiFareScoringTest {
 	}
 
 	@Test
-	void unconsumedFareFailsAtFinishWithOrdinalContext() {
+	void untraveledTaxiSuffixIsNotChargedAtFinish() {
 		HongKongTaxiFareScoring scoring = scoringFor(
 				source(2_000.0, "urban_taxi", 29.0),
 				source(2_001.0, "urban_taxi", 31.1));
 		scoring.handleLeg(experiencedTaxiLeg());
 
-		IllegalStateException error =
-				assertThrows(IllegalStateException.class, scoring::finish);
-
-		assertMismatchContext(error, 1, 2, 1, "<finish>", "<none>");
+		scoring.finish();
+		assertEquals(-1.45, scoring.getScore(), TOLERANCE);
 	}
 
 	@Test

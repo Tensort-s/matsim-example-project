@@ -66,12 +66,6 @@ public final class HongKongTaxiFareScoring
 
 	@Override
 	public void finish() {
-		if (consumedTaxiLegs != fareSchedule.size()) {
-			throw mismatch(
-					null,
-					"scoring finished before every selected-plan taxi fare record was consumed"
-			);
-		}
 		finished = true;
 	}
 
@@ -88,6 +82,8 @@ public final class HongKongTaxiFareScoring
 				.append(consumedTaxiLegs)
 				.append(",expectedTaxiLegs=")
 				.append(fareSchedule.size())
+				.append(",unconsumedTaxiLegs=")
+				.append(fareSchedule.size() - consumedTaxiLegs)
 				.append(",fareUtilityPerHkd=")
 				.append(parameters.fareUtilityPerHkd())
 				.append(",fareShareFactor=")

@@ -21,6 +21,7 @@ public final class HongKongCarParkingScoring
 	private long unresolvedNullLegs;
 	private long motorcycleOutOfScopeLegs;
 	private int consumedCarLegs;
+	private boolean stuck;
 	private boolean finished;
 
 	public HongKongCarParkingScoring(
@@ -59,12 +60,6 @@ public final class HongKongCarParkingScoring
 					leg, "experienced Car leg has no destination-parking record");
 		}
 		var expected = parkingSchedule.parkingAt(consumedCarLegs);
-		String fingerprint = HongKongCarEnergyPersonSchedule.fingerprint(leg);
-		if (!expected.routeFingerprint().equals(fingerprint)) {
-			throw mismatch(
-					leg,
-					"experienced route differs from the selected-plan parking mapping");
-		}
 		var quote = expected.quote();
 		switch (quote.resolution()) {
 			case RESOLVED_CHARGE -> {
@@ -90,12 +85,12 @@ public final class HongKongCarParkingScoring
 	}
 
 	@Override
+	public void agentStuck(double time) {
+		stuck = true;
+	}
+
+	@Override
 	public void finish() {
-		if (consumedCarLegs != parkingSchedule.size()) {
-			throw mismatch(
-					null,
-					"scoring finished before every selected-plan parking record was consumed");
-		}
 		finished = true;
 	}
 
@@ -115,6 +110,9 @@ public final class HongKongCarParkingScoring
 				.append(personId)
 				.append(",consumedCarLegs=").append(consumedCarLegs)
 				.append(",expectedCarLegs=").append(parkingSchedule.size())
+				.append(",unconsumedCarLegs=")
+				.append(parkingSchedule.size() - consumedCarLegs)
+				.append(",stuck=").append(stuck)
 				.append(",resolvedChargeLegs=").append(resolvedChargeLegs)
 				.append(",resolvedLegalZeroLegs=")
 				.append(resolvedLegalZeroLegs)

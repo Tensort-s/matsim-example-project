@@ -48,17 +48,19 @@ offline source distributions, not simulation results.
 
 ## Identity and duplicate guards
 
-Every selected prepared Car leg must match the canonical `person_id +
-leg_sequence`, destination facility and activity type, source departure and
-travel times, applicable next-departure time, route fingerprint and
-destination fingerprint. Missing, reordered, changed, ambiguous, duplicate or
-non-finite input fails closed.
+When the schedule is constructed, every selected prepared Car leg must match
+the canonical `person_id + leg_sequence`, destination facility and activity
+type, and source departure/travel times. The catalog owns the next departure
+of the same physical vehicle; it is not required to equal the current
+destination activity end time because intervening non-Car trips may occur.
 
 Only `handleLeg` may apply a resolved positive parking value. Selected-plan
-ordinals are consumed exactly once; money, event, trip and external-score
-callbacks are inert. The energy and toll scorers retain their existing exact
-once guards. Standard Car `monetaryDistanceRate` must already be zero and is
-neither mutated nor reinterpreted.
+ordinals are consumed at most once without a runtime route-fingerprint gate;
+an unvisited destination suffix is unconsumed and uncharged. Extra callbacks,
+wrong routing modes, ambiguous source rows, and non-finite values fail closed.
+Money, event, trip and external-score callbacks are inert. Standard Car
+`monetaryDistanceRate` must already be zero and is neither mutated nor
+reinterpreted.
 
 ## Evidence
 

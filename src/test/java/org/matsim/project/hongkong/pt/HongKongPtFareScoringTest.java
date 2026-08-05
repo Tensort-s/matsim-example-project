@@ -86,7 +86,7 @@ class HongKongPtFareScoringTest {
 	}
 
 	@Test
-	void duplicateLegCallbackAndIncompleteConsumptionFailClosed() {
+	void duplicateLegCallbackFailsButUntraveledSuffixIsUncharged() {
 		Fixture fixture = fixture("duplicate", true);
 		HongKongPtFareScoring first =
 				new HongKongPtFareScoring(
@@ -109,9 +109,8 @@ class HongKongPtFareScoringTest {
 								fixture.schedule,
 								fixture.catalog),
 						1.0);
-		IllegalStateException error =
-				assertThrows(IllegalStateException.class, incomplete::finish);
-		assertTrue(error.getMessage().contains("before every selected-plan"));
+		incomplete.finish();
+		assertEquals(0.0, incomplete.getScore(), 0.0);
 	}
 
 	@Test
@@ -142,7 +141,7 @@ class HongKongPtFareScoringTest {
 	}
 
 	@Test
-	void nonPtLegsDoNotConsumeOrdinalAndRouteMismatchFailsClosed() {
+	void nonPtLegsDoNotConsumeOrdinalAndPreparedRouteReplacementKeepsFare() {
 		Fixture fixture = fixture("ordinal", true);
 		HongKongPtFareScoring scoring =
 				new HongKongPtFareScoring(
@@ -155,13 +154,23 @@ class HongKongPtFareScoringTest {
 		scoring.handleLeg(walk);
 		assertEquals(0, scoring.consumedPtLegs());
 
-		Leg wrong = PopulationUtils.createLeg(TransportMode.pt);
-		wrong.setRoutingMode(TransportMode.pt);
-		IllegalStateException mismatch = assertThrows(
-				IllegalStateException.class,
-				() -> scoring.handleLeg(wrong));
-		assertTrue(mismatch.getMessage().contains("fingerprint"));
+		Leg rerouted = PopulationUtils.createLeg(TransportMode.pt);
+		rerouted.setRoutingMode(TransportMode.pt);
+		scoring.handleLeg(rerouted);
+		scoring.finish();
+		assertEquals(1, scoring.consumedPtLegs());
+	}
+
+	@Test
+	void stuckAgentMayLeaveUntraveledPtFaresUnconsumed() {
+		Fixture fixture = fixture("stuck", true);
+		HongKongPtFareScoring scoring = new HongKongPtFareScoring(
+				HongKongPtPersonFareSchedule.fromSelectedPlan(
+						fixture.person, fixture.schedule, fixture.catalog), 1.0);
+		scoring.agentStuck(10_000.0);
+		scoring.finish();
 		assertEquals(0, scoring.consumedPtLegs());
+		assertEquals(0.0, scoring.getScore(), 0.0);
 	}
 
 	@Test

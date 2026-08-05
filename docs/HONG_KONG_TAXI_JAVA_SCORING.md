@@ -31,8 +31,9 @@ source-plan attributes. Therefore the experienced Taxi leg is used only to
 verify `mode=taxi`, `routingMode=taxi`, and consume the next schedule entry. It
 does not need a route or any custom Taxi attribute.
 
-An extra experienced Taxi leg fails immediately. `finish()` fails when any
-selected-plan Taxi fare remains unconsumed.
+An extra experienced Taxi leg fails immediately. If QSim ends before a planned
+Taxi suffix is travelled, `finish()` leaves that suffix unconsumed and
+uncharged; only experienced Taxi ordinals contribute route-based fare.
 
 `hkTaxiFareBaselineHkd` remains in the versioned native-routing plans as a
 historical comparison field. It is not read by the scoring factory, schedule,

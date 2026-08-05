@@ -712,3 +712,66 @@ Stage 3 deterministic validation results:
 The previously documented Maven `${parent.version}`, Java 25 native-access and
 Unsafe, Guice ASM, MATSim, and synthetic-fixture warnings remain non-blocking.
 No MATSim or behavioral trend is created or authorized in Stage 3.
+
+## Direct joint-scoring runtime entry point
+
+`RunHongKong5Pct` can now install the canonical Taxi/PT/Car scoring
+composition for an actual simulation with:
+
+```text
+--simulate --multimodal-costs
+--pt-fare-root=<pt_fare_v1 directory>
+--car-cost-root=<car_cost_v1 directory>
+```
+
+Both cost roots are mandatory when joint scoring is enabled. Before loading
+the full scenario, the entry point validates that the config already contains
+an explicit Taxi scoring mode compatible with custom fare scoring. It does not
+choose a Taxi ASC or silently manufacture missing Taxi parameters. The Car
+component separately requires standard Car `monetaryDistanceRate=0` so the
+custom marginal-cost component is the sole Car monetary-distance owner.
+
+The independent 2026-08-05 Stage 11 attempt used this entry point and one
+10-iteration identity. It exited before iteration 0 because its inherited
+production config had no Taxi scoring mode set. Exact identity, evidence, and
+the no-retry decision are recorded in
+[`STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md`](integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md).
+
+After the user authorized the fixed Taxi formula, a replacement identity
+successfully passed Taxi config validation, Injector creation, startup, and
+`PrepareForSim`, then exposed a separate destination-parking validation bug at
+iteration-0 scoring initialization. The source field is the next departure of
+the same physical vehicle. The current production data has no cross-person
+vehicle use, but the next Car departure can occur after intervening non-Car
+trips and therefore must not be equated with the current destination
+activity's end time. The local runtime fix preserves person-local
+arrival/destination identity checks and leaves the vehicle-chain evidence with
+the canonical parking catalog.
+
+The subsequently authorized repair sequence completed one fixed-canonical-plan
+Stage 11 identity at
+`/mnt/DiskM/by/hk_stage11_direct_10it_fixed_plans_20260805_run9`. MATSim
+completed iterations `0..10` and exited `0`. Runtime scoring now consumes
+person-local same-mode ordinals without route-fingerprint gates and charges
+only the experienced prefix; an untravelled suffix is recorded but not
+charged. Scoring functions are created at `BeforeMobsim` so the snapshot is
+not stale relative to the plan about to execute.
+
+This completed identity is not full Taxi runtime coverage. Its release
+selected `plans_routed_5pct_v2.xml.gz`, which retains Taxi-assigned demand as
+`mode=ride`, rather than the separate Taxi-native plans derivative. Both the
+final and experienced output plans contain zero `mode=taxi` legs; experienced
+counts were Car `55,366`, PT `556,924`, ride `56,326`, walk `172,588`, and
+Taxi `0`. The Taxi formula and component were configured and injected but
+never received a Taxi-leg callback. The run therefore demonstrates joint
+stack completion and live Car/PT paths, not simultaneous live Taxi/PT/Car
+charging. A future closure run must package/select the Taxi-native plans and
+first prove their compatibility with the static Car/PT cost identities.
+
+Because the accepted Car energy/toll/parking artifacts are static
+person/leg/route products, this technical stability identity freezes route,
+mode, and time innovation: `ChangeExpBeta=1`, while `ReRoute`,
+`SubtourModeChoice`, and `TimeAllocationMutator` are `0`. Dynamic route- and
+mode-dependent cost regeneration is not claimed. Exact output metrics,
+limitations, immutable paths, and the complete failure-to-repair chain are in
+[`STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md`](integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md).

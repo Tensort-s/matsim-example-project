@@ -138,6 +138,50 @@ class HongKongCarParkingScoringTest {
 	}
 
 	@Test
+	void vehicleNextDepartureIsNotTheArrivingPersonsActivityEndTime() {
+		Fixture fixture = fixture(
+				"nonconsecutive-car-use",
+				resolvedCharge("nonconsecutive-car-use", 0, 40.0));
+		Activity destination = (Activity) fixture.person.getSelectedPlan()
+				.getPlanElements().get(2);
+		destination.setEndTime(700.0);
+
+		var schedule = HongKongCarParkingPersonSchedule.fromSelectedPlan(
+				fixture.person, fixture.catalog);
+
+		assertEquals(1, schedule.size());
+		assertEquals(500.0,
+				schedule.parkingAt(0).quote().nextDepartureTimeS(), 0.0);
+	}
+
+	@Test
+	void preparedRouteReplacementKeepsDestinationParkingOrdinal() {
+		Fixture fixture = fixture(
+				"runtime-reroute", resolvedCharge("runtime-reroute", 0, 40.0));
+		var scoring = new HongKongCarParkingScoring(
+				HongKongCarParkingPersonSchedule.fromSelectedPlan(
+						fixture.person, fixture.catalog), 1.0);
+		fixture.carLeg.getRoute().setDistance(1_001.0);
+		scoring.handleLeg(fixture.carLeg);
+		scoring.finish();
+		assertEquals(-40.0, scoring.getScore(), 0.0);
+		assertEquals(1, scoring.consumedCarLegs());
+	}
+
+	@Test
+	void stuckAgentMayLeaveUnreachedParkingUnconsumed() {
+		Fixture fixture = fixture(
+				"stuck", resolvedCharge("stuck", 0, 40.0));
+		var scoring = new HongKongCarParkingScoring(
+				HongKongCarParkingPersonSchedule.fromSelectedPlan(
+						fixture.person, fixture.catalog), 1.0);
+		scoring.agentStuck(10_000.0);
+		scoring.finish();
+		assertEquals(0, scoring.consumedCarLegs());
+		assertEquals(0.0, scoring.getScore(), 0.0);
+	}
+
+	@Test
 	void motorcycleRemainsOutOfScopeAndFixedOwnershipAbsent() {
 		Fixture fixture = fixture(
 				"motorcycle", motorcycle("motorcycle", 0));

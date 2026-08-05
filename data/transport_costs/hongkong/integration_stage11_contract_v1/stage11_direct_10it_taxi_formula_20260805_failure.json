@@ -1,0 +1,46 @@
+{
+  "record_type": "stage11_direct_taxi_formula_replacement_10_iteration_attempt",
+  "attempt_date": "2026-08-05",
+  "status": "FAILED_AT_ITERATION_0_SCORING_INITIALIZATION",
+  "release_root": "/mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_taxi_formula_20260805_release2",
+  "run_root": "/mnt/DiskM/by/hk_stage11_direct_10it_taxi_formula_20260805_run2",
+  "last_iteration": 10,
+  "authorized_taxi_leg_score": {
+    "formula": "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd",
+    "constant": -9.0,
+    "marginalUtilityOfTraveling_util_hr": -6.0,
+    "marginalUtilityOfDistance_util_m": 0.0,
+    "monetaryDistanceRate": 0.0,
+    "dailyMonetaryConstant": 0.0,
+    "dailyUtilityConstant": 0.0,
+    "fareUtilityPerHkd": 0.05,
+    "fareShareFactor": 1.0
+  },
+  "authorized_car_monetaryDistanceRate": 0.0,
+  "loaded_persons": 385820,
+  "assigned_explicit_car_vehicles": 24800,
+  "joint_injector_created": true,
+  "controller_startup_completed": true,
+  "prepare_for_sim_completed": true,
+  "iteration_directories": [0],
+  "qsim_started": false,
+  "completed_iterations": [],
+  "process_exit_code": 1,
+  "started_at": "2026-08-05T15:49:36.083412+08:00",
+  "finished_at": "2026-08-05T15:50:28+08:00",
+  "java_elapsed_seconds": 52.02,
+  "peak_resident_kib": 8467512,
+  "root_cause": {
+    "category": "CAR_PARKING_NEXT_VEHICLE_DEPARTURE_SEMANTIC_MISMATCH",
+    "message": "Canonical parking next-departure time differs from the destination activity.",
+    "detail": "HongKongCarParkingPersonSchedule incorrectly required canonical next_departure_time_s for the same physical vehicle to equal the current destination activity end time. Production has no cross-person vehicle use, but intervening non-Car trips can make the next Car departure later than that activity end.",
+    "taxi_formula_failure": false,
+    "car_cost_component": "destination_parking"
+  },
+  "local_repair": {
+    "status": "IMPLEMENTED_AND_TARGETED_TESTS_PASS",
+    "behavior": "Keep exact arriving leg and destination identity checks; do not equate the next physical-vehicle departure with the arriving person's activity end time.",
+    "third_server_attempt_started": false
+  },
+  "next_required_decision": "Authorize or decline one new immutable release/run for the tested parking semantic repair."
+}

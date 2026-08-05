@@ -27,6 +27,7 @@ public final class HongKongPtFareScoring
 	private long resolvedSegments;
 	private long unresolvedSegments;
 	private int consumedPtLegs;
+	private boolean stuck;
 	private boolean finished;
 
 	public HongKongPtFareScoring(
@@ -72,13 +73,6 @@ public final class HongKongPtFareScoring
 
 		HongKongPtPersonFareSchedule.LegFare expected =
 				fareSchedule.fareAt(consumedPtLegs);
-		String actualFingerprint =
-				HongKongPtPersonFareSchedule.fingerprint(leg);
-		if (!expected.routeFingerprint().equals(actualFingerprint)) {
-			throw mismatch(
-					leg,
-					"experienced PT route fingerprint differs from selected-plan schedule");
-		}
 
 		double legFare = expected.resolvedFareHkd();
 		double legScore = -legFare * marginalUtilityOfMoney;
@@ -100,12 +94,12 @@ public final class HongKongPtFareScoring
 	}
 
 	@Override
+	public void agentStuck(double time) {
+		stuck = true;
+	}
+
+	@Override
 	public void finish() {
-		if (consumedPtLegs != fareSchedule.size()) {
-			throw mismatch(
-					null,
-					"scoring finished before every selected-plan PT fare record was consumed");
-		}
 		finished = true;
 	}
 
@@ -127,6 +121,10 @@ public final class HongKongPtFareScoring
 				.append(consumedPtLegs)
 				.append(",expectedPtLegs=")
 				.append(fareSchedule.size())
+				.append(",unconsumedPtLegs=")
+				.append(fareSchedule.size() - consumedPtLegs)
+				.append(",stuck=")
+				.append(stuck)
 				.append(",resolvedSegments=")
 				.append(resolvedSegments)
 				.append(",unresolvedSegments=")

@@ -48,12 +48,16 @@ The selected-plan schedule requires:
 - `mode=car` and `routingMode=car`;
 - a finite, nonnegative prepared route distance;
 - an exact canonical person/leg key;
-- source and prepared-route distance equality within `1e-6 m`;
-- the same selected-plan route fingerprint at the scoring callback.
+- source and selected-plan distance equality within `1e-6 m` when the
+  canonical schedule is constructed.
 
-Missing keys, unresolved rows, changed routes, extra callbacks, missing
-callbacks, reordered callbacks, duplicate callbacks, and non-finite values
-fail closed. None becomes a numeric zero.
+Runtime callbacks consume the person-local Car ordinal and do not compare a
+route fingerprint: MATSim may prepare or copy an experienced route without
+changing the canonical cost identity. Missing keys, unresolved rows, extra
+callbacks, wrong routing modes, duplicate callbacks, and non-finite values
+still fail closed. If QSim ends before a planned suffix is travelled, that
+suffix is not consumed and is not charged; it is reported as unconsumed rather
+than fabricated as zero-cost travel.
 
 ## Canonical base boundary
 

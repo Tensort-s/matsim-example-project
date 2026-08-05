@@ -20,6 +20,7 @@ public final class HongKongCarTollScoring implements HongKongScoringComponent {
 	private long motorcycleOutOfScopeLegs;
 	private long physicalPassageEvents;
 	private int consumedCarLegs;
+	private boolean stuck;
 	private boolean finished;
 
 	public HongKongCarTollScoring(
@@ -56,12 +57,6 @@ public final class HongKongCarTollScoring implements HongKongScoringComponent {
 			throw mismatch(leg, "experienced Car leg has no confirmed-toll record");
 		}
 		var expected = tollSchedule.tollAt(consumedCarLegs);
-		String fingerprint = HongKongCarEnergyPersonSchedule.fingerprint(leg);
-		if (!expected.routeFingerprint().equals(fingerprint)) {
-			throw mismatch(
-					leg,
-					"experienced route differs from the confirmed selected-plan toll mapping");
-		}
 		var quote = expected.quote();
 		switch (quote.resolution()) {
 			case CONFIRMED_CHARGE -> {
@@ -87,12 +82,12 @@ public final class HongKongCarTollScoring implements HongKongScoringComponent {
 	}
 
 	@Override
+	public void agentStuck(double time) {
+		stuck = true;
+	}
+
+	@Override
 	public void finish() {
-		if (consumedCarLegs != tollSchedule.size()) {
-			throw mismatch(
-					null,
-					"scoring finished before every selected-plan toll record was consumed");
-		}
 		finished = true;
 	}
 
@@ -111,6 +106,9 @@ public final class HongKongCarTollScoring implements HongKongScoringComponent {
 				.append(personId)
 				.append(",consumedCarLegs=").append(consumedCarLegs)
 				.append(",expectedCarLegs=").append(tollSchedule.size())
+				.append(",unconsumedCarLegs=")
+				.append(tollSchedule.size() - consumedCarLegs)
+				.append(",stuck=").append(stuck)
 				.append(",confirmedChargeLegs=").append(confirmedChargeLegs)
 				.append(",confirmedNoChargeLegs=").append(confirmedNoChargeLegs)
 				.append(",motorcycleOutOfScopeLegs=")

@@ -1,5 +1,180 @@
 # Stage 11 — Joint stability at 5 and 10 iterations
 
+## Independent direct 10-iteration attempt (2026-08-05)
+
+The user directly superseded the two-release execution plan for this attempt:
+run one new 10-iteration identity, publish no second release, and do not use
+per-step SHA comparisons as operational gates. This instruction was executed
+outside the four lane workflow. It did not authorize Stage 12 or calibration.
+
+Exactly one new release and one new run were allocated under the permitted
+server root:
+
+```text
+release: /mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_20260805_release1
+run:     /mnt/DiskM/by/hk_stage11_direct_10it_20260805_run1
+```
+
+The derived config used `firstIteration=0`, `lastIteration=10`, a new output
+directory, fail-if-exists output policy, and the explicitly authorized change
+of Car `monetaryDistanceRate` from `-0.0007` to `0`. The process used the
+release JDK 25, the newly built root Shade JAR, explicit PT-fare and Car-cost
+roots, and the new `--multimodal-costs` entry-point option. No prior directory
+was overwritten or deleted.
+
+The process exited `1` before iteration 0. It loaded 385,820 persons, assigned
+24,800 explicit Car vehicles, and printed confirmation that the Taxi/PT/Car
+joint scoring module was installed. Injector creation then failed closed with:
+
+```text
+Missing scoring parameters for mode='taxi'; custom fare scoring cannot be installed.
+```
+
+The inherited production config defines `car`, `pt`, `walk`, and `ride`
+scoring mode sets but no `taxi` set. The established Taxi component requires
+an explicit Taxi scoring set with zero standard distance terms; it deliberately
+does not invent or mutate the Taxi ASC and travel utility. Therefore the
+authorized Car-rate change was applied correctly but was not sufficient to
+make the joint configuration runnable. The accompanying Guice warning
+`Unsupported class file major version 69` occurred while formatting the real
+exception and was not the process root cause.
+
+The immutable failure output contains the config, complete log, command
+metadata, numeric launcher PID, `exit_code.txt=1`, and finish timestamp. It has
+no iteration directory; only MATSim's empty `ITERS`/`tmp` directories and a
+63-byte `traveldistancestats.csv` were created. No replacement attempt was
+started, in accordance with the one-run instruction. The compact checked-in
+record is
+[`stage11_direct_10it_20260805_failure.json`](../../../data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_direct_10it_20260805_failure.json).
+
+The direct launcher now checks the Taxi scoring contract before allocating a
+release/run, and `RunHongKong5Pct` checks it before loading the large scenario.
+These are semantic dependency checks, not a duplicate SHA registry. A future
+replacement run requires an explicit decision for the Taxi scoring parameters
+(the previously tested technical pilot used `ASC=-9`, travel utility
+`-6 util/hour`, and zero Taxi distance terms); this attempt does not adopt
+those values for production.
+
+### Authorized Taxi-formula replacement attempt
+
+The user subsequently authorized the exact Taxi leg score
+
+```text
+S_taxi_leg = -9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd
+```
+
+and instructed Stage 11 to continue. The replacement config therefore adds
+one `taxi` mode set with `constant=-9`,
+`marginalUtilityOfTraveling=-6 util/hour`, zero marginal distance, zero
+monetary distance rate, and zero daily constants. The existing central Taxi
+component supplies `fareUtilityPerHkd=0.05` and `fareShareFactor=1`. Car
+`monetaryDistanceRate=0` remains the earlier authorized joint-cost setting.
+
+One replacement release/run was created without touching the first attempt:
+
+```text
+release: /mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_taxi_formula_20260805_release2
+run:     /mnt/DiskM/by/hk_stage11_direct_10it_taxi_formula_20260805_run2
+```
+
+The config loaded and the joint Injector, controller startup, consistency
+check, full `PrepareForSim`, and iteration-0 directory creation all succeeded.
+This proves that the authorized Taxi formula repaired the first failure. The
+process then exited `1` during iteration-start scoring-function creation,
+before QSim, with:
+
+```text
+Canonical parking next-departure time differs from the destination activity.
+```
+
+The failure exposed an independent Stage 8C parking validation defect.
+Canonical `next_departure_time_s` means the next Car departure of the same
+physical vehicle. The production audit proves that no vehicle is used by more
+than one person or household, but a person's next Car departure need not
+immediately follow the current destination activity because intervening
+non-Car trips can occur. It is therefore not necessarily that activity's end
+time. The Java schedule nevertheless compared those two different quantities.
+
+The person-local validation has been corrected locally to retain exact
+arrival-leg departure/travel time, route, facility, and activity-type checks
+while leaving the physical next-vehicle-departure chain to the catalog that
+owns it. A regression test with a different destination activity end time
+passes, together with the full targeted Taxi/Car/joint test set. No third
+server release/run has been created under the earlier single-run/release
+constraint. The compact replacement failure record is
+[`stage11_direct_10it_taxi_formula_20260805_failure.json`](../../../data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_direct_10it_taxi_formula_20260805_failure.json).
+
+### Completed fixed-canonical-plan 10-iteration run
+
+The user then explicitly instructed the independent agent to complete the
+repair and continue Stage 11. Each failed replacement remained immutable in a
+new server directory; no partial output was reused or overwritten. The
+bounded failure sequence exposed and repaired four runtime assumptions:
+
+1. an experienced MATSim route may be prepared or copied differently from the
+   selected-plan snapshot, so route fingerprints are not runtime charge keys;
+2. plans that are still active or lost at the 30-hour QSim end legitimately
+   leave an untravelled suffix, which must remain unconsumed and uncharged;
+3. scoring functions must snapshot the selected plan at
+   `controller.createScoringFunctionType=BeforeMobsim`, after replanning;
+4. the accepted Car energy/toll/parking tables are static canonical
+   person/leg products and cannot price newly generated routes or modes.
+
+The final dependency in item 4 defines this Stage 11 execution as a technical
+joint-scoring stability run on the canonical plans covered by those tables.
+`ChangeExpBeta` remains enabled with weight `1`; `ReRoute`,
+`SubtourModeChoice`, and `TimeAllocationMutator` have weight `0`. This does not
+claim an adaptive equilibrium or dynamic cost generation. It preserves the
+authorized Taxi formula, Car `monetaryDistanceRate=0`, demand, network,
+transit supply, capacities, and all cost values.
+
+The successful immutable identity is:
+
+```text
+release: /mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_fixed_plans_20260805_release9
+run:     /mnt/DiskM/by/hk_stage11_direct_10it_fixed_plans_20260805_run9
+```
+
+It ran from `2026-08-05T17:14:03+08:00` to
+`2026-08-05T17:44:51+08:00`, completed iterations `0..10`, and exited `0`.
+All 11 iteration directories and all 11 QSim 30-hour completion records are
+present. The log contains zero `ERROR` lines, zero scoring schedule mismatches,
+and zero uncaught-thread exceptions. Wall time was 30 minutes 47.87 seconds,
+peak resident memory was 28,413,472 KiB, and the complete output occupies
+approximately 11 GiB on the server.
+
+Average executed score over iterations had mean `61.0974350`, minimum
+`60.6846842`, maximum `61.4023047`, and range `0.7176205`. Fixed-plan mode
+shares were constant in every iteration: Car `0.0910661`, PT `0.7491844`,
+ride `0.0757920`, and walk `0.0839575`. QSim `lost` at 30 hours ranged from
+13,881 to 19,743 with mean 15,584.36. This is a nonfatal but material
+stability limitation for later supply/demand diagnosis; it is not calibrated
+or hidden by Stage 11.
+
+Post-run coverage inspection found an important boundary. The launcher and
+release selected `plans_routed_5pct_v2.xml.gz`, whose Taxi-assigned demand is
+still encoded as `mode=ride`; the separate
+`plans_routed_5pct_taxi_native.xml.gz` derivative was neither packaged nor
+selected. Final `output_plans.xml.zst` and
+`output_experienced_plans.xml.zst` therefore contain zero `mode=taxi` legs.
+Experienced-leg counts were Car `55,366`, PT `556,924`, ride `56,326`, walk
+`172,588`, and Taxi `0`. Person-level `modeDetail=taxi` is metadata and does
+not activate the Taxi scorer. Consequently this identity validates completion
+of the joint stack and live Car/PT paths, including the Car
+energy/toll/parking composition, but it does not validate Taxi runtime
+scoring or simultaneous live Taxi/PT/Car charging. The authorized Taxi
+formula was configured and injected only. Exact positive-charge counts by
+subcomponent were not instrumented. Stage 10's directed Taxi/PT/Car proof
+remains separate and cannot close this full-run Taxi coverage gap.
+
+Nonfatal warnings record zero Car routing randomness under the authorized
+zero monetary distance rate/inherited zero Car travel-time cost, runtime
+storage enlargement for short ferry links, incomplete plans at the 30-hour
+horizon, and an unsupported attribute converter in plan dumps. None produced
+an error or nonzero exit. The compact checked-in success record is
+[`stage11_direct_10it_fixed_plans_20260805_success.json`](../../../data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_direct_10it_fixed_plans_20260805_success.json).
+Stage 12 remains unauthorized.
+
 ## Candidate identity and authority
 
 | Field | Value |

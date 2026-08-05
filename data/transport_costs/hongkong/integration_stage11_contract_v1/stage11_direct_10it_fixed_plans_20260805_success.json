@@ -1,0 +1,116 @@
+{
+  "record_type": "stage11_direct_fixed_canonical_plans_10_iteration_run",
+  "attempt_date": "2026-08-05",
+  "status": "PASS_COMPLETED_ITERATIONS_0_THROUGH_10_TAXI_RUNTIME_NOT_COVERED",
+  "release_root": "/mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_fixed_plans_20260805_release9",
+  "run_root": "/mnt/DiskM/by/hk_stage11_direct_10it_fixed_plans_20260805_run9",
+  "last_iteration": 10,
+  "process_exit_code": 0,
+  "started_at": "2026-08-05T17:14:03.179229+08:00",
+  "finished_at": "2026-08-05T17:44:51+08:00",
+  "java_elapsed_seconds": 1847.87,
+  "peak_resident_kib": 28413472,
+  "loaded_persons": 385820,
+  "assigned_explicit_car_vehicles": 24800,
+  "authorized_taxi_leg_score": {
+    "formula": "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd",
+    "constant": -9.0,
+    "marginalUtilityOfTraveling_util_hr": -6.0,
+    "marginalUtilityOfDistance_util_m": 0.0,
+    "monetaryDistanceRate": 0.0,
+    "fareUtilityPerHkd": 0.05,
+    "fareShareFactor": 1.0
+  },
+  "authorized_car_monetaryDistanceRate": 0.0,
+  "scoring_lifecycle": {
+    "controller_createScoringFunctionType": "BeforeMobsim",
+    "reason": "Build person-local cost schedules after replanning and before the plan is executed."
+  },
+  "canonical_plan_contract": {
+    "scope": "Stage 11 technical joint-scoring stability on plans covered by the static canonical cost tables",
+    "ChangeExpBeta_weight": 1.0,
+    "ReRoute_weight": 0.0,
+    "SubtourModeChoice_weight": 0.0,
+    "TimeAllocationMutator_weight": 0.0,
+    "dynamic_route_or_mode_cost_generation": false
+  },
+  "completed_iterations": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "iteration_directory_count": 11,
+  "qsim_30_hour_completion_count": 11,
+  "log_error_lines": 0,
+  "schedule_mismatch_lines": 0,
+  "uncaught_exception_lines": 0,
+  "output_size_approx_gib": 11,
+  "score_stats": {
+    "average_executed_by_iteration": [
+      61.12447058400367,
+      61.05589754689919,
+      61.15781229461056,
+      61.036367130518784,
+      61.40230474463238,
+      61.049610034511204,
+      61.032797605574544,
+      60.684684232592566,
+      61.20615856063247,
+      61.24868899864828,
+      61.0729932879081
+    ],
+    "mean": 61.0974350018665,
+    "min": 60.6846842325926,
+    "max": 61.4023047446324,
+    "range": 0.717620512039815
+  },
+  "mode_shares_constant_by_iteration": {
+    "car": 0.09106606384495182,
+    "pt": 0.7491843886747694,
+    "ride": 0.07579201037097204,
+    "walk": 0.08395753710930672
+  },
+  "runtime_mode_coverage": {
+    "input_plans_file": "plans_routed_5pct_v2.xml.gz",
+    "input_contract": "The selected production plans retain Taxi-assigned demand as mode=ride; the Taxi-native derivative was not packaged or selected.",
+    "experienced_leg_counts": {
+      "car": 55366,
+      "pt": 556924,
+      "ride": 56326,
+      "walk": 172588,
+      "taxi": 0
+    },
+    "output_plans_mode_taxi": 0,
+    "output_experienced_plans_mode_taxi": 0,
+    "taxi_scoring_runtime_coverage": false,
+    "interpretation": "Car and PT runtime paths were exercised. The Taxi component and authorized formula were configured and injected but received no mode=taxi leg, so this run is not full Taxi/PT/Car runtime coverage. Per-component positive-charge counters were not emitted."
+  },
+  "qsim_lost_at_30_hours": {
+    "by_iteration": [14733, 15731, 16164, 15581, 13881, 15828, 15057, 19743, 14926, 14740, 15044],
+    "mean": 15584.3636363636,
+    "min": 13881,
+    "max": 19743,
+    "interpretation": "Nonfatal technical-stability metric; retain for later calibration and supply/demand diagnosis."
+  },
+  "runtime_repairs_exercised": [
+    "Parking next vehicle departure is not equated with the current destination activity end time.",
+    "Experienced Taxi/PT/Car costs consume person-local same-mode ordinals without route-fingerprint gates.",
+    "Only experienced leg prefixes are charged; untraveled suffixes remain uncharged.",
+    "Scoring functions are created at BeforeMobsim.",
+    "Innovation strategies that would leave the static canonical cost domain are frozen for this Stage 11 run."
+  ],
+  "nonfatal_warnings": [
+    "Taxi runtime scoring was not exercised because the selected plans contain zero mode=taxi legs; modeDetail=taxi person metadata does not activate a Taxi leg scorer.",
+    "Car routing randomness is unavailable because the authorized monetaryDistanceRate and inherited Car travel-time cost rate are zero.",
+    "Some ferry links have QSim storage capacity enlarged at runtime.",
+    "Some plans do not complete by the 30-hour simulation end.",
+    "MATSim cannot serialize one Id attribute converter in plan dumps."
+  ],
+  "superseded_failure_chain": [
+    {"attempt": 1, "category": "MISSING_TAXI_MODE_PARAMS"},
+    {"attempt": 2, "category": "PARKING_NEXT_DEPARTURE_SEMANTIC_MISMATCH"},
+    {"attempt": 3, "category": "EXPERIENCED_ROUTE_FINGERPRINT_GATE"},
+    {"attempt": 4, "category": "UNTRAVELED_PLAN_SUFFIX_REJECTED_AT_FINISH"},
+    {"attempt": 5, "category": "LOST_AGENT_WITHOUT_PERSON_STUCK_CALLBACK"},
+    {"attempt": 6, "category": "SCORING_SNAPSHOT_CREATED_BEFORE_REPLANNING"},
+    {"attempt": 7, "category": "INTERNAL_INSTEAD_OF_PUBLIC_CONTROLLER_XML_KEY"},
+    {"attempt": 8, "category": "STATIC_COST_TABLE_INCOMPATIBLE_WITH_ROUTE_AND_MODE_INNOVATION"}
+  ],
+  "stage12_authorized": false
+}

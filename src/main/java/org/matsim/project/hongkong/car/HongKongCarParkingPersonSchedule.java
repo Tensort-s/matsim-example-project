@@ -167,14 +167,16 @@ public final class HongKongCarParkingPersonSchedule {
 			throw new IllegalStateException(
 					"Canonical parking route travel time differs from the selected plan.");
 		}
-		if (quote.nextDepartureTimeS() != null) {
-			if (destination.getEndTime().isUndefined()
-					|| Math.abs(destination.getEndTime().seconds()
-					- quote.nextDepartureTimeS()) > TIME_TOLERANCE_S) {
-				throw new IllegalStateException(
-						"Canonical parking next-departure time differs from the destination activity.");
-			}
-		} else if (!quote.terminalEvent()) {
+		/*
+		 * nextDepartureTimeS belongs to the next departure of the same
+		 * physical vehicle.  The current production assignment has one person
+		 * per used vehicle, but that person's next Car departure need not
+		 * immediately follow this destination activity: intervening non-Car
+		 * trips can occur.  It is therefore not the destination-activity end
+		 * time.  The catalog validates the vehicle chain; this method validates
+		 * the arriving leg and destination identity.
+		 */
+		if (quote.nextDepartureTimeS() == null && !quote.terminalEvent()) {
 			throw new IllegalStateException(
 					"A non-terminal parking source is missing its next-departure time.");
 		}

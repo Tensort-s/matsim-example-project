@@ -48,17 +48,18 @@ The median zero is a confirmed-no-charge value, not unresolved filling.
 
 ## Route and duplicate guards
 
-Each selected prepared Car leg must match the canonical `person_id +
-leg_sequence`, source route distance, full route-link count, and route
-fingerprint. Every confirmed passage must retain its canonical facility and
-matched link sequence inside the audited source index span. Western Harbour
-alias/complementary fragments may contain audited gap links; their confirmed
-matched links must still appear in order.
+When the canonical schedule is constructed, each selected prepared Car leg
+must match `person_id + leg_sequence`, source route distance, and full
+route-link evidence. Every confirmed passage must retain its canonical
+facility and matched link sequence inside the audited source index span.
+Western Harbour alias/complementary fragments may contain audited gap links;
+their confirmed matched links must still appear in order.
 
-Only `handleLeg` can charge. Ordinals are consumed once; extra, missing,
-reordered, changed-route, ambiguous, or non-finite input fails closed. Money,
-event, trip, and external-score callbacks are inert, and no
-`PersonMoneyEvent` is emitted.
+Only `handleLeg` can charge. Experienced callbacks consume person-local Car
+ordinals once and do not re-check a runtime route fingerprint. Extra
+callbacks, wrong routing modes, ambiguous source rows, and non-finite values
+fail closed. An untravelled plan suffix is not charged. Money, event, trip and
+external-score callbacks are inert, and no `PersonMoneyEvent` is emitted.
 
 The Stage 8A energy and Stage 8B toll scorers remain unchanged inside the
 Stage 8C composite. Standard Car `monetaryDistanceRate` must still already be

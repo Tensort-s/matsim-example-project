@@ -186,7 +186,7 @@ class HongKongCarEnergyScoringTest {
 	}
 
 	@Test
-	void incompleteConsumptionAndExperiencedRouteMismatchFailClosed() {
+	void untraveledSuffixIsUnchargedAndPreparedRouteReplacementKeepsOrdinalCost() {
 		Fixture fixture = fixture(
 				"consumption",
 				resolvedQuote("consumption", 0, 1_000.0, 2.5));
@@ -194,17 +194,26 @@ class HongKongCarEnergyScoringTest {
 				HongKongCarEnergyPersonSchedule.fromSelectedPlan(
 						fixture.person, fixture.catalog),
 				1.0);
-		assertThrows(IllegalStateException.class, incomplete::finish);
+		incomplete.finish();
+		assertEquals(0.0, incomplete.getScore(), 0.0);
+		var stuck = new HongKongCarEnergyScoring(
+				HongKongCarEnergyPersonSchedule.fromSelectedPlan(
+						fixture.person, fixture.catalog), 1.0);
 
-		var mismatch = new HongKongCarEnergyScoring(
+		var rerouted = new HongKongCarEnergyScoring(
 				HongKongCarEnergyPersonSchedule.fromSelectedPlan(
 						fixture.person, fixture.catalog),
 				1.0);
 		fixture.carLeg.getRoute().setDistance(1_001.0);
-		assertThrows(
-				IllegalStateException.class,
-				() -> mismatch.handleLeg(fixture.carLeg));
-		assertEquals(0, mismatch.consumedCarLegs());
+		rerouted.handleLeg(fixture.carLeg);
+		rerouted.finish();
+		assertEquals(1, rerouted.consumedCarLegs());
+		assertEquals(-2.5, rerouted.getScore(), 0.0);
+
+		stuck.agentStuck(10_000.0);
+		stuck.finish();
+		assertEquals(0, stuck.consumedCarLegs());
+		assertEquals(0.0, stuck.getScore(), 0.0);
 	}
 
 	private static Fixture fixture(

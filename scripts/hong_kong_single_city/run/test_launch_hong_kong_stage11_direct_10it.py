@@ -1,0 +1,97 @@
+import unittest
+import xml.etree.ElementTree as ET
+
+from launch_hong_kong_stage11_direct_10it import (
+    freeze_canonical_plan_innovation,
+    require_canonical_plan_innovation_frozen,
+    require_scoring_function_creation_after_replanning,
+    require_taxi_scoring_contract,
+    set_scoring_function_creation_after_replanning,
+    set_taxi_scoring_contract,
+)
+
+
+def config_with_mode_params(mode_sets: str) -> ET.Element:
+    return ET.fromstring(
+        "<config><module name='scoring'>" + mode_sets + "</module></config>"
+    )
+
+
+class TaxiScoringContractTest(unittest.TestCase):
+
+    def test_missing_taxi_mode_is_added_with_authorized_formula(self) -> None:
+        root = config_with_mode_params(
+            "<parameterset type='modeParams'>"
+            "<param name='mode' value='car'/>"
+            "</parameterset>"
+        )
+        set_taxi_scoring_contract(root)
+        require_taxi_scoring_contract(root)
+
+
+    def test_explicit_zero_distance_terms_are_accepted(self) -> None:
+        root = config_with_mode_params(
+            "<parameterset type='modeParams'>"
+            "<param name='mode' value='taxi'/>"
+            "<param name='marginalUtilityOfDistance' value='0'/>"
+            "<param name='monetaryDistanceRate' value='0.0'/>"
+            "</parameterset>"
+        )
+        set_taxi_scoring_contract(root)
+        require_taxi_scoring_contract(root)
+
+    def test_existing_values_are_replaced_by_authorized_formula(self) -> None:
+        root = config_with_mode_params(
+            "<parameterset type='modeParams'>"
+            "<param name='mode' value='taxi'/>"
+            "<param name='marginalUtilityOfDistance' value='0'/>"
+            "<param name='monetaryDistanceRate' value='-0.0015'/>"
+            "</parameterset>"
+        )
+        set_taxi_scoring_contract(root)
+        require_taxi_scoring_contract(root)
+
+
+class ScoringLifecycleContractTest(unittest.TestCase):
+
+    def test_missing_controller_parameter_is_added(self) -> None:
+        root = ET.fromstring("<config><module name='controller'/></config>")
+        set_scoring_function_creation_after_replanning(root)
+        require_scoring_function_creation_after_replanning(root)
+
+    def test_iteration_starts_is_replaced_with_before_mobsim(self) -> None:
+        root = ET.fromstring(
+            "<config><module name='controller'>"
+            "<param name='createScoringFunctionType' "
+            "value='IterationStarts'/>"
+            "</module></config>"
+        )
+        set_scoring_function_creation_after_replanning(root)
+        require_scoring_function_creation_after_replanning(root)
+
+
+class CanonicalPlanContractTest(unittest.TestCase):
+
+    def test_innovation_is_frozen_for_each_subpopulation(self) -> None:
+        settings = "".join(
+            "<parameterset type='strategysettings'>"
+            f"<param name='strategyName' value='{strategy}'/>"
+            "<param name='weight' value='0.25'/>"
+            f"<param name='subpopulation' value='{subpopulation}'/>"
+            "</parameterset>"
+            for subpopulation in ("resident", "visitor")
+            for strategy in (
+                "ChangeExpBeta",
+                "ReRoute",
+                "SubtourModeChoice",
+                "TimeAllocationMutator",
+            )
+        )
+        root = ET.fromstring(
+            "<config><module name='replanning'>" + settings + "</module></config>"
+        )
+        freeze_canonical_plan_innovation(root)
+        require_canonical_plan_innovation_frozen(root)
+
+if __name__ == "__main__":
+    unittest.main()

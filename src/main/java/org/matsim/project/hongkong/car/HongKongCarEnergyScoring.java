@@ -24,6 +24,7 @@ public final class HongKongCarEnergyScoring
 	private long resolvedPrivateCarLegs;
 	private long motorcycleOutOfScopeLegs;
 	private int consumedCarLegs;
+	private boolean stuck;
 	private boolean finished;
 
 	public HongKongCarEnergyScoring(
@@ -68,13 +69,6 @@ public final class HongKongCarEnergyScoring
 		}
 		HongKongCarEnergyPersonSchedule.LegEnergy expected =
 				energySchedule.energyAt(consumedCarLegs);
-		String actualFingerprint =
-				HongKongCarEnergyPersonSchedule.fingerprint(leg);
-		if (!expected.routeFingerprint().equals(actualFingerprint)) {
-			throw mismatch(
-					leg,
-					"experienced Car route fingerprint differs from selected-plan source mapping");
-		}
 
 		var quote = expected.quote();
 		if (quote.resolved()) {
@@ -105,12 +99,12 @@ public final class HongKongCarEnergyScoring
 	}
 
 	@Override
+	public void agentStuck(double time) {
+		stuck = true;
+	}
+
+	@Override
 	public void finish() {
-		if (consumedCarLegs != energySchedule.size()) {
-			throw mismatch(
-					null,
-					"scoring finished before every selected-plan Car energy record was consumed");
-		}
 		finished = true;
 	}
 
@@ -132,6 +126,10 @@ public final class HongKongCarEnergyScoring
 				.append(consumedCarLegs)
 				.append(",expectedCarLegs=")
 				.append(energySchedule.size())
+				.append(",unconsumedCarLegs=")
+				.append(energySchedule.size() - consumedCarLegs)
+				.append(",stuck=")
+				.append(stuck)
 				.append(",resolvedPrivateCarLegs=")
 				.append(resolvedPrivateCarLegs)
 				.append(",motorcycleOutOfScopeLegs=")

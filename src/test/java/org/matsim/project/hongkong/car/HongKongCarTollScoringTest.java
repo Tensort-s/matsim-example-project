@@ -131,6 +131,37 @@ class HongKongCarTollScoringTest {
 	}
 
 	@Test
+	void preparedRouteReplacementKeepsConfirmedOrdinalToll() {
+		Fixture fixture = fixture("runtime-reroute",
+				chargedQuote("runtime-reroute", 0, 30.0));
+		var scoring = new HongKongCarTollScoring(
+				HongKongCarTollPersonSchedule.fromSelectedPlan(
+						fixture.person, fixture.catalog), 1.0);
+		NetworkRoute route = (NetworkRoute) fixture.carLeg.getRoute();
+		route.setLinkIds(
+				Id.createLinkId("from"),
+				List.of(Id.createLinkId("runtime-reroute")),
+				Id.createLinkId("to"));
+		scoring.handleLeg(fixture.carLeg);
+		scoring.finish();
+		assertEquals(-30.0, scoring.getScore(), 0.0);
+		assertEquals(1, scoring.consumedCarLegs());
+	}
+
+	@Test
+	void stuckAgentMayLeaveUntraveledTollsUnconsumed() {
+		Fixture fixture = fixture("stuck",
+				chargedQuote("stuck", 0, 30.0));
+		var scoring = new HongKongCarTollScoring(
+				HongKongCarTollPersonSchedule.fromSelectedPlan(
+						fixture.person, fixture.catalog), 1.0);
+		scoring.agentStuck(10_000.0);
+		scoring.finish();
+		assertEquals(0, scoring.consumedCarLegs());
+		assertEquals(0.0, scoring.getScore(), 0.0);
+	}
+
+	@Test
 	void motorcycleRemainsOutOfScopeAndFixedOwnershipAbsent() {
 		Fixture fixture = fixture(
 				"motorcycle", motorcycleQuote("motorcycle", 0));

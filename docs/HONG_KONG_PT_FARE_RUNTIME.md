@@ -105,12 +105,12 @@ references.
 ## Charging and duplicate prevention
 
 `HongKongPtPersonFareSchedule` snapshots the selected prepared plan and stores
-PT leg ordinals plus route fingerprints. `HongKongPtFareScoring` accepts each
-experienced `mode=pt,routingMode=pt` leg once and in that order.
+PT leg ordinals and their canonical segment quotes. `HongKongPtFareScoring`
+accepts each experienced `mode=pt,routingMode=pt` leg once and in that order.
 
 - an extra callback fails closed;
-- missing scheduled callbacks fail at `finish()`;
-- a route-fingerprint mismatch fails closed;
+- an untravelled suffix remains unconsumed and uncharged at `finish()`;
+- a runtime route fingerprint is not used as a second identity gate;
 - each chained segment is quoted once in chain order;
 - `addMoney`, event and trip callbacks are inert for this component;
 - no `PersonMoneyEvent` is emitted;

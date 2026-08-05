@@ -356,6 +356,21 @@ Do not rerun expensive or quota-limited acquisition merely because processed
 outputs exist. Verify source manifests and determine whether the requested
 change actually invalidates an upstream stage.
 
+## Multimodal-cost Stage 11 technical validation
+
+The 2026-08-05 fixed-canonical-plan joint-scoring-stack run completed
+iterations `0..10` with exit code `0` at
+`/mnt/DiskM/by/hk_stage11_direct_10it_fixed_plans_20260805_run9`. It is a
+technical cost-integration stability product, not a replacement for the
+adopted 50-iteration production run or local final visualization above. The
+static canonical Car costs require fixed route/mode/time plans in this test;
+dynamic cost-aware replanning remains future work. See
+`docs/integration/stage-briefs/STAGE_11_JOINT_STABILITY_5_10_ITERATIONS.md`.
+The run used `plans_routed_5pct_v2.xml.gz`, which contains zero actual
+`mode=taxi` legs; Taxi-assigned demand remains encoded as `ride`. It exercised
+live Car and PT paths but only configured/injected the Taxi scorer. It must
+not be cited as full simultaneous Taxi/PT/Car runtime coverage.
+
 ## Known limitations
 
 - Work OD is calibrated and Census-projected synthetic demand, not observed

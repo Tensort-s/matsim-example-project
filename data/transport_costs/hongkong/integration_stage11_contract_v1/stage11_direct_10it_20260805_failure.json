@@ -1,0 +1,48 @@
+{
+  "record_type": "stage11_direct_single_10_iteration_attempt",
+  "attempt_date": "2026-08-05",
+  "status": "FAILED_BEFORE_ITERATION_0",
+  "execution_authority": "direct_user_instruction_outside_four_lane_workflow",
+  "requested_release_count": 1,
+  "actual_release_count": 1,
+  "requested_run_count": 1,
+  "actual_run_count": 1,
+  "release_root": "/mnt/DiskM/by/hk_multimodal_cost_stage11_direct_10it_20260805_release1",
+  "run_root": "/mnt/DiskM/by/hk_stage11_direct_10it_20260805_run1",
+  "last_iteration": 10,
+  "authorized_config_change": {
+    "car.monetaryDistanceRate": {
+      "from": -0.0007,
+      "to": 0.0
+    }
+  },
+  "joint_scoring_requested": true,
+  "joint_scoring_installation_logged": true,
+  "loaded_persons": 385820,
+  "assigned_explicit_car_vehicles": 24800,
+  "process_exit_code": 1,
+  "started_at": "2026-08-05T14:59:39.568087+08:00",
+  "finished_at": "2026-08-05T15:00:13+08:00",
+  "java_elapsed_seconds": 33.83,
+  "peak_resident_kib": 7476328,
+  "completed_iterations": [],
+  "iteration_directories": [],
+  "root_cause": {
+    "category": "MISSING_TAXI_SCORING_CONFIGURATION",
+    "message": "Missing scoring parameters for mode='taxi'; custom fare scoring cannot be installed.",
+    "detail": "The inherited production config contains car, pt, walk, and ride modeParams but no taxi modeParams. The custom Taxi fare scorer fails closed instead of selecting an ASC or other Taxi utility parameters.",
+    "car_rate_change_applied": true,
+    "guice_asm_java25_warning_is_root_cause": false
+  },
+  "partial_outputs": {
+    "config": "config_stage11_direct_10it.xml",
+    "log": "run_stdout_stderr.log",
+    "metadata": "run_metadata.json",
+    "launcher_pid": "launcher_pid.txt",
+    "exit_code": "exit_code.txt",
+    "finish_time": "finished_at.txt",
+    "traveldistancestats_bytes": 63
+  },
+  "replacement_attempt_started": false,
+  "next_required_decision": "Explicitly authorize a complete Taxi scoring mode configuration before any separately authorized replacement run."
+}
