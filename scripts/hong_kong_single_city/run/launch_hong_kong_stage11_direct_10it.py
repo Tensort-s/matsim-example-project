@@ -37,9 +37,9 @@ FROZEN_INNOVATION_STRATEGIES = {
     "SubtourModeChoice",
     "TimeAllocationMutator",
 }
-INPUT_PATHS = {
+PHYSICAL_TRANSIT_MODES = "bus,gmb,train,light_rail,ferry"
+BASE_INPUT_PATHS = {
     ("network", "inputNetworkFile"): "network.xml.gz",
-    ("plans", "inputPlansFile"): "plans_routed_5pct_v2.xml.gz",
     ("facilities", "inputFacilitiesFile"): "facilities_5pct_v2.xml.gz",
     ("vehicles", "vehiclesFile"): "privateVehicles_5pct.xml.gz",
     ("transit", "transitScheduleFile"): "transitSchedule_5pct.xml.gz",
@@ -53,6 +53,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--payload-root", type=Path, required=True)
     parser.add_argument("--release-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
+    parser.add_argument("--plans-input", type=Path)
+    parser.add_argument("--config-template", type=Path)
     parser.add_argument("--last-iteration", type=int, default=10)
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="96g")
@@ -106,12 +108,102 @@ def set_car_distance_rate_zero(root: ET.Element) -> None:
     if len(car_sets) != 1:
         raise ValueError(f"Expected exactly one Car modeParams set; found {len(car_sets)}")
     distance_rate = unique_param(car_sets[0], "monetaryDistanceRate")
-    if distance_rate.get("value") != "-0.0007":
+    source_value = distance_rate.get("value")
+    if float(source_value if source_value is not None else "nan") not in {
+        -0.0007,
+        0.0,
+    }:
         raise ValueError(
-            "Expected the authorized source Car monetaryDistanceRate -0.0007; "
-            f"found {distance_rate.get('value')!r}"
+            "Expected Car monetaryDistanceRate -0.0007 or already-authorized 0; "
+            f"found {source_value!r}"
         )
     distance_rate.set("value", "0")
+
+
+def set_physical_transit_modes(root: ET.Element) -> None:
+    """Keep generic pt separate from physical QSim transit vehicle modes."""
+    unique_param(unique_module(root, "transit"), "transitModes").set(
+        "value", PHYSICAL_TRANSIT_MODES
+    )
+
+
+def require_physical_transit_modes(root: ET.Element) -> None:
+    actual = unique_param(
+        unique_module(root, "transit"), "transitModes"
+    ).get("value")
+    if actual != PHYSICAL_TRANSIT_MODES:
+        raise ValueError(
+            "transit.transitModes must contain the physical vehicle modes "
+            f"{PHYSICAL_TRANSIT_MODES}; found {actual!r}"
+        )
+
+
+def set_pt_teleported_routing(root: ET.Element) -> None:
+    """Restore MATSim's default generic-PT router after defaults are cleared."""
+    routing = unique_module(root, "routing")
+    matches = []
+    for parameters in routing.findall("./parameterset"):
+        if parameters.get("type") != "teleportedModeParameters":
+            continue
+        modes = [
+            param
+            for param in parameters.findall("./param")
+            if param.get("name") == "mode" and param.get("value") == "pt"
+        ]
+        if modes:
+            matches.append(parameters)
+    if len(matches) > 1:
+        raise ValueError(f"Expected at most one PT teleported router; found {len(matches)}")
+    parameters = matches[0] if matches else ET.SubElement(
+        routing, "parameterset", {"type": "teleportedModeParameters"}
+    )
+    mode_params = [
+        param for param in parameters.findall("./param")
+        if param.get("name") == "mode"
+    ]
+    if not mode_params:
+        ET.SubElement(parameters, "param", {"name": "mode", "value": "pt"})
+    elif len(mode_params) == 1:
+        mode_params[0].set("value", "pt")
+    else:
+        raise ValueError("Duplicate mode parameters in PT teleported router")
+    factors = [
+        param for param in parameters.findall("./param")
+        if param.get("name") == "teleportedModeFreespeedFactor"
+    ]
+    if len(factors) > 1:
+        raise ValueError("Duplicate PT teleportedModeFreespeedFactor")
+    if factors:
+        factors[0].set("value", "2.0")
+    else:
+        ET.SubElement(
+            parameters,
+            "param",
+            {"name": "teleportedModeFreespeedFactor", "value": "2.0"},
+        )
+
+
+def require_pt_teleported_routing(root: ET.Element) -> None:
+    routing = unique_module(root, "routing")
+    matches = []
+    for parameters in routing.findall("./parameterset"):
+        if parameters.get("type") != "teleportedModeParameters":
+            continue
+        modes = [
+            param.get("value") for param in parameters.findall("./param")
+            if param.get("name") == "mode"
+        ]
+        if modes == ["pt"]:
+            matches.append(parameters)
+    if len(matches) != 1:
+        raise ValueError(f"Expected exactly one PT teleported router; found {len(matches)}")
+    actual = unique_param(
+        matches[0], "teleportedModeFreespeedFactor"
+    ).get("value")
+    if float(actual if actual is not None else "nan") != 2.0:
+        raise ValueError(
+            f"PT teleportedModeFreespeedFactor must be 2.0; found {actual!r}"
+        )
 
 
 def taxi_mode_sets(root: ET.Element) -> tuple[ET.Element, list[ET.Element]]:
@@ -268,10 +360,12 @@ def require_canonical_plan_innovation_frozen(root: ET.Element) -> None:
 
 
 def write_run_config(template: Path, destination: Path, release: Path, run: Path,
-                     last_iteration: int) -> None:
+                     last_iteration: int, plans_file_name: str) -> None:
     tree = ET.parse(template)
     root = tree.getroot()
-    for (module_name, param_name), file_name in INPUT_PATHS.items():
+    input_paths = dict(BASE_INPUT_PATHS)
+    input_paths[("plans", "inputPlansFile")] = plans_file_name
+    for (module_name, param_name), file_name in input_paths.items():
         unique_param(unique_module(root, module_name), param_name).set(
             "value", str(release / "input" / file_name)
         )
@@ -288,10 +382,14 @@ def write_run_config(template: Path, destination: Path, release: Path, run: Path
     for name, value in updates.items():
         unique_param(controller, name).set("value", value)
     set_car_distance_rate_zero(root)
+    set_physical_transit_modes(root)
+    set_pt_teleported_routing(root)
     set_taxi_scoring_contract(root)
     set_scoring_function_creation_after_replanning(root)
     freeze_canonical_plan_innovation(root)
     require_taxi_scoring_contract(root)
+    require_physical_transit_modes(root)
+    require_pt_teleported_routing(root)
     require_scoring_function_creation_after_replanning(root)
     require_canonical_plan_innovation_frozen(root)
     with destination.open("x", encoding="utf-8", newline="\n") as handle:
@@ -320,7 +418,21 @@ def main() -> int:
         raise FileExistsError("Release and run roots must both be absent")
 
     base_java = base / "runtime/jdk-25/bin/java"
-    template = base / "config/config_formal_50it.xml"
+    template = (
+        safe_server_path(args.config_template, must_exist=True)
+        if args.config_template is not None
+        else base / "config/config_formal_50it.xml"
+    )
+    replacement_plans = (
+        safe_server_path(args.plans_input, must_exist=True)
+        if args.plans_input is not None
+        else None
+    )
+    plans_file_name = (
+        replacement_plans.name
+        if replacement_plans is not None
+        else "plans_routed_5pct_v2.xml.gz"
+    )
     payload_jar = payload / "matsim-example-project-0.0.1-SNAPSHOT.jar"
     pt_payload = payload / "pt_fare_v1"
     car_payload = payload / "car_cost_v1"
@@ -329,24 +441,40 @@ def main() -> int:
     require_regular(payload_jar)
     if not pt_payload.is_dir() or not car_payload.is_dir():
         raise ValueError("Payload must contain pt_fare_v1 and car_cost_v1 directories")
-    for file_name in INPUT_PATHS.values():
+    required_base_inputs = set(BASE_INPUT_PATHS.values())
+    if replacement_plans is None:
+        required_base_inputs.add(plans_file_name)
+    for file_name in required_base_inputs:
         require_regular(base / "input" / file_name)
+    if replacement_plans is not None:
+        require_regular(replacement_plans)
 
     # The semantic scoring contract is checked before allocating either of
     # the two immutable target directories. Operational input identity is not
     # delegated to a second SHA registry.
     source_tree = ET.parse(template)
     set_car_distance_rate_zero(source_tree.getroot())
+    set_physical_transit_modes(source_tree.getroot())
+    set_pt_teleported_routing(source_tree.getroot())
     set_taxi_scoring_contract(source_tree.getroot())
     set_scoring_function_creation_after_replanning(source_tree.getroot())
     freeze_canonical_plan_innovation(source_tree.getroot())
     require_taxi_scoring_contract(source_tree.getroot())
+    require_physical_transit_modes(source_tree.getroot())
+    require_pt_teleported_routing(source_tree.getroot())
     require_scoring_function_creation_after_replanning(source_tree.getroot())
     require_canonical_plan_innovation_frozen(source_tree.getroot())
 
     release.mkdir()
     shutil.copytree(base / "runtime", release / "runtime", symlinks=True)
     shutil.copytree(base / "input", release / "input", symlinks=True)
+    if replacement_plans is not None:
+        destination_plans = release / "input" / plans_file_name
+        if destination_plans.exists():
+            raise FileExistsError(
+                f"Replacement plans name collides in new release: {destination_plans}"
+            )
+        shutil.copy2(replacement_plans, destination_plans)
     (release / "app").mkdir()
     shutil.copy2(payload_jar, release / "app" / payload_jar.name)
     cost_root = release / "data/transport_costs/hongkong"
@@ -358,7 +486,14 @@ def main() -> int:
 
     run.mkdir()
     config = run / "config_stage11_direct_10it.xml"
-    write_run_config(template, config, release, run, args.last_iteration)
+    write_run_config(
+        template,
+        config,
+        release,
+        run,
+        args.last_iteration,
+        plans_file_name,
+    )
 
     java = release / "runtime/jdk-25/bin/java"
     jar = release / "app/matsim-example-project-0.0.1-SNAPSHOT.jar"
@@ -399,6 +534,10 @@ def main() -> int:
     metadata = {
         "objective": "One Hong Kong Stage 11 Taxi/PT/Car joint 10-iteration run",
         "base_release": str(base),
+        "config_template": str(template),
+        "replacement_plans": (
+            str(replacement_plans) if replacement_plans is not None else None
+        ),
         "release_root": str(release),
         "run_root": str(run),
         "last_iteration": args.last_iteration,
@@ -410,6 +549,10 @@ def main() -> int:
             "fare_share_factor": 1.0,
         },
         "joint_scoring": True,
+        "transit_routing_contract": {
+            "physical_transit_modes": PHYSICAL_TRANSIT_MODES,
+            "generic_pt_teleported_freespeed_factor": 2.0,
+        },
         "scoring_function_creation_event": SCORING_FUNCTION_CREATION_EVENT,
         "canonical_plan_innovation": {
             "ChangeExpBeta": 1.0,

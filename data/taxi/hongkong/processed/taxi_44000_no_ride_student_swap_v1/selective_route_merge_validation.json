@@ -1,0 +1,37 @@
+{
+  "status": "validated",
+  "all_checks_passed": true,
+  "checks": {
+    "persons_exact": true,
+    "target_main_trips_merged_exact": true,
+    "all_routes_non_null": true,
+    "ride_absent": true,
+    "taxi_count_exact": true,
+    "taxi_types_complete": true,
+    "car_raw_leg_count_unchanged": true,
+    "car_passenger_raw_leg_count_exact": true,
+    "school_bus_raw_leg_count_exact": true
+  },
+  "merge_counts": {
+    "persons": 385820,
+    "target_main_trips_merged": 3824,
+    "target_raw_legs_merged": 6010,
+    "target_stage_activities_merged": 2186
+  },
+  "output_audit": {
+    "persons": 385820,
+    "raw_legs": 881236,
+    "raw_leg_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2734,
+      "pt": 557347,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 199811
+    },
+    "null_routes": 0,
+    "taxi_without_hkTaxiType": 0,
+    "ride_raw_legs": 0
+  },
+  "scope": "Only the 3,824 student exchange main trips are copied from the whole-plan route-only result; every non-target trip remains from the pre-routing population."
+}

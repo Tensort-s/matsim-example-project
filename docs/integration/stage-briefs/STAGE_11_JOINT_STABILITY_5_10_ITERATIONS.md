@@ -175,6 +175,39 @@ an error or nonzero exit. The compact checked-in success record is
 [`stage11_direct_10it_fixed_plans_20260805_success.json`](../../../data/transport_costs/hongkong/integration_stage11_contract_v1/stage11_direct_10it_fixed_plans_20260805_success.json).
 Stage 12 remains unauthorized.
 
+## Completed no-`ride` Taxi-44,000 replacement
+
+The user subsequently adopted an exact 56,360-leg passenger allocation:
+Taxi 44,000, `car_passenger` 2,734, `school_bus` 9,626, and aggregate `ride`
+0. A student-to-student exchange retains all 2,490 controlled student
+passenger legs while ensuring every assigned student belongs to a car-owning
+household. Ride-hailing and licensed Taxi share the Taxi mode and the
+authorized score. Full allocation and routing provenance is in
+`docs/HONG_KONG_NO_RIDE_REALLOCATION.md`.
+
+The successful fixed-plan run reused one release and allocated a new run only:
+
+```text
+release: /mnt/DiskM/by/hk_multimodal_cost_stage11_taxi_44000_no_ride_20260806_release11
+run:     /mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14
+```
+
+It completed iterations `0..10`, exited `0`, and wrote 11 complete 30-hour
+QSim records. The log has zero errors, exceptions, scoring-schedule
+mismatches, and PT agents removed for missing transit routes. The final plans
+retain Taxi 44,000, `car_passenger` 2,734, `school_bus` 9,626, and `ride` 0.
+Iteration 0 experienced 43,966 Taxi, 557,188 PT, and 60,793 Car legs, closing
+the earlier run9 Taxi-runtime coverage gap. The repeated live callbacks cover
+Taxi fare, PT fare, and the composed Car energy/toll/destination-parking
+owner. Individual positive-charge counts are not instrumented.
+
+The final config keeps physical transit vehicle modes separate from generic
+`pt`, explicitly restores the baseline PT teleported router after clearing
+defaults, and freezes `ReRoute`, `SubtourModeChoice`, and
+`TimeAllocationMutator` at zero. These are semantic runtime contracts; the
+execution did not add per-step SHA gates. The candidate remains technical
+validation and does not replace the adopted 50-iteration production run.
+
 ## Candidate identity and authority
 
 | Field | Value |

@@ -29,6 +29,22 @@
       "local_particle_visualization": "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/particle-flow-detailed-road-corrected",
       "server_output": "/mnt/DiskM/by/hk_matsim_5pct_ptfixed_ferry_activity_v1/runs/formal_50it_v1/output",
       "notes": "Current adopted Ferry Core v1, 10% transit passenger capacity, 0.1 road capacity factors, and v2 multi-activity mode-choice plans. The complete raw events and full simulation output remain on the laboratory server; the local directory is the compact SimWrapper package."
+    },
+    {
+      "name": "stage11_taxi_44000_no_ride_10it_run14",
+      "role": "technical_joint_cost_validation_not_current_final_output",
+      "iterations": 10,
+      "release_reused": "/mnt/DiskM/by/hk_multimodal_cost_stage11_taxi_44000_no_ride_20260806_release11",
+      "server_output": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/selective_route_merge_attempt6/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/stage11_no_ride_10it_20260806_success.json",
+      "mode_counts": {
+        "taxi": 44000,
+        "car_passenger": 2734,
+        "school_bus": 9626,
+        "ride": 0
+      },
+      "notes": "Completed iterations 0..10 with exit code 0 and no errors, exceptions, scoring-schedule mismatches, or PT route removals. Route/mode/time innovation was frozen. This validates simultaneous live Taxi fare, PT fare, and composed Car energy/toll/parking scoring, but does not replace the adopted 50-iteration production run."
     }
   ],
   "shared_inputs": {

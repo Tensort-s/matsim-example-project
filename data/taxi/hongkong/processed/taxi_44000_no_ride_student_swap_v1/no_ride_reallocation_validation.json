@@ -1,0 +1,119 @@
+{
+  "status": "validated_preroute",
+  "all_checks_passed": true,
+  "checks": {
+    "mode_counts_exact": true,
+    "ride_absent": true,
+    "taxi_attributes_complete": true,
+    "student_exchange_null_routes_exact": true,
+    "student_pair_count_exact": true,
+    "adult_tour_count_exact": true
+  },
+  "policy": {
+    "taxi_legs": 44000,
+    "student_car_passenger_legs": 2490,
+    "adult_car_passenger_legs": 244,
+    "school_bus_legs": 9626,
+    "ride_legs": 0,
+    "student_swap_people_each_side": 956
+  },
+  "plans_audit": {
+    "persons": 385820,
+    "legs": 879050,
+    "mode_counts": {
+      "car": 67718,
+      "car_passenger": 2734,
+      "pt": 557104,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 197868
+    },
+    "routing_mode_counts": {
+      "car": 203154,
+      "car_passenger": 2734,
+      "pt": 557104,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 62432
+    },
+    "null_route_counts": {
+      "car_passenger": 1912,
+      "pt": 850,
+      "walk": 1062
+    },
+    "taxi_leg_attribute_sets": 44000,
+    "taxi_origin_attribute_sets": 44000
+  },
+  "transitions": {
+    "student_exchange_routes_cleared": 3824,
+    "target::car_passenger": 2734,
+    "target::pt": 850,
+    "target::school_bus": 9626,
+    "target::taxi": 44000,
+    "target::walk": 1062,
+    "transition::pt->car_passenger": 850,
+    "transition::ride->car_passenger": 822,
+    "transition::ride->pt": 850,
+    "transition::ride->school_bus": 9626,
+    "transition::ride->taxi": 6714,
+    "transition::ride->walk": 1062,
+    "transition::taxi->taxi": 37286,
+    "transition::walk->car_passenger": 1062
+  },
+  "student_pairing_rules": {
+    "same_stage_tcs": 955,
+    "same_stage_nearest_home": 1
+  },
+  "displaced_student_modes": {
+    "walk": 531,
+    "pt": 425
+  },
+  "route_config": {
+    "plans_path": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/input/plans_preroute_5pct_taxi_44000_no_ride.xml.gz",
+    "controller_output_directory": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/route_preparation/output",
+    "route_only": true,
+    "subtour_modes": "car,pt,walk",
+    "physical_transit_modes": "bus,gmb,train,light_rail,ferry",
+    "scoring_modes": [
+      "car",
+      "car_passenger",
+      "pt",
+      "school_bus",
+      "taxi",
+      "walk"
+    ],
+    "teleported_modes_added": [
+      "car_passenger",
+      "pt",
+      "school_bus",
+      "walk"
+    ],
+    "ride_value_occurrences": 0
+  },
+  "final_config": {
+    "plans_path": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/input/plans_routed_5pct_taxi_44000_no_ride.xml.gz",
+    "controller_output_directory": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/route_preparation/output_stage11",
+    "route_only": false,
+    "subtour_modes": "car,pt,walk",
+    "physical_transit_modes": "bus,gmb,train,light_rail,ferry",
+    "scoring_modes": [
+      "car",
+      "car_passenger",
+      "pt",
+      "school_bus",
+      "taxi",
+      "walk"
+    ],
+    "teleported_modes_added": [
+      "car_passenger",
+      "pt",
+      "school_bus",
+      "walk"
+    ],
+    "ride_value_occurrences": 0
+  },
+  "limitations": [
+    "The 3,824 student exchange legs intentionally have null routes and must be passed through the route-only MATSim preparation before simulation.",
+    "car_passenger and school_bus temporarily retain the historical ride scoring coefficients until separate evidence-based formulas are adopted."
+  ]
+}

@@ -53,6 +53,8 @@ hs_err_pid*
 tmp_*.txt
 __pycache__/
 *.py[cod]
+/no_ride_generation*.log
+/data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/no_ride_leg_reallocation_audit.csv
 
 # IntelliJ
 /.idea/

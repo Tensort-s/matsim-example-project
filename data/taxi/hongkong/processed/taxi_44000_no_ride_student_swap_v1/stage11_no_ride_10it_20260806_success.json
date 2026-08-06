@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "role": "stage11_technical_validation_not_current_production",
+  "release_reused": "/mnt/DiskM/by/hk_multimodal_cost_stage11_taxi_44000_no_ride_20260806_release11",
+  "run": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14",
+  "finished_at": "2026-08-06T01:44:25+08:00",
+  "exit_code": 0,
+  "iterations_completed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "qsim_30_hour_completion_records": 11,
+  "runtime": {
+    "wall_clock": "00:34:38.72",
+    "maximum_resident_set_kib": 28397444
+  },
+  "checks": {
+    "error_log_lines": 0,
+    "uncaught_exceptions": 0,
+    "scoring_schedule_mismatches": 0,
+    "pt_agents_removed_for_missing_transit_route": 0,
+    "mode_shares_constant_across_iterations": true,
+    "ride_absent_from_final_plans": true
+  },
+  "final_controlled_leg_counts": {
+    "taxi": 44000,
+    "car_passenger": 2734,
+    "school_bus": 9626,
+    "ride": 0
+  },
+  "iteration_0_experienced_leg_counts": {
+    "car": 60793,
+    "car_passenger": 2734,
+    "pt": 557188,
+    "school_bus": 9626,
+    "taxi": 43966,
+    "walk": 180435
+  },
+  "fixed_mode_shares": {
+    "car": 0.09106606384495182,
+    "car_passenger": 0.0036766386862000983,
+    "pt": 0.7490552894377998,
+    "school_bus": 0.012944888073651115,
+    "taxi": 0.059170483611120823,
+    "walk": 0.08408663634627643
+  },
+  "average_executed_score": {
+    "iterations": 11,
+    "mean": 61.5744800137337,
+    "minimum": 61.0881265590981,
+    "maximum": 61.8076028954974,
+    "range": 0.719476336399339
+  },
+  "configuration_contract": {
+    "car_monetaryDistanceRate": 0,
+    "taxi_leg_score": "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd",
+    "physical_transit_modes": "bus,gmb,train,light_rail,ferry",
+    "generic_pt_teleported_freespeed_factor": 2.0,
+    "ChangeExpBeta_weight": 1.0,
+    "ReRoute_weight": 0.0,
+    "SubtourModeChoice_weight": 0.0,
+    "TimeAllocationMutator_weight": 0.0
+  },
+  "coverage_interpretation": "Live Taxi fare, PT fare, and composed Car energy/toll/destination-parking callbacks completed together for 11 iterations. Positive charge counts by individual Car subcomponent are not separately instrumented.",
+  "failed_attempts_preserved": {
+    "run10": "Whole-plan routing changed a canonical Car route distance.",
+    "run11": "transitModes incorrectly used generic pt and removed PT agents; stopped with exit 143.",
+    "run12": "Physical transit modes were restored but the generic PT teleported router was missing.",
+    "run13": "A manually reused config retained innovation weights and generated a noncanonical Car plan."
+  }
+}

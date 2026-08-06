@@ -4,9 +4,13 @@ import xml.etree.ElementTree as ET
 from launch_hong_kong_stage11_direct_10it import (
     freeze_canonical_plan_innovation,
     require_canonical_plan_innovation_frozen,
+    require_physical_transit_modes,
+    require_pt_teleported_routing,
     require_scoring_function_creation_after_replanning,
     require_taxi_scoring_contract,
     set_scoring_function_creation_after_replanning,
+    set_physical_transit_modes,
+    set_pt_teleported_routing,
     set_taxi_scoring_contract,
 )
 
@@ -69,6 +73,26 @@ class ScoringLifecycleContractTest(unittest.TestCase):
         set_scoring_function_creation_after_replanning(root)
         require_scoring_function_creation_after_replanning(root)
 
+
+class PhysicalTransitModesContractTest(unittest.TestCase):
+
+    def test_generic_pt_is_replaced_by_physical_vehicle_modes(self) -> None:
+        root = ET.fromstring(
+            "<config><module name='transit'>"
+            "<param name='transitModes' value='pt'/>"
+            "</module></config>"
+        )
+        set_physical_transit_modes(root)
+        require_physical_transit_modes(root)
+        self.assertEqual(
+            "bus,gmb,train,light_rail,ferry",
+            root.find("./module/param").get("value"),
+        )
+
+    def test_generic_pt_teleported_router_is_explicit(self) -> None:
+        root = ET.fromstring("<config><module name='routing'/></config>")
+        set_pt_teleported_routing(root)
+        require_pt_teleported_routing(root)
 
 class CanonicalPlanContractTest(unittest.TestCase):
 

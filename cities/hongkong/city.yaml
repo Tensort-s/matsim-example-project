@@ -48,6 +48,22 @@ current_model:
   final_visualization: "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/"
   run_manifest: "runs/hongkong/run_manifest.json"
 
+stage11_no_ride_candidate:
+  status: "technical_validation_completed_not_current_production"
+  iterations: 10
+  release_reused: "/mnt/DiskM/by/hk_multimodal_cost_stage11_taxi_44000_no_ride_20260806_release11"
+  server_run: "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14"
+  server_plans: "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/selective_route_merge_attempt6/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz"
+  audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/"
+  taxi_legs: 44000
+  car_passenger_legs: 2734
+  school_bus_legs: 9626
+  ride_legs: 0
+  car_monetary_distance_rate: 0
+  taxi_score: "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd"
+  innovation_policy: "ChangeExpBeta only; route, mode, and time innovation frozen"
+  limitation: "car_passenger and school_bus retain provisional historical ride coefficients; no operator fleet is represented"
+
 simulation_parameters:
   iterations: 50
   flow_capacity_factor: 0.1

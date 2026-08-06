@@ -15,6 +15,7 @@ import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.population.io.PopulationWriter;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
+import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleUtils;
@@ -58,10 +59,16 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0]);
+		boolean noRideTaxiRouting = multimodalCosts
+				&& config.routing().getModeRoutingParams().containsKey(
+						HongKongNoRideTaxiRoutingModule.PASSENGER_DELEGATE_MODE);
 		if (multimodalCosts) {
 			// Fail before loading the large scenario when the joint-scoring
 			// configuration is incomplete or would double-charge Taxi distance.
 			HongKongTaxiScoringParameters.centralV1().validateConfig(config);
+			if (noRideTaxiRouting) {
+				HongKongNoRideTaxiRoutingModule.configure(config);
+			}
 		}
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		if (clearPtRoutes) {
@@ -86,6 +93,9 @@ public final class RunHongKong5Pct {
 			scenario.getPopulation().getPersons().size(), assignedVehicles);
 		Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new SwissRailRaptorModule());
+		if (noRideTaxiRouting) {
+			controler.addOverridingModule(new HongKongNoRideTaxiRoutingModule());
+		}
 		if (multimodalCosts) {
 			controler.addOverridingModule(new HongKongMultimodalCostScoringModule(
 					HongKongTaxiScoringParameters.centralV1(),

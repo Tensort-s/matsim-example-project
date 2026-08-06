@@ -1,0 +1,61 @@
+{
+  "status": "validated",
+  "all_checks_passed": true,
+  "completed_at": "2026-08-06T00:01:50+08:00",
+  "server_root": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1",
+  "successful_attempt": "route_preparation_attempt5",
+  "input_plans": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/input/plans_preroute_5pct_taxi_44000_no_ride.xml.gz",
+  "output_plans": "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/route_preparation_attempt5/plans_routed_5pct_taxi_44000_no_ride.xml.gz",
+  "persons": 385820,
+  "input_raw_leg_mode_counts": {
+    "car": 67718,
+    "car_passenger": 2734,
+    "pt": 557104,
+    "school_bus": 9626,
+    "taxi": 44000,
+    "walk": 197868
+  },
+  "main_trip_mode_counts_before_and_after": {
+    "car": 67718,
+    "car_passenger": 2734,
+    "pt": 557104,
+    "school_bus": 9626,
+    "taxi": 44000,
+    "walk": 62432
+  },
+  "output_raw_leg_mode_counts": {
+    "car": 67718,
+    "car_passenger": 2734,
+    "pt": 557672,
+    "school_bus": 9626,
+    "taxi": 44000,
+    "walk": 201152
+  },
+  "route_validation": {
+    "null_routes_before": 3824,
+    "null_routes_after": 0,
+    "taxi_without_hkTaxiType_before": 0,
+    "taxi_without_hkTaxiType_after": 0,
+    "ride_raw_legs_before": 0,
+    "ride_raw_legs_after": 0
+  },
+  "interpretation": "The raw PT and walk leg counts grow after SwissRailRaptor expands 850 newly assigned PT main trips into legal passenger and access/egress stage legs. Main-trip mode counts remain exact and are the conservation check after routing.",
+  "failed_attempts_preserved": [
+    {
+      "attempt": 1,
+      "reason": "Historical Taxi router still required aggregate ride as its delegate."
+    },
+    {
+      "attempt": 2,
+      "reason": "Explicit passenger routing parameters cleared MATSim default walk routing parameters."
+    },
+    {
+      "attempt": 3,
+      "reason": "Routes completed, but the first audit incorrectly required raw PT/walk leg counts to remain unchanged after legal PT stage expansion."
+    },
+    {
+      "attempt": 4,
+      "reason": "The first main-trip audit counted historical walk access legs by routing mode instead of the established main-trip structure."
+    }
+  ]
+}

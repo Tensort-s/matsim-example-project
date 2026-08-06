@@ -371,6 +371,23 @@ The run used `plans_routed_5pct_v2.xml.gz`, which contains zero actual
 live Car and PT paths but only configured/injected the Taxi scorer. It must
 not be cited as full simultaneous Taxi/PT/Car runtime coverage.
 
+The subsequent no-`ride` candidate completed iterations `0..10` with exit
+code `0` at
+`/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14`, reusing the
+single release
+`/mnt/DiskM/by/hk_multimodal_cost_stage11_taxi_44000_no_ride_20260806_release11`.
+Its final plans contain Taxi `44,000`, `car_passenger` `2,734`, `school_bus`
+`9,626`, and `ride` `0` legs. All 11 iterations retained fixed mode shares;
+the log contains zero errors, exceptions, scoring-schedule mismatches, or PT
+route removals. Iteration 0 experienced 43,966 Taxi, 557,188 PT, and 60,793
+Car legs, so the Taxi/PT/Car stack and the composed Car energy/toll/parking
+owner all received live callbacks. Positive charge incidence by individual
+Car subcomponent remains uninstrumented. This is a bounded technical
+validation with route/mode/time innovation frozen, not a new calibrated or
+adopted 50-iteration production run. Allocation, eligibility, routing repair,
+and provisional passenger-mode scoring are documented in
+`docs/HONG_KONG_NO_RIDE_REALLOCATION.md`.
+
 ## Known limitations
 
 - Work OD is calibrated and Census-projected synthetic demand, not observed
@@ -384,8 +401,10 @@ not be cited as full simultaneous Taxi/PT/Car runtime coverage.
 - Ferry Core v1 excludes 20 island-access routes whose land access is not yet
   adequately represented.
 - Detector and ATC road-flow observations do not cover every road link.
-- `ride` demand does not create a complete taxi, ride-hailing, or school-bus
-  operator fleet.
+- The adopted 50-iteration production plans still use aggregate `ride` and do
+  not create complete taxi, ride-hailing, or school-bus operator fleets. The
+  Stage 11 candidate removes `ride`, but its Taxi, `car_passenger`, and
+  `school_bus` legs remain passenger abstractions without operator fleets.
 - Private-car powertrains and destination car parks are not observed at
   vehicle/facility level; the offline car-cost layer therefore uses an
   explicit representative fleet and official-rate-bounded parking proxies.

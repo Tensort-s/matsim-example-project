@@ -182,6 +182,12 @@ capacity-factor, transit-capacity, or route-specific stop-link assumptions.
 The current `ride` mode is audited against 2026 Transport Department taxi
 controls in `docs/HONG_KONG_TAXI_INITIAL_PLAN_AUDIT.md`; that audit is
 read-only and does not modify the adopted v2 plans.
+The subsequent Stage 11 candidate removes aggregate `ride`, combines licensed
+Taxi and ride-hailing into exactly 44,000 Taxi legs, and uses a student-to-
+student exchange to enforce household-car eligibility for all 2,490 student
+`car_passenger` legs. Its exact counts, selective routing repair, limitations,
+and artifacts are in `docs/HONG_KONG_NO_RIDE_REALLOCATION.md`. This candidate
+does not yet replace the adopted 50-iteration production run.
 The real routed taxi base plans have a separate full-scenario, no-simulation
 load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
 taxi leg attributes, routes, fare-only scoring, and scoring-factory creation
