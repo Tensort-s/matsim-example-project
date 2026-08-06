@@ -63,6 +63,43 @@ stage11_no_ride_candidate:
   taxi_score: "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd"
   innovation_policy: "ChangeExpBeta only; route, mode, and time innovation frozen"
   limitation: "car_passenger and school_bus retain provisional historical ride coefficients; no operator fleet is represented"
+  household_car_passenger_candidate_audit:
+    status: "validated_read_only_no_bindings_created"
+    directory: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_car_passenger_candidate_audit_v1/"
+    legs_with_real_driver_in_current_plan: 2254
+    directly_compatible_existing_car_legs: 280
+    direct_or_detour_screen_compatible_legs: 384
+    people_with_complete_same_driver_round_trip: 139
+  school_escort_physical_pilot:
+    status: "validated_iteration_0_only_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_release4"
+    server_run: "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_physical_pilot_1iteration_20260806_success.json"
+    bound_people: 139
+    bound_legs: 278
+    physically_completed_legs: 273
+    complete_round_trip_people: 135
+    passenger_stuck_onboard_legs: 1
+    driver_stuck_before_pickup_legs: 3
+    skipped_after_prior_failure_legs: 1
+    unbound_car_passenger_legs_teleported: 2456
+    innovation_policy: "iteration 0 only; ChangeExpBeta only; route, mode, and time innovation frozen"
+  school_escort_joint_reroute_pilot:
+    status: "validated_one_cycle_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4"
+    server_run: "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_joint_reroute_1cycle_20260806_success.json"
+    qsim_iterations: [0, 1]
+    joint_reroute_applications: 1
+    bound_driver_legs: 278
+    changed_driver_routes: 208
+    unchanged_driver_routes: 70
+    binding_identity_failures: 0
+    final_physically_completed_legs: 274
+    final_complete_round_trip_people: 135
+    final_bound_teleportation_arrivals: 0
+    multimodal_costs_enabled: false
+    limitation: "isolated binding-under-rerouting test; fixed-route Car energy/toll/parking tables cannot price changed routes"
 
 simulation_parameters:
   iterations: 50

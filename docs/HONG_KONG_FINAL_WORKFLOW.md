@@ -388,6 +388,38 @@ adopted 50-iteration production run. Allocation, eligibility, routing repair,
 and provisional passenger-mode scoring are documented in
 `docs/HONG_KONG_NO_RIDE_REALLOCATION.md`.
 
+The subsequent read-only household candidate audit finds a real
+same-household private-car driver somewhere in the current plans for 2,254 of
+the 2,734 `car_passenger` legs, but only 280 legs directly match an existing
+Car leg and only 139 people have a complete same-driver return tour. The 139
+complete pairs exactly reproduce the legacy accepted school-escort pairs.
+Household car ownership alone must not be interpreted as an executable joint
+trip.
+
+A subsequent iteration-0-only physical pilot at
+`/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4` bound those 139
+students' 278 legs to the identified drivers' actual private-car QVehicles,
+with all innovation strategies frozen. It exited `0` and passed the event
+audit: 273 legs completed physically, 135 students completed both legs, no
+bound leg teleported, and all 278 outcomes were classified. One bound leg was
+stuck while onboard, three return pickups failed after the driver became
+stuck on the approach, and one subsequent leg was skipped following the prior
+failure. This validates the physical event mechanism, not a household joint
+selector; the other 2,456 `car_passenger` legs remain teleported.
+
+The next isolated run at
+`/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4` completed
+`it.0`, applied one fixed-binding `JointReRoute`, and physically validated the
+result in `it.1`. Of 278 driver legs, 208 changed link sequence and 70 remained
+unchanged; all passenger/driver leg keys, vehicles, and route endpoints were
+preserved. The final iteration completed 274 physical passenger legs, retained
+135 complete student round trips, generated zero bound teleported arrivals,
+and classified the other four outcomes as one onboard stuck and three
+driver-stuck-before-pickup cases. The fixed-route multimodal-cost module was
+intentionally excluded because its Car energy/toll/parking tables cannot price
+new routes. This is binding-under-rerouting evidence, not cost-aware replanning
+evidence.
+
 ## Known limitations
 
 - Work OD is calibrated and Census-projected synthetic demand, not observed
@@ -403,8 +435,10 @@ and provisional passenger-mode scoring are documented in
 - Detector and ATC road-flow observations do not cover every road link.
 - The adopted 50-iteration production plans still use aggregate `ride` and do
   not create complete taxi, ride-hailing, or school-bus operator fleets. The
-  Stage 11 candidate removes `ride`, but its Taxi, `car_passenger`, and
-  `school_bus` legs remain passenger abstractions without operator fleets.
+  Stage 11 candidate removes `ride`; only the fixed 139-pair school-escort
+  pilot physically binds 278 `car_passenger` legs to existing household
+  private cars. All other `car_passenger` legs and all `school_bus` legs
+  remain passenger abstractions, and Taxi still has no operator fleet.
 - Private-car powertrains and destination car parks are not observed at
   vehicle/facility level; the offline car-cost layer therefore uses an
   explicit representative fleet and official-rate-bounded parking proxies.

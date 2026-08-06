@@ -1,0 +1,36 @@
+{
+  "status": "validated_fixed_binding_catalog",
+  "scope": "Existing complete direct school_escort pairs only; no new driver tours and no plan innovation",
+  "counts": {
+    "passenger_people": 139,
+    "bound_car_passenger_legs": 278,
+    "driver_people": 139,
+    "private_vehicles": 139
+  },
+  "timing": {
+    "minimum_passenger_ready_before_driver_s": 0.0,
+    "maximum_passenger_ready_before_driver_s": 590.0
+  },
+  "implicit_connectors": {
+    "maximum_origin_access_gap_m": 378.5117773728652,
+    "maximum_destination_egress_gap_m": 378.5117773728652,
+    "modeled_as_separate_walk_legs": false
+  },
+  "checks": {
+    "exact_139_people": true,
+    "exact_278_legs": true,
+    "exact_legacy_pair_match": true,
+    "two_legs_per_passenger": true,
+    "all_passengers_ready_before_driver": true,
+    "all_driver_routes_use_bound_vehicle": true
+  },
+  "all_checks_passed": true,
+  "inputs": {
+    "plans": "F:\\Matsim\\derived\\hongkong\\taxi_44000_no_ride_student_swap_v1\\plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+    "candidate_people": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_car_passenger_candidate_audit_v1\\car_passenger_candidate_people.csv",
+    "candidate_legs": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_car_passenger_candidate_audit_v1\\car_passenger_candidate_legs.csv",
+    "legacy_assignments": "F:\\Matsim\\matsim-example-project\\data\\matsim_agents\\hongkong\\typical_weekday_5pct_v1\\validation\\school_escort_assignments.csv"
+  },
+  "output": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\school_escort_physical_pilot_v1\\school_escort_physical_bindings.csv",
+  "event_filter_id_count": 417
+}

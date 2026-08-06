@@ -50,6 +50,145 @@ band; the random generator seed is `20260805`.
 
 No discretionary adult `ride` tour is used to replace a student trip.
 
+## Household real-driver candidate audit
+
+A read-only candidate audit now tests whether each of the 2,734
+`car_passenger` legs can be associated with a real driver already present in
+the final Stage 11 plans. A real driver is a different member of the same
+household who has an assigned five-seat `private_car`, an existing routed
+`mode=car` leg, and a matching route `vehicleRefId`. Motorcycle legs are
+excluded. The audit does not create a binding, modify a plan, or create a new
+escort tour.
+
+The screening levels are deliberately separate:
+
+- **household driver exists:** at least one such real driver exists somewhere
+  in the current household plans, irrespective of trip compatibility;
+- **direct existing leg:** departure and arrival are each within 15 minutes,
+  and both origin and destination are within 500 m;
+- **detour screen:** departure is within 30 minutes, origin is within 500 m,
+  and a coordinate-based passenger drop-off adds no more than 5 km and no
+  more than 1.5 times the driver's direct straight-line distance.
+
+The detour result is only a candidate screen. It is not a network-routed
+joint plan and does not prove driver acceptance, schedule feasibility, or
+vehicle-capacity feasibility.
+
+Overall result:
+
+| Result | Legs | Share of 2,734 |
+|---|---:|---:|
+| Same-household real driver exists in current plans | 2,254 | 82.4433% |
+| Directly compatible existing Car leg | 280 | 10.2414% |
+| Additional detour-screen candidate | 104 | 3.8040% |
+| Direct or detour-screen compatible | 384 | 14.0454% |
+| Real driver exists but no compatible existing leg | 1,870 | 68.3980% |
+| No real driver in the current plans | 480 | 17.5567% |
+
+The 2,734 legs belong to 1,367 people in 1,283 households. Only 139 people
+(`10.1683%`) have both legs directly compatible with the same driver. These
+139 student-driver pairs exactly reproduce the accepted legacy
+`school_escort_assignments.csv`: person IDs and driver IDs both match with
+zero discrepancy. One additional student has both legs pass the detour screen
+but only with different drivers, so it is not counted as a same-driver return
+tour.
+
+Breakdown by allocation source:
+
+| Allocation source | Direct | Detour screen only | Real driver, incompatible | No real driver | Total legs |
+|---|---:|---:|---:|---:|---:|
+| Original eligible student `private_vehicle` retained | 278 | 20 | 248 | 32 | 578 |
+| Car-household student introduced by the 956-person swap | 2 | 81 | 1,571 | 258 | 1,912 |
+| Retained adult `private_car_passenger_van` | 0 | 3 | 51 | 190 | 244 |
+| **Total** | **280** | **104** | **1,870** | **480** | **2,734** |
+
+This establishes that `household_private_vehicle_count > 0` is a valid
+eligibility condition but not evidence of an executable joint trip. Binding
+more than the 139 existing complete pairs will require a later joint-plan
+builder that changes driver schedules or creates new escort tours. That work
+must also perform routed detour, score, simultaneous passenger-capacity, and
+driver-participation checks.
+
+## Fixed 139-pair physical pilot
+
+The 139 complete same-driver school-escort candidates were subsequently used
+in a bounded physical-QVehicle pilot. The binding catalog contains 278
+passenger legs. Each bound `car_passenger` departure waits for the identified
+driver's existing private-car vehicle, boards that vehicle, travels with its
+actual network movement, and alights when the bound driver Car leg arrives.
+The catalog is keyed by passenger/person selected-plan leg index; it does not
+create a household selector, change either member's plan, or synthesize a new
+escort tour. The maximum implicit access/egress coordinate gap in the fixed
+catalog is 378.512 m.
+
+The immutable one-iteration validation is:
+
+```text
+release: /mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_release4
+run:     /mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4
+QSim:    iteration 0 only; exit code 0
+```
+
+Plan innovation remained frozen: `ChangeExpBeta=1`, with `ReRoute`,
+`SubtourModeChoice`, and `TimeAllocationMutator` all at `0`. Event and engine
+audits passed. Of 278 bound legs, 273 completed the exact
+departure-board-alight-arrival sequence, and all 273 alightings coincided with
+the corresponding driver Car arrival. The bound vehicles generated 33,415
+`left link` and 33,411 `entered link` events, while bound passenger legs
+generated zero teleported arrivals. In person terms, 135 of the 139 students
+completed both physical legs.
+
+The five non-completed leg outcomes were fully classified: one passenger was
+on board when the driver's vehicle became stuck, three return pickups could
+not begin because the driver became stuck on the preceding approach Car leg,
+and one later bound leg was skipped after that passenger's earlier bound-leg
+failure. The run ended with zero waiting and zero onboard passengers, so the
+physical engine did not leave unresolved binding state or fall back to
+teleportation. These outcomes show that 139 static complete candidates do not
+guarantee 139 dynamically completed round trips under the current congested
+network and `stuckTime=600 s` policy.
+
+Only these 278 legs use physical binding. The remaining 2,456
+`car_passenger` legs retain the provisional teleported implementation. This
+pilot validates event mechanics and failure handling; it does not yet provide
+joint household plan selection, endogenous binding/unbinding, rerouting, or
+driver acceptance of added escort travel.
+
+### One-cycle binding-preserving JointReRoute
+
+A second isolated pilot applies exactly one `JointReRoute` cycle while keeping
+the same 139 passengers, 278 passenger/driver-leg keys, and private-car
+vehicle assignments fixed. It first runs `it.0` to obtain network travel
+times, reroutes only the 278 referenced driver Car legs, and then runs `it.1`
+to validate physical passenger movement. Ordinary `ReRoute`,
+`SubtourModeChoice`, and `TimeAllocationMutator` remain at `0`; therefore the
+single controlled JointReRoute is the only route innovation.
+
+```text
+release: /mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4
+run:     /mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4
+cycle:   it.0 -> one JointReRoute -> it.1; exit code 0
+```
+
+Direct input/output link-sequence comparison found 208 changed driver routes
+and 70 unchanged routes. All 278 output bindings retained the same passenger
+leg index, driver leg index, vehicle ID, route start link, and route end link.
+In `it.1`, 274 legs completed the exact physical
+departure-board-alight-arrival sequence; all 274 alightings matched the
+driver's Car arrival, and no bound leg used teleportation. The engine
+classified all outcomes as 274 completed, one passenger stuck while onboard,
+and three drivers stuck before pickup, with no downstream skipped leg and no
+waiting/onboard state left at the end. As in the fixed-route pilot, 135 of 139
+students completed both legs.
+
+This run deliberately excludes the custom Taxi/PT/Car multimodal-cost module.
+The current Car energy, toll, and parking tables are keyed to the fixed
+canonical routes and cannot validly price newly rerouted links. Consequently,
+this result proves binding persistence and physical QVehicle execution under
+one route-innovation cycle, but it is not evidence that the current static
+cost stack supports rerouting. Dynamic route-based Car cost calculation is a
+dependency for combining JointReRoute with the full Stage 11 scoring stack.
+
 ## Taxi allocation and scoring
 
 Taxi is exactly:
@@ -76,9 +215,12 @@ Taxi type.
 `car_passenger` and `school_bus` are explicit teleported passenger modes. They
 temporarily retain the historical `ride` scoring coefficients as independent
 compatibility baselines until evidence-based formulas are authorized. The
-configuration contains no `ride` mode parameter. `SubtourModeChoice` offers
-only `car,pt,walk`, because standard MATSim availability rules cannot enforce
-the household and student restrictions of the two passenger modes.
+139-pair physical pilot is the sole exception: its 278 bound
+`car_passenger` legs use real private-car QVehicles, while the other 2,456
+remain teleported. The configuration contains no `ride` mode parameter.
+`SubtourModeChoice` offers only `car,pt,walk`, because standard MATSim
+availability rules cannot enforce the household and student restrictions of
+the two passenger modes.
 
 The bounded Stage 11 run also freezes plan innovation: `ChangeExpBeta=1`,
 while `ReRoute`, `SubtourModeChoice`, and `TimeAllocationMutator` all have
@@ -168,9 +310,14 @@ Reproducible scripts:
 
 ```text
 scripts/hong_kong_single_city/demand_generation/
+  audit_hong_kong_household_car_passenger_candidates.py
+  prepare_hong_kong_school_escort_physical_pilot.py
   prepare_hong_kong_no_ride_reallocation.py
   merge_hong_kong_no_ride_selective_routes.py
 scripts/hong_kong_single_city/run/
+  audit_hong_kong_school_escort_joint_reroute_pilot.py
+  audit_hong_kong_school_escort_physical_pilot.py
+  launch_hong_kong_school_escort_physical_pilot.py
   launch_hong_kong_stage11_direct_10it.py
 ```
 
@@ -178,6 +325,15 @@ Compact tracked audit:
 
 ```text
 data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/
+  household_car_passenger_candidate_audit_v1/
+    car_passenger_candidate_legs.csv
+    car_passenger_candidate_people.csv
+    household_candidate_validation.json
+  school_escort_physical_pilot_v1/
+    school_escort_physical_bindings.csv
+    school_escort_physical_binding_validation.json
+    school_escort_physical_pilot_1iteration_20260806_success.json
+    school_escort_joint_reroute_1cycle_20260806_success.json
 ```
 
 Large local derived artifacts:
@@ -198,6 +354,18 @@ Validated Stage 11 run:
 
 ```text
 /mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_20260806_run14/
+```
+
+Validated one-iteration physical pilot:
+
+```text
+/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/
+```
+
+Validated one-cycle JointReRoute pilot:
+
+```text
+/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/
 ```
 
 Failed route/run attempts are retained in their versioned server directories;

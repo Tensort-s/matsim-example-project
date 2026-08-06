@@ -1,0 +1,178 @@
+{
+  "status": "validated",
+  "scope": "Fixed 139-pair school_escort: it.0, one binding-preserving JointReRoute, then physical it.1",
+  "inputs": {
+    "bindings": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_staging4/school_escort_physical_bindings.csv",
+    "events": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/pilot_relevant_events_it1.lines",
+    "input_plans": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+    "output_plans": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/output/ITERS/it.1/1.plans.xml.zst",
+    "config": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/config_stage11_school_escort_joint_reroute_1cycle.xml",
+    "log": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/run_stdout_stderr.log",
+    "exit_code": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/exit_code.txt"
+  },
+  "joint_reroute": {
+    "log_summary": {
+      "source_iteration": 0,
+      "drivers": 139,
+      "unique_driver_legs": 278,
+      "changed_routes": 208,
+      "unchanged_routes": 70,
+      "bindings_valid": 278
+    },
+    "unique_driver_legs": 278,
+    "changed_driver_legs": 208,
+    "unchanged_driver_legs": 70,
+    "changed_driver_leg_examples": [
+      "hk_person_00015293/10",
+      "hk_person_00039727/1",
+      "hk_person_00039727/10",
+      "hk_person_00097003/1",
+      "hk_person_00097003/10",
+      "hk_person_00147443/1",
+      "hk_person_00147443/10",
+      "hk_person_00242064/1",
+      "hk_person_00242064/10",
+      "hk_person_00268949/1",
+      "hk_person_00268949/10",
+      "hk_person_00366392/1",
+      "hk_person_00366392/10",
+      "hk_person_00500252/1",
+      "hk_person_00500252/10",
+      "hk_person_00560366/1",
+      "hk_person_00560366/10",
+      "hk_person_00595062/1",
+      "hk_person_00595062/10",
+      "hk_person_00605497/1"
+    ],
+    "binding_identity_failure_count": 0,
+    "binding_identity_failure_examples": []
+  },
+  "engine_summaries": [
+    {
+      "departures": 277,
+      "boardings": 274,
+      "alightings": 273,
+      "completed": 273,
+      "passenger_stuck_onboard": 1,
+      "driver_stuck_before_pickup": 3,
+      "skipped_after_prior_failure": 1,
+      "waiting": 0,
+      "onboard": 0,
+      "classified": 278
+    },
+    {
+      "departures": 278,
+      "boardings": 275,
+      "alightings": 274,
+      "completed": 274,
+      "passenger_stuck_onboard": 1,
+      "driver_stuck_before_pickup": 3,
+      "skipped_after_prior_failure": 0,
+      "waiting": 0,
+      "onboard": 0,
+      "classified": 278
+    }
+  ],
+  "final_iteration_events": {
+    "bound_passenger_people": 139,
+    "bound_legs_with_exact_depart_board_alight_arrive_sequence": 274,
+    "bound_legs_passenger_stuck_while_onboard": 1,
+    "bound_legs_driver_stuck_before_pickup": 3,
+    "bound_legs_not_started_after_prior_failure": 0,
+    "people_with_complete_physical_round_trip": 135,
+    "bound_teleportation_arrivals": 0,
+    "bound_stuck_events": [
+      {
+        "person": "hk_person_01756106",
+        "time": 50457.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_01755753",
+        "time": 63782.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_06591983",
+        "time": 64001.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_05528323",
+        "time": 71655.0,
+        "type": "stuckAndAbort"
+      }
+    ],
+    "bound_alight_times_matching_driver_car_arrival": 274,
+    "global_car_passenger_event_counts": {
+      "departure": 278,
+      "arrival": 274
+    },
+    "bound_vehicle_link_event_counts": {
+      "left link": 30119,
+      "entered link": 30115
+    },
+    "wait_time_seconds": {
+      "minimum": 1.0,
+      "maximum": 16677.0,
+      "mean": 224.46715328467153
+    },
+    "in_vehicle_time_seconds": {
+      "minimum": 12.0,
+      "maximum": 17438.0,
+      "mean": 567.1131386861314
+    },
+    "sequence_failures": [],
+    "sequence_failure_count": 0
+  },
+  "plans": {
+    "persons": 385820,
+    "selected_plan_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2734,
+      "pt": 557347,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 199811
+    },
+    "selected_scores_finite": true
+  },
+  "config": {
+    "first_iteration": 0,
+    "last_iteration": 1,
+    "strategy_weights": {
+      "ChangeExpBeta": [
+        1.0
+      ],
+      "ReRoute": [
+        0.0
+      ],
+      "SubtourModeChoice": [
+        0.0
+      ],
+      "TimeAllocationMutator": [
+        0.0
+      ]
+    }
+  },
+  "checks": {
+    "process_exit_zero": true,
+    "exact_binding_catalog": true,
+    "one_joint_reroute_application": true,
+    "joint_reroute_changed_routes": true,
+    "log_and_plan_route_counts_match": true,
+    "binding_identity_preserved": true,
+    "two_qsim_iterations": true,
+    "final_engine_matches_events": true,
+    "all_final_bound_outcomes_classified": true,
+    "no_final_bound_teleportation": true,
+    "final_bound_vehicles_moved_on_network": true,
+    "ordinary_innovation_frozen": true,
+    "output_mode_counts_unchanged": true,
+    "all_output_scores_finite": true,
+    "fixed_route_multimodal_cost_module_excluded": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true,
+  "interpretation": "This isolates binding persistence under one driver-route innovation cycle. The fixed-route Taxi/PT/Car cost module is intentionally not loaded, so the run is not evidence for cost consistency after rerouting."
+}

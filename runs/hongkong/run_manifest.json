@@ -45,6 +45,50 @@
         "ride": 0
       },
       "notes": "Completed iterations 0..10 with exit code 0 and no errors, exceptions, scoring-schedule mismatches, or PT route removals. Route/mode/time innovation was frozen. This validates simultaneous live Taxi fare, PT fare, and composed Car energy/toll/parking scoring, but does not replace the adopted 50-iteration production run."
+    },
+    {
+      "name": "stage11_school_escort_physical_1iteration_run4",
+      "role": "fixed_household_school_escort_physical_pilot_not_current_final_output",
+      "iterations": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_release4",
+      "server_output": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_release4/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_physical_pilot_1iteration_20260806_success.json",
+      "physical_binding_counts": {
+        "people": 139,
+        "legs": 278,
+        "completed_legs": 273,
+        "complete_round_trip_people": 135,
+        "passenger_stuck_onboard": 1,
+        "driver_stuck_before_pickup": 3,
+        "skipped_after_prior_failure": 1
+      },
+      "notes": "Iteration 0 only, exit code 0, with route/mode/time innovation frozen. Bound passengers boarded the identified household private-car QVehicles; 273 legs completed physically, no bound leg teleported, and all 278 outcomes were classified. The remaining 2,456 car_passenger legs stayed teleported. This validates physical mechanics and failure handling, not endogenous household joint-plan selection."
+    },
+    {
+      "name": "stage11_school_escort_joint_reroute_1cycle_run4",
+      "role": "fixed_binding_joint_reroute_physical_pilot_not_current_final_output",
+      "qsim_iterations": [0, 1],
+      "joint_reroute_applications": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4",
+      "server_output": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_joint_reroute_1cycle_20260806_success.json",
+      "route_counts": {
+        "bound_driver_legs": 278,
+        "changed": 208,
+        "unchanged": 70,
+        "binding_identity_failures": 0
+      },
+      "final_physical_counts": {
+        "completed_legs": 274,
+        "complete_round_trip_people": 135,
+        "passenger_stuck_onboard": 1,
+        "driver_stuck_before_pickup": 3,
+        "skipped_after_prior_failure": 0,
+        "bound_teleportation_arrivals": 0
+      },
+      "notes": "Completed it.0, exactly one fixed-binding JointReRoute, and physical validation in it.1 with exit code 0. Ordinary route/mode/time innovation remained frozen. The fixed-route multimodal-cost module was intentionally excluded because the canonical Car energy/toll/parking tables cannot price changed routes; this is binding persistence evidence, not cost-aware replanning evidence."
     }
   ],
   "shared_inputs": {

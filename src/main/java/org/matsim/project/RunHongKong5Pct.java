@@ -15,6 +15,9 @@ import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.population.io.PopulationWriter;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
+import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
+import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
+import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 import org.matsim.vehicles.Vehicle;
@@ -35,17 +38,31 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 				"Usage: RunHongKong5Pct <config.xml> [routed-plans.xml.gz] [--simulate] "
 						+ "[--clear-pt-routes] [--multimodal-costs "
-						+ "--pt-fare-root=<path> --car-cost-root=<path>]"
+						+ "--pt-fare-root=<path> --car-cost-root=<path>] "
+						+ "[--household-escort-bindings=<path>] "
+						+ "[--household-escort-joint-reroute]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
 		boolean clearPtRoutes = Arrays.asList(args).contains("--clear-pt-routes");
 		boolean multimodalCosts = Arrays.asList(args).contains("--multimodal-costs");
+		boolean householdEscortJointReRoute = Arrays.asList(args)
+				.contains("--household-escort-joint-reroute");
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
+		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
 		if (multimodalCosts && (ptFareRoot == null || carCostRoot == null)) {
 			throw new IllegalArgumentException(
 					"--multimodal-costs requires both --pt-fare-root and --car-cost-root.");
+		}
+		if (householdEscortJointReRoute && householdEscortBindings == null) {
+			throw new IllegalArgumentException(
+					"--household-escort-joint-reroute requires --household-escort-bindings.");
+		}
+		if (householdEscortJointReRoute && multimodalCosts) {
+			throw new IllegalArgumentException(
+					"Household JointReRoute cannot reuse the fixed-route Car cost tables; "
+							+ "run the isolated physical reroute pilot without --multimodal-costs.");
 		}
 		Path routedPlans = null;
 		for (int index = 1; index < args.length; index++) {
@@ -59,6 +76,9 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0]);
+		if (householdEscortBindings != null) {
+			HouseholdEscortPhysicalQSimModule.activateInConfig(config);
+		}
 		boolean noRideTaxiRouting = multimodalCosts
 				&& config.routing().getModeRoutingParams().containsKey(
 						HongKongNoRideTaxiRoutingModule.PASSENGER_DELEGATE_MODE);
@@ -71,6 +91,9 @@ public final class RunHongKong5Pct {
 			}
 		}
 		Scenario scenario = ScenarioUtils.loadScenario(config);
+		HouseholdEscortBindingCatalog householdEscortCatalog = householdEscortBindings == null
+				? null
+				: HouseholdEscortBindingCatalog.load(householdEscortBindings, scenario);
 		if (clearPtRoutes) {
 			int clearedPtRoutes = clearPtRoutes(scenario);
 			System.out.printf("Cleared %,d existing pt routes for SwissRailRaptor rerouting.%n", clearedPtRoutes);
@@ -93,6 +116,24 @@ public final class RunHongKong5Pct {
 			scenario.getPopulation().getPersons().size(), assignedVehicles);
 		Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new SwissRailRaptorModule());
+		if (householdEscortCatalog != null) {
+			HouseholdEscortBindingCatalog sharedEscortCatalog = householdEscortCatalog;
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					bind(HouseholdEscortBindingCatalog.class).toInstance(sharedEscortCatalog);
+				}
+			});
+			controler.addQSimModule(new HouseholdEscortPhysicalQSimModule(householdEscortCatalog));
+			System.out.printf(
+					"Enabled %,d fixed household school-escort physical bindings from %s.%n",
+					householdEscortCatalog.bindings().size(), householdEscortBindings);
+		}
+		if (householdEscortJointReRoute) {
+			controler.addOverridingModule(new HouseholdEscortJointReRouteModule(householdEscortCatalog));
+			System.out.println(
+					"Enabled one-shot fixed-binding household school-escort JointReRoute after it.0.");
+		}
 		if (noRideTaxiRouting) {
 			controler.addOverridingModule(new HongKongNoRideTaxiRoutingModule());
 		}

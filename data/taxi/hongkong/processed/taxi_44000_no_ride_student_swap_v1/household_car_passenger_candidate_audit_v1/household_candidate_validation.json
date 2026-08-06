@@ -1,0 +1,100 @@
+{
+  "status": "validated_read_only_candidate_audit",
+  "scope": "Stage 11 no-ride car_passenger legs only; no plans or bindings changed",
+  "inputs": {
+    "plans": "F:\\Matsim\\derived\\hongkong\\taxi_44000_no_ride_student_swap_v1\\plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+    "private_vehicles": "F:\\Matsim\\matsim-example-project\\data\\matsim_agents\\hongkong\\typical_weekday_5pct_v2_activity_modechoice\\privateVehicles_5pct.xml.gz",
+    "resident_agents": "F:\\Matsim\\matsim-example-project\\data\\matsim_agents\\hongkong\\typical_weekday_5pct_v1\\sampled_resident_agents.parquet",
+    "school_escort_assignments": "F:\\Matsim\\matsim-example-project\\data\\matsim_agents\\hongkong\\typical_weekday_5pct_v1\\validation\\school_escort_assignments.csv"
+  },
+  "definition": {
+    "real_driver": "A different member of the same household with an assigned private_car, an existing routed mode=car leg, and matching route vehicleRefId.",
+    "direct": "Existing car leg within the direct departure/arrival and origin/destination thresholds.",
+    "detour_screen": "Existing car leg with a compatible departure and origin whose straight-line passenger drop-off detour satisfies the configured added-distance and ratio thresholds; this is screening, not a routed joint plan."
+  },
+  "thresholds": {
+    "direct_departure_tolerance_s": 900,
+    "direct_arrival_tolerance_s": 900,
+    "direct_origin_radius_m": 500,
+    "direct_destination_radius_m": 500,
+    "detour_departure_tolerance_s": 1800,
+    "detour_origin_radius_m": 500,
+    "detour_max_added_distance_m": 5000,
+    "detour_max_ratio": 1.5
+  },
+  "counts": {
+    "car_passenger_legs": 2734,
+    "car_passenger_people": 1367,
+    "car_passenger_households": 1283,
+    "direct_existing_car_leg_candidates": 280,
+    "direct_or_detour_screen_candidates": 384,
+    "legs_with_real_driver_but_no_compatible_existing_leg": 1870,
+    "legs_without_real_driver_in_current_plan": 480,
+    "people_with_complete_same_driver_round_trip": 139
+  },
+  "coverage_percent": {
+    "legs_with_real_driver_in_current_plan": 82.44330651060717,
+    "direct_existing_car_leg_candidates": 10.241404535479152,
+    "direct_or_detour_screen_candidates": 14.045354791514265,
+    "people_with_complete_same_driver_round_trip": 10.168251645940014
+  },
+  "leg_status_counts": {
+    "existing_car_leg_detour_screen": 104,
+    "existing_car_leg_direct": 280,
+    "no_real_driver_current_plan": 480,
+    "real_driver_no_compatible_existing_leg": 1870
+  },
+  "person_tour_status_counts": {
+    "complete_detour_screen_different_drivers": 1,
+    "complete_direct_same_driver": 139,
+    "no_real_driver_current_plan": 240,
+    "partial_compatible_existing_legs": 104,
+    "real_driver_no_compatible_tour": 883
+  },
+  "leg_role_counts": {
+    "day_school_student": 2490,
+    "fixed_worker": 244
+  },
+  "leg_allocation_source_counts": {
+    "adult_retained_private_car_passenger_van": 244,
+    "student_original_private_vehicle_retained": 578,
+    "student_swap_car_household_donor": 1912
+  },
+  "plan_parse_counts": {
+    "car_legs": 67718,
+    "car_passenger_legs": 2734,
+    "persons": 385820
+  },
+  "driver_validation_counts": {
+    "accepted_private_car_legs": 64789,
+    "excluded_vehicle_type::motorcycle": 2929
+  },
+  "legacy_school_escort_crosscheck": {
+    "accepted_legacy_school_escort_people": 139,
+    "complete_direct_same_driver_people": 139,
+    "person_id_intersection": 139,
+    "accepted_only": 0,
+    "direct_only": 0,
+    "driver_id_mismatches": 0,
+    "exact_match": true
+  },
+  "checks": {
+    "car_passenger_leg_count_exact": true,
+    "student_leg_count_exact": true,
+    "adult_leg_count_exact": true,
+    "student_swap_leg_count_exact": true,
+    "student_retained_leg_count_exact": true,
+    "all_passengers_have_household": true,
+    "all_passengers_from_car_households": true,
+    "all_passenger_legs_have_route_time_and_coordinates": true,
+    "private_car_has_four_passenger_seats": true,
+    "complete_direct_tours_match_legacy_school_escort_assignments": true
+  },
+  "all_checks_passed": true,
+  "limitations": [
+    "Candidate status does not bind a passenger, alter a plan, or prove that a driver will accept the joint trip.",
+    "Detour screening uses activity coordinates and does not replace routed network detour, schedule, score, or vehicle-conflict validation.",
+    "The audit counts existing driver plans only; creating a new escort tour is outside this step.",
+    "Vehicle capacity is known (five seats including the driver), but simultaneous sibling allocation is deferred until joint-plan construction."
+  ]
+}

@@ -208,6 +208,54 @@ defaults, and freezes `ReRoute`, `SubtourModeChoice`, and
 execution did not add per-step SHA gates. The candidate remains technical
 validation and does not replace the adopted 50-iteration production run.
 
+### Fixed school-escort physical pilot
+
+The subsequent bounded pilot used the 139 complete same-driver candidates
+identified by the household audit. It ran only iteration `0`, with all plan
+innovation frozen, at:
+
+```text
+release: /mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_release4
+run:     /mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4
+```
+
+The run exited `0`. Its 278 fixed passenger legs board the identified
+drivers' actual private-car QVehicles instead of using teleportation. Event
+audit found 273 exact physical departure-board-alight-arrival sequences and
+135 complete student round trips. It found zero bound teleported arrivals;
+all 273 completed alightings matched driver Car arrivals. The five other leg
+outcomes were one passenger stuck onboard, three driver-stuck-before-pickup
+cases, and one later leg skipped after the prior bound failure. All 278
+outcomes were classified, with no waiting or onboard state left at the end.
+
+This is a physical-mechanics validation, not a new Stage 11 stability run or
+a household joint-plan selector. It leaves the other 2,456
+`car_passenger` legs teleported and does not enable endogenous binding,
+unbinding, rerouting, or driver acceptance.
+
+### One-cycle fixed-binding JointReRoute pilot
+
+The next isolated run completed `it.0`, applied one controlled JointReRoute to
+the 278 bound driver Car legs, and validated those bindings in `it.1`:
+
+```text
+release: /mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_release4
+run:     /mnt/DiskM/by/hk_stage11_school_escort_joint_reroute_20260806_run4
+```
+
+Direct plan comparison confirmed 208 changed and 70 unchanged driver link
+sequences, with zero passenger/driver-leg, vehicle, or endpoint binding
+failures. The final QSim completed 274 physical passenger legs and 135 full
+student round trips, generated zero bound teleported arrivals, and classified
+the four other legs as one onboard stuck and three driver-stuck-before-pickup
+outcomes. All ordinary replanning strategies remained frozen.
+
+The custom multimodal-cost module is intentionally absent from this isolated
+run. Stage 11 Car energy, toll, and parking values belong to the fixed
+canonical routes; applying them to the 208 changed routes would be invalid.
+The run therefore validates JointReRoute binding mechanics only. Dynamic Car
+cost reconstruction remains a prerequisite for cost-aware joint rerouting.
+
 ## Candidate identity and authority
 
 | Field | Value |

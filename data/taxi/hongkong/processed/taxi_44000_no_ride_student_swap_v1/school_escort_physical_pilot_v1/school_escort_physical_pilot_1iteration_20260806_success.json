@@ -1,0 +1,122 @@
+{
+  "status": "validated",
+  "scope": "Stage 11 iteration 0 fixed 139-pair school_escort physical pilot",
+  "inputs": {
+    "bindings": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_staging4/school_escort_physical_bindings.csv",
+    "events": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/pilot_relevant_events_final.lines",
+    "plans": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/output/ITERS/it.0/0.plans.xml.zst",
+    "config": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/config_stage11_school_escort_physical_1iteration.xml",
+    "log": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/run_stdout_stderr.log",
+    "exit_code": "/mnt/DiskM/by/hk_stage11_school_escort_physical_20260806_run4/exit_code.txt"
+  },
+  "engine_summary": {
+    "departures": 277,
+    "boardings": 274,
+    "alightings": 273,
+    "completed": 273,
+    "passenger_stuck_onboard": 1,
+    "driver_stuck_before_pickup": 3,
+    "skipped_after_prior_failure": 1,
+    "waiting": 0,
+    "onboard": 0,
+    "classified": 278
+  },
+  "events": {
+    "bound_passenger_people": 139,
+    "bound_legs_with_exact_depart_board_alight_arrive_sequence": 273,
+    "bound_legs_passenger_stuck_while_onboard": 1,
+    "bound_legs_driver_stuck_before_pickup": 3,
+    "bound_legs_not_started_after_prior_failure": 1,
+    "people_with_complete_physical_round_trip": 135,
+    "bound_teleportation_arrivals": 0,
+    "bound_stuck_events": [
+      {
+        "person": "hk_person_01756106",
+        "time": 32036.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_01755753",
+        "time": 61388.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_04725954",
+        "time": 64876.0,
+        "type": "stuckAndAbort"
+      },
+      {
+        "person": "hk_person_05528323",
+        "time": 67744.0,
+        "type": "stuckAndAbort"
+      }
+    ],
+    "bound_alight_times_matching_driver_car_arrival": 273,
+    "global_car_passenger_event_counts": {
+      "departure": 277,
+      "arrival": 273
+    },
+    "bound_vehicle_link_event_counts": {
+      "left link": 33415,
+      "entered link": 33411
+    },
+    "wait_time_seconds": {
+      "minimum": 1.0,
+      "maximum": 17211.0,
+      "mean": 256.5238095238095
+    },
+    "in_vehicle_time_seconds": {
+      "minimum": 12.0,
+      "maximum": 21575.0,
+      "mean": 797.4249084249084
+    },
+    "sequence_failures": [],
+    "sequence_failure_count": 0
+  },
+  "plans": {
+    "persons": 385820,
+    "selected_plan_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2734,
+      "pt": 557347,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 199811
+    },
+    "selected_scores_finite": true
+  },
+  "config": {
+    "first_iteration": 0,
+    "last_iteration": 0,
+    "strategy_weights": {
+      "ChangeExpBeta": [
+        1.0
+      ],
+      "ReRoute": [
+        0.0
+      ],
+      "SubtourModeChoice": [
+        0.0
+      ],
+      "TimeAllocationMutator": [
+        0.0
+      ]
+    }
+  },
+  "checks": {
+    "process_exit_zero": true,
+    "exact_binding_catalog": true,
+    "engine_summary_exact": true,
+    "all_bound_outcomes_classified": true,
+    "all_bound_alight_with_driver_arrival": true,
+    "no_bound_teleportation": true,
+    "dynamic_completion_matches_observed_network_stuck": true,
+    "bound_vehicles_moved_on_network": true,
+    "single_iteration_zero_only": true,
+    "innovation_frozen": true,
+    "output_mode_counts_unchanged": true,
+    "all_output_scores_finite": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true
+}
