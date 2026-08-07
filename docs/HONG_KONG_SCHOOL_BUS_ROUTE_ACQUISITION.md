@@ -208,7 +208,10 @@ The earlier `school_bus_proxy_routes_2026_v1` release retained all 102,684 HBS
 SPB passengers and produced 3,217 routes; it is the unfiltered upper bound.
 Version `school_bus_proxy_routes_2026_v2_non_tertiary` applied the 81.9007%
 split but gave 2,017 campuses near-universal service and produced 2,893 routes;
-it is the all-campus non-tertiary comparison. Neither is overwritten by v3.
+it is the all-campus non-tertiary comparison. Both v1 and v2 are historical
+versions and their output directories are intentionally not copied into the
+current integration worktree. They remain available in the school-bus
+acquisition worktree for provenance; neither is overwritten by v3.
 
 All inbound routes currently target the same 07:55 arrival and the builder
 does not interline two schools onto one vehicle. Therefore 2,384 is also the

@@ -151,7 +151,9 @@ applies an estimated 81.9007% non-tertiary school-bus share to the TCS 2022
 HBS SPB aggregate, selects schools with an explicit stage/funding/MTR-distance
 probability model, permits zero service, and locks 76 first-party route
 identities before generating residual proxy routes. The unfiltered SPB v1 and
-all-campus non-tertiary v2 remain historical comparisons. All inferred loads,
+all-campus non-tertiary v2 remain historical comparisons; their output
+directories are intentionally not copied into the current integration
+worktree. All inferred loads,
 pickup grid points, times, geometry, and capacities are `proxy_not_adopted`;
 they do not replace active PT supply or teleported `school_bus` legs.
 The separate v4 derivative road-routes the 2,308 inferred chains on the active

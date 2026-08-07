@@ -511,8 +511,9 @@ share, derived from 2021 Census education/mode tables, to the TCS 2022 HBS SPB
 aggregate. A school-level probability model then allows 722 of 2,023 campuses
 to have zero service and locks 76 first-party route identities before creating
 2,308 residual proxy routes. The unfiltered 3,217-route v1 and all-campus
-2,893-route v2 remain historical comparisons. EDB campus enrolment, locked
-route loads and all residual routes are modelled; restricted/undigitised
+2,893-route v2 remain historical comparisons whose output directories are
+intentionally not copied into the current integration worktree. EDB campus
+enrolment, locked route loads and all residual routes are modelled; restricted/undigitised
 first-party stops and geometry are not reproduced. The active PT supply, 9,626
 teleported `school_bus` legs, final run, and visualization remain unchanged.
 
