@@ -158,6 +158,12 @@ class NoRideReallocationTest(unittest.TestCase):
                 ),
             )
             self.assertEqual(
+                ["0"],
+                tree.xpath(
+                    "/config/module[@name='scoring']/parameterset[param[@name='mode' and @value='car_passenger']]/param[@name='monetaryDistanceRate']/@value"
+                ),
+            )
+            self.assertEqual(
                 ["bus,gmb,train,light_rail,ferry"],
                 tree.xpath(
                     "/config/module[@name='transit']/param[@name='transitModes']/@value"

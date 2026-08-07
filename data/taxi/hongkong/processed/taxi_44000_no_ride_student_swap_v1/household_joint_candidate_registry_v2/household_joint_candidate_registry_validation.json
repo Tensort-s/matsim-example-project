@@ -1,0 +1,41 @@
+{
+  "status": "validated_household_joint_candidate_registry",
+  "scope": "Existing driver Car legs only; direct/detour-screened household passengers; no new driver tour or independent passenger Car",
+  "counts": {
+    "candidate_legs": 384,
+    "candidate_bundles": 384,
+    "candidate_people": 244,
+    "candidate_households": 240,
+    "legacy_legs": 278,
+    "legacy_bundles": 278,
+    "new_candidate_legs": 106,
+    "new_candidate_bundles": 106,
+    "one_leg_bundles": 384,
+    "two_leg_bundles": 0,
+    "shared_driver_leg_resources": 4,
+    "passenger_departure_after_driver_departure_legs": 45
+  },
+  "candidate_source_counts": {
+    "existing_car_leg_detour_screen": 104,
+    "existing_car_leg_direct": 2,
+    "legacy_complete_direct_pair": 278
+  },
+  "checks": {
+    "candidate_leg_count_exact": true,
+    "candidate_bundle_count_exact": true,
+    "candidate_people_exact": true,
+    "candidate_households_exact": true,
+    "legacy_bindings_preserved": true,
+    "new_candidate_leg_count_exact": true,
+    "one_leg_per_candidate_bundle": true,
+    "household_selector_limit_respected": true,
+    "all_routes_and_vehicles_resolved": true
+  },
+  "all_checks_passed": true,
+  "inputs": {
+    "plans": "F:\\Matsim\\derived\\hongkong\\taxi_44000_no_ride_student_swap_v1\\plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+    "candidate_legs": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_car_passenger_candidate_audit_v1\\car_passenger_candidate_legs.csv",
+    "legacy_bindings": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\school_escort_physical_pilot_v1\\school_escort_physical_bindings.csv"
+  },
+  "output": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_joint_candidate_registry_v2\\household_joint_candidate_bindings.csv"
+}

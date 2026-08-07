@@ -189,6 +189,56 @@ one route-innovation cycle, but it is not evidence that the current static
 cost stack supports rerouting. Dynamic route-based Car cost calculation is a
 dependency for combining JointReRoute with the full Stage 11 scoring stack.
 
+## Existing-pair maximum-utility selector
+
+The next pilot adds a one-shot deterministic household selector over exactly
+the two existing alternatives for each of the 139 complete pairs: retain the
+original unbound plans, or install a two-leg physical binding whose driver
+routes pass the passenger's real pickup and drop-off links. It does not create
+a new pair, use a choice probability, or impose a driver participation rule.
+Passenger utility is `-1.5 - 6 * travel_time_hours`; distance and monetary
+distance coefficients are zero.
+
+The validated iteration-0 run at
+`/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3` selected 64
+bound and 75 unbound households. Thirty-three bound alternatives were
+rejected by the hard requirement that each waypoint route finish before the
+driver's next scheduled Car departure. The independent event audit found 127
+exact-waypoint physical completions among 128 active legs, one onboard stuck
+outcome, zero bound teleportation, zero unbound vehicle boardings, and no
+unclassified or residual engine state. Full scope and limitations are in
+`docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md`.
+
+The validated real-mode successor at
+`/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_run10` keeps the same
+139-household candidate set but replaces released `car_passenger` execution
+with a per-trip maximum-utility choice between physical PT and routed Taxi. It
+selected 104 bound and 35 unbound households; the 70 released trips became 24
+PT and 46 Taxi, with zero released Car. Passenger Car is not offered because
+the paired driver retains the household vehicle and this pilot does not assign
+an unused second vehicle. All independent audit checks passed. The remaining
+2,456 `car_passenger` legs outside this candidate set remain teleported.
+
+## Endogenous single-leg household candidates
+
+The next bounded pilot expands the executable registry to 384 candidate legs
+in 240 households. It preserves the 278 existing school-escort bindings and
+adds 106 direct/detour-screened legs that can reuse an already planned
+same-household driver Car leg. Each passenger leg is its own candidate group:
+outbound and return need not both be `car_passenger`, and released legs choose
+physical PT or routed Taxi independently. Competing candidates may not reuse
+the same driver-leg/vehicle resource.
+
+The validated iteration-0 run is
+`/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_run2`. It chose
+288 bound and 96 released legs; 51 of the 106 new candidates became physical
+joint rides. The 96 releases became 50 PT and 46 Taxi trips with no Car, and
+42 people used a mixed bound/unbound outbound-return combination. All 288
+bound departures were observed and classified; 279 completed at exact pickup
+and drop-off waypoints and none teleported. Ordinary innovation was frozen and
+the dynamic Car energy/toll/parking rules remained active. This does not
+create a new driver tour or make all 2,734 `car_passenger` legs physical.
+
 ## Taxi allocation and scoring
 
 Taxi is exactly:
@@ -212,12 +262,15 @@ attributes, including `hkTaxiType`. `hkTaxiFareBaselineHkd` remains a
 comparison field; live scoring calculates fare from the routed distance and
 Taxi type.
 
-`car_passenger` and `school_bus` are explicit teleported passenger modes. They
-temporarily retain the historical `ride` scoring coefficients as independent
-compatibility baselines until evidence-based formulas are authorized. The
-139-pair physical pilot is the sole exception: its 278 bound
-`car_passenger` legs use real private-car QVehicles, while the other 2,456
-remain teleported. The configuration contains no `ride` mode parameter.
+`car_passenger` and `school_bus` are explicit passenger modes. The current
+`car_passenger` score is the authorized base willingness plus time only,
+`-1.5 - 6 * travel_time_hours`; its distance and monetary-distance terms are
+both zero. `school_bus` still retains its provisional compatibility formula.
+In the fixed 139-pair physical pilot, 278 `car_passenger` legs use real
+private-car QVehicles, while the other 2,456 remain teleported. The real-mode
+maximum-utility successor may instead release either leg pair to physical PT
+or routed Taxi, but it does not change or generate the remaining pairs. The
+configuration contains no `ride` mode parameter.
 `SubtourModeChoice` offers only `car,pt,walk`, because standard MATSim
 availability rules cannot enforce the household and student restrictions of
 the two passenger modes.
@@ -315,6 +368,8 @@ scripts/hong_kong_single_city/demand_generation/
   prepare_hong_kong_no_ride_reallocation.py
   merge_hong_kong_no_ride_selective_routes.py
 scripts/hong_kong_single_city/run/
+  audit_hong_kong_household_max_utility_pilot.py
+  audit_hong_kong_household_real_mode_pilot.py
   audit_hong_kong_school_escort_joint_reroute_pilot.py
   audit_hong_kong_school_escort_physical_pilot.py
   launch_hong_kong_school_escort_physical_pilot.py
@@ -334,6 +389,8 @@ data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/
     school_escort_physical_binding_validation.json
     school_escort_physical_pilot_1iteration_20260806_success.json
     school_escort_joint_reroute_1cycle_20260806_success.json
+    household_max_utility_waypoint_1iteration_20260806_success.json
+    household_real_mode_waypoint_1iteration_20260806_success.json
 ```
 
 Large local derived artifacts:

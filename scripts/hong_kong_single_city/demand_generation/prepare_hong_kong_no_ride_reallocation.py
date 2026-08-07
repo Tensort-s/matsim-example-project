@@ -1024,15 +1024,17 @@ def transform_config(
         "car",
         {"monetaryDistanceRate": "0"},
     )
-    compatibility = {
+    car_passenger_time_only = {
         "constant": "-1.5",
         "marginalUtilityOfTraveling_util_hr": "-6",
         "marginalUtilityOfDistance_util_m": "0",
-        "monetaryDistanceRate": "-0.0015",
+        "monetaryDistanceRate": "0",
         "dailyMonetaryConstant": "0",
         "dailyUtilityConstant": "0",
     }
-    set_mode_scoring(scoring, "car_passenger", compatibility)
+    set_mode_scoring(scoring, "car_passenger", car_passenger_time_only)
+    compatibility = dict(car_passenger_time_only)
+    compatibility["monetaryDistanceRate"] = "-0.0015"
     set_mode_scoring(scoring, "school_bus", compatibility)
     set_mode_scoring(
         scoring,

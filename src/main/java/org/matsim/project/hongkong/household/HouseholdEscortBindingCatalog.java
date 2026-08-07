@@ -21,13 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Immutable, scenario-resolved bindings for the 139-pair physical pilot. */
+/** Immutable, scenario-resolved candidate bindings with mutable active selections. */
 public final class HouseholdEscortBindingCatalog {
-
-	public static final int EXPECTED_PASSENGERS = 139;
-	public static final int EXPECTED_BINDINGS = 278;
+	public static final String BINDING_KEY_ATTRIBUTE = "hkHouseholdEscortBindingKey";
 
 	public record Binding(
+			String candidateGroupId,
+			String householdId,
+			String candidateSource,
+			boolean newCandidate,
 			Id<Person> passengerId,
 			int passengerLegIndex,
 			Leg passengerLeg,
@@ -35,7 +37,10 @@ public final class HouseholdEscortBindingCatalog {
 			int driverLegIndex,
 			Leg driverLeg,
 			Id<Vehicle> vehicleId,
+			Id<Link> passengerPickupLinkId,
+			Id<Link> passengerDropoffLinkId,
 			Id<Link> driverDestinationLinkId,
+			double passengerPlannedDepartureTimeSeconds,
 			double driverPlannedDepartureTimeSeconds,
 			double originAccessGapMeters,
 			double destinationEgressGapMeters) {
@@ -43,15 +48,27 @@ public final class HouseholdEscortBindingCatalog {
 
 	private final List<Binding> bindings;
 	private final Map<String, Binding> passengerLegBindings;
+	private final Map<String, List<Binding>> candidateGroups;
+	private final Set<String> activeBindingKeys;
 
 	private HouseholdEscortBindingCatalog(List<Binding> bindings) {
 		this.bindings = List.copyOf(bindings);
 		this.passengerLegBindings = new LinkedHashMap<>();
+		Map<String, List<Binding>> groups = new LinkedHashMap<>();
+		this.activeBindingKeys = new HashSet<>();
 		for (Binding binding : bindings) {
-			if (passengerLegBindings.put(key(binding.passengerId(), binding.passengerLegIndex()), binding) != null) {
+			String key = key(binding.passengerId(), binding.passengerLegIndex());
+			if (passengerLegBindings.put(key, binding) != null) {
 				throw new IllegalArgumentException("Duplicate passenger leg binding: "
 						+ binding.passengerId() + "/" + binding.passengerLegIndex());
 			}
+			groups.computeIfAbsent(binding.candidateGroupId(), ignored -> new ArrayList<>())
+					.add(binding);
+			activeBindingKeys.add(key);
+		}
+		this.candidateGroups = new LinkedHashMap<>();
+		for (var entry : groups.entrySet()) {
+			this.candidateGroups.put(entry.getKey(), List.copyOf(entry.getValue()));
 		}
 	}
 
@@ -62,7 +79,6 @@ public final class HouseholdEscortBindingCatalog {
 		List<Map<String, String>> rows = readCsv(csv);
 		List<Binding> bindings = new ArrayList<>();
 		Map<Id<Person>, Integer> passengerCounts = new HashMap<>();
-		Map<Id<Person>, Id<Person>> passengerDrivers = new HashMap<>();
 		Set<String> uniqueKeys = new HashSet<>();
 		for (Map<String, String> row : rows) {
 			Id<Person> passengerId = Id.createPersonId(required(row, "passenger_person_id"));
@@ -70,6 +86,8 @@ public final class HouseholdEscortBindingCatalog {
 			int passengerLegIndex = Integer.parseInt(required(row, "passenger_leg_index"));
 			int driverLegIndex = Integer.parseInt(required(row, "driver_leg_index"));
 			Id<Vehicle> vehicleId = Id.createVehicleId(required(row, "vehicle_id"));
+			Id<Link> pickupLinkId = Id.createLinkId(required(row, "passenger_pickup_link"));
+			Id<Link> dropoffLinkId = Id.createLinkId(required(row, "passenger_dropoff_link"));
 			if (passengerId.equals(driverId)) {
 				throw new IllegalArgumentException("Passenger cannot drive their own bound leg: " + passengerId);
 			}
@@ -80,6 +98,14 @@ public final class HouseholdEscortBindingCatalog {
 
 			Person passenger = requiredPerson(scenario, passengerId);
 			Person driver = requiredPerson(scenario, driverId);
+			String householdId = optional(row, "household_id",
+					String.valueOf(passenger.getAttributes().getAttribute("householdId")));
+			if (householdId.isBlank() || "null".equals(householdId)) {
+				throw new IllegalArgumentException("Passenger lacks householdId: " + passengerId);
+			}
+			String candidateGroupId = optional(row, "candidate_group_id", passengerId.toString());
+			String candidateSource = optional(row, "candidate_source", "legacy_complete_direct_pair");
+			boolean newCandidate = Boolean.parseBoolean(optional(row, "new_candidate", "false"));
 			Leg passengerLeg = selectedLeg(passenger, passengerLegIndex);
 			Leg driverLeg = selectedLeg(driver, driverLegIndex);
 			if (!"car_passenger".equals(passengerLeg.getMode())) {
@@ -105,12 +131,16 @@ public final class HouseholdEscortBindingCatalog {
 			if (route.getEndLinkId() == null) {
 				throw new IllegalArgumentException("Bound driver route lacks an end link: " + driverId);
 			}
-			Id<Person> previousDriver = passengerDrivers.putIfAbsent(passengerId, driverId);
-			if (previousDriver != null && !previousDriver.equals(driverId)) {
-				throw new IllegalArgumentException("Passenger has different outbound and return drivers: " + passengerId);
+			if (!scenario.getNetwork().getLinks().containsKey(pickupLinkId)
+					|| !scenario.getNetwork().getLinks().containsKey(dropoffLinkId)) {
+				throw new IllegalArgumentException("Passenger waypoint is missing from the network: " + key);
 			}
 			passengerCounts.merge(passengerId, 1, Integer::sum);
 			bindings.add(new Binding(
+					candidateGroupId,
+					householdId,
+					candidateSource,
+					newCandidate,
 					passengerId,
 					passengerLegIndex,
 					passengerLeg,
@@ -118,17 +148,29 @@ public final class HouseholdEscortBindingCatalog {
 					driverLegIndex,
 					driverLeg,
 					vehicleId,
+					pickupLinkId,
+					dropoffLinkId,
 					route.getEndLinkId(),
+					Double.parseDouble(required(row, "passenger_planned_departure_time_s")),
 					Double.parseDouble(required(row, "driver_planned_departure_time_s")),
 					Double.parseDouble(required(row, "origin_access_gap_m")),
 					Double.parseDouble(required(row, "destination_egress_gap_m"))));
 		}
-		if (bindings.size() != EXPECTED_BINDINGS
-				|| passengerCounts.size() != EXPECTED_PASSENGERS
-				|| passengerCounts.values().stream().anyMatch(count -> count != 2)) {
-			throw new IllegalArgumentException(
-					"Physical pilot requires exactly 139 passengers and two legs each; found passengers="
-							+ passengerCounts.size() + ", bindings=" + bindings.size());
+		if (bindings.isEmpty() || passengerCounts.values().stream().anyMatch(count -> count < 1 || count > 2)) {
+			throw new IllegalArgumentException("Household joint-candidate registry requires one or two "
+					+ "candidate legs per passenger; found passengers=" + passengerCounts.size()
+					+ ", bindings=" + bindings.size());
+		}
+		for (var entry : bindings.stream().collect(java.util.stream.Collectors.groupingBy(
+				Binding::candidateGroupId)).entrySet()) {
+			Set<Id<Person>> passengers = entry.getValue().stream()
+					.map(Binding::passengerId).collect(java.util.stream.Collectors.toSet());
+			Set<String> households = entry.getValue().stream()
+					.map(Binding::householdId).collect(java.util.stream.Collectors.toSet());
+			if (passengers.size() != 1 || households.size() != 1) {
+				throw new IllegalArgumentException("Candidate group must contain one passenger and household: "
+						+ entry.getKey());
+			}
 		}
 		return new HouseholdEscortBindingCatalog(bindings);
 	}
@@ -137,8 +179,48 @@ public final class HouseholdEscortBindingCatalog {
 		return passengerLegBindings.get(key(passengerId, legIndex));
 	}
 
+	public synchronized Binding activeBindingForPassengerLeg(Id<Person> passengerId, int legIndex) {
+		String key = key(passengerId, legIndex);
+		return activeBindingKeys.contains(key) ? passengerLegBindings.get(key) : null;
+	}
+
+	public synchronized Binding activeBindingForKey(String bindingKey) {
+		return activeBindingKeys.contains(bindingKey) ? passengerLegBindings.get(bindingKey) : null;
+	}
+
+	public synchronized void setCandidateGroupBound(String candidateGroupId, boolean bound) {
+		List<Binding> group = candidateGroups.get(candidateGroupId);
+		if (group == null || group.isEmpty()) {
+			throw new IllegalArgumentException("Unknown household candidate group " + candidateGroupId);
+		}
+		List<String> keys = group.stream()
+				.map(binding -> key(binding.passengerId(), binding.passengerLegIndex()))
+				.toList();
+		if (bound) {
+			activeBindingKeys.addAll(keys);
+		} else {
+			activeBindingKeys.removeAll(keys);
+		}
+	}
+
+	public synchronized boolean isActive(Binding binding) {
+		return activeBindingKeys.contains(key(binding.passengerId(), binding.passengerLegIndex()));
+	}
+
+	public synchronized int activeBindingCount() {
+		return activeBindingKeys.size();
+	}
+
 	public List<Binding> bindings() {
 		return bindings;
+	}
+
+	public Map<String, List<Binding>> candidateGroups() {
+		return java.util.Collections.unmodifiableMap(candidateGroups);
+	}
+
+	public static String bindingKey(Binding binding) {
+		return key(binding.passengerId(), binding.passengerLegIndex());
 	}
 
 	private static Person requiredPerson(Scenario scenario, Id<Person> id) {
@@ -202,6 +284,11 @@ public final class HouseholdEscortBindingCatalog {
 			throw new IllegalArgumentException("Missing escort binding field: " + name);
 		}
 		return value;
+	}
+
+	private static String optional(Map<String, String> row, String name, String fallback) {
+		String value = row.get(name);
+		return value == null || value.isBlank() ? fallback : value.trim();
 	}
 
 	private static String key(Id<Person> passengerId, int legIndex) {

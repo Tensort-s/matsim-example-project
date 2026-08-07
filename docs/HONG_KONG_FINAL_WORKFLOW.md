@@ -420,6 +420,71 @@ intentionally excluded because its Car energy/toll/parking tables cannot price
 new routes. This is binding-under-rerouting evidence, not cost-aware replanning
 evidence.
 
+The dynamic-cost successor at
+`/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_run4` enabled the
+complete Taxi/PT/Car scoring stack during the same two-QSim, one-JointReRoute
+cycle. Energy and toll were calculated from arbitrary candidate links by the
+same rule later applied to actual link entries; destination parking used the
+actual facility and vehicle dwell. It exited `0` and passed all joint audit
+checks. Of 278 bound driver legs, 202 changed route and 76 remained unchanged,
+with zero binding identity failures. Iteration 1 recorded 5,812,513 priced Car
+link entries, 26,034 toll entries, 36,791 nonterminal parking settlements,
+positive HKD totals for all three components, and zero parking-facility
+mismatches. Final scores were finite and mode totals were unchanged. The final
+physical classification was 273 completed legs, one onboard stuck, and four
+driver-stuck-before-pickup cases, with zero bound teleportation. See
+`docs/HONG_KONG_DYNAMIC_CAR_COST_RUNTIME.md`. This is still a bounded technical
+pilot with ordinary route/mode/time innovation frozen, not the adopted
+50-iteration production result.
+
+The subsequent deterministic household-selector pilot at
+`/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3` compared exactly
+the bound and unbound alternatives for the same 139 complete school-escort
+pairs. It generated no new pair and used neither choice probabilities nor a
+driver participation constraint. Passenger utility was limited to
+`-1.5 - 6 * travel_time_hours`; every bound route explicitly passed the real
+pickup and drop-off links. The selector chose 64 bound and 75 unbound
+households, including 33 forced unbound by hard schedule infeasibility. The
+run exited `0`. Its independent event audit passed: 127 of 128 active bound
+legs completed at exact vehicle-link waypoints, the remaining passenger was
+stuck onboard, no bound leg teleported, no unbound candidate boarded a
+vehicle, and all active bindings were classified without residual state. See
+`docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md`. This is a one-iteration
+mechanism validation, not endogenous joint-trip generation or equilibrium.
+
+The real-mode successor at
+`/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_run10` removes
+teleported `car_passenger` from the unbound alternative for those same 139
+candidate households. Each released passenger trip chooses maximum utility
+between a SwissRailRaptor physical PT itinerary and a routed, fare-scored Taxi
+itinerary; passenger Car is unavailable while the driver retains the household
+vehicle and no unused second vehicle is explicit. The run selected 104 bound
+and 35 unbound households. Its 70 released trips became 24 PT and 46 Taxi,
+with zero released Car. The independent audit passed all checks, including
+physical PT routes, Taxi fare attributes, exact completed binding waypoints,
+mode-count conservation, finite scores, frozen ordinary innovation, and live
+dynamic Car energy/toll/parking scoring. Of 208 active binding legs, 202
+completed; the six non-completions were explicitly classified as three onboard
+stuck, one driver-stuck-before-pickup, and two simulation-horizon-before-pickup
+outcomes. This remains a one-iteration mechanism pilot; the other 2,456
+`car_passenger` legs remain teleported.
+
+The bounded endogenous successor at
+`/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_run2` expands
+the registry to 384 individually selectable passenger legs in 240 households.
+It preserves all 278 legacy legs and adds 106 candidates that reuse an
+existing compatible same-household driver Car leg; it does not create a new
+driver tour. Outbound and return are separate decision units, so one may stay
+bound while the other is released. The selector chose 288 bound and 96
+released legs, including 51 newly activated physical joint legs. The released
+legs became 50 physical PT and 46 routed Taxi trips, with zero released Car.
+Forty-two people selected a mixed bound/unbound round trip. The independent
+audit passed all checks: all 288 active departures were observed and
+classified, 279 completed at exact vehicle waypoints, no bound leg teleported,
+no driver-leg/vehicle resource was reused, dynamic Car costs were live, and
+ordinary innovation remained frozen. This is still an iteration-0 mechanism
+validation, not a calibrated equilibrium or general joint-tour generator.
+
 ## Known limitations
 
 - Work OD is calibrated and Census-projected synthetic demand, not observed
@@ -435,10 +500,11 @@ evidence.
 - Detector and ATC road-flow observations do not cover every road link.
 - The adopted 50-iteration production plans still use aggregate `ride` and do
   not create complete taxi, ride-hailing, or school-bus operator fleets. The
-  Stage 11 candidate removes `ride`; only the fixed 139-pair school-escort
-  pilot physically binds 278 `car_passenger` legs to existing household
-  private cars. All other `car_passenger` legs and all `school_bus` legs
-  remain passenger abstractions, and Taxi still has no operator fleet.
+  Stage 11 candidate removes `ride`; the newest one-iteration selector can
+  physically bind 384 screened `car_passenger` candidate legs to existing
+  household driver trips and selected 288 in its technical validation. The
+  other `car_passenger` legs and all `school_bus` legs remain passenger
+  abstractions, and Taxi still has no operator fleet.
 - Private-car powertrains and destination car parks are not observed at
   vehicle/facility level; the offline car-cost layer therefore uses an
   explicit representative fleet and official-rate-bounded parking proxies.

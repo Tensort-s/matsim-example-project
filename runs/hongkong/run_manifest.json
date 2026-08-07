@@ -89,6 +89,148 @@
         "bound_teleportation_arrivals": 0
       },
       "notes": "Completed it.0, exactly one fixed-binding JointReRoute, and physical validation in it.1 with exit code 0. Ordinary route/mode/time innovation remained frozen. The fixed-route multimodal-cost module was intentionally excluded because the canonical Car energy/toll/parking tables cannot price changed routes; this is binding persistence evidence, not cost-aware replanning evidence."
+    },
+    {
+      "name": "stage11_dynamic_car_cost_joint_reroute_1cycle_run4",
+      "role": "dynamic_car_cost_fixed_binding_joint_reroute_pilot_not_current_final_output",
+      "qsim_iterations": [0, 1],
+      "joint_reroute_applications": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_release4",
+      "server_output": "/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_run4/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_release4/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_dynamic_car_joint_reroute_1cycle_20260806_success.json",
+      "route_counts": {
+        "bound_driver_legs": 278,
+        "changed": 202,
+        "unchanged": 76,
+        "binding_identity_failures": 0
+      },
+      "final_physical_counts": {
+        "completed_legs": 273,
+        "complete_round_trip_people": 134,
+        "passenger_stuck_onboard": 1,
+        "driver_stuck_before_pickup": 4,
+        "bound_teleportation_arrivals": 0
+      },
+      "iteration_1_dynamic_costs": {
+        "link_entries": 5812513,
+        "toll_entries": 26034,
+        "nonterminal_parking_events": 36791,
+        "parking_facility_mismatches": 0,
+        "energy_hkd": 1919551.7584593298,
+        "toll_hkd": 655622.0,
+        "parking_hkd": 2183060.0
+      },
+      "notes": "Completed it.0, one fixed-binding JointReRoute, and it.1 with exit code 0 while Taxi/PT/Car scoring remained enabled. Candidate routing and experienced scoring shared the same link energy/toll rules; parking used experienced destination and vehicle dwell. Ordinary route/mode/time innovation remained frozen. This is a bounded cost-aware rerouting pilot, not the current 50-iteration production run."
+    },
+    {
+      "name": "stage11_household_max_utility_waypoint_1iteration_run3",
+      "role": "existing_pair_deterministic_household_selector_pilot_not_current_final_output",
+      "iterations": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_release3",
+      "server_output": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_release3/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/household_max_utility_waypoint_1iteration_20260806_success.json",
+      "selector_counts": {
+        "candidate_households": 139,
+        "candidates_per_household": 2,
+        "selected_bound": 64,
+        "selected_unbound": 75,
+        "schedule_infeasible_bound_candidates": 33,
+        "new_joint_pairs": 0
+      },
+      "physical_counts": {
+        "active_bound_legs": 128,
+        "exact_waypoint_completed": 127,
+        "passenger_stuck_onboard": 1,
+        "bound_teleportation_arrivals": 0,
+        "unbound_person_vehicle_events": 0,
+        "unclassified": 0
+      },
+      "notes": "Iteration 0 only, exit code 0. The selector used deterministic maximum household utility, no probability and no driver participation constraint. Passenger cost was base willingness plus travel time only. All bound candidates contained real pickup/drop-off links; the independent event audit passed every check. Ordinary route/mode/time innovation remained frozen, and no new joint pair was generated."
+    },
+    {
+      "name": "stage11_household_real_mode_waypoint_1iteration_run10",
+      "role": "existing_pair_real_pt_taxi_release_selector_pilot_not_current_final_output",
+      "iterations": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_release10",
+      "server_output": "/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_run10/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_release10/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/household_real_mode_waypoint_1iteration_20260806_success.json",
+      "selector_counts": {
+        "candidate_households": 139,
+        "selected_bound": 104,
+        "selected_unbound": 35,
+        "released_pt_legs": 24,
+        "released_taxi_legs": 46,
+        "released_car_legs": 0,
+        "unavailable_physical_pt_candidates": 29,
+        "new_joint_pairs": 0
+      },
+      "physical_counts": {
+        "active_bound_legs": 208,
+        "exact_waypoint_completed": 202,
+        "passenger_stuck_onboard": 3,
+        "driver_stuck_before_pickup": 1,
+        "simulation_end_before_pickup": 2,
+        "bound_teleportation_arrivals": 0,
+        "unclassified": 0
+      },
+      "output_mode_counts": {
+        "car": 67718,
+        "car_passenger": 2664,
+        "pt": 557375,
+        "school_bus": 9626,
+        "taxi": 44046,
+        "walk": 199863
+      },
+      "notes": "Iteration 0 only, exit code 0. Each released passenger trip chose maximum utility between physical SwissRailRaptor PT and routed Taxi; passenger Car was disabled because the driver retained the household vehicle and no unused second vehicle was explicit. The v2 independent audit passed every check. Ordinary innovation remained frozen, dynamic Car scoring remained live, and 2456 other car_passenger legs remained teleported."
+    },
+    {
+      "name": "stage11_endogenous_household_joint_single_leg_1iteration_run2",
+      "role": "bounded_endogenous_single_leg_household_selector_pilot_not_current_final_output",
+      "iterations": 1,
+      "release": "/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_release2",
+      "server_output": "/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_run2/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_release2/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "candidate_registry": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_candidate_registry_v2/household_joint_candidate_bindings.csv",
+      "audit": "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_candidate_registry_v2/endogenous_household_joint_1iteration_20260807_success.json",
+      "selector_counts": {
+        "candidate_unit": "single_passenger_leg",
+        "candidate_legs": 384,
+        "candidate_people": 244,
+        "candidate_households": 240,
+        "legacy_candidate_legs": 278,
+        "new_candidate_legs": 106,
+        "selected_bound_legs": 288,
+        "selected_unbound_legs": 96,
+        "selected_new_bound_legs": 51,
+        "selected_new_unbound_legs": 55,
+        "mixed_bound_unbound_people": 42,
+        "released_pt_legs": 50,
+        "released_taxi_legs": 46,
+        "released_car_legs": 0,
+        "vehicle_resource_conflicts": 0
+      },
+      "physical_counts": {
+        "active_bound_legs": 288,
+        "observed_bound_departures": 288,
+        "exact_waypoint_completed": 279,
+        "passenger_stuck_onboard": 4,
+        "driver_stuck_before_pickup": 3,
+        "simulation_end_before_pickup": 2,
+        "bound_teleportation_arrivals": 0,
+        "unclassified": 0
+      },
+      "output_mode_counts": {
+        "car": 67718,
+        "car_passenger": 2638,
+        "pt": 557400,
+        "school_bus": 9626,
+        "taxi": 44046,
+        "walk": 199914
+      },
+      "notes": "Iteration 0 only, exit code 0. Every outbound/return passenger leg was selected independently between a real waypoint binding and physical PT/routed Taxi release. Forty-two people used mixed bound/unbound directions. The independent audit passed all checks, ordinary innovation was frozen, and dynamic Car energy/toll/parking scoring remained live. New bindings reuse existing compatible driver Car legs; this run creates no driver tour and is not an equilibrium."
     }
   ],
   "shared_inputs": {

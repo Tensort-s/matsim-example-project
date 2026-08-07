@@ -146,6 +146,8 @@ def build_bindings(
                 "passenger_ready_before_driver_s": driver_departure - passenger_departure,
                 "origin_access_gap_m": float(row["best_origin_gap_m"]),
                 "destination_egress_gap_m": float(row["best_destination_gap_m"]),
+                "passenger_pickup_link": passenger["route_start_link"],
+                "passenger_dropoff_link": passenger["route_end_link"],
                 "driver_route_start_link": driver["route_start_link"],
                 "driver_route_end_link": driver["route_end_link"],
             }
@@ -159,6 +161,12 @@ def build_bindings(
         fail("Every pilot passenger must have exactly two bound legs")
     if any(float(item["passenger_ready_before_driver_s"]) < 0 for item in bindings):
         fail("At least one passenger is not ready before the bound driver departs")
+    if any(
+        not str(item["passenger_pickup_link"])
+        or not str(item["passenger_dropoff_link"])
+        for item in bindings
+    ):
+        fail("At least one passenger binding lacks a real network waypoint")
 
     summary = {
         "status": "validated_fixed_binding_catalog",
@@ -195,6 +203,11 @@ def build_bindings(
                 float(item["passenger_ready_before_driver_s"]) >= 0 for item in bindings
             ),
             "all_driver_routes_use_bound_vehicle": True,
+            "all_bindings_have_pickup_dropoff_links": all(
+                bool(item["passenger_pickup_link"])
+                and bool(item["passenger_dropoff_link"])
+                for item in bindings
+            ),
         },
     }
     summary["all_checks_passed"] = all(summary["checks"].values())

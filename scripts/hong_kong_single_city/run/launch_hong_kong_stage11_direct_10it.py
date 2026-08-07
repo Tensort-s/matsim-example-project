@@ -30,6 +30,14 @@ TAXI_MODE_PARAMS = {
     "dailyMonetaryConstant": "0",
     "dailyUtilityConstant": "0",
 }
+CAR_PASSENGER_TIME_ONLY_PARAMS = {
+    "constant": "-1.5",
+    "marginalUtilityOfTraveling_util_hr": "-6",
+    "marginalUtilityOfDistance_util_m": "0",
+    "monetaryDistanceRate": "0",
+    "dailyMonetaryConstant": "0",
+    "dailyUtilityConstant": "0",
+}
 SCORING_FUNCTION_CREATION_EVENT = "BeforeMobsim"
 SCORING_FUNCTION_CREATION_PARAM = "createScoringFunctionType"
 FROZEN_INNOVATION_STRATEGIES = {
@@ -222,6 +230,56 @@ def taxi_mode_sets(root: ET.Element) -> tuple[ET.Element, list[ET.Element]]:
     return scoring, matches
 
 
+def scoring_mode_sets(
+    root: ET.Element, mode: str
+) -> tuple[ET.Element, list[ET.Element]]:
+    scoring = unique_module(root, "scoring")
+    matches = []
+    for parameter_set in scoring.findall("./parameterset"):
+        if parameter_set.get("type") != "modeParams":
+            continue
+        if any(
+            item.get("name") == "mode" and item.get("value") == mode
+            for item in parameter_set.findall("./param")
+        ):
+            matches.append(parameter_set)
+    return scoring, matches
+
+
+def set_car_passenger_time_only(root: ET.Element) -> None:
+    """Remove the provisional passenger distance-money term."""
+    _, matches = scoring_mode_sets(root, "car_passenger")
+    if len(matches) != 1:
+        raise ValueError(
+            "Expected exactly one car_passenger modeParams set; "
+            f"found {len(matches)}"
+        )
+    block = matches[0]
+    for name, value in CAR_PASSENGER_TIME_ONLY_PARAMS.items():
+        parameters = [item for item in block.findall("./param") if item.get("name") == name]
+        if len(parameters) > 1:
+            raise ValueError(f"Duplicate car_passenger scoring parameter: {name}")
+        if parameters:
+            parameters[0].set("value", value)
+        else:
+            ET.SubElement(block, "param", {"name": name, "value": value})
+
+
+def require_car_passenger_time_only(root: ET.Element) -> None:
+    _, matches = scoring_mode_sets(root, "car_passenger")
+    if len(matches) != 1:
+        raise ValueError(
+            "Expected exactly one car_passenger modeParams set; "
+            f"found {len(matches)}"
+        )
+    for name, expected in CAR_PASSENGER_TIME_ONLY_PARAMS.items():
+        actual = unique_param(matches[0], name).get("value")
+        if float(actual if actual is not None else "nan") != float(expected):
+            raise ValueError(
+                f"car_passenger {name} must be {expected}; found {actual!r}"
+            )
+
+
 def set_taxi_scoring_contract(root: ET.Element) -> None:
     """Write the user-authorized Taxi leg formula into the derived config."""
     scoring, matches = taxi_mode_sets(root)
@@ -385,9 +443,11 @@ def write_run_config(template: Path, destination: Path, release: Path, run: Path
     set_physical_transit_modes(root)
     set_pt_teleported_routing(root)
     set_taxi_scoring_contract(root)
+    set_car_passenger_time_only(root)
     set_scoring_function_creation_after_replanning(root)
     freeze_canonical_plan_innovation(root)
     require_taxi_scoring_contract(root)
+    require_car_passenger_time_only(root)
     require_physical_transit_modes(root)
     require_pt_teleported_routing(root)
     require_scoring_function_creation_after_replanning(root)
@@ -457,9 +517,11 @@ def main() -> int:
     set_physical_transit_modes(source_tree.getroot())
     set_pt_teleported_routing(source_tree.getroot())
     set_taxi_scoring_contract(source_tree.getroot())
+    set_car_passenger_time_only(source_tree.getroot())
     set_scoring_function_creation_after_replanning(source_tree.getroot())
     freeze_canonical_plan_innovation(source_tree.getroot())
     require_taxi_scoring_contract(source_tree.getroot())
+    require_car_passenger_time_only(source_tree.getroot())
     require_physical_transit_modes(source_tree.getroot())
     require_pt_teleported_routing(source_tree.getroot())
     require_scoring_function_creation_after_replanning(source_tree.getroot())

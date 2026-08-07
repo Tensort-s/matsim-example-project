@@ -34,6 +34,12 @@ JOINT_PATTERN = re.compile(
     r"unique_driver_legs=(\d+), changed_routes=(\d+), unchanged_routes=(\d+), "
     r"bindings_valid=(\d+)"
 )
+DYNAMIC_COST_PATTERN = re.compile(
+    r"HK_DYNAMIC_CAR_COST_AUDIT iteration=(\d+) linkEntries=(\d+) "
+    r"tollEntries=(\d+) parkingEvents=(\d+) parkingFacilityMismatches=(\d+) "
+    r"terminalParkingEvents=(\d+) energyHkd=([0-9.Ee+-]+) "
+    r"tollHkd=([0-9.Ee+-]+) parkingHkd=([0-9.Ee+-]+)"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -46,6 +52,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--log", type=Path, required=True)
     parser.add_argument("--exit-code", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--dynamic-car-costs", action="store_true")
     return parser.parse_args()
 
 
@@ -170,6 +177,20 @@ def main() -> int:
             values,
         ))
     final_engine = engine_summaries[-1] if engine_summaries else None
+    dynamic_cost_summaries = [
+        {
+            "iteration": int(item.group(1)),
+            "link_entries": int(item.group(2)),
+            "toll_entries": int(item.group(3)),
+            "parking_events": int(item.group(4)),
+            "parking_facility_mismatches": int(item.group(5)),
+            "terminal_parking_events": int(item.group(6)),
+            "energy_hkd": float(item.group(7)),
+            "toll_hkd": float(item.group(8)),
+            "parking_hkd": float(item.group(9)),
+        }
+        for item in DYNAMIC_COST_PATTERN.finditer(log_text)
+    ]
     completed = events["bound_legs_with_exact_depart_board_alight_arrive_sequence"]
     onboard_stuck = events["bound_legs_passenger_stuck_while_onboard"]
     pickup_stuck = events["bound_legs_driver_stuck_before_pickup"]
@@ -220,7 +241,18 @@ def main() -> int:
         "output_mode_counts_unchanged": plans["selected_plan_mode_counts"]
         == base.EXPECTED_MODE_COUNTS,
         "all_output_scores_finite": plans["selected_scores_finite"],
-        "fixed_route_multimodal_cost_module_excluded": (
+        "cost_module_policy_matches_request": (
+            args.dynamic_car_costs
+            and "dynamicCarCosts=true" in log_text
+            and len(dynamic_cost_summaries) == 2
+            and [item["iteration"] for item in dynamic_cost_summaries] == [0, 1]
+            and all(item["link_entries"] > 0 for item in dynamic_cost_summaries)
+            and all(item["toll_entries"] > 0 for item in dynamic_cost_summaries)
+            and all(item["parking_events"] > 0 for item in dynamic_cost_summaries)
+            and all(item["energy_hkd"] > 0 for item in dynamic_cost_summaries)
+            and all(item["toll_hkd"] > 0 for item in dynamic_cost_summaries)
+            and all(item["parking_hkd"] > 0 for item in dynamic_cost_summaries)
+        ) if args.dynamic_car_costs else (
             "Enabled Hong Kong Taxi/PT/Car joint cost scoring" not in log_text
         ),
     }
@@ -244,6 +276,7 @@ def main() -> int:
             "binding_identity_failure_examples": binding_identity_failures[:20],
         },
         "engine_summaries": engine_summaries,
+        "dynamic_car_cost_summaries": dynamic_cost_summaries,
         "final_iteration_events": events,
         "plans": plans,
         "config": config,
@@ -251,9 +284,11 @@ def main() -> int:
         "failed_checks": [name for name, passed in checks.items() if not passed],
         "all_checks_passed": all(checks.values()),
         "interpretation": (
+            "This validates binding persistence under one driver-route innovation cycle "
+            "with event-based dynamic Car energy, toll, and parking enabled."
+            if args.dynamic_car_costs else
             "This isolates binding persistence under one driver-route innovation cycle. "
-            "The fixed-route Taxi/PT/Car cost module is intentionally not loaded, so the "
-            "run is not evidence for cost consistency after rerouting."
+            "The fixed-route Taxi/PT/Car cost module is intentionally not loaded."
         ),
     }
     args.output.write_text(

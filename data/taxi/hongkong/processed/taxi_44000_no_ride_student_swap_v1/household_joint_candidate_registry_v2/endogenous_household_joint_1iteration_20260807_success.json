@@ -1,0 +1,123 @@
+{
+  "status": "validated",
+  "selector_summary": {
+    "candidate_bundles": 384,
+    "alternatives_per_candidate": 2,
+    "selected_bound": 288,
+    "selected_unbound": 96,
+    "active_bindings": 288,
+    "generated_waypoint_legs": 384,
+    "infeasible_bound_bundles": 79,
+    "selected_unbound_pt_legs": 50,
+    "selected_unbound_taxi_legs": 46,
+    "selected_unbound_car_legs": 0,
+    "unavailable_physical_pt_candidates": 43,
+    "candidate_households": 240,
+    "candidate_legs": 384,
+    "new_candidate_bundles": 106,
+    "selected_new_bound_bundles": 51,
+    "selected_new_unbound_bundles": 55,
+    "selected_bound_legs": 288,
+    "selected_unbound_legs": 96,
+    "resource_conflict_unbound_bundles": 1,
+    "new_joint_pairs": 51
+  },
+  "registry": {
+    "bindings": 384,
+    "candidate_bundles": 384,
+    "candidate_households": 240,
+    "new_candidate_bindings": 106,
+    "new_candidate_bundles": 106,
+    "candidate_group_size_counts": {
+      "1": 384
+    }
+  },
+  "selection_counts": {
+    "legacy_bound": 237,
+    "legacy_unbound": 41,
+    "new_bound": 51,
+    "new_unbound": 55
+  },
+  "mixed_bound_unbound_passengers": {
+    "count": 42,
+    "examples": [
+      "hk_person_00147447",
+      "hk_person_00605500",
+      "hk_person_00663165",
+      "hk_person_00679028",
+      "hk_person_00711062",
+      "hk_person_00987838",
+      "hk_person_01154922",
+      "hk_person_02739247",
+      "hk_person_02787984",
+      "hk_person_02854124",
+      "hk_person_02862570",
+      "hk_person_03365979",
+      "hk_person_04383905",
+      "hk_person_04397269",
+      "hk_person_04515340",
+      "hk_person_04557080",
+      "hk_person_04614107",
+      "hk_person_04672723",
+      "hk_person_04683733",
+      "hk_person_04725954"
+    ]
+  },
+  "vehicle_resource_conflicts": [],
+  "released_plans": {
+    "expected_released_trips": 96,
+    "observed_released_trips": 96,
+    "physical_pt_trips": 50,
+    "routed_taxi_trips": 46,
+    "released_car_legs": 0,
+    "failure_count": 0,
+    "failure_examples": []
+  },
+  "events": {
+    "active_bound_candidate_legs": 288,
+    "bound_legs_completed_at_exact_waypoints": 279,
+    "bound_waypoint_failure_count": 0,
+    "bound_waypoint_failure_examples": [],
+    "bound_teleportation_arrivals": 0,
+    "observed_passenger_legs": 288,
+    "unmatched_bound_departures": 0
+  },
+  "plans": {
+    "persons": 385820,
+    "selected_plan_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2638,
+      "pt": 557400,
+      "school_bus": 9626,
+      "taxi": 44046,
+      "walk": 199914
+    },
+    "selected_scores_finite": true
+  },
+  "checks": {
+    "process_exit_zero": true,
+    "registry_shape_exact": true,
+    "each_candidate_is_one_leg": true,
+    "selector_summary_exact": true,
+    "every_bundle_selected_once": true,
+    "every_candidate_leg_has_real_release_choice": true,
+    "new_candidates_were_endogenously_selected": true,
+    "vehicle_resources_not_reused": true,
+    "selected_leg_counts_conserved": true,
+    "released_trip_count_conserved": true,
+    "released_plans_are_real_pt_or_taxi": true,
+    "completed_bound_legs_use_exact_waypoints": true,
+    "no_bound_teleportation": true,
+    "all_bound_departures_observed": true,
+    "all_active_bindings_classified": true,
+    "remaining_car_passenger_count_correct": true,
+    "taxi_count_correct": true,
+    "car_count_unchanged": true,
+    "ordinary_innovation_frozen": true,
+    "one_qsim_iteration": true,
+    "dynamic_costs_live": true,
+    "all_scores_finite": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true
+}

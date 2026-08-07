@@ -62,7 +62,7 @@ stage11_no_ride_candidate:
   car_monetary_distance_rate: 0
   taxi_score: "-9 - 6 * travel_time_hours - 0.05 * route_based_fare_hkd"
   innovation_policy: "ChangeExpBeta only; route, mode, and time innovation frozen"
-  limitation: "car_passenger and school_bus retain provisional historical ride coefficients; no operator fleet is represented"
+  limitation: "car_passenger now uses base willingness plus time only; school_bus retains a provisional compatibility coefficient; no operator fleet is represented"
   household_car_passenger_candidate_audit:
     status: "validated_read_only_no_bindings_created"
     directory: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_car_passenger_candidate_audit_v1/"
@@ -100,6 +100,99 @@ stage11_no_ride_candidate:
     final_bound_teleportation_arrivals: 0
     multimodal_costs_enabled: false
     limitation: "isolated binding-under-rerouting test; fixed-route Car energy/toll/parking tables cannot price changed routes"
+  dynamic_car_cost_joint_reroute_pilot:
+    status: "validated_one_cycle_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_release4"
+    server_run: "/mnt/DiskM/by/hk_stage11_dynamic_car_joint_reroute_20260806_run4"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/school_escort_dynamic_car_joint_reroute_1cycle_20260806_success.json"
+    qsim_iterations: [0, 1]
+    joint_reroute_applications: 1
+    bound_driver_legs: 278
+    changed_driver_routes: 202
+    unchanged_driver_routes: 76
+    binding_identity_failures: 0
+    final_physically_completed_legs: 273
+    final_complete_round_trip_people: 134
+    final_bound_teleportation_arrivals: 0
+    multimodal_costs_enabled: true
+    dynamic_car_costs_enabled: true
+    iteration_1_dynamic_costs:
+      link_entries: 5812513
+      toll_entries: 26034
+      nonterminal_parking_events: 36791
+      parking_facility_mismatches: 0
+      energy_hkd: 1919551.7584593298
+      toll_hkd: 655622.0
+      parking_hkd: 2183060.0
+    innovation_policy: "one fixed-binding JointReRoute only; ordinary route, mode, and time innovation frozen"
+    limitation: "technical cost-aware rerouting pilot; not general household joint-plan selection or a long-run equilibrium"
+  household_max_utility_waypoint_pilot:
+    status: "validated_iteration_0_only_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_release3"
+    server_run: "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/household_max_utility_waypoint_1iteration_20260806_success.json"
+    candidate_households: 139
+    selected_bound_households: 64
+    selected_unbound_households: 75
+    schedule_infeasible_bound_candidates: 33
+    active_bound_legs: 128
+    exact_waypoint_completed_legs: 127
+    passenger_stuck_onboard_legs: 1
+    bound_teleportation_arrivals: 0
+    unbound_person_vehicle_events: 0
+    probabilistic_choice: false
+    driver_participation_constraint: false
+    new_joint_pair_generation: false
+    passenger_score: "-1.5 - 6 * travel_time_hours"
+    innovation_policy: "iteration 0 only; ordinary route, mode, and time innovation frozen"
+    limitation: "existing 139 complete pairs only; unbound car_passenger remains teleported; not an equilibrium or endogenous joint-trip generator"
+  household_real_mode_waypoint_pilot:
+    status: "validated_iteration_0_only_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_release10"
+    server_run: "/mnt/DiskM/by/hk_stage11_household_real_mode_20260806_run10"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/school_escort_physical_pilot_v1/household_real_mode_waypoint_1iteration_20260806_success.json"
+    candidate_households: 139
+    selected_bound_households: 104
+    selected_unbound_households: 35
+    released_pt_legs: 24
+    released_taxi_legs: 46
+    released_car_legs: 0
+    unavailable_physical_pt_candidates: 29
+    active_bound_legs: 208
+    exact_waypoint_completed_legs: 202
+    passenger_stuck_onboard_legs: 3
+    driver_stuck_before_pickup_legs: 1
+    simulation_end_before_pickup_legs: 2
+    passenger_car_availability: "disabled while paired driver retains the household Car and no unused additional vehicle is explicit"
+    ordinary_innovation_frozen: true
+    limitation: "same 139 complete pairs only; 2456 other car_passenger legs remain teleported; not an equilibrium or endogenous joint-trip generator"
+  endogenous_household_joint_single_leg_pilot:
+    status: "validated_iteration_0_only_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_release2"
+    server_run: "/mnt/DiskM/by/hk_stage11_endogenous_household_joint_20260807_run2"
+    registry: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_candidate_registry_v2/household_joint_candidate_bindings.csv"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_candidate_registry_v2/endogenous_household_joint_1iteration_20260807_success.json"
+    candidate_unit: "single passenger leg; outbound and return are independent"
+    candidate_legs: 384
+    candidate_people: 244
+    candidate_households: 240
+    legacy_candidate_legs: 278
+    new_candidate_legs: 106
+    selected_bound_legs: 288
+    selected_unbound_legs: 96
+    selected_new_bound_legs: 51
+    selected_new_unbound_legs: 55
+    mixed_bound_unbound_people: 42
+    released_pt_legs: 50
+    released_taxi_legs: 46
+    released_car_legs: 0
+    exact_waypoint_completed_legs: 279
+    passenger_stuck_onboard_legs: 4
+    driver_stuck_before_pickup_legs: 3
+    simulation_end_before_pickup_legs: 2
+    vehicle_resource_conflicts: 0
+    ordinary_innovation_frozen: true
+    limitation: "reuses existing compatible driver Car legs only; no new driver tour, choice probability, driver acceptance constraint, unused-second-car allocation, or long-run equilibrium"
 
 simulation_parameters:
   iterations: 50
@@ -120,7 +213,9 @@ documentation:
   road_capacity: "docs/HONG_KONG_ROAD_SPEED_CAPACITY.md"
   agents: "docs/HONG_KONG_MATSIM_AGENTS_5PCT.md"
   car_cost_model: "docs/HONG_KONG_CAR_COST_MODEL.md"
+  dynamic_car_cost_runtime: "docs/HONG_KONG_DYNAMIC_CAR_COST_RUNTIME.md"
+  household_selector: "docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md"
 
 offline_audits:
   car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"
-  car_cost_status: "read_only_offline_audit_not_active_matsim_scoring"
+  car_cost_status: "offline canonical inputs; static and optional dynamic Stage 11 runtime consumers available, neither adopted as current production"

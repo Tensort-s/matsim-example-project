@@ -22,7 +22,8 @@
     "exact_legacy_pair_match": true,
     "two_legs_per_passenger": true,
     "all_passengers_ready_before_driver": true,
-    "all_driver_routes_use_bound_vehicle": true
+    "all_driver_routes_use_bound_vehicle": true,
+    "all_bindings_have_pickup_dropoff_links": true
   },
   "all_checks_passed": true,
   "inputs": {

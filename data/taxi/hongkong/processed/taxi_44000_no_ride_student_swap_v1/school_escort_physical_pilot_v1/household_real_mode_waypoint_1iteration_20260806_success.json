@@ -1,0 +1,69 @@
+{
+  "status": "validated",
+  "selector_summary": {
+    "households": 139,
+    "candidates_per_household": 2,
+    "selected_bound": 104,
+    "selected_unbound": 35,
+    "active_bindings": 208,
+    "generated_waypoint_legs": 278,
+    "infeasible_bound_households": 33,
+    "selected_unbound_pt_legs": 24,
+    "selected_unbound_taxi_legs": 46,
+    "selected_unbound_car_passenger_legs": 0,
+    "unavailable_physical_pt_candidates": 29
+  },
+  "selection_counts": {
+    "bound": 104,
+    "unbound": 35
+  },
+  "released_plans": {
+    "expected_released_trips": 70,
+    "observed_released_trips": 70,
+    "physical_pt_trips": 24,
+    "routed_taxi_trips": 46,
+    "released_car_legs": 0,
+    "failure_count": 0,
+    "failure_examples": []
+  },
+  "events": {
+    "bound_legs_completed_at_exact_waypoints": 202,
+    "bound_waypoint_failure_count": 0,
+    "bound_waypoint_failure_examples": [],
+    "bound_teleportation_arrivals": 0,
+    "unbound_person_vehicle_events": 0,
+    "unbound_teleportation_arrivals": 0,
+    "observed_passenger_legs": 208
+  },
+  "plans": {
+    "persons": 385820,
+    "selected_plan_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2664,
+      "pt": 557375,
+      "school_bus": 9626,
+      "taxi": 44046,
+      "walk": 199863
+    },
+    "selected_scores_finite": true
+  },
+  "checks": {
+    "process_exit_zero": true,
+    "selector_summary_present": true,
+    "all_candidate_legs_have_pt_taxi_choice": true,
+    "released_trip_count_conserved": true,
+    "released_plans_are_real_pt_or_taxi": true,
+    "completed_bound_legs_use_exact_waypoints": true,
+    "no_bound_teleportation": true,
+    "all_active_bindings_classified": true,
+    "remaining_car_passenger_count_correct": true,
+    "taxi_count_correct": true,
+    "car_count_unchanged": true,
+    "ordinary_innovation_frozen": true,
+    "one_qsim_iteration": true,
+    "dynamic_costs_live": true,
+    "all_scores_finite": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true
+}

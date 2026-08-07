@@ -188,6 +188,20 @@ student exchange to enforce household-car eligibility for all 2,490 student
 `car_passenger` legs. Its exact counts, selective routing repair, limitations,
 and artifacts are in `docs/HONG_KONG_NO_RIDE_REALLOCATION.md`. This candidate
 does not yet replace the adopted 50-iteration production run.
+The bounded 139-household maximum-utility selector and its real pickup/drop-off
+waypoint contract are documented in
+`docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md`. It compares only the
+existing bound and unbound alternatives, creates no new joint trip, and is a
+one-iteration technical pilot rather than production demand.
+Its validated real-mode successor replaces released candidate
+`car_passenger` trips with maximum-utility physical PT or routed Taxi, keeps
+passenger Car unavailable without a released or additional household vehicle,
+and leaves the other 2,456 passenger abstractions unchanged.
+The 2026-08-07 bounded endogenous successor expands this to 384 single-leg
+candidates in 240 households, while still reusing only existing driver Car
+legs. It selected 288 physical bindings and 96 PT/Taxi releases; 42 people
+used different bound/unbound choices by direction. The iteration-0 independent
+audit passed, but the result is not an adopted production equilibrium.
 The real routed taxi base plans have a separate full-scenario, no-simulation
 load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
 taxi leg attributes, routes, fare-only scoring, and scoring-factory creation
@@ -293,6 +307,12 @@ demand and Ferry Core inputs by SHA256, rejects historical v1/pre-Ferry
 defaults, requires a clean exact source SHA and current Taxi/PT/Car JAR class
 inventory, and defines a later Supervisor-authorized Linux JDK 25 build and
 deployment-manifest interface. It does not authorize server access or a run.
+The later optional dynamic private-car runtime is documented in
+`docs/HONG_KONG_DYNAMIC_CAR_COST_RUNTIME.md`. It removes the fixed-leg lookup
+for candidate and experienced Car routes, uses one shared link energy/toll
+rule for routing and scoring, and settles destination parking from experienced
+vehicle dwell. Its one-cycle Stage 11 validation is not the adopted production
+run; the static Stage 8 runtime remains available as a historical baseline.
 
 The final local SimWrapper project for this configuration is:
 

@@ -1,0 +1,94 @@
+{
+  "status": "validated",
+  "selector_summary": {
+    "households": 139,
+    "candidates_per_household": 2,
+    "selected_bound": 64,
+    "selected_unbound": 75,
+    "active_bindings": 128,
+    "generated_waypoint_legs": 278,
+    "infeasible_bound_households": 33
+  },
+  "physical_summary": {
+    "departures": 128,
+    "boardings": 128,
+    "alightings": 127,
+    "completed": 127,
+    "passenger_stuck_onboard": 1,
+    "driver_stuck_before_pickup": 0,
+    "skipped_after_prior_failure": 0,
+    "waiting": 0,
+    "onboard": 0,
+    "classified": 128
+  },
+  "selection_counts": {
+    "bound": 64,
+    "unbound": 75
+  },
+  "events": {
+    "bound_legs_completed_at_exact_waypoints": 127,
+    "bound_waypoint_failure_count": 0,
+    "bound_waypoint_failure_examples": [],
+    "bound_teleportation_arrivals": 0,
+    "unbound_person_vehicle_events": 0,
+    "unbound_teleportation_arrivals": 0,
+    "observed_passenger_legs": 278
+  },
+  "plans": {
+    "persons": 385820,
+    "selected_plan_mode_counts": {
+      "car": 67718,
+      "car_passenger": 2734,
+      "pt": 557347,
+      "school_bus": 9626,
+      "taxi": 44000,
+      "walk": 199811
+    },
+    "selected_scores_finite": true
+  },
+  "config": {
+    "first_iteration": 0,
+    "last_iteration": 0,
+    "strategy_weights": {
+      "ChangeExpBeta": [
+        1.0
+      ],
+      "ReRoute": [
+        0.0
+      ],
+      "SubtourModeChoice": [
+        0.0
+      ],
+      "TimeAllocationMutator": [
+        0.0
+      ]
+    }
+  },
+  "checks": {
+    "process_exit_zero": true,
+    "exact_existing_candidate_population": true,
+    "exact_two_candidates_no_probability_or_driver_constraint": true,
+    "bound_unbound_selection_conserved": true,
+    "all_waypoint_candidates_generated": true,
+    "completed_bound_legs_use_exact_waypoints": true,
+    "all_active_bindings_classified": true,
+    "no_bound_teleportation": true,
+    "no_unbound_vehicle_boarding": true,
+    "passenger_score_is_base_plus_time_only": true,
+    "ordinary_innovation_frozen": true,
+    "one_qsim_iteration": true,
+    "dynamic_costs_live": true,
+    "output_modes_conserved": true,
+    "all_scores_finite": true
+  },
+  "failed_checks": [],
+  "all_checks_passed": true,
+  "inputs": {
+    "bindings": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_release3/input/school_escort_physical_bindings.csv",
+    "events": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/output/ITERS/it.0/0.events.xml.zst",
+    "plans": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/output/output_plans.xml.zst",
+    "config": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/config_stage11_school_escort_max_utility_1iteration.xml",
+    "log": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/run_stdout_stderr.log",
+    "exit_code": "/mnt/DiskM/by/hk_stage11_household_max_utility_20260806_run3/exit_code.txt"
+  }
+}

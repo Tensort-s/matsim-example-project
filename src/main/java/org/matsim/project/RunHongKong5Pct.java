@@ -17,6 +17,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
 import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
 import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
+import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorModule;
 import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
@@ -38,16 +39,19 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 				"Usage: RunHongKong5Pct <config.xml> [routed-plans.xml.gz] [--simulate] "
 						+ "[--clear-pt-routes] [--multimodal-costs "
-						+ "--pt-fare-root=<path> --car-cost-root=<path>] "
+						+ "--pt-fare-root=<path> --car-cost-root=<path> [--dynamic-car-costs]] "
 						+ "[--household-escort-bindings=<path>] "
-						+ "[--household-escort-joint-reroute]"
+						+ "[--household-escort-joint-reroute] [--household-escort-max-utility]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
 		boolean clearPtRoutes = Arrays.asList(args).contains("--clear-pt-routes");
 		boolean multimodalCosts = Arrays.asList(args).contains("--multimodal-costs");
+		boolean dynamicCarCosts = Arrays.asList(args).contains("--dynamic-car-costs");
 		boolean householdEscortJointReRoute = Arrays.asList(args)
 				.contains("--household-escort-joint-reroute");
+		boolean householdEscortMaxUtility = Arrays.asList(args)
+				.contains("--household-escort-max-utility");
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
 		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
@@ -55,14 +59,30 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 					"--multimodal-costs requires both --pt-fare-root and --car-cost-root.");
 		}
+		if (dynamicCarCosts && !multimodalCosts) {
+			throw new IllegalArgumentException(
+					"--dynamic-car-costs requires --multimodal-costs.");
+		}
 		if (householdEscortJointReRoute && householdEscortBindings == null) {
 			throw new IllegalArgumentException(
 					"--household-escort-joint-reroute requires --household-escort-bindings.");
 		}
-		if (householdEscortJointReRoute && multimodalCosts) {
+		if (householdEscortMaxUtility && householdEscortBindings == null) {
+			throw new IllegalArgumentException(
+					"--household-escort-max-utility requires --household-escort-bindings.");
+		}
+		if (householdEscortMaxUtility && !dynamicCarCosts) {
+			throw new IllegalArgumentException(
+					"--household-escort-max-utility requires --dynamic-car-costs.");
+		}
+		if (householdEscortMaxUtility && householdEscortJointReRoute) {
+			throw new IllegalArgumentException(
+					"Maximum-utility household selection and historical JointReRoute are mutually exclusive.");
+		}
+		if (householdEscortJointReRoute && multimodalCosts && !dynamicCarCosts) {
 			throw new IllegalArgumentException(
 					"Household JointReRoute cannot reuse the fixed-route Car cost tables; "
-							+ "run the isolated physical reroute pilot without --multimodal-costs.");
+							+ "enable --dynamic-car-costs or run the isolated pilot without costs.");
 		}
 		Path routedPlans = null;
 		for (int index = 1; index < args.length; index++) {
@@ -126,13 +146,19 @@ public final class RunHongKong5Pct {
 			});
 			controler.addQSimModule(new HouseholdEscortPhysicalQSimModule(householdEscortCatalog));
 			System.out.printf(
-					"Enabled %,d fixed household school-escort physical bindings from %s.%n",
+					"Enabled %,d household joint-candidate physical bindings from %s.%n",
 					householdEscortCatalog.bindings().size(), householdEscortBindings);
 		}
 		if (householdEscortJointReRoute) {
 			controler.addOverridingModule(new HouseholdEscortJointReRouteModule(householdEscortCatalog));
 			System.out.println(
 					"Enabled one-shot fixed-binding household school-escort JointReRoute after it.0.");
+		}
+		if (householdEscortMaxUtility) {
+			controler.addOverridingModule(new HouseholdEscortMaxUtilitySelectorModule());
+			System.out.println(
+					"Enabled one-shot deterministic household bound-versus-real-PT/Taxi "
+							+ "maximum-utility selection; passenger Car is unavailable.");
 		}
 		if (noRideTaxiRouting) {
 			controler.addOverridingModule(new HongKongNoRideTaxiRoutingModule());
@@ -141,11 +167,13 @@ public final class RunHongKong5Pct {
 			controler.addOverridingModule(new HongKongMultimodalCostScoringModule(
 					HongKongTaxiScoringParameters.centralV1(),
 					ptFareRoot,
-					carCostRoot));
+					carCostRoot,
+					dynamicCarCosts));
 			System.out.printf(
-					"Enabled Hong Kong Taxi/PT/Car joint cost scoring; PT root=%s; Car root=%s.%n",
+					"Enabled Hong Kong Taxi/PT/Car joint cost scoring; PT root=%s; Car root=%s; dynamicCarCosts=%s.%n",
 					ptFareRoot,
-					carCostRoot);
+					carCostRoot,
+					dynamicCarCosts);
 		}
 		if (!simulate) {
 			controler.addOverridingModule(new AbstractModule() {

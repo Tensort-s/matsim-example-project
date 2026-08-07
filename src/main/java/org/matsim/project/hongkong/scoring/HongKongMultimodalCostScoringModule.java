@@ -3,6 +3,7 @@ package org.matsim.project.hongkong.scoring;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.project.hongkong.car.HongKongCarEnergyCostCatalog;
 import org.matsim.project.hongkong.car.HongKongCarMarginalCostScoringComponentModule;
+import org.matsim.project.hongkong.car.HongKongDynamicCarCostModule;
 import org.matsim.project.hongkong.pt.HongKongPtFareRuntimeCatalog;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentModule;
@@ -27,18 +28,28 @@ public final class HongKongMultimodalCostScoringModule
 	private final HongKongTaxiScoringParameters taxiParameters;
 	private final Path ptFareReleaseRoot;
 	private final Path carCostRoot;
+	private final boolean dynamicCarCosts;
 
 	public HongKongMultimodalCostScoringModule() {
 		this(
 				HongKongTaxiScoringParameters.centralV1(),
 				HongKongPtFareRuntimeCatalog.DEFAULT_RELEASE_ROOT,
-				HongKongCarEnergyCostCatalog.DEFAULT_CAR_COST_ROOT);
+				HongKongCarEnergyCostCatalog.DEFAULT_CAR_COST_ROOT,
+				false);
 	}
 
 	public HongKongMultimodalCostScoringModule(
 			HongKongTaxiScoringParameters taxiParameters,
 			Path ptFareReleaseRoot,
 			Path carCostRoot) {
+		this(taxiParameters, ptFareReleaseRoot, carCostRoot, false);
+	}
+
+	public HongKongMultimodalCostScoringModule(
+			HongKongTaxiScoringParameters taxiParameters,
+			Path ptFareReleaseRoot,
+			Path carCostRoot,
+			boolean dynamicCarCosts) {
 		this.taxiParameters =
 				Objects.requireNonNull(taxiParameters, "taxiParameters");
 		this.ptFareReleaseRoot = Objects.requireNonNull(
@@ -47,6 +58,7 @@ public final class HongKongMultimodalCostScoringModule
 		this.carCostRoot = Objects.requireNonNull(
 						carCostRoot, "carCostRoot")
 				.toAbsolutePath().normalize();
+		this.dynamicCarCosts = dynamicCarCosts;
 	}
 
 	@Override
@@ -56,7 +68,11 @@ public final class HongKongMultimodalCostScoringModule
 				taxiParameters));
 		install(new HongKongPtFareScoringComponentModule(
 				ptFareReleaseRoot));
-		install(new HongKongCarMarginalCostScoringComponentModule(
-				carCostRoot));
+		if (dynamicCarCosts) {
+			install(new HongKongDynamicCarCostModule(carCostRoot));
+		} else {
+			install(new HongKongCarMarginalCostScoringComponentModule(
+					carCostRoot));
+		}
 	}
 }
