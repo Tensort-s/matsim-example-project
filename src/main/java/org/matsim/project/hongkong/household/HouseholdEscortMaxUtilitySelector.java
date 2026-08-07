@@ -232,11 +232,12 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 				PassengerModeCandidate taxiCandidate = buildTaxiCandidate(
 						router, passenger, passengerTrip, binding.passengerLegIndex(),
 						binding.passengerPlannedDepartureTimeSeconds());
+				PassengerModeCandidate walkCandidate = buildWalkCandidate(
+						router, passenger, passengerTrip, binding.passengerLegIndex(),
+						binding.passengerPlannedDepartureTimeSeconds());
 				if (!ptCandidate.available()) unavailablePtCandidates++;
-				PassengerModeCandidate unboundMode = ptCandidate.available()
-						&& ptCandidate.utility() >= taxiCandidate.utility()
-						? ptCandidate
-						: taxiCandidate;
+				PassengerModeCandidate unboundMode = bestUnboundMode(
+						ptCandidate, taxiCandidate, walkCandidate);
 				unboundModeCandidates.add(unboundMode);
 				double boundPassengerTime = waypoint.passengerArrivalTimeS()
 						- binding.passengerPlannedDepartureTimeSeconds();
@@ -247,12 +248,14 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 						+ "new_candidate={} passenger={} passenger_leg={} "
 						+ "pt_available={} pt_utility={} pt_time_s={} pt_fare_hkd={} "
 						+ "pt_unresolved_fare_segments={} "
-						+ "taxi_utility={} taxi_time_s={} taxi_fare_hkd={} selected_mode={}",
+						+ "taxi_utility={} taxi_time_s={} taxi_fare_hkd={} "
+						+ "walk_utility={} walk_time_s={} selected_mode={}",
 						binding.candidateGroupId(), binding.householdId(), binding.newCandidate(),
 						binding.passengerId(), binding.passengerLegIndex(), ptCandidate.available(),
 						ptCandidate.utility(), ptCandidate.travelTimeS(), ptCandidate.fareHkd(),
 						ptCandidate.unresolvedFareSegments(), taxiCandidate.utility(),
-						taxiCandidate.travelTimeS(), taxiCandidate.fareHkd(), unboundMode.mode());
+						taxiCandidate.travelTimeS(), taxiCandidate.fareHkd(),
+						walkCandidate.utility(), walkCandidate.travelTimeS(), unboundMode.mode());
 				unboundUtility += unboundRoute.driverUtility() + unboundMode.utility();
 				boundUtility += waypoint.metric().driverUtility()
 						+ passengerUtility(Math.max(0.0, boundPassengerTime));
@@ -280,6 +283,7 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 		int selectedUnboundLegs = 0;
 		int selectedUnboundPtLegs = 0;
 		int selectedUnboundTaxiLegs = 0;
+		int selectedUnboundWalkLegs = 0;
 		int selectedNewBound = 0;
 		int selectedNewUnbound = 0;
 		int resourceConflictUnbound = 0;
@@ -327,6 +331,8 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 						.filter(candidate -> TransportMode.pt.equals(candidate.mode())).count();
 				selectedUnboundTaxiLegs += bundle.unboundModeCandidates().stream()
 						.filter(candidate -> HongKongTaxiScoringParameters.TAXI_MODE.equals(candidate.mode())).count();
+				selectedUnboundWalkLegs += bundle.unboundModeCandidates().stream()
+						.filter(candidate -> TransportMode.walk.equals(candidate.mode())).count();
 			}
 			totalBoundUtility += bundle.boundUtility();
 			totalUnboundUtility += bundle.unboundUtility();
@@ -375,7 +381,8 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 		LOG.info("Household escort maximum-utility selector: candidate_bundles={}, alternatives_per_candidate=2, "
 				+ "selected_bound={}, selected_unbound={}, active_bindings={}, generated_waypoint_legs={}, "
 				+ "infeasible_bound_households={}, selected_unbound_pt_legs={}, "
-				+ "selected_unbound_taxi_legs={}, selected_unbound_car_passenger_legs=0, "
+				+ "selected_unbound_taxi_legs={}, selected_unbound_walk_legs={}, "
+				+ "selected_unbound_car_passenger_legs=0, "
 				+ "unavailable_physical_pt_candidates={}, candidate_households={}, candidate_legs={}, "
 				+ "new_candidate_bundles={}, selected_new_bound_bundles={}, "
 				+ "selected_new_unbound_bundles={}, selected_bound_legs={}, selected_unbound_legs={}, "
@@ -385,7 +392,8 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 				+ "new_joint_pairs={}",
 				evaluatedBundles.size(), selectedBound, selectedUnbound, catalog.activeBindingCount(),
 				generatedWaypointLegs, infeasibleBoundHouseholds,
-				selectedUnboundPtLegs, selectedUnboundTaxiLegs, unavailablePtCandidates,
+				selectedUnboundPtLegs, selectedUnboundTaxiLegs, selectedUnboundWalkLegs,
+				unavailablePtCandidates,
 				byHousehold.size(), catalog.bindings().size(), newCandidateBundles,
 				selectedNewBound, selectedNewUnbound, selectedBoundLegs, selectedUnboundLegs,
 				resourceConflictUnbound,
@@ -558,6 +566,58 @@ public final class HouseholdEscortMaxUtilitySelector implements StartupListener 
 		return new PassengerModeCandidate(
 				HongKongTaxiScoringParameters.TAXI_MODE,
 				trip, utility, tripTravelTime(trip), fareHkd, 0, true);
+	}
+
+	private PassengerModeCandidate buildWalkCandidate(
+			TripRouter router,
+			Person passenger,
+			PlanTrip passengerTrip,
+			int passengerLegIndex,
+			double departureTimeS) {
+		List<? extends PlanElement> routed = router.calcRoute(
+				TransportMode.walk,
+				FacilitiesUtils.toFacility(passengerTrip.origin(), facilities),
+				FacilitiesUtils.toFacility(passengerTrip.destination(), facilities),
+				departureTimeS,
+				passenger,
+				passengerTrip.leg().getAttributes());
+		List<PlanElement> trip = new ArrayList<>(routed);
+		List<Leg> legs = trip.stream()
+				.filter(Leg.class::isInstance)
+				.map(Leg.class::cast)
+				.toList();
+		if (legs.isEmpty() || legs.stream().anyMatch(leg -> !TransportMode.walk.equals(leg.getMode()))) {
+			throw new IllegalStateException("Unbound Walk candidate must contain only Walk legs: "
+					+ passenger.getId() + "/" + passengerLegIndex);
+		}
+		for (Leg leg : legs) {
+			leg.setRoutingMode(TransportMode.walk);
+			setReleasedModeAttributes(leg.getAttributes(), TransportMode.walk, passengerLegIndex);
+		}
+		return new PassengerModeCandidate(
+				TransportMode.walk, trip, standardTripUtility(trip),
+				tripTravelTime(trip), 0.0, 0, true);
+	}
+
+	private static PassengerModeCandidate bestUnboundMode(
+			PassengerModeCandidate pt,
+			PassengerModeCandidate taxi,
+			PassengerModeCandidate walk) {
+		List<PassengerModeCandidate> candidates = List.of(pt, taxi, walk);
+		return candidates.stream()
+				.filter(PassengerModeCandidate::available)
+				.max(Comparator.comparingDouble(PassengerModeCandidate::utility)
+						.thenComparingInt(candidate -> unboundModeTiePriority(candidate.mode())))
+				.orElseThrow(() -> new IllegalStateException("No available unbound passenger mode."));
+	}
+
+	private static int unboundModeTiePriority(String mode) {
+		return switch (mode) {
+			case TransportMode.pt -> 3;
+			case HongKongTaxiScoringParameters.TAXI_MODE -> 2;
+			case TransportMode.walk -> 1;
+			default -> throw new IllegalArgumentException("Unsupported unbound passenger mode " + mode);
+		};
 	}
 
 	private double standardTripUtility(List<PlanElement> trip) {

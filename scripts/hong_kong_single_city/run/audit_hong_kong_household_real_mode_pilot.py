@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit bound waypoints plus released PT/Taxi household passenger trips."""
+"""Audit bound waypoints plus released PT/Taxi/Walk household passenger trips."""
 
 from __future__ import annotations
 
@@ -36,7 +36,8 @@ SUMMARY = re.compile(
     r"selected_bound=(\d+), selected_unbound=(\d+), "
     r"active_bindings=(\d+), generated_waypoint_legs=(\d+), "
     r"infeasible_bound_households=(\d+), selected_unbound_pt_legs=(\d+), "
-    r"selected_unbound_taxi_legs=(\d+), selected_unbound_car_passenger_legs=(\d+), "
+    r"selected_unbound_taxi_legs=(\d+), selected_unbound_walk_legs=(\d+), "
+    r"selected_unbound_car_passenger_legs=(\d+), "
     r"unavailable_physical_pt_candidates=(\d+), .*probability_choice=false, "
     r"driver_constraint=false, new_joint_pairs=\d+"
 )
@@ -44,7 +45,7 @@ REAL_CANDIDATE = re.compile(
     r"HK_HOUSEHOLD_ESCORT_REAL_MODE_CANDIDATE "
     r"(?:candidate_group=\S+ household=\S+ new_candidate=(?:true|false) )?"
     r"passenger=(\S+) passenger_leg=(\d+) "
-    r"pt_available=(true|false).*selected_mode=(pt|taxi)"
+    r"pt_available=(true|false).*selected_mode=(pt|taxi|walk)"
 )
 RELEASED_MODE = "hkHouseholdEscortReleasedPassengerMode"
 RELEASED_INDEX = "hkHouseholdEscortOriginalPassengerLegIndex"
@@ -127,6 +128,7 @@ def audit_released_plans(
     failures: list[str] = []
     pt_trips = 0
     taxi_trips = 0
+    walk_trips = 0
     for key, expected_mode in expected.items():
         legs = observed.get(key, [])
         if not legs:
@@ -143,7 +145,7 @@ def audit_released_plans(
                 failures.append(f"{key}: Taxi trip is not one routed Taxi leg")
             elif len(taxi_legs[0]["taxi_attributes"]) != len(TAXI_NAMES):
                 failures.append(f"{key}: Taxi fare attributes incomplete")
-        else:
+        elif expected_mode == "pt":
             pt_trips += 1
             physical = [
                 item for item in legs
@@ -157,6 +159,12 @@ def audit_released_plans(
                 failures.append(f"{key}: no TransitPassengerRoute PT leg")
             if any(item["routing_mode"] not in {"", "pt"} for item in legs):
                 failures.append(f"{key}: inconsistent PT routingMode")
+        else:
+            walk_trips += 1
+            if any(item["mode"] != "walk" for item in legs):
+                failures.append(f"{key}: released Walk trip contains a non-Walk leg")
+            if any(item["routing_mode"] not in {"", "walk"} for item in legs):
+                failures.append(f"{key}: inconsistent Walk routingMode")
     extras = sorted(set(observed) - set(expected))
     if extras:
         failures.append(f"unexpected released trip tags: {extras[:10]}")
@@ -165,6 +173,7 @@ def audit_released_plans(
         "observed_released_trips": len(observed),
         "physical_pt_trips": pt_trips,
         "routed_taxi_trips": taxi_trips,
+        "routed_walk_trips": walk_trips,
         "released_car_legs": released_car_legs,
         "failure_count": len(failures),
         "failure_examples": failures[:20],
@@ -195,7 +204,8 @@ def main() -> int:
             "households", "candidates_per_household", "selected_bound",
             "selected_unbound", "active_bindings", "generated_waypoint_legs",
             "infeasible_bound_households", "selected_unbound_pt_legs",
-            "selected_unbound_taxi_legs", "selected_unbound_car_passenger_legs",
+            "selected_unbound_taxi_legs", "selected_unbound_walk_legs",
+            "selected_unbound_car_passenger_legs",
             "unavailable_physical_pt_candidates",
         )
         summary = dict(zip(names, (int(value) for value in summary_matches[0].groups())))
@@ -217,9 +227,10 @@ def main() -> int:
         "released_trip_count_conserved": summary is not None
         and len(expected_released) == summary["selected_unbound"] * 2
         and summary["selected_unbound_pt_legs"]
-        + summary["selected_unbound_taxi_legs"] == len(expected_released)
+        + summary["selected_unbound_taxi_legs"]
+        + summary["selected_unbound_walk_legs"] == len(expected_released)
         and summary["selected_unbound_car_passenger_legs"] == 0,
-        "released_plans_are_real_pt_or_taxi": released["failure_count"] == 0
+        "released_plans_are_real_pt_taxi_or_walk": released["failure_count"] == 0
         and released["released_car_legs"] == 0,
         "completed_bound_legs_use_exact_waypoints": events[
             "bound_waypoint_failure_count"
@@ -236,6 +247,10 @@ def main() -> int:
         and plans["selected_plan_mode_counts"].get("taxi")
         == base.EXPECTED_MODE_COUNTS["taxi"]
         + summary["selected_unbound_taxi_legs"],
+        "walk_count_correct": summary is not None
+        and plans["selected_plan_mode_counts"].get("walk")
+        == base.EXPECTED_MODE_COUNTS["walk"]
+        + summary["selected_unbound_walk_legs"],
         "car_count_unchanged": plans["selected_plan_mode_counts"].get("car")
         == base.EXPECTED_MODE_COUNTS["car"],
         "ordinary_innovation_frozen": config["strategy_weights"].get("ReRoute") == [0.0]

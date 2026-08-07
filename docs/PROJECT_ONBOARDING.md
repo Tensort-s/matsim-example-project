@@ -202,6 +202,15 @@ candidates in 240 households, while still reusing only existing driver Car
 legs. It selected 288 physical bindings and 96 PT/Taxi releases; 42 people
 used different bound/unbound choices by direction. The iteration-0 independent
 audit passed, but the result is not an adopted production equilibrium.
+The subsequent all-household candidate extension is documented in
+`docs/HONG_KONG_ALL_HOUSEHOLD_JOINT_PLAN_INNOVATION.md`. Its current v3
+registry screens 9,289 passenger-driver pairs in 5,789 car households,
+preserves the original selected plans through iteration 0, allows complete
+driver-day Car switches, and releases every unbound original `car_passenger`
+trip to routed PT, Taxi, or Walk. `school_bus` remains explicitly closed in
+this phase. The iterations 0-1 run13 technical gate selected and classified
+2,124 physical joint trips and passed its independent audit; it is not the
+adopted production equilibrium.
 The real routed taxi base plans have a separate full-scenario, no-simulation
 load gate in `docs/HONG_KONG_TAXI_LOAD_TEST.md`. It validates typed
 taxi leg attributes, routes, fare-only scoring, and scoring-factory creation

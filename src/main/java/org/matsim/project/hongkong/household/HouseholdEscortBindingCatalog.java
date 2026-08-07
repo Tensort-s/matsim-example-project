@@ -52,11 +52,31 @@ public final class HouseholdEscortBindingCatalog {
 	private final Set<String> activeBindingKeys;
 
 	private HouseholdEscortBindingCatalog(List<Binding> bindings) {
-		this.bindings = List.copyOf(bindings);
+		this.bindings = new ArrayList<>();
 		this.passengerLegBindings = new LinkedHashMap<>();
-		Map<String, List<Binding>> groups = new LinkedHashMap<>();
+		this.candidateGroups = new LinkedHashMap<>();
 		this.activeBindingKeys = new HashSet<>();
-		for (Binding binding : bindings) {
+		register(bindings, true);
+	}
+
+	public static HouseholdEscortBindingCatalog empty() {
+		return new HouseholdEscortBindingCatalog(List.of());
+	}
+
+	public synchronized void replaceWithActiveBindings(List<Binding> replacements) {
+		bindings.clear();
+		passengerLegBindings.clear();
+		candidateGroups.clear();
+		activeBindingKeys.clear();
+		register(replacements, true);
+	}
+
+	private void register(List<Binding> additions, boolean active) {
+		Map<String, List<Binding>> groups = new LinkedHashMap<>();
+		for (var entry : candidateGroups.entrySet()) {
+			groups.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+		}
+		for (Binding binding : additions) {
 			String key = key(binding.passengerId(), binding.passengerLegIndex());
 			if (passengerLegBindings.put(key, binding) != null) {
 				throw new IllegalArgumentException("Duplicate passenger leg binding: "
@@ -64,9 +84,10 @@ public final class HouseholdEscortBindingCatalog {
 			}
 			groups.computeIfAbsent(binding.candidateGroupId(), ignored -> new ArrayList<>())
 					.add(binding);
-			activeBindingKeys.add(key);
+			if (active) activeBindingKeys.add(key);
+			this.bindings.add(binding);
 		}
-		this.candidateGroups = new LinkedHashMap<>();
+		this.candidateGroups.clear();
 		for (var entry : groups.entrySet()) {
 			this.candidateGroups.put(entry.getKey(), List.copyOf(entry.getValue()));
 		}
@@ -212,7 +233,7 @@ public final class HouseholdEscortBindingCatalog {
 	}
 
 	public List<Binding> bindings() {
-		return bindings;
+		return List.copyOf(bindings);
 	}
 
 	public Map<String, List<Binding>> candidateGroups() {

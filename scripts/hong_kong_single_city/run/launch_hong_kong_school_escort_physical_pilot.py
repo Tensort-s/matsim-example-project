@@ -251,10 +251,10 @@ def main() -> int:
             if args.joint_reroute
             else (
                 "Stage 11 endogenous household joint-candidate pilot with "
-                "physical bound rides and real PT/Taxi release choices"
+                "physical bound rides and real PT/Taxi/Walk release choices"
                 if args.endogenous_joint_candidates
                 else "Stage 11 household maximum-utility pilot with physical bound "
-                "rides and real PT/Taxi choices for released passengers"
+                "rides and real PT/Taxi/Walk choices for released passengers"
                 if args.max_utility_selector
                 else "Stage 11 fixed 139-pair school_escort physical QVehicle pilot"
             )
@@ -315,7 +315,7 @@ def main() -> int:
             "new_candidate_bundles": 106 if args.endogenous_joint_candidates else 0,
             "bound_candidate_requires_real_waypoints": args.max_utility_selector,
             "unbound_candidate_modes": (
-                ["pt", "taxi"] if args.max_utility_selector else None
+                ["pt", "taxi", "walk"] if args.max_utility_selector else None
             ),
             "unbound_car_candidate_enabled": False,
             "car_availability_rule": (

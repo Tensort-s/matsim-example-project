@@ -193,6 +193,38 @@ stage11_no_ride_candidate:
     vehicle_resource_conflicts: 0
     ordinary_innovation_frozen: true
     limitation: "reuses existing compatible driver Car legs only; no new driver tour, choice probability, driver acceptance constraint, unused-second-car allocation, or long-run equilibrium"
+  all_car_household_joint_plan_pilot:
+    status: "validated_iterations_0_1_not_current_production"
+    release: "/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_release13"
+    server_run: "/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_run13"
+    registry: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_plan_potential_audit_v3/household_joint_plan_potential_candidates.csv"
+    audit: "data/taxi/hongkong/processed/taxi_44000_no_ride_student_swap_v1/household_joint_plan_potential_audit_v3/all_household_joint_plan_iterations_0_1_run13_success.json"
+    server_audit: "/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_run13/household_joint_plan_pilot_audit_v3.json"
+    candidate_unit: "single passenger main trip; outbound and return are independent"
+    candidate_pairs: 9289
+    candidate_households: 5789
+    candidate_passenger_people: 7210
+    existing_driver_car_candidates: 7177
+    complete_driver_day_car_switch_candidates: 2112
+    routed_schedule_infeasible_candidates: 3060
+    selected_joint_trips: 2124
+    selected_existing_driver_car_trips: 2124
+    selected_driver_day_car_switches: 0
+    selected_fallbacks: 7165
+    selected_original_car_passenger_joint_trips: 267
+    applied_original_car_passenger_release_pt: 136
+    applied_original_car_passenger_release_taxi: 261
+    applied_original_car_passenger_release_walk: 2070
+    exact_waypoint_completed: 1667
+    passenger_stuck_onboard: 12
+    driver_stuck_before_pickup: 101
+    skipped_after_prior_bound_failure: 31
+    simulation_end_before_pickup: 299
+    simulation_end_before_bound_departure: 14
+    unclassified_physical_bindings: 0
+    ordinary_innovation_frozen: true
+    school_bus_candidates: 0
+    limitation: "deterministic maximum utility without choice probability or driver acceptance constraint; no selected new driver Car day in validation; not the adopted 50-iteration output or equilibrium"
 
 simulation_parameters:
   iterations: 50

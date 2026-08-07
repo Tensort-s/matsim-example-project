@@ -63,6 +63,14 @@ areas, 2021 DCCA geometry, and the existing student-school TCS classifier; no
 nearest-zone or default-zone fallback is allowed. At startup, the repair set
 must exactly equal the unresolved facility set.
 
+The all-household joint-plan technical gate expands the potential full-day
+driver-switch destination universe to 4,007 facilities. Its v3 companion table
+contains 1,266 exact facility-zone rows: 47 baseline repairs plus 1,219 new
+point-within assignments. Ten border facilities remain explicitly unresolved;
+no candidate depending on an unpriced default/nearest zone is admitted. The
+table is scoped to that pilot and does not replace the baseline production
+repair table.
+
 ## Activation and failure policy
 
 `RunHongKong5Pct` accepts `--dynamic-car-costs` only together with

@@ -43,14 +43,24 @@ public final class HongKongTaxiPersonFareSchedule {
 		}
 
 		List<RouteFare> fares = new ArrayList<>();
+		int planElementIndex = 0;
 		for (PlanElement element : selectedPlan.getPlanElements()) {
 			if (element instanceof Leg leg
 					&& HongKongTaxiScoringParameters.TAXI_MODE.equals(leg.getMode())) {
-				HongKongTaxiRouteContext context = HongKongTaxiRouteContext.from(leg);
+				HongKongTaxiRouteContext context;
+				try {
+					context = HongKongTaxiRouteContext.from(leg);
+				} catch (RuntimeException error) {
+					throw new IllegalStateException(
+							"Invalid selected Taxi leg: person_id=" + person.getId()
+									+ ", plan_element_index=" + planElementIndex,
+							error);
+				}
 				fares.add(new RouteFare(
 						context,
 						calculator.calculate(context.distanceMeters(), context.taxiType())));
 			}
+			planElementIndex++;
 		}
 		return new HongKongTaxiPersonFareSchedule(person.getId(), fares);
 	}

@@ -19,6 +19,8 @@ import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
 import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
 import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorModule;
 import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
+import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
+import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 import org.matsim.vehicles.Vehicle;
@@ -26,7 +28,10 @@ import org.matsim.vehicles.VehicleUtils;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /** Loads and runs the Hong Kong 5% road/PT scenario with explicit car vehicles. */
 public final class RunHongKong5Pct {
@@ -41,7 +46,8 @@ public final class RunHongKong5Pct {
 						+ "[--clear-pt-routes] [--multimodal-costs "
 						+ "--pt-fare-root=<path> --car-cost-root=<path> [--dynamic-car-costs]] "
 						+ "[--household-escort-bindings=<path>] "
-						+ "[--household-escort-joint-reroute] [--household-escort-max-utility]"
+						+ "[--household-escort-joint-reroute] [--household-escort-max-utility] "
+						+ "[--household-joint-plan-candidates=<path>]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -55,6 +61,7 @@ public final class RunHongKong5Pct {
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
 		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
+		Path householdJointPlanCandidates = optionPath(args, "--household-joint-plan-candidates=");
 		if (multimodalCosts && (ptFareRoot == null || carCostRoot == null)) {
 			throw new IllegalArgumentException(
 					"--multimodal-costs requires both --pt-fare-root and --car-cost-root.");
@@ -79,6 +86,16 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 					"Maximum-utility household selection and historical JointReRoute are mutually exclusive.");
 		}
+		if (householdJointPlanCandidates != null && !dynamicCarCosts) {
+			throw new IllegalArgumentException(
+					"--household-joint-plan-candidates requires --multimodal-costs --dynamic-car-costs.");
+		}
+		if (householdJointPlanCandidates != null
+				&& (householdEscortBindings != null || householdEscortJointReRoute
+				|| householdEscortMaxUtility)) {
+			throw new IllegalArgumentException(
+					"All-household joint-plan innovation is mutually exclusive with historical escort pilots.");
+		}
 		if (householdEscortJointReRoute && multimodalCosts && !dynamicCarCosts) {
 			throw new IllegalArgumentException(
 					"Household JointReRoute cannot reuse the fixed-route Car cost tables; "
@@ -96,7 +113,10 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0]);
-		if (householdEscortBindings != null) {
+		if (householdJointPlanCandidates != null) {
+			requireHouseholdSelectionOnly(config);
+		}
+		if (householdEscortBindings != null || householdJointPlanCandidates != null) {
 			HouseholdEscortPhysicalQSimModule.activateInConfig(config);
 		}
 		boolean noRideTaxiRouting = multimodalCosts
@@ -112,8 +132,10 @@ public final class RunHongKong5Pct {
 		}
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		HouseholdEscortBindingCatalog householdEscortCatalog = householdEscortBindings == null
-				? null
+				? (householdJointPlanCandidates == null ? null : HouseholdEscortBindingCatalog.empty())
 				: HouseholdEscortBindingCatalog.load(householdEscortBindings, scenario);
+		HouseholdJointPlanCandidateCatalog householdJointCatalog = householdJointPlanCandidates == null
+				? null : HouseholdJointPlanCandidateCatalog.load(householdJointPlanCandidates);
 		if (clearPtRoutes) {
 			int clearedPtRoutes = clearPtRoutes(scenario);
 			System.out.printf("Cleared %,d existing pt routes for SwissRailRaptor rerouting.%n", clearedPtRoutes);
@@ -145,9 +167,23 @@ public final class RunHongKong5Pct {
 				}
 			});
 			controler.addQSimModule(new HouseholdEscortPhysicalQSimModule(householdEscortCatalog));
-			System.out.printf(
-					"Enabled %,d household joint-candidate physical bindings from %s.%n",
-					householdEscortCatalog.bindings().size(), householdEscortBindings);
+			System.out.printf("Enabled %,d initial household physical bindings%s.%n",
+					householdEscortCatalog.bindings().size(), householdEscortBindings == null
+						? " (delayed selection after iteration 0)" : " from " + householdEscortBindings);
+		}
+		if (householdJointCatalog != null) {
+			HouseholdJointPlanCandidateCatalog sharedJointCatalog = householdJointCatalog;
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					bind(HouseholdJointPlanCandidateCatalog.class).toInstance(sharedJointCatalog);
+				}
+			});
+			controler.addOverridingModule(new HouseholdJointPlanInnovationModule());
+			System.out.printf("Enabled %,d all-car-household joint-plan candidates from %s; "
+					+ "baseline selection is preserved in iteration 0; car_passenger releases="
+					+ "pt|taxi|walk; school_bus disabled.%n",
+					householdJointCatalog.candidates().size(), householdJointPlanCandidates);
 		}
 		if (householdEscortJointReRoute) {
 			controler.addOverridingModule(new HouseholdEscortJointReRouteModule(householdEscortCatalog));
@@ -157,7 +193,7 @@ public final class RunHongKong5Pct {
 		if (householdEscortMaxUtility) {
 			controler.addOverridingModule(new HouseholdEscortMaxUtilitySelectorModule());
 			System.out.println(
-					"Enabled one-shot deterministic household bound-versus-real-PT/Taxi "
+					"Enabled one-shot deterministic household bound-versus-real-PT/Taxi/Walk "
 							+ "maximum-utility selection; passenger Car is unavailable.");
 		}
 		if (noRideTaxiRouting) {
@@ -207,6 +243,39 @@ public final class RunHongKong5Pct {
 			result = Path.of(value).toAbsolutePath().normalize();
 		}
 		return result;
+	}
+
+	private static void requireHouseholdSelectionOnly(Config config) {
+		Map<String, Integer> keepLastSelectedBySubpopulation = new HashMap<>();
+		Set<String> subpopulations = new HashSet<>();
+		for (var settings : config.replanning().getStrategySettings()) {
+			String subpopulation = settings.getSubpopulation();
+			if (subpopulation == null || subpopulation.isBlank()) {
+				throw new IllegalArgumentException(
+						"All-household joint-plan validation requires explicit strategy subpopulations.");
+			}
+			subpopulations.add(subpopulation);
+			if ("KeepLastSelected".equals(settings.getStrategyName())) {
+				if (Math.abs(settings.getWeight() - 1.0) > 1e-12) {
+					throw new IllegalArgumentException(
+							"KeepLastSelected must have weight 1 for " + subpopulation);
+				}
+				keepLastSelectedBySubpopulation.merge(subpopulation, 1, Integer::sum);
+			} else if (Math.abs(settings.getWeight()) > 1e-12) {
+				throw new IllegalArgumentException(
+						"All-household maximum-utility validation cannot run a second plan selector: "
+								+ settings.getStrategyName() + " weight=" + settings.getWeight());
+			}
+		}
+		if (subpopulations.isEmpty()) {
+			throw new IllegalArgumentException("No replanning subpopulations were configured.");
+		}
+		for (String subpopulation : subpopulations) {
+			if (keepLastSelectedBySubpopulation.getOrDefault(subpopulation, 0) != 1) {
+				throw new IllegalArgumentException(
+						"Expected exactly one KeepLastSelected strategy for " + subpopulation);
+			}
+		}
 	}
 
 	private static int clearPtRoutes(Scenario scenario) {

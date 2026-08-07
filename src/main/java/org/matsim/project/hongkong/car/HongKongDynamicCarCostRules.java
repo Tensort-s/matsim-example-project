@@ -303,6 +303,11 @@ public final class HongKongDynamicCarCostRules {
 		return tcsZoneByFacility.size();
 	}
 
+	public boolean hasParkingZone(String destinationFacilityId) {
+		return destinationFacilityId != null
+				&& tcsZoneByFacility.containsKey(destinationFacilityId);
+	}
+
 	private double tollAt(String facility, double timeS) {
 		double clock = moduloDay(timeS);
 		for (TollRate rate : tollRatesByFacility.getOrDefault(facility, List.of())) {
@@ -448,22 +453,21 @@ public final class HongKongDynamicCarCostRules {
 			Map<String, Integer> zones,
 			Set<String> missingZoneFacilities) {
 		Set<String> repaired = new HashSet<>();
+		Set<String> supplemental = new HashSet<>();
 		for (Map<String, String> row : csv(path)) {
 			String facility = requireText(
 					row.get("destination_facility_id"), "destination_facility_id");
 			int zone = (int) number(row, "tcs_zone");
 			zoneGroup(zone);
-			if (!missingZoneFacilities.contains(facility)) {
-				throw new IllegalStateException(
-						"Dynamic parking zone repair is not an unresolved facility: " + facility);
-			}
 			if (!"point_within_adopted_study_area_and_dcca_classification".equals(
 					row.get("assignment_method"))) {
 				throw new IllegalStateException("Unsupported dynamic parking zone repair method.");
 			}
-			if (zones.putIfAbsent(facility, zone) != null || !repaired.add(facility)) {
+			if (zones.putIfAbsent(facility, zone) != null) {
 				throw new IllegalStateException("Duplicate/conflicting parking zone repair: " + facility);
 			}
+			if (missingZoneFacilities.contains(facility)) repaired.add(facility);
+			else supplemental.add(facility);
 		}
 		if (!repaired.equals(missingZoneFacilities)) {
 			Set<String> omitted = new HashSet<>(missingZoneFacilities);

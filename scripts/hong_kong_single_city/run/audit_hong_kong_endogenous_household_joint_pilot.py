@@ -45,7 +45,8 @@ SUMMARY = re.compile(
     r"selected_bound=(\d+), selected_unbound=(\d+), "
     r"active_bindings=(\d+), generated_waypoint_legs=(\d+), "
     r"infeasible_bound_households=(\d+), selected_unbound_pt_legs=(\d+), "
-    r"selected_unbound_taxi_legs=(\d+), selected_unbound_car_passenger_legs=(\d+), "
+    r"selected_unbound_taxi_legs=(\d+), selected_unbound_walk_legs=(\d+), "
+    r"selected_unbound_car_passenger_legs=(\d+), "
     r"unavailable_physical_pt_candidates=(\d+), candidate_households=(\d+), "
     r"candidate_legs=(\d+), new_candidate_bundles=(\d+), "
     r"selected_new_bound_bundles=(\d+), selected_new_unbound_bundles=(\d+), "
@@ -62,7 +63,7 @@ SELECTION = re.compile(
 REAL_CANDIDATE = re.compile(
     r"HK_HOUSEHOLD_ESCORT_REAL_MODE_CANDIDATE candidate_group=(\S+) "
     r"household=(\S+) new_candidate=(true|false) passenger=(\S+) "
-    r"passenger_leg=(\d+) pt_available=(true|false).*selected_mode=(pt|taxi)"
+    r"passenger_leg=(\d+) pt_available=(true|false).*selected_mode=(pt|taxi|walk)"
 )
 
 
@@ -233,7 +234,8 @@ def main() -> int:
             "candidate_bundles", "alternatives_per_candidate", "selected_bound",
             "selected_unbound", "active_bindings", "generated_waypoint_legs",
             "infeasible_bound_bundles", "selected_unbound_pt_legs",
-            "selected_unbound_taxi_legs", "selected_unbound_car_legs",
+            "selected_unbound_taxi_legs", "selected_unbound_walk_legs",
+            "selected_unbound_car_legs",
             "unavailable_physical_pt_candidates", "candidate_households",
             "candidate_legs", "new_candidate_bundles",
             "selected_new_bound_bundles", "selected_new_unbound_bundles",
@@ -308,9 +310,10 @@ def main() -> int:
         "released_trip_count_conserved": summary is not None
         and len(expected_released) == summary["selected_unbound_legs"]
         and summary["selected_unbound_pt_legs"]
-        + summary["selected_unbound_taxi_legs"] == len(expected_released)
+        + summary["selected_unbound_taxi_legs"]
+        + summary["selected_unbound_walk_legs"] == len(expected_released)
         and summary["selected_unbound_car_legs"] == 0,
-        "released_plans_are_real_pt_or_taxi": released["failure_count"] == 0
+        "released_plans_are_real_pt_taxi_or_walk": released["failure_count"] == 0
         and released["released_car_legs"] == 0,
         "completed_bound_legs_use_exact_waypoints": events[
             "bound_waypoint_failure_count"
@@ -329,6 +332,9 @@ def main() -> int:
         "taxi_count_correct": summary is not None
         and plans["selected_plan_mode_counts"].get("taxi")
         == base.EXPECTED_MODE_COUNTS["taxi"] + summary["selected_unbound_taxi_legs"],
+        "walk_count_correct": summary is not None
+        and plans["selected_plan_mode_counts"].get("walk")
+        == base.EXPECTED_MODE_COUNTS["walk"] + summary["selected_unbound_walk_legs"],
         "car_count_unchanged": plans["selected_plan_mode_counts"].get("car")
         == base.EXPECTED_MODE_COUNTS["car"],
         "ordinary_innovation_frozen": config["strategy_weights"].get("ReRoute") == [0.0]

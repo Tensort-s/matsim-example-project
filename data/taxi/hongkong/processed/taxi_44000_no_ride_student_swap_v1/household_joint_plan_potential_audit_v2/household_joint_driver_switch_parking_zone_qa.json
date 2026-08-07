@@ -1,0 +1,31 @@
+{
+  "status": "prepared_exact_household_joint_driver_switch_parking_zones",
+  "driver_switch_people": 1458,
+  "driver_day_destination_facilities": 4008,
+  "already_in_car_feasibility": 2773,
+  "already_in_original_repairs": 5,
+  "new_exact_spatial_assignments": 1220,
+  "explicitly_unresolved_border_facilities": [
+    "border_0",
+    "border_1",
+    "border_10",
+    "border_11",
+    "border_12",
+    "border_2",
+    "border_3",
+    "border_4",
+    "border_7",
+    "border_8"
+  ],
+  "combined_zone_rows": 1267,
+  "assignment_method": "point_within_adopted_study_area_and_dcca_classification",
+  "default_or_nearest_tcs_zone_fallback": false,
+  "school_bus_scope": false,
+  "inputs": {
+    "plans": "F:\\Matsim\\derived\\hongkong\\taxi_44000_no_ride_student_swap_v1\\plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+    "candidates": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_joint_plan_potential_audit_v2\\household_joint_plan_potential_candidates.csv",
+    "car_feasibility": "data\\transport_costs\\hongkong\\car_cost_v1\\input_feasibility\\car_leg_input_feasibility.parquet",
+    "existing_repairs": "data\\transport_costs\\hongkong\\car_cost_v1\\dynamic_runtime_v1\\facility_tcs_zone_repairs.csv"
+  },
+  "output": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_joint_plan_potential_audit_v2\\facility_tcs_zone_repairs_with_driver_switch.csv"
+}

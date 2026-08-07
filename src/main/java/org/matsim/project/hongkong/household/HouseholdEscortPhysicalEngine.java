@@ -31,8 +31,10 @@ import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** Boards fixed school passengers into their household driver's actual QVehicle. */
 public final class HouseholdEscortPhysicalEngine implements MobsimEngine, DepartureHandler,
@@ -53,12 +55,22 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 			MobsimVehicle vehicle) {
 	}
 
+	private record VehicleWaypoint(
+			Id<org.matsim.vehicles.Vehicle> vehicleId,
+			Id<Link> linkId) {
+	}
+
 	private final HouseholdEscortBindingCatalog catalog;
 	private final EventsManager events;
 	private final QSim qsim;
 	private final Map<String, Waiting> waiting = new LinkedHashMap<>();
 	private final Map<String, Onboard> onboard = new LinkedHashMap<>();
 	private final Map<String, String> terminalOutcomes = new LinkedHashMap<>();
+	private final Map<VehicleWaypoint, LinkedHashSet<String>> waitingAtWaypoint = new LinkedHashMap<>();
+	private final Map<VehicleWaypoint, LinkedHashSet<String>> onboardAtWaypoint = new LinkedHashMap<>();
+	private volatile Set<VehicleWaypoint> activeWaypoints = Set.of();
+	private volatile Set<Id<Person>> activeDriverIds = Set.of();
+	private volatile Set<Id<Person>> activePassengerIds = Set.of();
 	private InternalInterface internalInterface;
 	private int departures;
 	private int boardings;
@@ -97,13 +109,16 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 		if (!binding.passengerPickupLinkId().equals(fromLinkId)) {
 			throw new IllegalStateException("Bound passenger did not depart at the pickup waypoint: " + key(binding));
 		}
-		String key = key(binding);
-		if (waiting.containsKey(key) || onboard.containsKey(key)) {
-			throw new IllegalStateException("Duplicate bound passenger departure: " + key);
+		synchronized (this) {
+			String key = key(binding);
+			if (waiting.containsKey(key) || onboard.containsKey(key)) {
+				throw new IllegalStateException("Duplicate bound passenger departure: " + key);
+			}
+			internalInterface.registerAdditionalAgentOnLink(passenger);
+			waiting.put(key, new Waiting(binding, passenger, fromLinkId));
+			addIndex(waitingAtWaypoint, pickupWaypoint(binding), key);
+			departures++;
 		}
-		internalInterface.registerAdditionalAgentOnLink(passenger);
-		waiting.put(key, new Waiting(binding, passenger, fromLinkId));
-		departures++;
 		return true;
 	}
 
@@ -124,65 +139,69 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 
 	@Override
 	public void handleEvent(PersonArrivalEvent event) {
-		if (!"car".equals(event.getLegMode()) || onboard.isEmpty()) {
+		if (!"car".equals(event.getLegMode()) || !activeDriverIds.contains(event.getPersonId())) {
 			return;
 		}
-		List<String> missed = onboard.entrySet().stream()
-				.filter(entry -> entry.getValue().binding().driverId().equals(event.getPersonId()))
-				.map(Map.Entry::getKey)
-				.toList();
-		if (!missed.isEmpty()) {
-			throw new IllegalStateException("Driver arrived before bound passenger drop-off waypoint: " + missed);
+		synchronized (this) {
+			List<String> missed = onboard.entrySet().stream()
+					.filter(entry -> entry.getValue().binding().driverId().equals(event.getPersonId()))
+					.map(Map.Entry::getKey)
+					.toList();
+			if (!missed.isEmpty()) {
+				throw new IllegalStateException("Driver arrived before bound passenger drop-off waypoint: " + missed);
+			}
 		}
 	}
 
-	private void handleVehicleAtWaypoint(double now, Id<org.matsim.vehicles.Vehicle> vehicleId, Id<Link> linkId) {
-		List<String> completed = onboard.entrySet().stream()
-				.filter(entry -> entry.getValue().vehicle().getId().equals(vehicleId)
-						&& entry.getValue().binding().passengerDropoffLinkId().equals(linkId))
-				.map(Map.Entry::getKey)
-				.toList();
-		for (String key : completed) {
-			Onboard ride = onboard.remove(key);
-			if (!ride.vehicle().removePassenger(ride.passenger())) {
-				throw new IllegalStateException("Bound passenger is absent from vehicle at drop-off: "
-						+ ride.passenger().getId());
-			}
-			ride.passenger().setVehicle(null);
-			events.processEvent(new PersonLeavesVehicleEvent(now, ride.passenger().getId(), vehicleId));
-			ride.passenger().notifyArrivalOnLinkByNonNetworkMode(linkId);
-			ride.passenger().endLegAndComputeNextState(now);
-			internalInterface.arrangeNextAgentState(ride.passenger());
-			terminalOutcomes.put(key, "completed_physical_ride");
-			alightings++;
+	private void handleVehicleAtWaypoint(
+			double now, Id<org.matsim.vehicles.Vehicle> vehicleId, Id<Link> linkId) {
+		VehicleWaypoint waypoint = new VehicleWaypoint(vehicleId, linkId);
+		if (!activeWaypoints.contains(waypoint)) {
+			return;
 		}
+		synchronized (this) {
+			for (String key : indexedKeys(onboardAtWaypoint, waypoint)) {
+				Onboard ride = onboard.remove(key);
+				removeIndex(onboardAtWaypoint, waypoint, key);
+				if (ride == null) continue;
+				if (!ride.vehicle().removePassenger(ride.passenger())) {
+					throw new IllegalStateException("Bound passenger is absent from vehicle at drop-off: "
+							+ ride.passenger().getId());
+				}
+				ride.passenger().setVehicle(null);
+				events.processEvent(new PersonLeavesVehicleEvent(now, ride.passenger().getId(), vehicleId));
+				ride.passenger().notifyArrivalOnLinkByNonNetworkMode(linkId);
+				ride.passenger().endLegAndComputeNextState(now);
+				internalInterface.arrangeNextAgentState(ride.passenger());
+				terminalOutcomes.put(key, "completed_physical_ride");
+				alightings++;
+			}
 
-		List<String> pickups = waiting.entrySet().stream()
-				.filter(entry -> entry.getValue().binding().vehicleId().equals(vehicleId)
-						&& entry.getValue().binding().passengerPickupLinkId().equals(linkId)
-						&& isBoundDriverLegActive(entry.getValue().binding()))
-				.map(Map.Entry::getKey)
-				.toList();
-		for (String key : pickups) {
-			Waiting candidate = waiting.remove(key);
-			MobsimAgent driverAgent = qsim.getAgents().get(candidate.binding().driverId());
-			MobsimDriverAgent driver = (MobsimDriverAgent) driverAgent;
-			MobsimVehicle vehicle = driver.getVehicle();
-			if (vehicle == null || !vehicle.getId().equals(vehicleId)) {
-				throw new IllegalStateException("Bound vehicle is unavailable at pickup waypoint: " + key);
+			for (String key : indexedKeys(waitingAtWaypoint, waypoint)) {
+				Waiting candidate = waiting.get(key);
+				if (candidate == null || !isBoundDriverLegActive(candidate.binding())) continue;
+				waiting.remove(key);
+				removeIndex(waitingAtWaypoint, waypoint, key);
+				MobsimAgent driverAgent = qsim.getAgents().get(candidate.binding().driverId());
+				MobsimDriverAgent driver = (MobsimDriverAgent) driverAgent;
+				MobsimVehicle vehicle = driver.getVehicle();
+				if (vehicle == null || !vehicle.getId().equals(vehicleId)) {
+					throw new IllegalStateException("Bound vehicle is unavailable at pickup waypoint: " + key);
+				}
+				if (vehicle.getPassengers().size() >= vehicle.getPassengerCapacity()) {
+					throw new IllegalStateException("Bound private car is full: " + vehicle.getId());
+				}
+				MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
+						candidate.passenger().getId(), candidate.registeredLinkId());
+				if (removed == null || !vehicle.addPassenger(candidate.passenger())) {
+					throw new IllegalStateException("Cannot board passenger at the exact pickup waypoint: " + key);
+				}
+				candidate.passenger().setVehicle(vehicle);
+				events.processEvent(new PersonEntersVehicleEvent(now, candidate.passenger().getId(), vehicleId));
+				onboard.put(key, new Onboard(candidate.binding(), candidate.passenger(), vehicle));
+				addIndex(onboardAtWaypoint, dropoffWaypoint(candidate.binding()), key);
+				boardings++;
 			}
-			if (vehicle.getPassengers().size() >= vehicle.getPassengerCapacity()) {
-				throw new IllegalStateException("Bound private car is full: " + vehicle.getId());
-			}
-			MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
-					candidate.passenger().getId(), candidate.registeredLinkId());
-			if (removed == null || !vehicle.addPassenger(candidate.passenger())) {
-				throw new IllegalStateException("Cannot board passenger at the exact pickup waypoint: " + key);
-			}
-			candidate.passenger().setVehicle(vehicle);
-			events.processEvent(new PersonEntersVehicleEvent(now, candidate.passenger().getId(), vehicleId));
-			onboard.put(key, new Onboard(candidate.binding(), candidate.passenger(), vehicle));
-			boardings++;
 		}
 	}
 
@@ -196,12 +215,17 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 
 	@Override
 	public void handleEvent(PersonStuckEvent event) {
+		if (!activeDriverIds.contains(event.getPersonId()) && !activePassengerIds.contains(event.getPersonId())) {
+			return;
+		}
+		synchronized (this) {
 		List<String> onboardFailures = onboard.entrySet().stream()
 				.filter(entry -> entry.getValue().passenger().getId().equals(event.getPersonId()))
 				.map(Map.Entry::getKey)
 				.toList();
 		for (String key : onboardFailures) {
-			onboard.remove(key);
+			Onboard failed = onboard.remove(key);
+			removeIndex(onboardAtWaypoint, dropoffWaypoint(failed.binding()), key);
 			terminalOutcomes.putIfAbsent(key, "passenger_stuck_while_onboard");
 		}
 
@@ -211,6 +235,7 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 				.toList();
 		for (String key : waitingFailures) {
 			Waiting failed = waiting.remove(key);
+			removeIndex(waitingAtWaypoint, pickupWaypoint(failed.binding()), key);
 			MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
 					failed.passenger().getId(), failed.registeredLinkId());
 			if (removed == null) {
@@ -220,31 +245,49 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 			failed.passenger().setStateToAbort(event.getTime());
 			internalInterface.arrangeNextAgentState(failed.passenger());
 		}
+		}
 	}
 
 	@Override
-	public void beforeMobsim() {
+	public synchronized void beforeMobsim() {
 		waiting.clear();
 		onboard.clear();
 		terminalOutcomes.clear();
+		waitingAtWaypoint.clear();
+		onboardAtWaypoint.clear();
+		activeWaypoints = catalog.bindings().stream()
+				.filter(catalog::isActive)
+				.flatMap(binding -> java.util.stream.Stream.of(
+						pickupWaypoint(binding), dropoffWaypoint(binding)))
+				.collect(java.util.stream.Collectors.toUnmodifiableSet());
+		activeDriverIds = catalog.bindings().stream()
+				.filter(catalog::isActive)
+				.map(HouseholdEscortBindingCatalog.Binding::driverId)
+				.collect(java.util.stream.Collectors.toUnmodifiableSet());
+		activePassengerIds = catalog.bindings().stream()
+				.filter(catalog::isActive)
+				.map(HouseholdEscortBindingCatalog.Binding::passengerId)
+				.collect(java.util.stream.Collectors.toUnmodifiableSet());
 		departures = 0;
 		boardings = 0;
 		alightings = 0;
 	}
 
 	@Override
-	public void afterMobsim() {
+	public synchronized void afterMobsim() {
 		int expected = catalog.activeBindingCount();
 		int simulationEndBeforePickup = waiting.size();
 		for (var entry : waiting.entrySet()) {
 			terminalOutcomes.putIfAbsent(entry.getKey(), "simulation_end_before_pickup");
 		}
 		waiting.clear();
+		waitingAtWaypoint.clear();
 		int simulationEndWhileOnboard = onboard.size();
 		for (var entry : onboard.entrySet()) {
 			terminalOutcomes.putIfAbsent(entry.getKey(), "simulation_end_while_onboard");
 		}
 		onboard.clear();
+		onboardAtWaypoint.clear();
 		var passengersWithFailure = terminalOutcomes.entrySet().stream()
 				.filter(entry -> !"completed_physical_ride".equals(entry.getValue()))
 				.map(entry -> entry.getKey().substring(0, entry.getKey().lastIndexOf('/')))
@@ -257,17 +300,23 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 				terminalOutcomes.put(key, "skipped_after_prior_bound_failure");
 			}
 		}
+		for (HouseholdEscortBindingCatalog.Binding binding : catalog.bindings()) {
+			if (!catalog.isActive(binding)) continue;
+			terminalOutcomes.putIfAbsent(key(binding), "simulation_end_before_bound_departure");
+		}
 		long completed = outcomeCount("completed_physical_ride");
 		long onboardStuck = outcomeCount("passenger_stuck_while_onboard");
 		long pickupStuck = outcomeCount("driver_stuck_before_pickup");
 		long downstreamSkipped = outcomeCount("skipped_after_prior_bound_failure");
+		long beforeDeparture = outcomeCount("simulation_end_before_bound_departure");
 		LOG.info("Household school-escort physical pilot: departures={}, boardings={}, alightings={}, "
 				+ "completed={}, passenger_stuck_onboard={}, driver_stuck_before_pickup={}, "
 				+ "skipped_after_prior_failure={}, waiting={}, onboard={}, classified={}, "
-				+ "simulation_end_before_pickup={}, simulation_end_while_onboard={}",
+				+ "simulation_end_before_pickup={}, simulation_end_while_onboard={}, "
+				+ "simulation_end_before_bound_departure={}",
 				departures, boardings, alightings, completed, onboardStuck, pickupStuck,
 				downstreamSkipped, waiting.size(), onboard.size(), terminalOutcomes.size(),
-				simulationEndBeforePickup, simulationEndWhileOnboard);
+				simulationEndBeforePickup, simulationEndWhileOnboard, beforeDeparture);
 		if (terminalOutcomes.size() != expected || !waiting.isEmpty() || !onboard.isEmpty()) {
 			List<String> unclassified = catalog.bindings().stream()
 					.filter(catalog::isActive)
@@ -298,6 +347,33 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 
 	private static String key(HouseholdEscortBindingCatalog.Binding binding) {
 		return binding.passengerId() + "/" + binding.passengerLegIndex();
+	}
+
+	private static VehicleWaypoint pickupWaypoint(HouseholdEscortBindingCatalog.Binding binding) {
+		return new VehicleWaypoint(binding.vehicleId(), binding.passengerPickupLinkId());
+	}
+
+	private static VehicleWaypoint dropoffWaypoint(HouseholdEscortBindingCatalog.Binding binding) {
+		return new VehicleWaypoint(binding.vehicleId(), binding.passengerDropoffLinkId());
+	}
+
+	private static void addIndex(
+			Map<VehicleWaypoint, LinkedHashSet<String>> index, VehicleWaypoint waypoint, String key) {
+		index.computeIfAbsent(waypoint, ignored -> new LinkedHashSet<>()).add(key);
+	}
+
+	private static void removeIndex(
+			Map<VehicleWaypoint, LinkedHashSet<String>> index, VehicleWaypoint waypoint, String key) {
+		LinkedHashSet<String> keys = index.get(waypoint);
+		if (keys == null) return;
+		keys.remove(key);
+		if (keys.isEmpty()) index.remove(waypoint);
+	}
+
+	private static List<String> indexedKeys(
+			Map<VehicleWaypoint, LinkedHashSet<String>> index, VehicleWaypoint waypoint) {
+		LinkedHashSet<String> keys = index.get(waypoint);
+		return keys == null ? List.of() : List.copyOf(keys);
 	}
 
 	private long outcomeCount(String outcome) {

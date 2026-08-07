@@ -485,6 +485,20 @@ no driver-leg/vehicle resource was reused, dynamic Car costs were live, and
 ordinary innovation remained frozen. This is still an iteration-0 mechanism
 validation, not a calibrated equilibrium or general joint-tour generator.
 
+The all-car-household technical successor at
+`/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_run13` screens every
+eligible trip in car-owning households rather than only the 384-entry bounded
+registry. Its v3 registry contains 9,289 passenger-driver pairs in 5,789
+households and excludes pickup/drop-off pairs resolving to one network link.
+After an unchanged iteration 0, the maximum-utility selector chose 2,124
+physical joint trips, all reusing existing driver Car trips, and released the
+remaining original `car_passenger` trips to PT, Taxi, or Walk. The independent
+audit classified all 2,124 bindings and passed every check with exit code 0.
+Ordinary route/mode/time innovation remained frozen. This validates broad
+candidate generation, atomic household composites, dynamic multimodal costs,
+and physical waypoint execution; it is not the adopted 50-iteration output or
+a calibrated equilibrium.
+
 ## Known limitations
 
 - Work OD is calibrated and Census-projected synthetic demand, not observed
@@ -500,11 +514,11 @@ validation, not a calibrated equilibrium or general joint-tour generator.
 - Detector and ATC road-flow observations do not cover every road link.
 - The adopted 50-iteration production plans still use aggregate `ride` and do
   not create complete taxi, ride-hailing, or school-bus operator fleets. The
-  Stage 11 candidate removes `ride`; the newest one-iteration selector can
-  physically bind 384 screened `car_passenger` candidate legs to existing
-  household driver trips and selected 288 in its technical validation. The
-  other `car_passenger` legs and all `school_bus` legs remain passenger
-  abstractions, and Taxi still has no operator fleet.
+  Stage 11 candidate removes `ride`; the newest iterations 0–1 technical gate
+  selected 2,124 physical household joint trips from 9,289 screened pairs and
+  released every unbound original `car_passenger` trip to PT, Taxi, or Walk.
+  All `school_bus` legs remain passenger abstractions, and Taxi still has no
+  operator fleet.
 - Private-car powertrains and destination car parks are not observed at
   vehicle/facility level; the offline car-cost layer therefore uses an
   explicit representative fleet and official-rate-bounded parking proxies.

@@ -1,0 +1,61 @@
+{
+  "status": "audited_read_only_household_joint_plan_potential",
+  "scope": "All households with an adult assigned vehicle holder and a home-based day; passenger modes car_passenger/PT/Taxi/walk; school_bus excluded",
+  "thresholds": {
+    "direct_departure_tolerance_s": 1800,
+    "direct_origin_radius_m": 500,
+    "direct_destination_radius_m": 500,
+    "detour_departure_tolerance_s": 2700,
+    "detour_max_added_distance_m": 8000,
+    "detour_max_ratio": 1.5,
+    "max_candidates_per_passenger_trip": 3
+  },
+  "parse_counts": {
+    "main_trips": 695115,
+    "persons": 385820,
+    "persons_with_household": 363275
+  },
+  "counts": {
+    "candidate_pairs": 9289,
+    "candidate_pairs_by_driver::car": 7177,
+    "candidate_pairs_by_driver::pt": 1663,
+    "candidate_pairs_by_driver::taxi": 207,
+    "candidate_pairs_by_driver::walk": 242,
+    "candidate_pairs_by_passenger::car_passenger": 703,
+    "candidate_pairs_by_passenger::pt": 6279,
+    "candidate_pairs_by_passenger::taxi": 317,
+    "candidate_pairs_by_passenger::walk": 1990,
+    "candidate_pairs_requiring_driver_car_switch": 2112,
+    "candidate_pairs_reusing_driver_car": 7177,
+    "candidate_passenger_trips::car_passenger": 657,
+    "candidate_passenger_trips::pt": 6129,
+    "candidate_passenger_trips::taxi": 309,
+    "candidate_passenger_trips::walk": 1924,
+    "car_households": 22235,
+    "eligible_driver_people": 24800,
+    "eligible_passenger_trips_before_screen": 92684,
+    "excluded_same_pickup_dropoff_link": 90,
+    "excluded_same_pickup_dropoff_link::car_passenger": 2,
+    "excluded_same_pickup_dropoff_link::pt": 14,
+    "excluded_same_pickup_dropoff_link::taxi": 2,
+    "excluded_same_pickup_dropoff_link::walk": 72,
+    "no_candidate::car_passenger": 2075,
+    "no_candidate::pt": 67371,
+    "no_candidate::taxi": 4809,
+    "no_candidate::walk": 9320
+  },
+  "candidate_households": 5789,
+  "candidate_passenger_people": 7210,
+  "candidate_rows": 9289,
+  "limitations": [
+    "This is a geometric/time screen, not routed waypoint feasibility.",
+    "Passenger trips whose pickup and drop-off resolve to the same network link are excluded because QSim cannot represent distinct boarding and alighting waypoints for them.",
+    "A non-Car driver candidate requires switching the complete home-based day tour to Car during plan construction.",
+    "School-bus trips are counted outside the open passenger modes and are not candidates in this phase.",
+    "No plan is added or selected by this audit."
+  ],
+  "inputs": {
+    "plans": "F:\\Matsim\\derived\\hongkong\\taxi_44000_no_ride_student_swap_v1\\plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz"
+  },
+  "output": "data\\taxi\\hongkong\\processed\\taxi_44000_no_ride_student_swap_v1\\household_joint_plan_potential_audit_v3\\household_joint_plan_potential_candidates.csv"
+}

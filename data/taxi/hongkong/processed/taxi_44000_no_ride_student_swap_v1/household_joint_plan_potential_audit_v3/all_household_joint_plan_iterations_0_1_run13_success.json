@@ -1,0 +1,54 @@
+{
+  "status": "validated",
+  "server_run": "/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_run13",
+  "server_audit": "/mnt/DiskM/by/hk_stage11_all_household_joint_20260807_run13/household_joint_plan_pilot_audit_v3.json",
+  "process_exit_code": 0,
+  "iteration_range": [0, 1],
+  "candidate_rows": 9289,
+  "candidate_households": 5789,
+  "selection_counts": {
+    "joint": 2124,
+    "fallback": 7165,
+    "selected_driver_switch_pairs": 0,
+    "routed_schedule_infeasible": 3060
+  },
+  "original_car_passenger_resolution": {
+    "initial": 2734,
+    "selected_joint": 267,
+    "released_pt": 136,
+    "released_taxi": 261,
+    "released_walk": 2070
+  },
+  "physical_counts": {
+    "active_bindings": 2124,
+    "departures": 2079,
+    "boardings": 1679,
+    "exact_waypoint_completed": 1667,
+    "passenger_stuck_onboard": 12,
+    "driver_stuck_before_pickup": 101,
+    "skipped_after_prior_bound_failure": 31,
+    "simulation_end_before_pickup": 299,
+    "simulation_end_before_bound_departure": 14,
+    "waiting_after_cleanup": 0,
+    "onboard_after_cleanup": 0,
+    "unclassified": 0
+  },
+  "output_mode_leg_counts": {
+    "car": 67718,
+    "car_passenger": 2124,
+    "pt": 556243,
+    "school_bus": 9626,
+    "taxi": 44121,
+    "walk": 201668,
+    "ride": 0
+  },
+  "strategy": {
+    "KeepLastSelected": 1.0,
+    "ReRoute": 0.0,
+    "SubtourModeChoice": 0.0,
+    "TimeAllocationMutator": 0.0
+  },
+  "all_checks_passed": true,
+  "failed_checks": [],
+  "scope": "technical iterations 0-1 mechanism gate; not the adopted 50-iteration production output or a calibrated equilibrium"
+}
