@@ -27,6 +27,32 @@ upstream baseline, and historical outputs, read
 - `transit_supply/`
   Route-to-link map matching and MATSim public-transport supply assembly.
 
+School-bus source acquisition and the Census-adjusted, school-probability,
+first-party-locked non-production proxy builder are documented in
+`docs/HONG_KONG_SCHOOL_BUS_ROUTE_ACQUISITION.md`. They must not be confused
+with the ordinary public-bus/GMB downloader or the active MATSim PT supply.
+The v4 road-geometry preparation and static comparison can be rebuilt with:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\map_match_hong_kong_school_bus_proxy_routes.py
+```
+
+It uses the active MATSim `car` road layer, does not generate an interactive
+map, and remains a manual-review candidate rather than adopted supply.
+
+Build the partial-demand v5 candidate with the hard 3,439-vehicle ceiling and
+60/75-minute stage limits using:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_school_bus_time_split_fleet_cap.py
+```
+
+The builder deletes remaining over-limit inferred routes and may recover
+feasible pickup grids as direct routes; it does not force territory-wide
+student coverage.
+
 ## Current scripts
 
 Prepare the fixed-link administrative boundary:

@@ -239,6 +239,7 @@ documentation:
   final_workflow: "docs/HONG_KONG_FINAL_WORKFLOW.md"
   od: "docs/HONG_KONG_WEDAN_INPUTS_AND_INFERENCE.md"
   student_school: "docs/HONG_KONG_STUDENT_SCHOOL_OD.md"
+  school_bus_acquisition: "docs/HONG_KONG_SCHOOL_BUS_ROUTE_ACQUISITION.md"
   border_visitor: "docs/HONG_KONG_ARRIVAL_DEPARTURE_OD.md"
   households: "docs/HONG_KONG_SYNTHETIC_HOUSEHOLDS.md"
   public_transport: "docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md"
@@ -251,3 +252,58 @@ documentation:
 offline_audits:
   car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"
   car_cost_status: "offline canonical inputs; static and optional dynamic Stage 11 runtime consumers available, neither adopted as current production"
+
+school_bus_candidate:
+  status: "proxy_not_adopted"
+  version: "school_bus_proxy_routes_2026_v3_school_probability_locked76"
+  historical_upper_bound_version: "school_bus_proxy_routes_2026_v1"
+  historical_non_tertiary_all_campuses_version: "school_bus_proxy_routes_2026_v2_non_tertiary"
+  source_catalog: "data/school/hongkong/raw/school_bus_route_sources_2026/source_catalog.csv"
+  assumptions: "cities/hongkong/school_bus_proxy_assumptions.yaml"
+  historical_v2_assumptions: "cities/hongkong/school_bus_proxy_assumptions_v2_non_tertiary.yaml"
+  locked_route_inventory: "cities/hongkong/school_bus_first_party_locked_routes.csv"
+  output: "data/school/hongkong/processed/school_bus_proxy_routes_2026_v3_school_probability_locked76/"
+  road_geometry_version: "school_bus_proxy_routes_2026_v4_road_matched"
+  road_geometry_output: "data/school/hongkong/processed/school_bus_proxy_routes_2026_v4_road_matched/"
+  road_geometry_status: "proxy_not_adopted_route_membership_and_loads_inherited_from_v3"
+  road_geometry_network: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/network.xml.gz"
+  road_geometry_mode_filter: ["car"]
+  road_geometry_inferred_routes: 2308
+  road_geometry_locked_null_routes: 76
+  road_geometry_directed_segments: 40293
+  road_geometry_undirected_fallback_segments: 1165
+  road_geometry_straight_fallback_segments: 0
+  road_geometry_median_path_km: 54.502
+  road_geometry_p95_path_km: 118.317
+  road_geometry_limitation: "Pickup order is proxy-optimised, 933 routes contain an undirected fallback, legacy v3 times are not recalculated, and long paths require manual review"
+  constrained_version: "school_bus_proxy_routes_2026_v5_time_split_fleet_cap3439"
+  constrained_output: "data/school/hongkong/processed/school_bus_proxy_routes_2026_v5_time_split_fleet_cap3439/"
+  constrained_status: "proxy_not_adopted_hard_time_partial_demand"
+  transport_department_reference_fleet: 4200
+  fleet_ceiling_non_tertiary_share: 0.819006959927839
+  fleet_ceiling_exact_product: 3439.8292316969237
+  fleet_ceiling_integer_floor: 3439
+  constrained_peak_vehicle_equivalents: 3439
+  constrained_inferred_routes: 3363
+  constrained_locked_geometry_null_routes: 76
+  constrained_primary_kindergarten_max_minutes: 60
+  constrained_secondary_special_max_minutes: 75
+  constrained_inferred_routes_over_time_limit: 0
+  constrained_retained_proxy_students: 34151
+  constrained_retained_proxy_student_share: 0.4060809284295889
+  constrained_unserved_proxy_students: 49948
+  constrained_limitation: "Hard time and fleet ceilings take priority over demand coverage; 3028 direct one-pickup recovery routes lower the modelled median; locked first-party routes are not time-validatable without geometry"
+  non_tertiary_school_bus_share_of_spb_boardings: 0.819006959927839
+  target_round_trip_students: 84099
+  campuses_selected_for_school_bus: 1301
+  campuses_zero_school_bus: 722
+  primary_selection_rate: 0.946619
+  secondary_selection_rate: 0.340249
+  locked_first_party_routes: 76
+  locked_first_party_proxy_students: 491
+  inferred_proxy_routes: 2308
+  routes_total: 2384
+  peak_vehicle_equivalents_without_interlining: 2384
+  proxy_pickup_records: 41493
+  routes_over_20km_radius: 165
+  limitation: "School presence probabilities and locked-route passenger loads are inferred; first-party route geometry/stops are not redistributed or digitised; candidate remains outside production"

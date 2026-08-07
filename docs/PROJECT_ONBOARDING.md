@@ -144,6 +144,31 @@ canonical assignment is in expected students; daily HBS and boarding-equivalent
 outputs use different units. Read `docs/HONG_KONG_STUDENT_SCHOOL_OD.md` before
 using these matrices for MATSim demand.
 
+School-bus evidence acquisition and the territory-wide, explicitly inferred
+candidate are documented in
+`docs/HONG_KONG_SCHOOL_BUS_ROUTE_ACQUISITION.md`. The current v3 candidate
+applies an estimated 81.9007% non-tertiary school-bus share to the TCS 2022
+HBS SPB aggregate, selects schools with an explicit stage/funding/MTR-distance
+probability model, permits zero service, and locks 76 first-party route
+identities before generating residual proxy routes. The unfiltered SPB v1 and
+all-campus non-tertiary v2 remain historical comparisons. All inferred loads,
+pickup grid points, times, geometry, and capacities are `proxy_not_adopted`;
+they do not replace active PT supply or teleported `school_bus` legs.
+The separate v4 derivative road-routes the 2,308 inferred chains on the active
+MATSim `car` layer after deterministic proxy pickup-order improvement, leaves
+all 76 locked first-party geometries null, and writes a static comparison map.
+It has no straight disconnected fallback, but 933 routes contain at least one
+undirected-topology fallback and 268 paths exceed 100 km; it therefore remains
+manual-review geometry outside production. No interactive map is generated,
+and v3 times are not recalculated after reordering.
+The v5 constrained derivative makes the 3,439-vehicle ceiling and 60/75-minute
+stage limits hard. It retains exactly 3,363 time-valid inferred routes plus 76
+locked geometry-null identities, covers 34,151 of 84,099 proxy students, and
+leaves 49,948 explicitly unserved. Freed vehicle slots are filled with 3,028
+direct one-pickup recovery routes selected by load and verified on the road
+network. This is a partial-demand sensitivity candidate, not production
+supply; the locked identities still lack geometry for time validation.
+
 Hong Kong public-transport route geometry is now map-matched to the official
 TNM road network and OSM rail links. The formal MATSim base network,
 route-link sequences, stop snaps, QA, preview, and hashes are under
