@@ -422,6 +422,47 @@ evidence.
 
 ## Known limitations
 
+### School-bus candidate outside production
+
+`data/school/hongkong/processed/school_bus_proxy_routes_2026_v3_school_probability_locked76/`
+is a territory-wide modelling-preparation candidate described in
+`docs/HONG_KONG_SCHOOL_BUS_ROUTE_ACQUISITION.md`. It is not an adopted
+production input. It applies an estimated 81.9007% non-tertiary school-bus
+share, derived from 2021 Census education/mode tables, to the TCS 2022 HBS SPB
+aggregate. A school-level probability model then allows 722 of 2,023 campuses
+to have zero service and locks 76 first-party route identities before creating
+2,308 residual proxy routes. The unfiltered 3,217-route v1 and all-campus
+2,893-route v2 remain historical comparisons. EDB campus enrolment, locked
+route loads and all residual routes are modelled; restricted/undigitised
+first-party stops and geometry are not reproduced. The active PT supply, 9,626
+teleported `school_bus` legs, final run, and visualization remain unchanged.
+
+A downstream geometry-only candidate is available at
+`data/school/hongkong/processed/school_bus_proxy_routes_2026_v4_road_matched/`.
+It preserves v3 route membership, campuses, loads and the 76 geometry-null
+locked identities, improves only inferred pickup order, and routes 2,308 proxy
+chains on the active MATSim `car` road layer. It produces a static comparison
+PNG, not an interactive map. Of 41,458 waypoint segments, 1,165 require an
+explicit undirected-topology fallback and none require a straight disconnected
+fallback. Median path length is 54.502 km and 268 routes exceed 100 km, so this
+is modelling-preparation geometry requiring manual feasibility review, not an
+adopted timetable or operational school-bus supply. Legacy v3 times are not
+recalculated after the v4 ordering change.
+
+The stricter downstream v5 candidate is under
+`data/school/hongkong/processed/school_bus_proxy_routes_2026_v5_time_split_fleet_cap3439/`.
+It uses `floor(4,200 × 81.90069599%) = 3,439` as an absolute one-route/one-peak-
+vehicle ceiling. Inferred kindergarten/primary routes must be no longer than
+60 minutes and secondary/special routes no longer than 75 minutes. Routes that
+still fail after the fleet-budgeted first split are removed; unused slots
+recover high-load feasible grids as direct one-pickup routes. The result fills
+the ceiling with 3,363 time-valid inferred routes and 76 geometry-null locked
+records, retains 34,151/84,099 proxy students, and explicitly leaves 49,948
+unserved. All inferred routes pass the hard time threshold, with a 73.98-minute
+maximum, but locked first-party records remain time-unvalidated. This partial-
+demand candidate and its static map are not adopted MATSim supply; no
+interactive map is generated.
+
 - Work OD is calibrated and Census-projected synthetic demand, not observed
   person-to-person movement.
 - DCCA school flows constrain destination classes, not a complete observed

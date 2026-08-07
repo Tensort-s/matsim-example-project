@@ -1,0 +1,93 @@
+version: school_bus_proxy_routes_2026_v3_school_probability_locked76
+status: proxy_not_adopted
+crs: EPSG:32650
+demand:
+  source: TCS_2022_home_based_school_SPB_main_mode_equivalent
+  daily_two_way_main_mode_equivalent: 205368.89708
+  non_tertiary_school_bus_share_of_spb_boardings: 0.819006959927839
+  target_round_trip_students: 84099
+  share_estimate:
+    source: CSD_2021_Population_Census_tables_5_12_and_5_14
+    school_bus_main: 126106
+    school_bus_supplementary: 7553
+    post_secondary_school_bus_main: 1086
+    residential_coach_main: 7864
+    residential_coach_supplementary: 7131
+    other_main: 7001
+    other_supplementary: 6136
+    method: >-
+      Main plus supplementary counts are used because TCS reports boardings.
+      The post-secondary share observed within main-mode school-bus users is
+      applied to total school-bus users; residential coach and all Census
+      other-mode users are conservatively excluded from non-tertiary school bus.
+  caveat: >-
+    TCS SPB includes company, school, resident, tourist, shuttle and
+    cross-boundary buses. The 81.9007% split is a cross-source estimate using
+    2021 Census categories, not an observed 2022 SPB service-type breakdown.
+school_selection:
+  deterministic_seed: hk_school_bus_v3_20260806
+  probability_floor: 0.05
+  probability_ceiling: 0.98
+  base_probability_by_stage:
+    kindergarten: 0.60
+    primary: 0.90
+    secondary: 0.28
+    special: 0.85
+    other: 0.45
+  stage_demand_weight:
+    kindergarten: 0.1870
+    primary: 0.2264
+    secondary: 0.0401
+    special: 0.20
+    other: 0.10
+  funding_bonus:
+    dss: 0.15
+    other_private: 0.15
+    local_aided: 0.03
+    aided: 0.0
+    all: 0.0
+  mtr_distance_bonus:
+    at_most_500m: 0.0
+    500_to_1000m: 0.04
+    1000_to_2000m: 0.10
+    over_2000m: 0.18
+  enrolment_bonus:
+    at_least_700: 0.05
+    below_150: -0.08
+  force_first_party_schools: true
+  caveat: >-
+    Probabilities are explicit modelling assumptions informed by consultation,
+    Census mode use and school/operator samples. DSS and other-private sector
+    are only proxies for stronger resources; they are not audited school budgets.
+locked_routes:
+  expected_route_count: 76
+  default_model_capacity: 50
+  inventory: cities/hongkong/school_bus_first_party_locked_routes.csv
+  caveat: >-
+    Locking preserves the publisher, school and route count. It does not claim
+    observed passenger loads, digitised geometry or permission to redistribute
+    restricted stop tables.
+routing:
+  default_vehicle_capacity: 50
+  small_vehicle_capacities: [19, 28]
+  maximum_vehicle_capacity: 50
+  school_arrival_time: "07:55:00"
+  average_in_vehicle_speed_kmh: 25.2
+  road_circuity_factor: 1.25
+  dwell_seconds_per_pickup: 45
+  minimum_run_minutes: 15
+  maximum_run_minutes: 75
+  typical_service_radius_km: 8
+  long_service_radius_km: 20
+  pickup_geometry: origin_grid_representative_point
+  route_geometry: straight_line_unrouted
+  return_departure_by_stage:
+    kindergarten: "12:30:00"
+    primary: "15:30:00"
+    secondary: "16:00:00"
+    special: "16:00:00"
+    other: "16:00:00"
+qa:
+  require_exact_integer_demand_conservation: true
+  flag_radius_over_km: 20
+  reject_nonfinite_or_negative_demand: true

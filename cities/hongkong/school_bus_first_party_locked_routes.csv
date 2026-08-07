@@ -1,0 +1,77 @@
+source_id,route_code,campus_id,school_name_en,evidence_class,published_capacity,model_capacity,content_note
+dgs_tender_2026,DGS_LOCKED_01,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_02,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_03,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_04,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_05,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_06,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_07,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_08,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_09,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_10,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_11,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_12,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_13,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_14,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_15,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_16,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_17,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_18,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGS_LOCKED_19,511714000,DIOCESAN GIRLS' SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_01,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_02,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_03,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_04,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_05,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_06,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_07,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+dgs_tender_2026,DGJS_LOCKED_08,210706000,DIOCESAN GIRLS' JUNIOR SCHOOL,first_party_current,,50,restricted_summary_only
+hktayy3_routes_2526,A,524808000,THE HONG KONG TAOIST ASSOCIATION THE YUEN YUEN INSTITUTE NO. 3 SECONDARY SCHOOL,first_party_current,,50,public_route_table
+hktayy3_routes_2526,B,524808000,THE HONG KONG TAOIST ASSOCIATION THE YUEN YUEN INSTITUTE NO. 3 SECONDARY SCHOOL,first_party_current,,50,public_route_table
+twtaps_routes_2526,TSING_YI,115150000,TSUEN WAN TRADE ASSOCIATION PRIMARY SCHOOL,first_party_current,,50,broad_route_group
+twtaps_routes_2526,KWAI_CHUNG_1,115150000,TSUEN WAN TRADE ASSOCIATION PRIMARY SCHOOL,first_party_current,,50,broad_route_group
+twtaps_routes_2526,KWAI_CHUNG_2,115150000,TSUEN WAN TRADE ASSOCIATION PRIMARY SCHOOL,first_party_current,,50,broad_route_group
+twtaps_routes_2526,TSUEN_WAN,115150000,TSUEN WAN TRADE ASSOCIATION PRIMARY SCHOOL,first_party_current,,50,broad_route_group
+twtaps_routes_2526,TSING_LUNG_TAU,115150000,TSUEN WAN TRADE ASSOCIATION PRIMARY SCHOOL,first_party_current,,50,broad_route_group
+cccklc_routes_2526,1,553700000,THE CHURCH OF CHRIST IN CHINA KUNG LEE COLLEGE,first_party_current,27,27,public_route_table
+cccklc_routes_2526,2,553700000,THE CHURCH OF CHRIST IN CHINA KUNG LEE COLLEGE,first_party_current,28,28,public_route_table
+bfhmc_routes_2526,1,190128000,BUDDHIST FAT HO MEMORIAL COLLEGE,first_party_current,,50,public_route_table
+bfhmc_routes_2526,2,190128000,BUDDHIST FAT HO MEMORIAL COLLEGE,first_party_current,,50,public_route_table
+mary_rose_routes_2425,R1,250082000,MARY ROSE SCHOOL,first_party_historical,28,28,historical_route_table
+mary_rose_routes_2425,R2,250082000,MARY ROSE SCHOOL,first_party_historical,50,50,historical_route_table
+mary_rose_routes_2425,R3,250082000,MARY ROSE SCHOOL,first_party_historical,27,27,historical_route_table
+mary_rose_routes_2425,R4,250082000,MARY ROSE SCHOOL,first_party_historical,50,50,historical_route_table
+mary_rose_routes_2425,Y1,250082000,MARY ROSE SCHOOL,first_party_historical,19,19,historical_route_table
+mary_rose_routes_2425,Y2,250082000,MARY ROSE SCHOOL,first_party_historical,27,27,historical_route_table
+mary_rose_routes_2425,Y3,250082000,MARY ROSE SCHOOL,first_party_historical,28,28,historical_route_table
+mary_rose_routes_2425,Y4,250082000,MARY ROSE SCHOOL,first_party_historical,19,19,historical_route_table
+mary_rose_routes_2425,G1,250082000,MARY ROSE SCHOOL,first_party_historical,28,28,historical_route_table
+mary_rose_routes_2425,G2,250082000,MARY ROSE SCHOOL,first_party_historical,19,19,historical_route_table
+jcctm_route_2025,TUEN_MUN,230928000,JU CHING CHU SECONDARY SCHOOL (TUEN MUN),first_party_current,,50,public_route_table
+apsw_routes_2526,1,522007000,"ALLIANCE PRIMARY SCHOOL, WHAMPOA",first_party_current,,50,visual_route_map
+apsw_routes_2526,3,522007000,"ALLIANCE PRIMARY SCHOOL, WHAMPOA",first_party_current,,50,visual_route_map
+apsw_routes_2526,5,522007000,"ALLIANCE PRIMARY SCHOOL, WHAMPOA",first_party_current,,50,visual_route_map
+apsw_routes_2526,6,522007000,"ALLIANCE PRIMARY SCHOOL, WHAMPOA",first_party_current,,50,visual_route_map
+apsw_routes_2526,7,522007000,"ALLIANCE PRIMARY SCHOOL, WHAMPOA",first_party_current,,50,visual_route_map
+kcm_isf_routes_2526,01,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,01A,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,01B,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,02,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,03,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,04,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,04B,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,05,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,05A,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,05B,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,05C,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,06,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,06A,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,07,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,07A,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,07B,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,08,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,09,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,10,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,11,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,12,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
+kcm_isf_routes_2526,13,553190000,THE INDEPENDENT SCHOOLS FOUNDATION ACADEMY,operator_first_party_current,,50,proposed_route_table
