@@ -53,6 +53,117 @@ The builder deletes remaining over-limit inferred routes and may recover
 feasible pickup grids as direct routes; it does not force territory-wide
 student coverage.
 
+Build and validate the v6 road-running MATSim supply candidate with:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_school_bus_adoption_ready_supply.py
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\audit_hong_kong_school_bus_adoption_ready_supply.py
+```
+
+V6 preserves all v5 passenger capacities, reconstructs proxy road geometry for
+the 76 first-party identities, and emits a merged network, schedule and vehicle
+bundle. It is ready for student-plan assignment and a physical test but remains
+outside current production; consult the acquisition document for provenance
+and road-direction repair limitations.
+
+Regenerate mode candidates for every day-school student, independently by
+direction and without using the old mode as a filter or rank term, then audit
+all physical supply references with:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\prepare_hong_kong_school_mode_candidate_registry.py
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\audit_hong_kong_school_mode_candidate_registry.py
+```
+
+This emits an unselected registry only. PT and Taxi are regenerated for every
+school trip, Walk is distance-screened, and `car_passenger` remains the
+responsibility of the real-driver household joint-plan catalogue.
+
+The first Stage 11 application uses the deterministic cross-mode launcher and
+independent plan/event audit below. The pilot deliberately does not constrain
+school-bus seats: source capacities remain unchanged in v6, while runtime
+school-bus vehicle types receive 1,000,000 seats so every eligible and willing
+student can board.
+
+The runtime preserves MATSim's normal routing order: it runs the stock
+`PrepareForMobsim` first, restores only selected route-specific school-bus
+trip slices, and then creates QSim agents. Moving that restoration before the
+stock preparation or into a QSim engine causes mixed household/student plans
+to cache a regular-PT substitute and is not equivalent.
+
+The accepted server result is
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31`: 884/884 selected
+school-bus departures board the correct physical vehicle, with no ordinary-PT
+substitution or source-capacity exceedance. Three remain aboard at the 30:00
+horizon because their vehicles are traffic-stuck, so the independent audit
+status is `validated_with_network_stuck_limitations`.
+
+The same launcher also supports the no-innovation physical non-Taxi gate. With
+`--physical-nontaxi-modes`, ordinary PT is rerouted by SwissRailRaptor against
+a read-only schedule view that excludes every `school_bus` route, while the
+full schedule remains available to TransitQSim and exact school-bus
+candidates. Walk receives a capacity-free road-network route and custom link
+progression at 1.34 m/s; its bookkeeping vehicles have PCU 0 and never enter
+QNetwork. Car and bound `car_passenger` retain their physical implementations,
+and Taxi is the only teleported main mode. ReRoute, SubtourModeChoice and
+TimeAllocationMutator remain at weight zero throughout this gate.
+
+The launcher passes `--unlimited-ordinary-pt-capacity` for this bounded
+mechanical gate. The switch expands ordinary PT runtime seats only; it never
+rewrites the adopted 10% vehicle file. This isolation was added after run51
+showed 60,585 PT passenger legs still waiting before first boarding at the
+30:00 horizon. A passing capacity-free run therefore validates event-level
+physical execution, not PT seat calibration. Selected `car_passenger` legs
+also carry a stable pre-`PrepareForMobsim` route, and any unbound departure
+after the one-shot household selection now fails closed instead of silently
+using MATSim's teleporter.
+
+At an audited drop-off that is also the driver's destination link, the
+physical escort engine accepts `PersonArrival` as the final waypoint because
+QNetwork may omit a separate terminal `LinkEnter`. For true intermediate
+waypoints, every active binding stores the selected driver's complete detour
+and restores it after stock `PrepareForMobsim`; otherwise MATSim can replace it
+with a direct activity-to-activity route and silently omit the pickup/drop-off.
+Passengers are still removed from the real QVehicle and receive normal
+leave/arrival events. A different outstanding drop-off is left pending until
+the parallel event queue drains, because its earlier `LinkEnter` callback may
+arrive on another handler thread after `PersonArrival`; only a genuinely
+unfinished passenger is then classified as onboard at `afterMobsim`.
+
+The completed capacity-isolated gate is
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56`. The process exits
+zero and `physical_nontaxi_audit.json` reports `validated`: all direct
+main-mode teleport arrivals are Taxi, and PT, Walk and bound `car_passenger`
+have none. `student_school_mode_choice_audit.json` remains `failed`, because
+1,002 selected school-bus trips produce only 952 departures and 876
+board/alight pairs; 76 selected students are stuck despite zero wrong-vehicle
+boards, ordinary-PT substitutions or seat-capacity exceedances. Treat run56 as
+a physical-execution gate with unresolved network-completion instability, not
+as a capacity, production, or innovation result.
+
+Run56's two apparent deficits have one cause: 76 students miss their first
+selected vehicle after per-link QSim rounding makes physical Walk take longer
+than its routed time, and 50 later selected school-bus legs consequently never
+depart. `HongKongPhysicalWalkEngine` now advances the next link from the prior
+continuous due time rather than the integer callback time. The repaired run57
+at `/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57` records
+1,002/1,002 physical school-bus departures and correct boardings. One boarded
+student remains aboard a traffic-stuck vehicle at 30:00, so this is
+`validated_with_network_stuck_limitations`, not a complete-day or innovation
+result.
+
+```text
+scripts/hong_kong_single_city/run/launch_hong_kong_student_school_mode_choice_pilot.py
+scripts/hong_kong_single_city/run/audit_hong_kong_student_school_mode_choice_pilot.py
+scripts/hong_kong_single_city/run/audit_hong_kong_physical_nontaxi_pilot.py
+```
+
 ## Current scripts
 
 Prepare the fixed-link administrative boundary:

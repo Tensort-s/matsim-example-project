@@ -171,6 +171,54 @@ direct one-pickup recovery routes selected by load and verified on the road
 network. This is a partial-demand sensitivity candidate, not production
 supply; the locked identities still lack geometry for time validation.
 
+The downstream v6 adoption-ready candidate is under
+`data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/`.
+It merges all 3,439 v5 identities into the Ferry Core network and schedule,
+creates 6,878 morning/afternoon physical routes and departures, and retains
+unscaled 19/27/28/50-seat passenger capacities. All 76 first-party identities
+receive campus-OD-supported proxy pickups and road geometry; identity is
+first-party evidence, while stops, order, time and geometry remain inferred.
+All routes pass structural, capacity and 60/75-minute checks and load in MATSim
+2026.0. The 2,420 reverse-direction proxy links and two topology connectors are
+explicit review items. A bounded Stage 11 allocation and physical-run gate now
+exists without seat-capacity competition. Server run31 exits zero: all 884
+selected physical school-bus trips board the correct v6 vehicle, with no
+ordinary-PT substitution or source-capacity exceedance; three remain aboard
+traffic-stuck buses at the 30:00 horizon. V6 is still not current production.
+
+The follow-on no-innovation gate integrates physical ordinary PT, physical
+school bus, QNetwork Car, real-driver `car_passenger`, and capacity-free
+network Walk in one run; Taxi remains the sole teleported main mode. Ordinary
+PT routing cannot see school-bus routes, but TransitQSim retains the full
+schedule. This is a technical stability gate only: ordinary ReRoute,
+SubtourModeChoice and TimeAllocationMutator remain disabled, and the later
+innovation phase is intentionally outside the current scope.
+
+The capacity-constrained first attempt (server run51) is retained as a failed
+stress result: physical PT and Walk events were produced, but 60,585 PT
+passenger legs remained waiting to board at 30:00 and two bound
+`car_passenger` legs were inadvertently teleported after plan preparation.
+The binding route is now made stable and post-selection unbound departures
+fail closed. An optional unlimited ordinary-PT runtime-capacity switch is used
+only to isolate physical execution; it does not alter or validate the adopted
+10% PT capacity supply.
+
+The isolated mechanical result is server run56. It exits zero and its physical
+audit passes: Taxi accounts for all 64,115 direct main-mode teleport arrivals,
+while Car, PT, school bus, Walk and bound `car_passenger` execute physically.
+The strict student audit does not pass, however. Of 1,002 final school-bus
+choices, 952 depart and 876 board/alight; 76 selected students are stuck, with
+no wrong vehicle, ordinary-PT substitution, or seat-capacity rejection. This
+is caused by physical Walk accumulating QSim second-rounding at every link:
+all 76 miss their first vehicle, and 50 later selected school-bus legs then
+cannot depart. Run57 schedules links from continuous due times instead. It
+exits zero with 1,002/1,002 school-bus departures and boardings, no wrong
+vehicle, PT substitution, or capacity rejection, and a passing physical audit.
+One boarded student remains aboard a traffic-stuck vehicle at 30:00, so the
+student audit is `validated_with_network_stuck_limitations`. The adopted PT
+files remain unchanged, ordinary plan innovation remains frozen, and the later
+innovation phase has not started.
+
 Hong Kong public-transport route geometry is now map-matched to the official
 TNM road network and OSM rail links. The formal MATSim base network,
 route-link sequences, stop snaps, QA, preview, and hashes are under

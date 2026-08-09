@@ -149,7 +149,8 @@ public final class HongKongPtPersonFareSchedule {
 		for (PlanElement element :
 				person.getSelectedPlan().getPlanElements()) {
 			if (!(element instanceof Leg leg)
-					|| !"pt".equals(leg.getMode())) {
+					|| !"pt".equals(leg.getMode())
+					|| !"pt".equals(leg.getRoutingMode())) {
 				continue;
 			}
 			fares.add(quoteLeg(

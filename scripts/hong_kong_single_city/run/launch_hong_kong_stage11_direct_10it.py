@@ -371,7 +371,7 @@ def freeze_canonical_plan_innovation(root: ET.Element) -> None:
         key = (subpopulation, strategy)
         counts[key] = counts.get(key, 0) + 1
         weight = unique_param(settings, "weight")
-        if strategy == "ChangeExpBeta":
+        if strategy in {"ChangeExpBeta", "KeepLastSelected"}:
             weight.set("value", "1")
         elif strategy in FROZEN_INNOVATION_STRATEGIES:
             weight.set("value", "0")
@@ -380,15 +380,17 @@ def freeze_canonical_plan_innovation(root: ET.Element) -> None:
     subpopulations = {subpopulation for subpopulation, _ in counts}
     if not subpopulations:
         raise ValueError("No Stage 11 replanning subpopulations found")
-    expected = {"ChangeExpBeta", *FROZEN_INNOVATION_STRATEGIES}
     for subpopulation in subpopulations:
         actual = {
             strategy
             for candidate_subpopulation, strategy in counts
             if candidate_subpopulation == subpopulation
         }
-        if actual != expected or any(
-            counts[(subpopulation, strategy)] != 1 for strategy in expected
+        fresh_contract = {"ChangeExpBeta", *FROZEN_INNOVATION_STRATEGIES}
+        frozen_contract = {"KeepLastSelected", *FROZEN_INNOVATION_STRATEGIES}
+        accepted = actual == fresh_contract or actual == frozen_contract
+        if not accepted or any(
+            counts[(subpopulation, strategy)] != 1 for strategy in actual
         ):
             raise ValueError(
                 f"Unexpected replanning strategy contract for {subpopulation}: "
@@ -404,8 +406,8 @@ def require_canonical_plan_innovation_frozen(root: ET.Element) -> None:
             continue
         strategy = unique_param(settings, "strategyName").get("value")
         weight = unique_param(settings, "weight").get("value")
-        expected = "1" if strategy == "ChangeExpBeta" else "0"
-        if strategy not in {"ChangeExpBeta", *FROZEN_INNOVATION_STRATEGIES}:
+        expected = "1" if strategy in {"ChangeExpBeta", "KeepLastSelected"} else "0"
+        if strategy not in {"ChangeExpBeta", "KeepLastSelected", *FROZEN_INNOVATION_STRATEGIES}:
             raise ValueError(f"Unexpected Stage 11 replanning strategy: {strategy}")
         if float(weight if weight is not None else "nan") != float(expected):
             raise ValueError(

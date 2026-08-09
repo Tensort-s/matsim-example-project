@@ -1,6 +1,7 @@
 package org.matsim.project.hongkong.household;
 
 import ch.sbb.matsim.routing.pt.raptor.SwissRailRaptor;
+import ch.sbb.matsim.routing.pt.raptor.RaptorRoute;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
@@ -29,8 +30,15 @@ import org.matsim.core.router.util.TravelTime;
 import org.matsim.facilities.ActivityFacilities;
 import org.matsim.facilities.FacilitiesUtils;
 import org.matsim.pt.routes.TransitPassengerRoute;
+import org.matsim.pt.routes.DefaultTransitPassengerRoute;
+import org.matsim.pt.transitSchedule.api.Departure;
+import org.matsim.pt.transitSchedule.api.TransitLine;
+import org.matsim.pt.transitSchedule.api.TransitRoute;
+import org.matsim.pt.transitSchedule.api.TransitRouteStop;
+import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 import org.matsim.project.hongkong.car.HongKongDynamicCarCostRules;
 import org.matsim.project.hongkong.pt.HongKongPtFareRuntimeCatalog;
+import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareCalculator;
 import org.matsim.project.hongkong.taxi.HongKongTaxiLegAttributes;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
@@ -65,6 +73,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private static final double DRIVER_CONSTANT = -0.5;
 	private static final double PASSENGER_CONSTANT = -1.5;
 	private static final double TRAVEL_UTILITY_PER_HOUR = -6.0;
+	private static final double SCHOOL_BUS_BOARDING_READY_MARGIN_S = 5.0;
 	private static final String RELEASED_MODE_ATTRIBUTE = "hkHouseholdEscortReleasedPassengerMode";
 	private static final String RELEASED_TRIP_INDEX_ATTRIBUTE = "hkHouseholdEscortOriginalPassengerLegIndex";
 
@@ -79,7 +88,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private record PassengerModeCandidate(
 			String mode, List<PlanElement> elements, double utility,
-			double travelTimeS, double fareHkd, boolean available) {
+			double travelTimeS, double fareHkd, boolean available,
+			double originEndTimeS, String sourceCandidateId) {
 		PassengerModeCandidate {
 			elements = List.copyOf(elements);
 		}
@@ -101,6 +111,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			HouseholdJointPlanCandidateCatalog.Candidate candidate,
 			CarMetric waypointCar,
 			Map<Integer, CarMetric> switchedDayCar,
+			double passengerDepartureTimeS,
 			double passengerJointTravelTimeS,
 			double delta,
 			boolean scheduleFeasible) {
@@ -117,6 +128,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private final HouseholdJointPlanCandidateCatalog candidates;
 	private final HouseholdEscortBindingCatalog bindings;
 	private final HouseholdJointPlanAlternativeGenerator alternativeGenerator;
+	private final StudentSchoolModeCandidateCatalog studentCandidates;
 	private final Scenario scenario;
 	private final ActivityFacilities facilities;
 	private final Provider<TripRouter> tripRouterProvider;
@@ -135,6 +147,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			HouseholdJointPlanCandidateCatalog candidates,
 			HouseholdEscortBindingCatalog bindings,
 			HouseholdJointPlanAlternativeGenerator alternativeGenerator,
+			StudentSchoolModeCandidateCatalog studentCandidates,
 			Scenario scenario,
 			ActivityFacilities facilities,
 			Provider<TripRouter> tripRouterProvider,
@@ -147,6 +160,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		this.candidates = candidates;
 		this.bindings = bindings;
 		this.alternativeGenerator = alternativeGenerator;
+		this.studentCandidates = studentCandidates;
 		this.scenario = scenario;
 		this.facilities = facilities;
 		this.tripRouterProvider = tripRouterProvider;
@@ -165,7 +179,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		if (event.getIteration() != 1 || applied) return;
 		alternativeGenerator.generate();
 		TripRouter router = tripRouterProvider.get();
-		Map<PersonTripKey, PassengerModeCandidate> releases = buildCarPassengerReleases(router);
+		Map<PersonTripKey, PassengerModeCandidate> releases = buildIndependentChoices(router);
 		Map<PersonTripKey, Double> originalPassengerUtilities = new HashMap<>();
 		List<CandidateEvaluation> evaluations = new ArrayList<>();
 		int infeasible = 0;
@@ -214,6 +228,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		}
 
 		Installation installation = installSelections(releases, selected);
+		studentCandidates.snapshotSelectedSchoolBusPlans(scenario);
 		int repairedSelectedTaxiTrips = repairSelectedTaxiRoutes(router);
 		bindings.replaceWithActiveBindings(installation.bindings());
 		applied = true;
@@ -224,6 +239,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				.filter(value -> HongKongJointPlanModes.TAXI.equals(value.mode())).count();
 		long releasedWalk = releases.values().stream()
 				.filter(value -> TransportMode.walk.equals(value.mode())).count();
+		long selectedSchoolBus = releases.values().stream()
+				.filter(value -> "school_bus".equals(value.mode())).count();
 		long selectedSwitch = selected.stream()
 				.filter(value -> value.candidate().driverRequiresCarSwitch()).count();
 		long selectedExistingCar = selected.size() - selectedSwitch;
@@ -232,13 +249,16 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				+ "selected_joint_pairs={}, selected_existing_car_pairs={}, selected_driver_switch_pairs={}, "
 				+ "active_physical_bindings={}, original_car_passenger_trips={}, "
 				+ "fallback_best_pt={}, fallback_best_taxi={}, fallback_best_walk={}, "
+				+ "independent_best_school_bus={}, "
 				+ "selected_plans_added={}, repaired_selected_taxi_trips={}, "
 				+ "initial_selected_plans_preserved_through_iteration_0=true, "
-				+ "school_bus_candidates=0, probability_choice=false, driver_constraint=false",
+				+ "school_bus_candidates={}, school_bus_capacity_constraint=false, "
+				+ "probability_choice=false, driver_constraint=false",
 				 evaluations.size(), byHousehold.size(), switchCandidates, infeasible,
 				 selected.size(), selectedExistingCar, selectedSwitch, bindings.activeBindingCount(),
-				 releases.size(), releasedPt, releasedTaxi, releasedWalk,
-				 installation.selectedPlansAdded(), repairedSelectedTaxiTrips);
+				 releases.size(), releasedPt, releasedTaxi, releasedWalk, selectedSchoolBus,
+				 installation.selectedPlansAdded(), repairedSelectedTaxiTrips,
+				 studentCandidates.physicalSchoolBusOptionCount());
 	}
 
 	private int repairSelectedTaxiRoutes(TripRouter router) {
@@ -276,7 +296,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				&& leg.getTravelTime().isDefined();
 	}
 
-	private Map<PersonTripKey, PassengerModeCandidate> buildCarPassengerReleases(TripRouter router) {
+	private Map<PersonTripKey, PassengerModeCandidate> buildIndependentChoices(TripRouter router) {
 		Map<PersonTripKey, PassengerModeCandidate> result = new LinkedHashMap<>();
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			Plan plan = requiredSelectedPlan(person);
@@ -302,6 +322,46 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 						walk.utility(), best.mode());
 			}
 		}
+		if (!studentCandidates.enabled()) return result;
+
+		for (StudentSchoolModeCandidateCatalog.TripCandidate candidate : studentCandidates.trips().values()) {
+			Person person = requiredPerson(candidate.key().personId());
+			Plan plan = requiredSelectedPlan(person);
+			MainTrip trip = mainTrip(plan, candidate.key().tripIndex());
+			double departure = tripDeparture(trip);
+			PassengerModeCandidate pt = buildPtCandidate(person, trip, candidate.key().tripIndex(), departure);
+			PassengerModeCandidate taxi = buildTaxiCandidate(
+					router, person, trip, candidate.key().tripIndex(), departure);
+			PassengerModeCandidate walk = candidate.walkAvailable()
+					? buildWalkCandidate(router, person, trip, candidate.key().tripIndex(), departure)
+					: unavailable(TransportMode.walk, "walk_distance_ineligible");
+			List<PassengerModeCandidate> choices = new ArrayList<>(List.of(pt, taxi, walk));
+			for (StudentSchoolModeCandidateCatalog.SchoolBusOption option : candidate.schoolBusOptions()) {
+				choices.add(buildSchoolBusCandidate(
+						router, person, trip, candidate.key().tripIndex(), option));
+			}
+			PassengerModeCandidate best = choices.stream()
+					.filter(PassengerModeCandidate::available)
+					.max(Comparator.comparingDouble(PassengerModeCandidate::utility)
+							.thenComparingInt(value -> releaseTiePriority(value.mode()))
+							.thenComparing(PassengerModeCandidate::sourceCandidateId,
+									Comparator.reverseOrder()))
+					.orElseThrow(() -> new IllegalStateException(
+							"No independent student mode for " + candidate.key()));
+			PersonTripKey key = new PersonTripKey(person.getId(), candidate.key().tripIndex());
+			result.put(key, best);
+			String schoolBusUtilities = choices.stream().filter(value -> "school_bus".equals(value.mode()))
+					.map(value -> value.sourceCandidateId() + ":" + value.utility())
+					.collect(java.util.stream.Collectors.joining("|"));
+			LOG.info("HK_STUDENT_SCHOOL_MODE_SELECTION person={} trip={} direction={} stage={} "
+					+ "original_mode_audit={} pt_available={} pt_utility={} taxi_utility={} "
+					+ "walk_available={} walk_utility={} school_bus_options={} "
+					+ "school_bus_utilities={} selected_mode={} selected_source={} selected_utility={}",
+					person.getId(), candidate.key().tripIndex(), candidate.direction(),
+					candidate.studentStage(), candidate.originalModeAuditOnly(), pt.available(), pt.utility(),
+					taxi.utility(), walk.available(), walk.utility(), candidate.schoolBusOptions().size(),
+					schoolBusUtilities, best.mode(), best.sourceCandidateId(), best.utility());
+		}
 		return result;
 	}
 
@@ -321,7 +381,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				&& TripStructureUtils.getTrips(driverPlan).stream()
 				.map(TripStructureUtils.Trip::getDestinationActivity)
 				.anyMatch(destination -> !hasParkingZone(destination)))) {
-			return new CandidateEvaluation(candidate, null, Map.of(), Double.NaN,
+			return new CandidateEvaluation(candidate, null, Map.of(), Double.NaN, Double.NaN,
 					-Double.MAX_VALUE, false);
 		}
 		Id<Vehicle> vehicleId = Id.createVehicleId(candidate.vehicleId());
@@ -335,16 +395,20 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				router, candidate, driver, driverTrip, passengerTrip, vehicleId, nextDeparture);
 		CarMetric waypoint = waypointRoute.car();
 		boolean feasible = waypoint.arrivalTimeS() <= nextDeparture + 1e-9;
-		double passengerJointTime = waypointRoute.passengerArrivalTimeS()
-				- candidate.passengerDepartureTimeS();
+		// A waypoint-only NetworkRoute cannot make the driver's QVehicle wait at pickup.
+		// Make the passenger ready before the bound driver leg starts, so an unexpectedly
+		// early vehicle can never pass the pickup before the passenger enters QSim.  The
+		// resulting wait is deliberately included in passenger generalized time/utility.
+		double passengerDeparture = Math.max(0.0, Math.min(
+				candidate.passengerDepartureTimeS(), candidate.driverDepartureTimeS() - 1.0));
+		double passengerJointTime = waypointRoute.passengerArrivalTimeS() - passengerDeparture;
 		feasible &= passengerJointTime >= 0.0;
 
 		double fallbackPassenger;
 		PersonTripKey passengerKey = new PersonTripKey(passenger.getId(), candidate.passengerTripIndex());
-		if ("car_passenger".equals(candidate.passengerOriginalMode())) {
-			PassengerModeCandidate release = releases.get(passengerKey);
-			if (release == null) throw new IllegalStateException("Missing car_passenger release " + passengerKey);
-			fallbackPassenger = release.utility();
+		PassengerModeCandidate independent = releases.get(passengerKey);
+		if (independent != null) {
+			fallbackPassenger = independent.utility();
 		} else {
 			fallbackPassenger = originalPassengerUtilities.computeIfAbsent(
 					passengerKey, ignored -> originalTripUtility(passengerTrip));
@@ -386,7 +450,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			driverDelta = waypoint.utility() - baseline.utility();
 		}
 		return new CandidateEvaluation(
-				candidate, waypoint, switchedDay, passengerJointTime,
+				candidate, waypoint, switchedDay, passengerDeparture, passengerJointTime,
 				driverDelta + jointPassenger - fallbackPassenger, feasible);
 	}
 
@@ -473,6 +537,10 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 					(Map.Entry<PersonTripKey, PassengerModeCandidate> value) -> value.getKey().tripIndex())
 					.reversed());
 			for (var release : entry.getValue()) {
+				if (Double.isFinite(release.getValue().originEndTimeS())) {
+					mainTrip(plan, release.getKey().tripIndex()).origin().setEndTime(
+							release.getValue().originEndTimeS());
+				}
 				replaceMainTrip(plan, release.getKey().tripIndex(), release.getValue().elements());
 				copyTaxiAttributesToOrigin(plan, release.getKey().tripIndex(), release.getValue());
 			}
@@ -483,11 +551,10 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			var candidate = evaluation.candidate();
 			Person passenger = requiredPerson(candidate.passengerPersonId());
 			Plan passengerPlan = composite(passenger, composites);
-			Leg passengerLeg = PopulationUtils.createLeg("car_passenger");
-			passengerLeg.setRoutingMode("car_passenger");
-			passengerLeg.getAttributes().putAttribute(
-					HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE,
-					candidate.candidateId());
+			mainTrip(passengerPlan, candidate.passengerTripIndex()).origin().setEndTime(
+					evaluation.passengerDepartureTimeS());
+			Leg passengerLeg = createBoundPassengerLeg(
+					candidate, evaluation.passengerJointTravelTimeS());
 			replaceMainTrip(passengerPlan, candidate.passengerTripIndex(), List.of(passengerLeg));
 			selectedByDriver.computeIfAbsent(Id.createPersonId(candidate.driverPersonId()),
 					ignored -> new ArrayList<>()).add(evaluation);
@@ -535,16 +602,23 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			Leg passengerLeg = onlyLeg(passengerTrip, "car_passenger");
 			Leg driverLeg = modeLeg(driverTrip, TransportMode.car);
 			NetworkRoute driverRoute = (NetworkRoute) driverLeg.getRoute();
+			if (!fullLinkSequence(driverRoute).contains(Id.createLinkId(candidate.passengerPickupLinkId()))
+					|| !fullLinkSequence(driverRoute).contains(
+							Id.createLinkId(candidate.passengerDropoffLinkId()))) {
+				throw new IllegalStateException("Installed joint driver route omits passenger waypoint: "
+						+ candidate.candidateId());
+			}
 			HouseholdEscortBindingCatalog.Binding binding = new HouseholdEscortBindingCatalog.Binding(
 					candidate.candidateId(), candidate.householdId(),
 					"all_car_household_potential_audit_v3",
 					!"car_passenger".equals(candidate.passengerOriginalMode()),
 					passenger.getId(), allLegIndex(passenger.getSelectedPlan(), passengerLeg), passengerLeg,
 					driver.getId(), allLegIndex(driver.getSelectedPlan(), driverLeg), driverLeg,
+					HouseholdEscortBindingCatalog.snapshotNetworkRoute(driverRoute),
 					Id.createVehicleId(candidate.vehicleId()),
 					Id.createLinkId(candidate.passengerPickupLinkId()),
 					Id.createLinkId(candidate.passengerDropoffLinkId()),
-					driverRoute.getEndLinkId(), candidate.passengerDepartureTimeS(),
+					driverRoute.getEndLinkId(), evaluation.passengerDepartureTimeS(),
 					candidate.driverDepartureTimeS(), candidate.originAccessGapM(),
 					candidate.destinationEgressGapM());
 			passengerLeg.getAttributes().putAttribute(
@@ -566,10 +640,15 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private PassengerModeCandidate buildPtCandidate(
 			Person person, MainTrip trip, int tripIndex, double departure) {
-		List<? extends PlanElement> routed = ptRouter.calcRoute(DefaultRoutingRequest.of(
+		List<? extends PlanElement> routed = ptRouter.calcRoute(
 				FacilitiesUtils.toFacility(trip.origin(), facilities),
-				FacilitiesUtils.toFacility(trip.destination(), facilities), departure,
-				person, firstLeg(trip).getAttributes()));
+				FacilitiesUtils.toFacility(trip.destination(), facilities),
+				departure, departure, departure, person, firstLeg(trip).getAttributes(),
+				(routes, ignored) -> routes.stream()
+						.filter(route -> !containsSchoolBus(route))
+						.min(Comparator.comparingDouble(RaptorRoute::getTotalCosts)
+								.thenComparingDouble(RaptorRoute::getTravelTime))
+						.orElse(null));
 		if (routed == null || routed.isEmpty()) return unavailablePt();
 		List<PlanElement> elements = new ArrayList<>(routed);
 		int ptLegs = 0;
@@ -584,6 +663,11 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			Set<TransitPassengerRoute> visited = Collections.newSetFromMap(new IdentityHashMap<>());
 			for (TransitPassengerRoute current = first; current != null; current = current.getChainedRoute()) {
 				if (!visited.add(current)) throw new IllegalStateException("PT chained route cycle");
+				TransitLine line = scenario.getTransitSchedule().getTransitLines().get(current.getLineId());
+				TransitRoute transitRoute = line == null ? null : line.getRoutes().get(current.getRouteId());
+				if (transitRoute == null || "school_bus".equals(transitRoute.getTransportMode())) {
+					return unavailablePt();
+				}
 				var quote = ptFareCatalog.quote(current, scenario.getTransitSchedule());
 				if (quote.resolved()) fare += quote.costHkd();
 			}
@@ -591,12 +675,11 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		if (ptLegs == 0) return unavailablePt();
 		return new PassengerModeCandidate(TransportMode.pt, elements,
 				standardTripUtility(elements) - fare * config.scoring().getMarginalUtilityOfMoney(),
-				tripTravelTime(elements), fare, true);
+				tripTravelTime(elements), fare, true, Double.NaN, "pt");
 	}
 
 	private static PassengerModeCandidate unavailablePt() {
-		return new PassengerModeCandidate(TransportMode.pt, List.of(),
-				Double.NEGATIVE_INFINITY, Double.NaN, 0.0, false);
+		return unavailable(TransportMode.pt, "pt_unavailable");
 	}
 
 	private PassengerModeCandidate buildTaxiCandidate(
@@ -620,16 +703,19 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		setReleaseAttributes(taxi.getAttributes(), HongKongJointPlanModes.TAXI, tripIndex);
 		return new PassengerModeCandidate(HongKongJointPlanModes.TAXI, elements,
 				standardTripUtility(elements) + taxiParameters.fareScore(fare),
-				tripTravelTime(elements), fare, true);
+				tripTravelTime(elements), fare, true, Double.NaN, "taxi");
 	}
 
 	private PassengerModeCandidate buildWalkCandidate(
 			TripRouter router, Person person, MainTrip trip, int tripIndex, double departure) {
-		List<PlanElement> elements = new ArrayList<>(router.calcRoute(
+		List<PlanElement> elements = physicalWalkRouteOrNull(() -> router.calcRoute(
 				TransportMode.walk,
 				FacilitiesUtils.toFacility(trip.origin(), facilities),
 				FacilitiesUtils.toFacility(trip.destination(), facilities),
 				departure, person, firstLeg(trip).getAttributes()));
+		if (elements == null) {
+			return unavailable(TransportMode.walk, "walk_network_unreachable");
+		}
 		for (PlanElement element : elements) {
 			if (element instanceof Leg leg) {
 				leg.setRoutingMode(TransportMode.walk);
@@ -637,7 +723,182 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			}
 		}
 		return new PassengerModeCandidate(TransportMode.walk, elements,
-				standardTripUtility(elements), tripTravelTime(elements), 0.0, true);
+				standardTripUtility(elements), tripTravelTime(elements), 0.0, true,
+				Double.NaN, "walk");
+	}
+
+	private PassengerModeCandidate buildSchoolBusCandidate(
+			TripRouter router, Person person, MainTrip trip, int tripIndex,
+			StudentSchoolModeCandidateCatalog.SchoolBusOption option) {
+		TransitLine line = scenario.getTransitSchedule().getTransitLines().get(
+				Id.create(option.transitLineId(), TransitLine.class));
+		if (line == null) return unavailable("school_bus", option.candidateId() + ":missing_line");
+		TransitRoute transitRoute = line.getRoutes().get(Id.create(option.transitRouteId(), TransitRoute.class));
+		if (transitRoute == null || !"school_bus".equals(transitRoute.getTransportMode())) {
+			return unavailable("school_bus", option.candidateId() + ":missing_physical_route");
+		}
+		Departure scheduledDeparture = transitRoute.getDepartures().get(
+				Id.create(option.departureId(), Departure.class));
+		if (scheduledDeparture == null || scheduledDeparture.getVehicleId() == null
+				|| !option.vehicleId().equals(scheduledDeparture.getVehicleId().toString())) {
+			return unavailable("school_bus", option.candidateId() + ":missing_departure");
+		}
+		TransitStopFacility boarding = scenario.getTransitSchedule().getFacilities().get(
+				Id.create(option.boardingFacilityId(), TransitStopFacility.class));
+		TransitStopFacility alighting = scenario.getTransitSchedule().getFacilities().get(
+				Id.create(option.alightingFacilityId(), TransitStopFacility.class));
+		if (boarding == null || alighting == null
+				|| boarding.getLinkId() == null || alighting.getLinkId() == null
+				|| !option.boardingLinkId().equals(boarding.getLinkId().toString())
+				|| !option.alightingLinkId().equals(alighting.getLinkId().toString())) {
+			return unavailable("school_bus", option.candidateId() + ":missing_stop");
+		}
+		Link boardingLink = scenario.getNetwork().getLinks().get(boarding.getLinkId());
+		Link alightingLink = scenario.getNetwork().getLinks().get(alighting.getLinkId());
+		if (boardingLink == null || alightingLink == null) {
+			return unavailable("school_bus", option.candidateId() + ":missing_stop_link");
+		}
+
+		double desiredDeparture = tripDeparture(trip);
+		List<PlanElement> provisionalAccess = physicalWalkRouteOrNull(() -> router.calcRoute(
+				TransportMode.walk, FacilitiesUtils.toFacility(trip.origin(), facilities),
+				FacilitiesUtils.wrapLinkAndCoord(boardingLink, boarding.getCoord()),
+				desiredDeparture, person, firstLeg(trip).getAttributes()));
+		if (provisionalAccess == null) {
+			return unavailable("school_bus", option.candidateId() + ":access_unreachable");
+		}
+		double accessTime = tripTravelTime(provisionalAccess);
+		double readyDeadline = option.scheduledBoardTimeS() - SCHOOL_BUS_BOARDING_READY_MARGIN_S;
+		double start = desiredDeparture + accessTime <= readyDeadline + 1e-6
+				? desiredDeparture : readyDeadline - accessTime;
+		if (!Double.isFinite(start) || start < 0.0) {
+			return unavailable("school_bus", option.candidateId() + ":invalid_start");
+		}
+		List<PlanElement> access = physicalWalkRouteOrNull(() -> router.calcRoute(
+				TransportMode.walk, FacilitiesUtils.toFacility(trip.origin(), facilities),
+				FacilitiesUtils.wrapLinkAndCoord(boardingLink, boarding.getCoord()),
+				start, person, firstLeg(trip).getAttributes()));
+		if (access == null) {
+			return unavailable("school_bus", option.candidateId() + ":access_unreachable");
+		}
+		accessTime = tripTravelTime(access);
+		double accessArrival = start + accessTime;
+		if (accessArrival > readyDeadline + 1e-6
+				|| option.scheduledAlightTimeS() < option.scheduledBoardTimeS()) {
+			return unavailable("school_bus", option.candidateId() + ":schedule_infeasible");
+		}
+
+		List<PlanElement> egress = physicalWalkRouteOrNull(() -> router.calcRoute(
+				TransportMode.walk, FacilitiesUtils.wrapLinkAndCoord(alightingLink, alighting.getCoord()),
+				FacilitiesUtils.toFacility(trip.destination(), facilities),
+				option.scheduledAlightTimeS(), person, firstLeg(trip).getAttributes()));
+		if (egress == null) {
+			return unavailable("school_bus", option.candidateId() + ":egress_unreachable");
+		}
+		for (PlanElement element : access) if (element instanceof Leg leg) {
+			leg.setRoutingMode("school_bus");
+			setReleaseAttributes(leg.getAttributes(), "school_bus", tripIndex);
+		}
+		for (PlanElement element : egress) if (element instanceof Leg leg) {
+			leg.setRoutingMode("school_bus");
+			setReleaseAttributes(leg.getAttributes(), "school_bus", tripIndex);
+		}
+
+		Activity boardingStage = PopulationUtils.createStageActivityFromCoordLinkIdAndModePrefix(
+				boarding.getCoord(), boarding.getLinkId(), TransportMode.pt);
+		boardingStage.setMaximumDuration(0.0);
+		Activity alightingStage = PopulationUtils.createStageActivityFromCoordLinkIdAndModePrefix(
+				alighting.getCoord(), alighting.getLinkId(), TransportMode.pt);
+		alightingStage.setMaximumDuration(0.0);
+		DefaultTransitPassengerRoute passengerRoute = new DefaultTransitPassengerRoute(
+				boarding, line, transitRoute, alighting);
+		passengerRoute.setBoardingTime(option.scheduledBoardTimeS());
+		passengerRoute.setTravelTime(option.scheduledAlightTimeS() - accessArrival);
+		passengerRoute.setDistance(transitSegmentDistance(transitRoute, boarding, alighting));
+		Leg schoolBus = PopulationUtils.createLeg(TransportMode.pt);
+		schoolBus.setRoutingMode("school_bus");
+		schoolBus.setDepartureTime(accessArrival);
+		schoolBus.setTravelTime(option.scheduledAlightTimeS() - accessArrival);
+		schoolBus.setRoute(passengerRoute);
+		setReleaseAttributes(schoolBus.getAttributes(), "school_bus", tripIndex);
+		schoolBus.getAttributes().putAttribute("hkSchoolBusCandidateId", option.candidateId());
+
+		List<PlanElement> elements = new ArrayList<>();
+		elements.addAll(access);
+		elements.add(boardingStage);
+		elements.add(schoolBus);
+		elements.add(alightingStage);
+		elements.addAll(egress);
+		double earlyScheduleShift = Math.max(0.0, desiredDeparture - start);
+		double utility = standardTripUtility(elements)
+				+ TRAVEL_UTILITY_PER_HOUR * earlyScheduleShift / 3_600.0;
+		return new PassengerModeCandidate("school_bus", elements, utility,
+				tripTravelTime(elements) + earlyScheduleShift, 0.0, true,
+				start, option.candidateId());
+	}
+
+	private double transitSegmentDistance(
+			TransitRoute route, TransitStopFacility boarding, TransitStopFacility alighting) {
+		List<TransitRouteStop> stops = route.getStops();
+		int fromStop = -1;
+		int toStop = -1;
+		for (int index = 0; index < stops.size(); index++) {
+			if (fromStop < 0 && stops.get(index).getStopFacility().getId().equals(boarding.getId())) {
+				fromStop = index;
+			}
+			if (fromStop >= 0 && index > fromStop
+					&& stops.get(index).getStopFacility().getId().equals(alighting.getId())) {
+				toStop = index;
+				break;
+			}
+		}
+		if (fromStop < 0 || toStop < 0) throw new IllegalStateException(
+				"School-bus stop order is invalid on " + route.getId());
+		List<Id<Link>> links = fullLinkSequence(route.getRoute());
+		List<Integer> stopLinkIndexes = new ArrayList<>(stops.size());
+		int searchFrom = 0;
+		for (TransitRouteStop stop : stops) {
+			Id<Link> linkId = stop.getStopFacility().getLinkId();
+			int resolved = -1;
+			for (int index = searchFrom; index < links.size(); index++) {
+				if (links.get(index).equals(linkId)) {
+					resolved = index;
+					break;
+				}
+			}
+			if (resolved < 0 && searchFrom > 0 && links.get(searchFrom - 1).equals(linkId)) {
+				resolved = searchFrom - 1;
+			}
+			if (resolved < 0) throw new IllegalStateException(
+					"School-bus stop link is absent from route " + route.getId() + ": " + linkId);
+			stopLinkIndexes.add(resolved);
+			searchFrom = Math.min(links.size(), resolved + 1);
+		}
+		int fromLink = stopLinkIndexes.get(fromStop);
+		int toLink = stopLinkIndexes.get(toStop);
+		if (fromLink < 0 || toLink < fromLink) throw new IllegalStateException(
+				"School-bus stop links are absent or reversed on " + route.getId());
+		double distance = 0.0;
+		for (int index = fromLink; index <= toLink; index++) {
+			Link link = scenario.getNetwork().getLinks().get(links.get(index));
+			if (link == null) throw new IllegalStateException("Missing school-bus route link " + links.get(index));
+			distance += link.getLength();
+		}
+		return distance;
+	}
+
+	private static PassengerModeCandidate unavailable(String mode, String source) {
+		return new PassengerModeCandidate(mode, List.of(), Double.NEGATIVE_INFINITY,
+				Double.NaN, 0.0, false, Double.NaN, source);
+	}
+
+	private static boolean containsSchoolBus(RaptorRoute route) {
+		for (RaptorRoute.RoutePart part : route.getParts()) {
+			for (RaptorRoute.RoutePart current = part; current != null; current = current.chainedPart) {
+				if (current.route != null && "school_bus".equals(current.route.getTransportMode())) return true;
+			}
+		}
+		return false;
 	}
 
 	private WaypointRoute routeWaypoint(
@@ -749,8 +1010,9 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		double utility = 0.0;
 		for (PlanElement element : elements) {
 			if (!(element instanceof Leg leg)) continue;
-			ScoringConfigGroup.ModeParams params = config.scoring().getModes().get(leg.getMode());
-			if (params == null) throw new IllegalStateException("Missing scoring mode " + leg.getMode());
+			String scoringMode = scoringModeForLeg(leg);
+			ScoringConfigGroup.ModeParams params = config.scoring().getModes().get(scoringMode);
+			if (params == null) throw new IllegalStateException("Missing scoring mode " + scoringMode);
 			double travelTime = requiredTravelTime(leg);
 			double distance = leg.getRoute() == null ? 0.0 : leg.getRoute().getDistance();
 			if (!Double.isFinite(distance)) distance = 0.0;
@@ -760,6 +1022,35 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 					+ config.scoring().getMarginalUtilityOfMoney() * params.getMonetaryDistanceRate()) * distance;
 		}
 		return utility;
+	}
+
+	static String scoringModeForLeg(Leg leg) {
+		if (TransportMode.pt.equals(leg.getMode())
+				&& "school_bus".equals(leg.getRoutingMode())) {
+			return "school_bus";
+		}
+		if (TransportMode.non_network_walk.equals(leg.getMode())) {
+			return TransportMode.walk;
+		}
+		return leg.getMode();
+	}
+
+	private static List<PlanElement> physicalWalkRouteOrNull(
+			java.util.function.Supplier<List<? extends PlanElement>> routingCall) {
+		try {
+			return new ArrayList<>(routingCall.get());
+		} catch (RuntimeException exception) {
+			if (isNoNetworkRouteFailure(exception)) return null;
+			throw exception;
+		}
+	}
+
+	static boolean isNoNetworkRouteFailure(RuntimeException exception) {
+		for (Throwable current = exception; current != null; current = current.getCause()) {
+			String message = current.getMessage();
+			if (message != null && message.startsWith("No route found from node ")) return true;
+		}
+		return false;
 	}
 
 	private static double passengerUtility(double travelTimeS) {
@@ -781,7 +1072,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		}
 		if (routingModes.size() == 1) return routingModes.iterator().next();
 		for (String preferred : List.of("car_passenger", TransportMode.car,
-				HongKongJointPlanModes.TAXI, TransportMode.pt, TransportMode.walk)) {
+				HongKongJointPlanModes.TAXI, "school_bus", TransportMode.pt, TransportMode.walk)) {
 			if (routingModes.contains(preferred)) return preferred;
 		}
 		throw new IllegalStateException("Cannot identify trip mode " + routingModes);
@@ -853,6 +1144,22 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		leg.setRoute(copyRoute(metric.route()));
 		leg.setTravelTime(metric.travelTimeS());
 		replaceMainTrip(plan, tripIndex, List.of(leg));
+	}
+
+	static Leg createBoundPassengerLeg(
+			HouseholdJointPlanCandidateCatalog.Candidate candidate, double travelTimeS) {
+		Leg passengerLeg = PopulationUtils.createLeg("car_passenger");
+		passengerLeg.setRoutingMode("car_passenger");
+		var passengerRoute = RouteUtils.createGenericRouteImpl(
+				Id.createLinkId(candidate.passengerPickupLinkId()),
+				Id.createLinkId(candidate.passengerDropoffLinkId()));
+		passengerRoute.setTravelTime(travelTimeS);
+		passengerLeg.setRoute(passengerRoute);
+		passengerLeg.setTravelTime(travelTimeS);
+		passengerLeg.getAttributes().putAttribute(
+				HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE,
+				candidate.candidateId());
+		return passengerLeg;
 	}
 
 	private static void installDriverWaypoint(Plan plan, int tripIndex, CarMetric metric) {
@@ -929,7 +1236,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	}
 
 	private static int releaseTiePriority(String mode) {
-		if (TransportMode.pt.equals(mode)) return 3;
+		if (TransportMode.pt.equals(mode)) return 4;
+		if ("school_bus".equals(mode)) return 3;
 		if (HongKongJointPlanModes.TAXI.equals(mode)) return 2;
 		if (TransportMode.walk.equals(mode)) return 1;
 		throw new IllegalArgumentException("Unsupported release mode " + mode);

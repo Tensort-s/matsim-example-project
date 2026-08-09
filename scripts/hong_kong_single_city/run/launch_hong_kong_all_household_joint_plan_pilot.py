@@ -97,8 +97,6 @@ def set_household_selection_only(root: ET.Element) -> None:
             strategy = HOUSEHOLD_SELECTION_STRATEGY
             changed += 1
         observed.setdefault(strategy, []).append(float(params["weight"].get("value")))
-    if changed == 0:
-        raise ValueError("No ChangeExpBeta strategy was available for household selection freeze")
     expected = {
         HOUSEHOLD_SELECTION_STRATEGY: [1.0, 1.0, 1.0],
         "ReRoute": [0.0, 0.0, 0.0],

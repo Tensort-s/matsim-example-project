@@ -543,6 +543,130 @@ maximum, but locked first-party records remain time-unvalidated. This partial-
 demand candidate and its static map are not adopted MATSim supply; no
 interactive map is generated.
 
+The v6 adoption-ready candidate is under
+`data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/`.
+It adds all 3,439 v5 route identities to a copy of the Ferry Core network,
+schedule and fleet as 6,878 physical morning/afternoon routes and departures.
+Passenger capacities remain unscaled at 19, 27, 28 or 50 seats, and all 34,151
+retained proxy students fit. The 76 first-party identities receive one nearby
+campus-OD-supported proxy pickup and road path each; their identities are
+evidence-backed, but pickup membership, times and geometry remain inferred.
+Independent structural QA and MATSim 2026.0 loading pass, and no direction
+exceeds its 60/75-minute stage limit. The network nevertheless requires 2,420
+explicit reverse-direction proxy links and two short topology connectors;
+these are physical MATSim links but not verified legal road-direction evidence.
+V6 is ready for demand allocation and a no-innovation physical test, but it
+does not yet replace the current production supply or teleported student plans.
+
+The demand-preparation step regenerates candidates for all 36,808
+day-school students instead of retaining their old selected mode. Across
+73,616 independently screened directions it emits fresh PT and Taxi candidates,
+distance-limited Walk candidates, and 15,322 route-specific school-bus rows
+covering 14,265 trips. Of the old 9,626 teleported school-bus legs, only 1,837
+remain physically eligible, while 12,428 legs from other old modes newly gain a
+school-bus option. The catalogue has now been exercised in a bounded Stage 11
+iteration-0/1 deterministic-choice gate. That gate intentionally omits seat
+capacity competition; source capacities remain provenance for a future
+capacity-constrained experiment.
+
+The accepted server gate is
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31`. It exits zero
+with all independent core checks passing. The final student modes are 921
+`car_passenger`, 307 PT, 884 physical school bus, 21,269 Taxi and 50,235 Walk.
+Every selected school-bus trip boards its exact v6 vehicle; none uses ordinary
+PT, none boards the wrong vehicle and none exceeds source capacity (peak load
+seven). Three boarded students remain on traffic-stuck buses at the 30:00
+horizon, so the result is labelled
+`validated_with_network_stuck_limitations`, not a complete-day equilibrium.
+
+The next bounded integration gate keeps the same iteration-0/1 selector but
+makes every main mode except Taxi physical. Ordinary PT uses TransitQSim and a
+SwissRailRaptor routing view from which all `school_bus` routes are excluded;
+the complete schedule remains in QSim for exact school-bus candidates. Walk
+uses capacity-free road-network paths at 1.34 m/s through a dedicated engine,
+so pedestrians produce link-progression events without consuming road
+capacity. Car continues to use QNetwork plus common dynamic energy, toll and
+parking rules, while bound `car_passenger` uses the real household driver.
+The Raptor access execution mode `non_network_walk` is scored with the Walk
+parameters. Ordinary ReRoute, SubtourModeChoice and TimeAllocationMutator stay
+frozen; this gate does not implement the later innovation phase.
+
+The first full non-Taxi attempt, server run51, retained the adopted 10% PT
+vehicle capacities. It proved physical event production but is a failed
+stability gate: 60,585 ordinary-PT passenger legs were still waiting before
+their first boarding at the 30:00 horizon, 1,445 were aboard, and two newly
+bound `car_passenger` legs fell back to teleportation after stock route
+preparation changed their preceding leg indexes. The latter is fixed by giving
+every selected passenger binding a stable routed leg before
+`PrepareForMobsim` and rejecting any unbound post-selection departure. A
+separate explicit `--unlimited-ordinary-pt-capacity` option is available only
+for the mechanical physical-execution gate. It changes runtime capacities,
+not the adopted 10% supply files, and its result must not be presented as PT
+capacity validation.
+
+The physical household engine treats a driver's `PersonArrival` on the audited
+drop-off link as the terminal waypoint because QNetwork does not guarantee a
+separate final `LinkEnter` callback for a destination link. Run54 showed that
+this fallback is insufficient when stock `PrepareForMobsim` replaces a selected
+driver detour with a direct activity-origin/activity-destination route: the
+intermediate passenger drop-off then is never physically traversed. Every
+active binding therefore keeps an immutable copy of the selected
+pickup/drop-off waypoint route and restores it after stock route preparation,
+before QSim agents are created. The arrival fallback still performs real
+vehicle removal and passenger-arrival events only when driver arrival and the
+audited drop-off genuinely share a link. A different outstanding drop-off is
+not rejected inside the arrival callback: the parallel event manager may
+deliver that callback before an earlier vehicle `LinkEnter` reaches this
+handler. It is resolved by the delayed link event or classified as genuinely
+onboard only after the complete event queue drains in `afterMobsim`.
+
+The resulting mechanical gate is server run
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56`. It completes
+iterations 0--1 with exit code zero. Its independent physical audit is
+`validated`: Car, ordinary PT, school bus, Walk and bound `car_passenger` all
+produce their required physical events, while the 64,115 direct main-mode
+teleport arrivals are Taxi only. There are no direct teleported PT, Walk or
+`car_passenger` arrivals. In iteration 1, network Walk records 113,612
+departures, 113,319 arrivals and 4,088,507 link entries; the household engine
+classifies all 4,000 bindings and completes 3,889. This validates the physical
+execution wiring, not equilibrium or capacity adequacy.
+
+Run56 deliberately gives ordinary PT unlimited runtime seats to isolate that
+wiring; the adopted 10% vehicle file is unchanged. Even without seat rejection,
+11,763 PT legs are still waiting before boarding and 1,294 are aboard at the
+30:00 horizon across the two iterations, showing remaining traffic/network
+completion pressure. The strict student audit therefore remains `failed`:
+after household override 1,002 school-bus trips are selected, only 952 reach a
+school-bus departure, and 876 board and alight. Seventy-six selected students
+are stuck; there is no wrong-vehicle boarding, ordinary-PT substitution, or
+source-capacity exceedance, and terminal school-bus load is zero. The missing
+events are causally linked rather than two independent groups: all 76 students
+miss their first selected vehicle, and 50 of those also have a later selected
+school-bus leg which can no longer depart after the first leg aborts.
+
+Event-level diagnosis identifies a Walk clock mismatch. The route scorer sums
+continuous per-link travel time, while the first physical Walk engine scheduled
+each next link from the integer QSim callback time. This accumulated up to one
+extra second per traversed link. One representative passenger was planned to
+be ready at 27,486 seconds, reached the stop at 27,497, and missed a school bus
+which departed at 27,494. The engine now schedules each link from the previous
+continuous due time, so QSim can round only the final arrival once rather than
+once per link.
+
+The repaired no-innovation gate is server run
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57`. It exits zero;
+the physical audit remains `validated`, with Taxi alone accounting for all
+64,155 direct main-mode teleport arrivals. The student audit records 1,002
+selected school-bus legs, 1,002 physical departures and 1,002 correct
+boardings: both the 50-leg departure deficit and 76-person missed-boarding set
+are eliminated. There are no wrong-vehicle boardings, ordinary-PT
+substitutions or source-capacity exceedances. A single correctly boarded
+student remains aboard a traffic-stuck school bus at the 30:00 horizon, giving
+1,001 alightings/arrivals and the status
+`validated_with_network_stuck_limitations`. This residual is a downstream
+network-completion advisory, not a recurrence of the boarding defect. Ordinary
+plan innovation remains frozen and Step 6 is still not started.
+
 - Work OD is calibrated and Census-projected synthetic demand, not observed
   person-to-person movement.
 - DCCA school flows constrain destination classes, not a complete observed
@@ -556,10 +680,14 @@ interactive map is generated.
 - Detector and ATC road-flow observations do not cover every road link.
 - The adopted 50-iteration production plans still use aggregate `ride` and do
   not create complete taxi, ride-hailing, or school-bus operator fleets. The
-  Stage 11 candidate removes `ride`; the newest iterations 0–1 technical gate
-  selected 2,124 physical household joint trips from 9,289 screened pairs and
-  released every unbound original `car_passenger` trip to PT, Taxi, or Walk.
-  All `school_bus` legs remain passenger abstractions, and Taxi still has no
+  Stage 11 candidate removes `ride`; the earlier household-only iterations
+  0--1 gate selected 2,124 physical household joint trips from 9,289 screened
+  pairs and released every unbound original `car_passenger` trip to PT, Taxi,
+  or Walk. The repaired integrated run57 selector later activates 4,003
+  bindings, of which 3,895 complete before the horizon.
+  The production-baseline `school_bus` legs remain passenger abstractions. A
+  route-specific all-student v6 registry and bounded physical-choice gate now
+  exist, but v6 is not yet the adopted production supply; Taxi still has no
   operator fleet.
 - Private-car powertrains and destination car parks are not observed at
   vehicle/facility level; the offline car-cost layer therefore uses an

@@ -30,6 +30,7 @@ import org.matsim.core.mobsim.qsim.interfaces.MobsimEngine;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -101,6 +102,12 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 				? catalog.activeBindingForPassengerLeg(agent.getId(), currentLegIndex(planAgent))
 				: catalog.activeBindingForKey(persistentKey.toString());
 		if (binding == null) {
+			if (catalog.activeBindingCount() > 0) {
+				throw new IllegalStateException("Unbound car_passenger departure after household "
+						+ "selection: person=" + agent.getId() + ", leg=" + currentLegIndex(planAgent));
+			}
+			// Iteration 0 deliberately executes the untouched baseline before the
+			// one-shot household selector establishes the physical binding catalog.
 			return false;
 		}
 		if (!(agent instanceof MobsimPassengerAgent passenger)) {
@@ -142,15 +149,29 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 		if (!"car".equals(event.getLegMode()) || !activeDriverIds.contains(event.getPersonId())) {
 			return;
 		}
+		List<VehicleWaypoint> terminalDropoffs;
 		synchronized (this) {
-			List<String> missed = onboard.entrySet().stream()
-					.filter(entry -> entry.getValue().binding().driverId().equals(event.getPersonId()))
-					.map(Map.Entry::getKey)
+			terminalDropoffs = onboard.values().stream()
+					.map(Onboard::binding)
+					.filter(binding -> binding.driverId().equals(event.getPersonId()))
+					.filter(binding -> binding.passengerDropoffLinkId().equals(event.getLinkId()))
+					.map(HouseholdEscortPhysicalEngine::dropoffWaypoint)
+					.distinct()
 					.toList();
-			if (!missed.isEmpty()) {
-				throw new IllegalStateException("Driver arrived before bound passenger drop-off waypoint: " + missed);
-			}
 		}
+		// A QNetwork leg may reach its destination link without a final LinkEnter
+		// callback.  PersonArrival is therefore the physical terminal waypoint
+		// fallback, not evidence by itself that the passenger was missed.
+		for (VehicleWaypoint waypoint : terminalDropoffs) {
+			handleVehicleAtWaypoint(event.getTime(), waypoint.vehicleId(), waypoint.linkId());
+		}
+		// SimStepParallelEventsManager may deliver this arrival to our handler
+		// before an earlier LinkEnter for the same vehicle has been processed on
+		// another event thread. Do not turn that legal reordering into a false
+		// abort. The selected/restored route is validated to contain every active
+		// waypoint; the delayed LinkEnter completes the physical alighting, while
+		// any genuinely outstanding passenger is classified after all events have
+		// drained in afterMobsim().
 	}
 
 	private void handleVehicleAtWaypoint(
@@ -159,45 +180,67 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 		if (!activeWaypoints.contains(waypoint)) {
 			return;
 		}
+		List<Map.Entry<String, Onboard>> dropoffs = new ArrayList<>();
+		List<Map.Entry<String, Waiting>> pickupCandidates = new ArrayList<>();
 		synchronized (this) {
 			for (String key : indexedKeys(onboardAtWaypoint, waypoint)) {
 				Onboard ride = onboard.remove(key);
 				removeIndex(onboardAtWaypoint, waypoint, key);
-				if (ride == null) continue;
-				if (!ride.vehicle().removePassenger(ride.passenger())) {
-					throw new IllegalStateException("Bound passenger is absent from vehicle at drop-off: "
-							+ ride.passenger().getId());
-				}
-				ride.passenger().setVehicle(null);
-				events.processEvent(new PersonLeavesVehicleEvent(now, ride.passenger().getId(), vehicleId));
-				ride.passenger().notifyArrivalOnLinkByNonNetworkMode(linkId);
-				ride.passenger().endLegAndComputeNextState(now);
-				internalInterface.arrangeNextAgentState(ride.passenger());
+				if (ride != null) dropoffs.add(Map.entry(key, ride));
+			}
+			for (String key : indexedKeys(waitingAtWaypoint, waypoint)) {
+				Waiting candidate = waiting.get(key);
+				if (candidate != null) pickupCandidates.add(Map.entry(key, candidate));
+			}
+		}
+
+		// Never call back into QSim while holding this engine's monitor. QSim's
+		// main thread invokes departure handlers while holding its own agent-state
+		// monitor, whereas event delivery runs on a separate thread.
+		for (var entry : dropoffs) {
+			String key = entry.getKey();
+			Onboard ride = entry.getValue();
+			if (!ride.vehicle().removePassenger(ride.passenger())) {
+				throw new IllegalStateException("Bound passenger is absent from vehicle at drop-off: "
+						+ ride.passenger().getId());
+			}
+			ride.passenger().setVehicle(null);
+			events.processEvent(new PersonLeavesVehicleEvent(now, ride.passenger().getId(), vehicleId));
+			ride.passenger().notifyArrivalOnLinkByNonNetworkMode(linkId);
+			ride.passenger().endLegAndComputeNextState(now);
+			internalInterface.arrangeNextAgentState(ride.passenger());
+			synchronized (this) {
 				terminalOutcomes.put(key, "completed_physical_ride");
 				alightings++;
 			}
+		}
 
-			for (String key : indexedKeys(waitingAtWaypoint, waypoint)) {
-				Waiting candidate = waiting.get(key);
-				if (candidate == null || !isBoundDriverLegActive(candidate.binding())) continue;
+		for (var entry : pickupCandidates) {
+			String key = entry.getKey();
+			Waiting candidate = entry.getValue();
+			if (!isBoundDriverLegActive(candidate.binding())) continue;
+			synchronized (this) {
+				if (waiting.get(key) != candidate) continue;
 				waiting.remove(key);
 				removeIndex(waitingAtWaypoint, waypoint, key);
-				MobsimAgent driverAgent = qsim.getAgents().get(candidate.binding().driverId());
-				MobsimDriverAgent driver = (MobsimDriverAgent) driverAgent;
-				MobsimVehicle vehicle = driver.getVehicle();
-				if (vehicle == null || !vehicle.getId().equals(vehicleId)) {
-					throw new IllegalStateException("Bound vehicle is unavailable at pickup waypoint: " + key);
-				}
-				if (vehicle.getPassengers().size() >= vehicle.getPassengerCapacity()) {
-					throw new IllegalStateException("Bound private car is full: " + vehicle.getId());
-				}
-				MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
-						candidate.passenger().getId(), candidate.registeredLinkId());
-				if (removed == null || !vehicle.addPassenger(candidate.passenger())) {
-					throw new IllegalStateException("Cannot board passenger at the exact pickup waypoint: " + key);
-				}
-				candidate.passenger().setVehicle(vehicle);
-				events.processEvent(new PersonEntersVehicleEvent(now, candidate.passenger().getId(), vehicleId));
+			}
+			MobsimAgent driverAgent = qsim.getAgents().get(candidate.binding().driverId());
+			MobsimDriverAgent driver = (MobsimDriverAgent) driverAgent;
+			MobsimVehicle vehicle = driver.getVehicle();
+			if (vehicle == null || !vehicle.getId().equals(vehicleId)) {
+				throw new IllegalStateException("Bound vehicle is unavailable at pickup waypoint: " + key);
+			}
+			if (vehicle.getPassengers().size() >= vehicle.getPassengerCapacity()) {
+				throw new IllegalStateException("Bound private car is full: " + vehicle.getId());
+			}
+			MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
+					candidate.passenger().getId(), candidate.registeredLinkId());
+			if (removed == null || !vehicle.addPassenger(candidate.passenger())) {
+				throw new IllegalStateException("Cannot board passenger at the exact pickup waypoint: " + key);
+			}
+			candidate.passenger().setVehicle(vehicle);
+			events.processEvent(new PersonEntersVehicleEvent(now, candidate.passenger().getId(), vehicleId));
+			synchronized (this) {
 				onboard.put(key, new Onboard(candidate.binding(), candidate.passenger(), vehicle));
 				addIndex(onboardAtWaypoint, dropoffWaypoint(candidate.binding()), key);
 				boardings++;
@@ -218,6 +261,7 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 		if (!activeDriverIds.contains(event.getPersonId()) && !activePassengerIds.contains(event.getPersonId())) {
 			return;
 		}
+		List<Waiting> abortedWaiting = new ArrayList<>();
 		synchronized (this) {
 		List<String> onboardFailures = onboard.entrySet().stream()
 				.filter(entry -> entry.getValue().passenger().getId().equals(event.getPersonId()))
@@ -236,15 +280,19 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 		for (String key : waitingFailures) {
 			Waiting failed = waiting.remove(key);
 			removeIndex(waitingAtWaypoint, pickupWaypoint(failed.binding()), key);
+			terminalOutcomes.put(key, "driver_stuck_before_pickup");
+			abortedWaiting.add(failed);
+		}
+		}
+		for (Waiting failed : abortedWaiting) {
 			MobsimAgent removed = internalInterface.unregisterAdditionalAgentOnLink(
 					failed.passenger().getId(), failed.registeredLinkId());
 			if (removed == null) {
-				throw new IllegalStateException("Cannot abort waiting passenger after driver stuck: " + key);
+				throw new IllegalStateException("Cannot abort waiting passenger after driver stuck: "
+						+ key(failed.binding()));
 			}
-			terminalOutcomes.put(key, "driver_stuck_before_pickup");
 			failed.passenger().setStateToAbort(event.getTime());
 			internalInterface.arrangeNextAgentState(failed.passenger());
-		}
 		}
 	}
 

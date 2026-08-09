@@ -333,6 +333,264 @@ time test until their permitted stop geometry is available; they remain an
 evidence inventory, not validated physical supply. No interactive map is
 generated.
 
+## V6 adoption-ready MATSim supply candidate
+
+Version `matsim_road_pt_school_bus_supply_2026_v6_adoption_ready` converts the
+complete v5 route inventory into a road-running MATSim supply candidate without
+changing the adopted Ferry Core production supply or the current 9,626
+teleported student legs. It contains 3,439 `TransitLine` records, 6,878 morning
+and afternoon `TransitRoute` records and departures, and 3,439 reusable
+vehicles.
+
+All 76 first-party route identities now have physical candidate geometry. The
+identity, school and source route code remain first-party evidence; the builder
+does not claim that unavailable or restricted stop tables were observed. Each
+identity receives one nearby pickup grid supported by the same campus-specific
+student OD used upstream, then receives an inbound and outbound road path. Its
+pickup membership, order, schedule and geometry remain explicit inferred
+proxies. This distinction is recorded route by route in
+`school_bus_first_party_reconstruction_v6.csv`.
+
+Passenger capacities are not scaled: the original 19, 27, 28 and 50-seat
+classes are retained, and every one of the 34,151 retained v5 proxy students
+fits within the assigned vehicle. Road PCU values remain scenario-scaled by
+vehicle size. Both directions are recomputed at 25.2 km/h with 45-second
+intermediate dwell, and every direction passes the 60-minute
+kindergarten/primary or 75-minute secondary/special threshold.
+
+The output is:
+
+```text
+data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/
+```
+
+The main files are:
+
+| V6 file | Purpose |
+|---|---|
+| `network.xml.gz` | Ferry Core network plus `school_bus` permissions and explicit repair links |
+| `transitSchedule_5pct_school_bus_v6.xml.gz` | Existing PT schedule plus 3,439 two-direction school-bus lines |
+| `transitVehicles_10pct_regular_school_bus_unscaled.xml.gz` | Existing PT fleet plus 3,439 unscaled-capacity school buses |
+| `school_bus_routes_v6.csv` | Direction-level paths, times, loads, capacities and geometry provenance |
+| `school_bus_stops_v6.csv` | Pickup/drop-off facilities, grid membership and network links |
+| `school_bus_network_repairs_v6.csv` | Every explicit road-direction or topology repair |
+| `school_bus_first_party_reconstruction_v6.csv` | Identity evidence versus inferred geometry audit |
+| `school_bus_supply_v6_summary.json` | Build counts and limitations |
+| `school_bus_supply_v6_validation.json` | Independent network/schedule/vehicle/reference checks |
+
+Build and audit commands are:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_school_bus_adoption_ready_supply.py
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\audit_hong_kong_school_bus_adoption_ready_supply.py
+```
+
+The independent audit passes with no missing or discontinuous route links,
+invalid stop-link order, missing vehicle reference, capacity failure, vehicle
+schedule overlap or stage-time violation. MATSim 2026.0 also loads the complete
+network, schedule and vehicle bundle and resolves all 3,439 lines, 6,878
+routes/departures and 3,439 school-bus vehicles.
+
+The road layer still contains explicit modelling repairs: 2,420
+school-bus-only reverse-direction proxy links and two short topology connectors.
+They affect 228 and five direction-level routes respectively. These links make
+every `NetworkRoute` physically continuous in MATSim, but they are not proof of
+legal real-world direction access and require later road-direction review. V6
+is therefore ready for student-plan allocation and a no-innovation physical
+test, not yet the adopted production supply.
+
+## V6 all-student mode candidate regeneration
+
+The second adoption step is implemented by
+`prepare_hong_kong_school_mode_candidate_registry.py`. It reads the selected
+plans of the current Stage 11 population and screens every
+`day_school_student` trip. The existing leg mode is copied only to the
+`original_mode_audit_only` column; it is not an eligibility condition, a rank
+term, or an automatically retained candidate. Morning home-to-school and
+afternoon school-to-home trips are evaluated independently, so a student may
+have a physical school-bus candidate in only one direction.
+
+Every school trip receives fresh PT and Taxi release candidates. Walk is added
+when the home-school crow-fly distance is at most 5 km. `car_passenger` is not
+fabricated by this registry: it can enter only through the separate household
+joint-plan catalogue with a real driver and waypoint. A school-bus candidate
+requires an exact campus, home-grid and school-stage match in v6, a home stop
+within 1,500 m, a campus stop within 750 m, and an afternoon departure no more
+than 30 minutes before or 90 minutes after the student's current school end.
+Each accepted row contains the real v6 line, route, departure, vehicle,
+boarding/alighting facility and link references. At most three physical route
+alternatives are retained per direction.
+
+The current 5% plans contain 36,808 day-school students and 73,616 school
+trips. The regenerated catalogue has 214,222 rows: 73,616 PT, 73,616 Taxi,
+51,668 Walk and 15,322 physical school-bus route candidates. A total of 14,265
+trips have at least one school-bus candidate. This corresponds to 6,866
+students with both directions, 533 with morning only, none with afternoon
+only, and 29,409 with neither direction. The asymmetry is expected because the
+afternoon screen also enforces school-end/departure compatibility.
+
+The old/new comparison demonstrates that old mode was not preserved: of the
+9,626 formerly teleported `school_bus` legs, only 1,837 are physically eligible
+under v6 and 7,789 fall back to newly generated alternatives; 12,428 legs whose
+old mode was not `school_bus` newly gain a physical school-bus candidate.
+
+Outputs are under:
+
+```text
+data/school/hongkong/processed/school_bus_plan_candidates_5pct_v6/
+```
+
+The registry is deliberately unselected and does not itself modify the Stage
+11 plans. Its source-capacity fields remain provenance only. For the first
+user-authorized choice pilot, seat allocation is deliberately disabled: every
+student who passes the physical school/route/access/time screen may choose the
+service when it is their maximum-utility alternative. The v6 source XML keeps
+the 19/27/28/50-seat classes unchanged; only the pilot runtime expands those
+four school-bus vehicle types to 1,000,000 seats. A later capacity-constrained
+experiment can therefore be added without rebuilding supply or candidates.
+The independent registry audit resolves every line, route, departure, vehicle,
+stop and link reference and passes all checks.
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\prepare_hong_kong_school_mode_candidate_registry.py
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\demand_generation\audit_hong_kong_school_mode_candidate_registry.py
+```
+
+## Stage 11 deterministic school-mode selector
+
+`StudentSchoolModeCandidateCatalog` and the extended
+`HouseholdJointPlanSelector` implement the first application of the registry.
+After iteration 0, every student direction is independently routed and scored
+as regular PT, Taxi and—within 5 km—Walk. Each eligible school-bus row is
+materialized as access Walk, a real `DefaultTransitPassengerRoute` with the v6
+line/route/stops/departure/vehicle, and egress Walk. Waiting and in-vehicle time
+are both included in the school-bus leg time; any required earlier activity
+departure is also charged as time. The provisional school-bus score remains
+`-1.5 - 6 × travel_time_hours`, with zero distance-money charge. Regular PT
+selection explicitly excludes `school_bus` routes so the two alternatives are
+not conflated.
+
+The best independent student mode becomes the fallback utility for the
+household selector. A real `car_passenger` waypoint candidate may replace that
+fallback only when the exact household combination has non-negative total
+utility and no driver/passenger/vehicle conflict. This preserves one exact
+household optimization rather than applying two selectors sequentially. No
+new ordinary `ReRoute`, `SubtourModeChoice` or `TimeAllocationMutator` strategy
+is enabled in the iteration-0/1 gate.
+
+MATSim reconstructs an experienced physical transit passenger leg as
+`mode=pt` even when its preserved `routingMode` is `school_bus`. The composed
+scorer therefore treats `routingMode=school_bus` as authoritative: the strict
+ordinary-PT fare ordinal skips it, and the standard delegate temporarily sees
+`mode=school_bus` so the configured school-bus constant/time/distance terms are
+used. Selected passenger legs follow MATSim's physical transit convention
+`mode=pt,routingMode=school_bus`; the route itself retains the exact v6
+school-bus line, route and stops.
+
+Physical school bus and the explicit teleported generic `pt` router coexist in
+the same QSim through a dedicated departure splitter. MATSim evaluates
+departure handlers in registration order, so the splitter is registered before
+the network, teleportation and physical transit handlers. Passenger agents do
+not expose the wrapped `PlanAgent` directly, and asking a generic PT passenger
+for a physical stop itself emits a route error. The selector therefore records
+the selected person's school-bus boarding link and time window before
+`PrepareForSim`; only a matching departure whose current execution mode is
+`pt` is then checked against the v6 stop IDs and sent to the physical tracker.
+The mode condition prevents a zero-distance access Walk on the same boarding
+link from being mistaken for the main school-bus leg. Every other
+`PTPassengerAgent` returns unhandled so the QSim chain's registered
+TeleportationEngine—not a separately injected instance—performs the movement.
+After MATSim's normal per-iteration `PrepareForMobsim` routing and immediately
+before QSim agent creation, a narrow decorator restores detached copies of only
+the selected school-bus trip slices and normalizes legacy physical-submode
+passenger legs to internal execution mode `pt`. Restoring any earlier is
+incorrect because `PrepareForMobsim` can route the trip again; restoring from a
+QSim engine is also too late because passenger agents have already cached their
+steps. Ordinary PT and every other trip retain the routes produced by
+`PrepareForMobsim`.
+This avoids both ordinary-PT removal and accidental replacement of a selected
+school-bus route by a regular GMB/MTR route.
+
+The combined gate also uses the physical household escort engine. Parallel
+link-event delivery must never call QSim while holding that engine's state
+monitor: the QSim main thread invokes departure handlers while holding its own
+agent-state monitor. Boarding/alighting state is therefore staged under the
+household-engine lock, while QSim registration, event emission and next-state
+arrangement run after releasing it. This preserves exact waypoint binding
+without a reverse-lock deadlock when school-bus and household choices coexist.
+
+The reproducible server launcher and independent event/plan audit are:
+
+```text
+scripts/hong_kong_single_city/run/launch_hong_kong_student_school_mode_choice_pilot.py
+scripts/hong_kong_single_city/run/audit_hong_kong_student_school_mode_choice_pilot.py
+```
+
+The accepted iteration-0/1 technical gate is server run
+`/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31`. It exits zero
+and its independent audit reports
+`validated_with_network_stuck_limitations`, with every core check passing. All
+73,616 student school trips are decided exactly once. Independent maximum
+utility selects 315 PT, 897 school bus, 21,552 Taxi and 50,852 Walk trips;
+after exact household joint-plan override the final student counts are 921
+`car_passenger`, 307 PT, 884 school bus, 21,269 Taxi and 50,235 Walk.
+
+All 884 final school-bus departures use a catalogued physical v6 route and all
+884 passengers board the correct school-bus vehicle. There are no ordinary-PT
+substitutions, wrong-vehicle boardings or source-capacity exceedances. The
+largest selected-student load on any vehicle is seven, although the runtime
+still uses the explicitly unconstrained one-million-seat override. Of those
+passengers, 881 alight and arrive before the 30:00 horizon. Three correctly
+boarded students remain aboard three traffic-stuck buses at the horizon; this
+is recorded as a network-completion advisory, not a capacity rejection. V6
+therefore passes this bounded mechanical/choice gate but remains outside the
+current production baseline and is not yet a long-run equilibrium result.
+
+For the subsequent physical non-Taxi integration, the ordinary-PT Raptor graph
+is built from a filtered schedule view containing 3,613 regular routes and no
+`school_bus` routes. TransitQSim still receives the complete schedule with all
+6,878 school-bus directions. This separation prevents a non-catalogued
+ordinary PT passenger from using a school-bus stop or vehicle without removing
+the physical supply needed by selected students.
+
+The capacity-constrained integration attempt run51 is intentionally retained
+as a failed stress test. It confirms physical PT/Walk link and boarding events,
+but deterministic no-innovation routing combined with the adopted 10% PT
+vehicle capacities leaves 60,585 ordinary-PT passenger legs waiting before
+boarding at the 30:00 horizon. The follow-up mechanical gate may explicitly
+remove ordinary-PT seat competition at runtime while retaining the source
+vehicle file unchanged. That gate tests physical execution only; it does not
+supersede the 10% capacity provenance or demonstrate capacity adequacy.
+
+The capacity-isolated follow-up is server run56. It exits zero and passes the
+separate physical non-Taxi audit: Taxi is the only directly teleported main
+mode, ordinary PT uses TransitQSim, Walk traverses road links without consuming
+capacity, and every active `car_passenger` has a real driver. The school-bus
+completion audit is intentionally not relaxed. After household override it
+finds 1,002 selected school-bus trips, 952 departures and 876 correct
+board/alight pairs. Seventy-six selected students are stuck; none boards the
+wrong vehicle, substitutes ordinary PT, exceeds source capacity, or remains in
+a school-bus vehicle at the horizon. Thus the physical mechanisms are wired
+correctly, but integrated school-bus/network completion is not yet stable. The
+76 are the upstream failures: each misses the first selected vehicle, and 50
+later selected legs then never depart.
+
+Run57 fixes the cause in the physical Walk engine. Route preparation and QSim
+now share one continuous sum of link travel times; the discrete QSim clock may
+round final arrival once but no longer adds rounding at every link. The
+unchanged no-innovation selector again chooses 1,002 school-bus trips, and all
+1,002 physically depart and board the correct vehicle. There are 1,001
+alightings/arrivals; one correctly boarded student remains aboard a
+traffic-stuck vehicle at 30:00. The physical audit passes and the student audit
+is `validated_with_network_stuck_limitations`. Ordinary plan innovation remains
+disabled and is not part of this result.
+
 ## Re-run source acquisition
 
 ```powershell

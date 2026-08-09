@@ -279,6 +279,188 @@
         "walk": 201668
       },
       "notes": "Iterations 0-1, exit code 0. Iteration 0 preserved the initial selected plans; the custom selector then ran after ordinary replanning and selected exact maximum-utility household composites while KeepLastSelected prevented independent template selection. Original car_passenger trips could release to routed PT, Taxi, or Walk; school_bus was excluded and ride remained absent. The stage-aware independent audit passed all checks. All 2124 physical bindings received explicit terminal classifications. Ordinary ReRoute, SubtourModeChoice, and TimeAllocationMutator remained frozen, so this validates mechanics and coupled scoring rather than long-run equilibrium."
+    },
+    {
+      "name": "stage11_student_school_mode_iterations_0_1_run31",
+      "role": "bounded_unconstrained_student_cross_mode_physical_school_bus_gate_not_current_final_output",
+      "iterations": 2,
+      "iteration_range": [0, 1],
+      "release": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_release31",
+      "server_output": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31/output",
+      "input_plans": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_release31/input/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+      "student_candidate_registry": "data/school/hongkong/processed/school_bus_plan_candidates_5pct_v6/",
+      "school_bus_supply": "data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/",
+      "server_audit": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31/student_school_mode_choice_audit.json",
+      "audit_status": "validated_with_network_stuck_limitations",
+      "student_school_trip_count": 73616,
+      "physical_school_bus_option_count": 15322,
+      "independent_max_utility_modes": {
+        "pt": 315,
+        "school_bus": 897,
+        "taxi": 21552,
+        "walk": 50852
+      },
+      "final_student_modes_after_household_joint_override": {
+        "car_passenger": 921,
+        "pt": 307,
+        "school_bus": 884,
+        "taxi": 21269,
+        "walk": 50235
+      },
+      "physical_school_bus_events": {
+        "departure": 884,
+        "board": 884,
+        "alight": 881,
+        "arrival": 881,
+        "wrong_vehicle_boardings": 0,
+        "regular_pt_substitutions": 0,
+        "peak_selected_student_load": 7,
+        "source_capacity_exceedances": 0,
+        "terminal_onboard_students": 3
+      },
+      "school_bus_capacity_constraint": false,
+      "school_bus_runtime_seats_per_vehicle_type": 1000000,
+      "ordinary_innovation_frozen": true,
+      "notes": "Iterations 0-1, exit code 0. Every student trip chose deterministic maximum utility among its available PT, Taxi, Walk and exact physical school-bus candidates before exact household joint-plan override. Seat competition was intentionally disabled. All 884 final school-bus passengers boarded their catalogued v6 vehicle; none substituted ordinary PT or exceeded source capacity. Three remained aboard traffic-stuck vehicles at the 30:00 horizon, so completion advisories fail while every core audit check passes. This is a bounded technical gate, not adopted production or long-run equilibrium."
+    },
+    {
+      "name": "stage11_physical_nontaxi_capacity_stress_iterations_0_1_run51",
+      "role": "failed_capacity_constrained_physical_nontaxi_stress_not_current_final_output",
+      "iterations": 2,
+      "iteration_range": [0, 1],
+      "release": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_release51",
+      "server_output": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run51/output",
+      "ordinary_pt_capacity_constraint": true,
+      "ordinary_pt_waiting_before_boarding_at_horizon": 60585,
+      "ordinary_pt_onboard_at_horizon": 1445,
+      "direct_teleported_car_passenger_legs": 2,
+      "status": "failed_pt_capacity_and_network_stability_gate",
+      "notes": "The adopted 10% PT capacities were retained. The attempt produced physical PT and Walk events but left 60,585 ordinary-PT legs waiting to board and 1,445 aboard at 30:00. Two newly bound car_passenger legs also fell back to teleportation after stock route preparation changed plan indexes. The binding and route-restoration defects were fixed in later attempts. This run is preserved as a failed capacity/network stress result."
+    },
+    {
+      "name": "stage11_physical_nontaxi_mechanical_gate_iterations_0_1_run56",
+      "role": "capacity_isolated_no_innovation_physical_nontaxi_mechanical_gate_not_current_final_output",
+      "iterations": 2,
+      "iteration_range": [0, 1],
+      "release": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_release56",
+      "server_output": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56/output",
+      "physical_audit": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56/physical_nontaxi_audit.json",
+      "physical_audit_status": "validated",
+      "student_audit": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56/student_school_mode_choice_audit.json",
+      "student_audit_status": "failed_school_bus_network_completion",
+      "ordinary_pt_capacity_constraint": false,
+      "adopted_pt_capacity_files_changed": false,
+      "ordinary_innovation_frozen": true,
+      "direct_teleported_main_mode_arrivals": {
+        "taxi": 64115
+      },
+      "iteration_1_horizon_state": {
+        "active": 12420,
+        "lost": 3372
+      },
+      "iteration_1_physical_walk": {
+        "departures": 113612,
+        "arrivals": 113319,
+        "stuck": 293,
+        "link_enters": 4088507,
+        "link_leaves": 4088214
+      },
+      "iteration_1_household_bindings": {
+        "selected": 4000,
+        "completed": 3889,
+        "passenger_stuck_onboard": 4,
+        "driver_stuck_before_pickup": 12,
+        "simulation_end_before_pickup": 54,
+        "simulation_end_while_onboard": 4
+      },
+      "final_student_modes_after_household_joint_override": {
+        "car_passenger": 939,
+        "pt": 386,
+        "school_bus": 1002,
+        "taxi": 21520,
+        "walk": 49769
+      },
+      "selected_school_bus_events": {
+        "departure": 952,
+        "board": 876,
+        "alight": 876,
+        "arrival": 876,
+        "missed_first_boarding_students": 76,
+        "downstream_selected_legs_not_departed": 50,
+        "wrong_vehicle_boardings": 0,
+        "regular_pt_substitutions": 0,
+        "source_capacity_exceedances": 0,
+        "terminal_onboard_students": 0
+      },
+      "ordinary_pt_terminal_state": {
+        "waiting_before_boarding": 11763,
+        "onboard": 1294
+      },
+      "innovation_phase": "not_started_by_scope",
+      "notes": "Iterations 0-1, exit code 0. Unlimited ordinary-PT runtime seats isolate event-level physical execution without changing the adopted 10% source vehicle file. The physical audit passes: Car, ordinary PT, school bus, Walk and bound car_passenger execute physically, and Taxi is the sole directly teleported main mode. The strict student audit fails because 76 students miss their first selected school bus after physical Walk accumulates per-link QSim time rounding; 50 of those students also have a later selected school-bus leg which consequently never departs. There are no wrong-vehicle boards, ordinary-PT substitutions, source-capacity exceedances or terminal school-bus loads. This is not capacity validation, production equilibrium, or authorization to open innovation."
+    },
+    {
+      "name": "stage11_physical_nontaxi_walk_timing_repair_iterations_0_1_run57",
+      "role": "capacity_isolated_no_innovation_school_bus_boarding_repair_gate_not_current_final_output",
+      "iterations": 2,
+      "iteration_range": [0, 1],
+      "release": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_release57",
+      "server_output": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57/output",
+      "physical_audit": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57/physical_nontaxi_audit.json",
+      "physical_audit_status": "validated",
+      "student_audit": "/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57/student_school_mode_choice_audit.json",
+      "student_audit_status": "validated_with_network_stuck_limitations",
+      "ordinary_pt_capacity_constraint": false,
+      "adopted_pt_capacity_files_changed": false,
+      "ordinary_innovation_frozen": true,
+      "walk_timing_repair": "Each next link is scheduled from the previous continuous due time rather than the integer QSim callback time, preventing per-link rounding accumulation.",
+      "direct_teleported_main_mode_arrivals": {
+        "taxi": 64155
+      },
+      "iteration_1_horizon_state": {
+        "active": 12534,
+        "lost": 3129
+      },
+      "iteration_1_physical_walk": {
+        "departures": 113813,
+        "arrivals": 113522,
+        "stuck": 291,
+        "link_enters": 4090907,
+        "link_leaves": 4090616
+      },
+      "iteration_1_household_bindings": {
+        "selected": 4003,
+        "completed": 3895,
+        "passenger_stuck_onboard": 2,
+        "driver_stuck_before_pickup": 8,
+        "simulation_end_before_pickup": 60,
+        "simulation_end_while_onboard": 2
+      },
+      "final_student_modes_after_household_joint_override": {
+        "car_passenger": 939,
+        "pt": 386,
+        "school_bus": 1002,
+        "taxi": 21520,
+        "walk": 49769
+      },
+      "selected_school_bus_events": {
+        "departure": 1002,
+        "board": 1002,
+        "alight": 1001,
+        "arrival": 1001,
+        "missed_first_boarding_students": 0,
+        "downstream_selected_legs_not_departed": 0,
+        "terminal_onboard_students": 1,
+        "wrong_vehicle_boardings": 0,
+        "regular_pt_substitutions": 0,
+        "source_capacity_exceedances": 0
+      },
+      "ordinary_pt_terminal_state": {
+        "waiting_before_boarding": 11856,
+        "onboard": 1036
+      },
+      "innovation_phase": "not_started_by_scope",
+      "notes": "Iterations 0-1, exit code 0. The physical Walk clock repair eliminates both run56 boarding symptoms: all 1,002 selected school-bus legs depart and all 1,002 board the correct physical vehicle. One correctly boarded passenger remains aboard a traffic-stuck school bus at the 30:00 horizon, so only the downstream completion advisory remains. The physical non-Taxi audit passes, Taxi remains the sole directly teleported main mode, the adopted 10% PT source file is unchanged, and ordinary innovation remains frozen."
     }
   ],
   "shared_inputs": {

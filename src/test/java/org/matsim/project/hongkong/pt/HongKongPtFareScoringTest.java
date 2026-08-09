@@ -162,6 +162,46 @@ class HongKongPtFareScoringTest {
 	}
 
 	@Test
+	void physicalPtExecutionLegMayOmitRoutingModeButCannotConflict() {
+		Fixture fixture = fixture("physical-null-routing-mode", true);
+		HongKongPtPersonFareSchedule schedule = HongKongPtPersonFareSchedule.fromSelectedPlan(
+				fixture.person, fixture.schedule, fixture.catalog);
+		HongKongPtFareScoring accepted = new HongKongPtFareScoring(schedule, 1.0);
+		Leg physicalExecutionLeg = PopulationUtils.createLeg(TransportMode.pt);
+		accepted.handleLeg(physicalExecutionLeg);
+		assertEquals(1, accepted.consumedPtLegs());
+
+		HongKongPtFareScoring rejected = new HongKongPtFareScoring(schedule, 1.0);
+		Leg conflicting = PopulationUtils.createLeg(TransportMode.pt);
+		conflicting.setRoutingMode(TransportMode.car);
+		assertThrows(IllegalStateException.class, () -> rejected.handleLeg(conflicting));
+	}
+
+	@Test
+	void physicalSchoolBusExperiencedAsPtDoesNotConsumePtFareOrdinal() {
+		Fixture fixture = fixture("school-bus-skip", true);
+		HongKongPtFareScoring scoring = new HongKongPtFareScoring(
+				HongKongPtPersonFareSchedule.fromSelectedPlan(
+						fixture.person, fixture.schedule, fixture.catalog), 1.0);
+		Leg experiencedSchoolBus = PopulationUtils.createLeg(TransportMode.pt);
+		experiencedSchoolBus.setRoutingMode("school_bus");
+		scoring.handleLeg(experiencedSchoolBus);
+		assertEquals(0, scoring.consumedPtLegs());
+		assertEquals(0.0, scoring.getScore(), 0.0);
+		scoring.handleLeg(fixture.ptLeg);
+		assertEquals(1, scoring.consumedPtLegs());
+	}
+
+	@Test
+	void selectedPhysicalSchoolBusIsExcludedFromPtFareSchedule() {
+		Fixture fixture = fixture("school-bus-selected-plan", true);
+		fixture.ptLeg.setRoutingMode("school_bus");
+		HongKongPtPersonFareSchedule schedule = HongKongPtPersonFareSchedule.fromSelectedPlan(
+				fixture.person, fixture.schedule, fixture.catalog);
+		assertEquals(0, schedule.size());
+	}
+
+	@Test
 	void stuckAgentMayLeaveUntraveledPtFaresUnconsumed() {
 		Fixture fixture = fixture("stuck", true);
 		HongKongPtFareScoring scoring = new HongKongPtFareScoring(

@@ -52,6 +52,9 @@ public final class HongKongPtFareScoring
 	@Override
 	public void handleLeg(Leg leg) {
 		Objects.requireNonNull(leg, "leg");
+		if ("school_bus".equals(leg.getRoutingMode())) {
+			return;
+		}
 		if (!"pt".equals(leg.getMode())) {
 			return;
 		}
@@ -60,10 +63,10 @@ public final class HongKongPtFareScoring
 					leg,
 					"experienced PT leg received after scoring was finished");
 		}
-		if (!"pt".equals(leg.getRoutingMode())) {
+		if (leg.getRoutingMode() != null && !"pt".equals(leg.getRoutingMode())) {
 			throw mismatch(
 					leg,
-					"experienced PT leg must have routingMode=pt");
+					"experienced PT leg has a conflicting non-pt routingMode");
 		}
 		if (consumedPtLegs >= fareSchedule.size()) {
 			throw mismatch(

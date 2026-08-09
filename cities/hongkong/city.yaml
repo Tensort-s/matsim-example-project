@@ -295,6 +295,85 @@ school_bus_candidate:
   constrained_retained_proxy_student_share: 0.4060809284295889
   constrained_unserved_proxy_students: 49948
   constrained_limitation: "Hard time and fleet ceilings take priority over demand coverage; 3028 direct one-pickup recovery routes lower the modelled median; locked first-party routes are not time-validatable without geometry"
+  adoption_ready_version: "matsim_road_pt_school_bus_supply_2026_v6_adoption_ready"
+  adoption_ready_status: "adoption_ready_candidate_not_current_production"
+  adoption_ready_output: "data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/"
+  adoption_ready_base_supply: "data/transit/hongkong/processed/matsim_road_pt_supply_2026_hybrid_capacity_mixed_bus_pcu005_ferry_core_v1_cap010/"
+  adoption_ready_lines: 3439
+  adoption_ready_transit_routes: 6878
+  adoption_ready_departures: 6878
+  adoption_ready_vehicles: 3439
+  adoption_ready_first_party_physical_lines: 76
+  adoption_ready_retained_proxy_students: 34151
+  adoption_ready_passenger_capacity_scaled: false
+  adoption_ready_vehicle_capacity_classes: [19, 27, 28, 50]
+  adoption_ready_directions_over_stage_time_limit: 0
+  adoption_ready_continuous_directed_directions: 6645
+  adoption_ready_reverse_proxy_directions: 228
+  adoption_ready_topology_connector_directions: 5
+  adoption_ready_reverse_proxy_links: 2420
+  adoption_ready_topology_connector_links: 2
+  adoption_ready_matsim_load_validation: "passed"
+  adoption_ready_limitation: "First-party route identities are evidence-backed, but their single pickup grids, ordering, times and road paths are OD-supported inferred proxies; 228 directions require explicit reverse-direction road proxies and five use short topology connectors; the all-student registry has passed one bounded unconstrained Stage 11 gate but is not adopted production"
+  student_candidate_version: "school_bus_plan_candidates_5pct_v6"
+  student_candidate_status: "candidate_registry_exercised_in_bounded_unconstrained_stage11_gate_not_current_production"
+  student_candidate_output: "data/school/hongkong/processed/school_bus_plan_candidates_5pct_v6/"
+  student_candidate_source_plans: "/mnt/DiskM/by/hk_stage11_taxi_44000_no_ride_v1/selective_route_merge_attempt6/plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz"
+  student_candidate_students: 36808
+  student_candidate_school_trips: 73616
+  student_candidate_physical_school_bus_eligible_trips: 14265
+  student_candidate_physical_school_bus_candidate_rows: 15322
+  student_candidate_both_directions_students: 6866
+  student_candidate_inbound_only_students: 533
+  student_candidate_outbound_only_students: 0
+  student_candidate_neither_direction_students: 29409
+  student_candidate_old_school_bus_still_eligible: 1837
+  student_candidate_old_school_bus_now_ineligible: 7789
+  student_candidate_newly_eligible_from_other_modes: 12428
+  student_candidate_pt_rows: 73616
+  student_candidate_taxi_rows: 73616
+  student_candidate_walk_rows: 51668
+  student_candidate_old_mode_policy: "audit_only_never_used_for_eligibility_or_ranking"
+  student_candidate_capacity_policy: "first Stage 11 choice pilot intentionally unconstrained; source capacities retained as provenance and runtime school_bus types expanded to 1000000 seats"
+  student_candidate_validation: "passed"
+  student_choice_selector: "deterministic per-trip PT/Taxi/Walk/physical-school_bus maximum utility integrated as the fallback in exact household joint-plan selection"
+  student_choice_school_bus_scoring: "-1.5 - 6 * full door-to-door travel_time_hours, including wait; zero distance-money rate; earlier schedule shift charged as time"
+  student_choice_ordinary_innovation: "frozen in iteration 0-1 gate"
+  student_choice_technical_gate: "validated_with_network_stuck_limitations"
+  student_choice_technical_gate_server_run: "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run31"
+  student_choice_final_mode_counts: {car_passenger: 921, pt: 307, school_bus: 884, taxi: 21269, walk: 50235}
+  student_choice_school_bus_departures: 884
+  student_choice_school_bus_boardings: 884
+  student_choice_school_bus_alightings: 881
+  student_choice_school_bus_wrong_vehicle_boardings: 0
+  student_choice_school_bus_regular_pt_substitutions: 0
+  student_choice_school_bus_peak_selected_student_load: 7
+  student_choice_school_bus_source_capacity_exceedances: 0
+  student_choice_school_bus_terminal_onboard_students: 3
+  student_choice_school_bus_terminal_limitation: "three correctly boarded students remained aboard traffic-stuck school buses at the 30:00 QSim horizon; this is not rejection or seat-capacity competition"
+  physical_nontaxi_capacity_stress_server_run: "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run51"
+  physical_nontaxi_capacity_stress_status: "failed_pt_capacity_and_network_stability_gate"
+  physical_nontaxi_capacity_stress_waiting_before_boarding: 60585
+  physical_nontaxi_capacity_stress_onboard_at_horizon: 1445
+  physical_nontaxi_pre_walk_timing_fix_server_run: "/mnt/DiskM/by/hk_stage11_student_school_mode_20260808_run56"
+  physical_nontaxi_pre_walk_timing_fix_status: "76 students missed their first selected school bus; 50 of those consequently never departed on a later selected school-bus leg"
+  physical_nontaxi_technical_gate_server_run: "/mnt/DiskM/by/hk_stage11_student_school_mode_20260809_run57"
+  physical_nontaxi_technical_gate_status: "physical_execution_and_school_bus_boarding_validated_with_one_terminal_onboard_student"
+  physical_nontaxi_ordinary_pt_capacity_constraint: false
+  physical_nontaxi_adopted_pt_capacity_files_changed: false
+  physical_nontaxi_direct_teleported_main_modes: {taxi: 64155}
+  physical_nontaxi_iteration_1_active_at_30h: 12534
+  physical_nontaxi_iteration_1_lost_at_30h: 3129
+  physical_nontaxi_household_bindings: 4003
+  physical_nontaxi_household_completed: 3895
+  physical_nontaxi_student_final_modes: {car_passenger: 939, pt: 386, school_bus: 1002, taxi: 21520, walk: 49769}
+  physical_nontaxi_school_bus_departures: 1002
+  physical_nontaxi_school_bus_boardings: 1002
+  physical_nontaxi_school_bus_alightings: 1001
+  physical_nontaxi_school_bus_stuck_students: 1
+  physical_nontaxi_walk_time_rule: "route and QSim both accumulate continuous per-link travel deadlines; QSim discretization may round the final arrival once but cannot accumulate once per traversed link"
+  physical_nontaxi_limitation: "Run57 removes all selected school-bus departure and boarding deficits; one correctly boarded student remains aboard a traffic-stuck school bus at the 30:00 horizon, so full network completion is still an advisory limitation"
+  physical_nontaxi_innovation_status: "not_started_by_scope"
   non_tertiary_school_bus_share_of_spb_boardings: 0.819006959927839
   target_round_trip_students: 84099
   campuses_selected_for_school_bus: 1301

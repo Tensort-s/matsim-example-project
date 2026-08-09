@@ -36,6 +36,7 @@ public final class HouseholdEscortBindingCatalog {
 			Id<Person> driverId,
 			int driverLegIndex,
 			Leg driverLeg,
+			NetworkRoute plannedDriverRoute,
 			Id<Vehicle> vehicleId,
 			Id<Link> passengerPickupLinkId,
 			Id<Link> passengerDropoffLinkId,
@@ -69,6 +70,39 @@ public final class HouseholdEscortBindingCatalog {
 		candidateGroups.clear();
 		activeBindingKeys.clear();
 		register(replacements, true);
+	}
+
+	/**
+	 * Restores the selected joint driver's exact waypoint route after MATSim's
+	 * stock per-iteration route preparation. The stock preparer may replace a
+	 * valid detour route with a direct origin-destination route because pickup
+	 * and drop-off waypoints are not activities in the driver's plan.
+	 */
+	public synchronized int restoreSelectedDriverWaypointRoutes() {
+		int restored = 0;
+		Set<String> restoredDriverLegs = new HashSet<>();
+		for (Binding binding : bindings) {
+			if (!isActive(binding)) continue;
+			String driverLegKey = key(binding.driverId(), binding.driverLegIndex());
+			if (!restoredDriverLegs.add(driverLegKey)) {
+				throw new IllegalStateException("Multiple active passengers share one driver leg: "
+						+ driverLegKey);
+			}
+			NetworkRoute planned = binding.plannedDriverRoute();
+			if (!containsLink(planned, binding.passengerPickupLinkId())
+					|| !containsLink(planned, binding.passengerDropoffLinkId())) {
+				throw new IllegalStateException("Stored joint driver route omits passenger waypoint: "
+						+ bindingKey(binding));
+			}
+			NetworkRoute restoredRoute = snapshotNetworkRoute(planned);
+			binding.driverLeg().setRoute(restoredRoute);
+			binding.driverLeg().setRoutingMode("car");
+			if (restoredRoute.getTravelTime().isDefined()) {
+				binding.driverLeg().setTravelTime(restoredRoute.getTravelTime().seconds());
+			}
+			restored++;
+		}
+		return restored;
 	}
 
 	private void register(List<Binding> additions, boolean active) {
@@ -168,6 +202,7 @@ public final class HouseholdEscortBindingCatalog {
 					driverId,
 					driverLegIndex,
 					driverLeg,
+					snapshotNetworkRoute(route),
 					vehicleId,
 					pickupLinkId,
 					dropoffLinkId,
@@ -194,6 +229,23 @@ public final class HouseholdEscortBindingCatalog {
 			}
 		}
 		return new HouseholdEscortBindingCatalog(bindings);
+	}
+
+	public static NetworkRoute snapshotNetworkRoute(NetworkRoute source) {
+		NetworkRoute copy = org.matsim.core.population.routes.RouteUtils.createLinkNetworkRouteImpl(
+				source.getStartLinkId(), new ArrayList<>(source.getLinkIds()), source.getEndLinkId());
+		copy.setVehicleId(source.getVehicleId());
+		copy.setDistance(source.getDistance());
+		if (source.getTravelTime().isDefined()) {
+			copy.setTravelTime(source.getTravelTime().seconds());
+		}
+		return copy;
+	}
+
+	private static boolean containsLink(NetworkRoute route, Id<Link> linkId) {
+		return linkId.equals(route.getStartLinkId())
+				|| route.getLinkIds().contains(linkId)
+				|| linkId.equals(route.getEndLinkId());
 	}
 
 	public Binding bindingForPassengerLeg(Id<Person> passengerId, int legIndex) {

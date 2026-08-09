@@ -49,7 +49,16 @@ public final class HongKongComposableScoringFunction implements ScoringFunction 
 	@Override
 	public void handleLeg(Leg leg) {
 		components.forEach(component -> component.handleLeg(leg));
-		delegate.handleLeg(leg);
+		if ("pt".equals(leg.getMode()) && "school_bus".equals(leg.getRoutingMode())) {
+			leg.setMode("school_bus");
+			try {
+				delegate.handleLeg(leg);
+			} finally {
+				leg.setMode("pt");
+			}
+		} else {
+			delegate.handleLeg(leg);
+		}
 	}
 
 	@Override
