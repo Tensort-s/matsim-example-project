@@ -15,6 +15,10 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.population.io.PopulationWriter;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.contrib.signals.SignalSystemsConfigGroup;
+import org.matsim.contrib.signals.builder.Signals;
+import org.matsim.contrib.signals.data.SignalsData;
+import org.matsim.contrib.signals.data.SignalsDataLoader;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
 import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
 import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
@@ -58,7 +62,8 @@ public final class RunHongKong5Pct {
 						+ "[--household-escort-joint-reroute] [--household-escort-max-utility] "
 						+ "[--household-joint-plan-candidates=<path>] "
 						+ "[--student-school-mode-candidates=<directory>] "
-						+ "[--physical-nontaxi-modes] [--unlimited-ordinary-pt-capacity]"
+						+ "[--physical-nontaxi-modes] [--unlimited-ordinary-pt-capacity] "
+						+ "[--traffic-signals]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -68,6 +73,7 @@ public final class RunHongKong5Pct {
 		boolean physicalNonTaxiModes = Arrays.asList(args).contains("--physical-nontaxi-modes");
 		boolean unlimitedOrdinaryPtCapacity = Arrays.asList(args)
 				.contains("--unlimited-ordinary-pt-capacity");
+		boolean trafficSignals = Arrays.asList(args).contains("--traffic-signals");
 		boolean householdEscortJointReRoute = Arrays.asList(args)
 				.contains("--household-escort-joint-reroute");
 		boolean householdEscortMaxUtility = Arrays.asList(args)
@@ -135,7 +141,18 @@ public final class RunHongKong5Pct {
 			}
 		}
 
-		Config config = ConfigUtils.loadConfig(args[0]);
+		Config config = ConfigUtils.loadConfig(args[0], new SignalSystemsConfigGroup());
+		SignalSystemsConfigGroup signalConfig = ConfigUtils.addOrGetModule(
+				config, SignalSystemsConfigGroup.class);
+		if (trafficSignals && !signalConfig.isUseSignalSystems()) {
+			throw new IllegalArgumentException(
+					"--traffic-signals requires signalsystems.useSignalsystems=true in config.");
+		}
+		if (trafficSignals && config.qsim().isUsingFastCapacityUpdate()) {
+			config.qsim().setUsingFastCapacityUpdate(false);
+			System.out.println(
+					"Disabled QSim fast capacity update because MATSim signals require exact capacity updates.");
+		}
 		if (physicalNonTaxiModes) {
 			configurePhysicalPtAndWalk(config);
 			HongKongPhysicalWalkQSimModule.activateInConfig(config);
@@ -166,6 +183,15 @@ public final class RunHongKong5Pct {
 			}
 		}
 		Scenario scenario = ScenarioUtils.loadScenario(config);
+		if (trafficSignals) {
+			scenario.addScenarioElement(
+					SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());
+			System.out.printf(
+					"Loaded explicit MATSim traffic signals; systems=%s; groups=%s; control=%s.%n",
+					signalConfig.getSignalSystemFile(),
+					signalConfig.getSignalGroupsFile(),
+					signalConfig.getSignalControlFile());
+		}
 		if (unlimitedOrdinaryPtCapacity) {
 			int overriddenTypes = 0;
 			for (var type : scenario.getTransitVehicles().getVehicleTypes().values()) {
@@ -260,6 +286,10 @@ public final class RunHongKong5Pct {
 		System.out.printf("Loaded %,d persons; assigned %,d explicit car vehicles.%n",
 			scenario.getPopulation().getPersons().size(), assignedVehicles);
 		Controler controler = new Controler(scenario);
+		if (trafficSignals) {
+			Signals.configure(controler);
+			System.out.println("Enabled explicit movement-level traffic-signal control.");
+		}
 		controler.addOverridingModule(new SwissRailRaptorModule());
 		if (physicalNonTaxiModes) {
 			controler.addOverridingModule(new HongKongOrdinaryPtRaptorModule());

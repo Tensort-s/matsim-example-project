@@ -109,6 +109,8 @@ docs/HONG_KONG_PRIVATE_CAR_ENERGY_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_FIXED_OWNERSHIP_APPLICATION.md
 docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
 docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md
+docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md
+docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -639,3 +641,14 @@ The sibling `light_rail_station_od_v1/` layer supplies adult Octopus base
 fares only for explicit ordered Light Rail stop IDs. Its complete 68 by 68
 official matrix is kept separate from both MTR scopes; loop and short-turn
 route states remain explicit, and transfer concessions are not modelled.
+
+## Hong Kong traffic signals
+
+The conservative 2026 location fusion and its MATSim adoption boundary are
+documented in `docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md`. The subsequent
+movement-, conflict-, timing-, pedestrian-, and capacity-aware implementation
+design is in `docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md`. The
+2,054-location registry is adoption-ready only as a spatial registry; traffic
+signals are not enabled in the production scenario. They are available only
+through the explicit Stage 11 `--traffic-signals` pilot path documented in the
+adoption design.

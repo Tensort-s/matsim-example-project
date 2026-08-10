@@ -119,6 +119,12 @@
 			<version>${matsim.version}</version>
 		</dependency>
 		<dependency>
+			<!-- Optional Hong Kong movement-level traffic-signal pilots. -->
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>signals</artifactId>
+			<version>${matsim.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>taxi</artifactId>
 			<version>${matsim.version}</version>

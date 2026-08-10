@@ -499,6 +499,70 @@ candidate generation, atomic household composites, dynamic multimodal costs,
 and physical waypoint execution; it is not the adopted 50-iteration output or
 a calibrated equilibrium.
 
+## Traffic-signal location registry candidate
+
+The adoption-ready location registry under
+`data/transit/hongkong/processed/hong_kong_traffic_signal_registry_2026_v1/`
+fuses 5,540 OSM `highway=traffic_signals` observations with 37,167 official
+Transport Department Traffic Aids point features and the active MATSim Car
+network. It resolves the OSM observations to 2,054 conservative physical
+signal-location groups; 1,969 have both official and OSM evidence. This is 26
+locations (1.282%) above the independent mid-2025 official aggregate of about
+2,028 signalised junctions. The official total is a validation benchmark, not
+a count-fitting target.
+
+The registry also supplies 8,288 incoming Car-link control candidates for
+2,016 groups, but it contains no phase, cycle, green split or coordination
+timing. It therefore does not yet modify the active MATSim network/config or
+Stage 11 runs. The 263 official-geometry-only clusters remain a separate review
+table and are excluded from the default registry to avoid double-counting
+large junctions. See `docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md`.
+
+The follow-on adoption design in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md` applies the March
+2026 Transport Department signal-design rules and digitizes a public
+eight-junction AM/PM example as an observed-partial pilot. It replaces direct
+incoming-link activation with movement groups, conflicts, explicit transition
+and pedestrian clearance, time-of-day evidence classes, and capacity
+deconvolution. This remains outside the adopted production supply. It is now
+available through an explicit Stage 11 `--traffic-signals` pilot path, so
+ordinary production runs without that flag remain unchanged.
+
+The first implementation package is
+`data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1/`.
+It compiles separate AM and PM controls for the eight public-example
+junctions: 32 controlled final approaches, 62 movement signals, 26 signal
+groups, 3-second amber, 2-second red+amber and 5-second minimum intergreen.
+Because MATSim inserts amber after dropping and red+amber before green, the
+compiled onset gap is 6 seconds and the static validator confirms the emitted
+event-level intergreen is 5 seconds.
+Only the 32 approach capacities are replaced by TPDM saturation proxies; all
+other network links remain unchanged. Static validation passes with zero
+blocking same-stage conflicts and no SHA gate. The movement-to-stage mapping,
+offsets and full-day activation remain inferred/missing, and pedestrian phases
+are explicitly blocked pending crossing geometry. This pilot is not the
+adopted production signal supply.
+
+The accepted AM integration sensitivity is stored at
+`/mnt/DiskM/by/hk_stage11_traffic_signals_20260810_run3`. It completed
+iterations 0--1 with exit code 0. Runtime audit covered 87,240 signal-state
+events and found zero missing groups, conflicting greens, intergreen,
+amber/red+amber, or cycle violations; all 32 controlled approaches carried
+traffic. The existing physical-mode gate remained valid and all 1,002 selected
+school-bus legs completed correctly. However, applying the observed-partial AM
+plan all day increased person stuck events from 14,382 in no-signal run57 to
+16,631 and reduced controlled-approach entries by 3.43%. It is therefore a
+successful mechanical test and an unsuccessful production-performance test;
+the active production supply and manifest remain unchanged.
+
+The complementary PM mechanical sensitivity at
+`/mnt/DiskM/by/hk_stage11_traffic_signals_20260810_run4` completed iteration 0
+with exit code 0. Its 87,238 signal-state events also passed all runtime signal
+checks across 8 systems, 26 groups, and 32 active approaches. Its 30:00
+lost-agent counter was 10,180, versus 10,074 for AM iteration 0 and 8,738 for
+no-signal run57 iteration 0. AM and PM controller files are therefore both
+mechanically valid, but neither peak plan is adopted as an all-day schedule.
+
 ## Known limitations
 
 ### School-bus candidate outside production

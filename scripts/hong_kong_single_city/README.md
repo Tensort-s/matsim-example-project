@@ -842,6 +842,61 @@ The environment requires `xlrd>=2.0.1`. The road/PT supply builder
 automatically reapplies the generated route-direction attributes on subsequent
 rebuilds. See `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`.
 
+## Traffic-signal location registry
+
+Download the Transport Department Traffic Aids traffic-light layers and build
+the conservative OSM/official/MATSim-network fusion:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\data_acquisition\download_hong_kong_traffic_signal_data.py
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_traffic_signal_registry.py
+```
+
+The output is under
+`data/transit/hongkong/processed/hong_kong_traffic_signal_registry_2026_v1/`.
+It is a signal-location and candidate-controlled-link registry, not a signal
+timing plan and not yet an adopted MATSim signals input. See
+`docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md`.
+
+The MATSim pilot conversion is specified in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md`. It requires
+movement-level turn control, conflict and pedestrian-clearance records,
+evidence-labelled time-of-day plans, and an audit preventing signal capacity
+from being counted twice. The eight-junction AM/PM timing sheet is a pilot
+input only; it is not a city-wide timing template.
+
+Build the eight-junction vehicle-signal pilot on the current physical
+school-bus network, compile separate AM/PM MATSim inputs, and validate them:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_traffic_signal_pilot_v1.py `
+  --network .\data\transit\hongkong\processed\matsim_road_pt_school_bus_supply_2026_v6_adoption_ready\network.xml.gz
+
+.\mvnw.cmd -q `
+  '-Dexec.mainClass=org.matsim.project.hongkong.signals.BuildHongKongTrafficSignalPilot' `
+  '-Dexec.args=data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1 data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1/network_signal_capacity_deconvolved.xml.gz data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1/matsim_am am' `
+  org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+
+.\mvnw.cmd -q `
+  '-Dexec.mainClass=org.matsim.project.hongkong.signals.BuildHongKongTrafficSignalPilot' `
+  '-Dexec.args=data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1 data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1/network_signal_capacity_deconvolved.xml.gz data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v1/matsim_pm pm' `
+  org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\validate_hong_kong_traffic_signal_pilot_v1.py `
+  --source-network .\data\transit\hongkong\processed\matsim_road_pt_school_bus_supply_2026_v6_adoption_ready\network.xml.gz
+```
+
+The generated directory contains 8 junction systems, 62 movement signals, 26
+groups, AM/PM controls, capacity and conflict audits, and an explicit
+pedestrian-phase blocker table. It is ignored rebuildable data and is not the
+adopted production supply. Runtime activation additionally requires the
+runner's `--traffic-signals` flag.
+
 ## SimWrapper visualization
 
 Open the compact SimWrapper project for the final Ferry Core v1,
