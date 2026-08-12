@@ -615,6 +615,19 @@ individual topology/source review. Full paths and metrics remain in
 `docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`; the run manifest and current
 production supply are unchanged.
 
+The traffic-signal branch now has a separate materialized form of exactly
+these two repairs. Its scope, hashes, walk-only ordering requirement,
+Stage-1/1.5 rebuild, Top-100-by-96 rebuild, and mandatory no-signal equivalence
+gate are recorded in
+`docs/HONG_KONG_ROAD_HOTSPOT_MATERIALIZED_SIGNAL_BASELINE.md`. It deliberately
+excludes all run68 Car-origin/proxy-facility changes and does not alter the
+production inputs or enable signals by default. The order-preserving no-signal
+run7 passes practical equivalence to run62. Its paired signal run8 exits zero
+and passes all signal-state, physical-mode, and student-school-bus checks, but
+road delay rises 12.95% and road-vehicle stuck rises 3.52% versus run7.
+Accordingly this Top-100-by-96 signal controller is mechanically validated but
+not adopted; it remains an explicitly switchable sensitivity.
+
 A second opt-in sensitivity now addresses private-Car activity-link direction
 without enabling ordinary innovation. The run62 event audit exposes 15,078
 unique initial reverse transitions as `person_id + private_car_trip_ordinal`

@@ -686,3 +686,17 @@ all signal mechanics checks, but relative to no-signal run57 road delay rises
 7.65% and road-vehicle stuck rises 3.34%. Its status is therefore
 `top100_tod_15min_runtime_validated_performance_not_adopted`; it remains
 opt-in and does not change the production network or run manifest.
+
+The follow-on road-hotspot signal baseline is documented in
+`docs/HONG_KONG_ROAD_HOTSPOT_MATERIALIZED_SIGNAL_BASELINE.md`. It materializes
+only the two run62 repairs into independent network, plans, and transit-schedule
+inputs; it explicitly excludes run68 Car-origin work and preserves the two
+restricted links as walk-only. The order-preserving candidate11 has runtime
+XML files identical to candidate8 and adds mandatory Java validation plus
+complete source hashes; the earlier candidate5 also proved the topology and
+Top-100-by-96 signal-reference chain but is diagnostic because full XML
+reserialization changed runtime entity order. Candidate8's no-signal run7
+passes practical equivalence to run62. The paired signal run8 passes all
+mechanical and physical-mode checks but increases road delay 12.95% and road-
+vehicle stuck 3.52% versus run7. The signal controller is therefore not
+adopted and remains opt-in; production metadata is unchanged.

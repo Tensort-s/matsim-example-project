@@ -149,6 +149,25 @@ public final class HongKongRoadHotspotRepairV1 {
 				RESTRICTED_LINK_IDS.size(), activityReferences);
 	}
 
+	/**
+	 * Materialises exactly the already validated V1 mutation into independent
+	 * scenario input files.  This deliberately reuses {@link #apply(Scenario)}
+	 * so the offline candidate cannot drift from the run62 runtime semantics.
+	 */
+	public static RepairStats materialize(Scenario scenario) {
+		// Run62 enables physical Walk before applying this road repair.  An offline
+		// candidate is loaded before that runtime step, so preserve the resulting
+		// walk-only access explicitly instead of falling back to restricted_access.
+		for (Id<Link> linkId : RESTRICTED_LINK_IDS) {
+			Link link = scenario.getNetwork().getLinks().get(linkId);
+			if (link == null) throw new IllegalArgumentException("Missing audited restricted link " + linkId);
+			Set<String> modes = new LinkedHashSet<>(link.getAllowedModes());
+			modes.add("walk");
+			link.setAllowedModes(modes);
+		}
+		return apply(scenario);
+	}
+
 	private static Id<Link> nearestLink(
 			List<Id<Link>> linkIds, org.matsim.api.core.v01.Coord point, Network network) {
 		return linkIds.stream().min(Comparator.comparingDouble(linkId -> {

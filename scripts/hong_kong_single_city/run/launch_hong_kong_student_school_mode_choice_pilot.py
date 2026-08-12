@@ -60,6 +60,14 @@ def parse_args() -> argparse.Namespace:
         help="Apply the bounded two-link no-signal road repair.",
     )
     parser.add_argument(
+        "--materialized-road-hotspot-candidate",
+        type=Path,
+        help=(
+            "Independent candidate directory containing network.xml.gz, plans.xml.gz, "
+            "transitSchedule.xml.gz, transitVehicles.xml.gz and a validated summary."
+        ),
+    )
+    parser.add_argument(
         "--car-origin-anchor-observations",
         type=Path,
         help=(
@@ -124,6 +132,10 @@ def configure_physical_school_bus(path: Path) -> None:
 
 def main() -> int:
     args = parse_args()
+    if args.road_hotspot_repair_v1 and args.materialized_road_hotspot_candidate:
+        raise ValueError(
+            "A materialized road-hotspot candidate must not also enable the runtime repair"
+        )
     base = safe_server_path(args.base_release, must_exist=True)
     template = safe_server_path(args.config_template, must_exist=True)
     payload = safe_server_path(args.payload_root, must_exist=True)
@@ -134,6 +146,11 @@ def main() -> int:
         if args.car_origin_anchor_observations is not None
         else None
     )
+    materialized_candidate = (
+        safe_server_path(args.materialized_road_hotspot_candidate, must_exist=True)
+        if args.materialized_road_hotspot_candidate is not None
+        else None
+    )
     if release.exists() or run.exists():
         raise FileExistsError("Release and run roots must both be new directories")
 
@@ -142,17 +159,51 @@ def main() -> int:
     student_candidates = payload / "school_bus_plan_candidates_5pct_v6"
     household_candidates_name = "household_joint_plan_potential_candidates.csv"
     household_candidates = base / "input" / household_candidates_name
-    payload_files = {
-        supply / "network.xml.gz": "network.xml.gz",
-        supply / "transitSchedule_5pct_school_bus_v6.xml.gz": "transitSchedule_5pct.xml.gz",
-        supply / "transitVehicles_10pct_regular_school_bus_unscaled.xml.gz": "transitVehicles_10pct.xml.gz",
-    }
+    payload_files = (
+        {
+            materialized_candidate / "network.xml.gz": "network.xml.gz",
+            materialized_candidate / "transitSchedule.xml.gz": "transitSchedule_5pct.xml.gz",
+            materialized_candidate / "transitVehicles.xml.gz": "transitVehicles_10pct.xml.gz",
+            materialized_candidate / "plans.xml.gz":
+                "plans_routed_selective_5pct_taxi_44000_no_ride.xml.gz",
+        }
+        if materialized_candidate is not None
+        else {
+            supply / "network.xml.gz": "network.xml.gz",
+            supply / "transitSchedule_5pct_school_bus_v6.xml.gz": "transitSchedule_5pct.xml.gz",
+            supply / "transitVehicles_10pct_regular_school_bus_unscaled.xml.gz":
+                "transitVehicles_10pct.xml.gz",
+        }
+    )
     require_regular(base / "runtime/jdk-25/bin/java", executable=True)
     require_regular(template)
     require_regular(jar)
     require_regular(household_candidates)
     for source in payload_files:
         require_regular(source)
+    if materialized_candidate is not None:
+        validation = materialized_candidate / "materialization_validation.json"
+        require_regular(validation)
+        materialized_summary = json.loads(validation.read_text(encoding="utf-8"))
+        if materialized_summary.get("status") != "validated":
+            raise ValueError("Materialized road-hotspot candidate is not validated")
+        if materialized_summary.get("java_reference_validation") != "passed":
+            raise ValueError("Candidate must pass the full Java reference validation")
+        if materialized_summary.get("run68_car_origin_repairs") is not False:
+            raise ValueError("Candidate must explicitly exclude run68 Car-origin repairs")
+        candidate_checks = materialized_summary.get("checks")
+        if not isinstance(candidate_checks, dict) or not candidate_checks:
+            raise ValueError("Candidate validation must include explicit reference checks")
+        failed_candidate_checks = {
+            name: value for name, value in candidate_checks.items() if value != 0
+        }
+        if failed_candidate_checks:
+            raise ValueError(
+                "Materialized road-hotspot candidate failed reference checks: "
+                f"{failed_candidate_checks}"
+            )
+        if candidate_checks.get("restricted_links_not_walk_only") != 0:
+            raise ValueError("Candidate must preserve the run62 walk-only restriction semantics")
     for name in ("school_trip_universe_v6.csv", "school_bus_physical_route_candidates_v6.csv"):
         require_regular(student_candidates / name)
 
@@ -166,7 +217,7 @@ def main() -> int:
     for source, destination in payload_files.items():
         shutil.copy2(source, release / "input" / destination)
     release_candidates = release / "input/school_bus_plan_candidates_5pct_v6"
-    shutil.copytree(student_candidates, release_candidates)
+    shutil.copytree(student_candidates, release_candidates, dirs_exist_ok=True)
     (release / "app").mkdir()
     shutil.copy2(jar, release / "app" / jar.name)
     for name in ("home", "tmp", "logs"):
@@ -281,6 +332,12 @@ def main() -> int:
             "TimeAllocationMutator": 0.0,
         },
         "road_hotspot_repair_v1": args.road_hotspot_repair_v1,
+        "materialized_road_hotspot_candidate": (
+            str(materialized_candidate) if materialized_candidate is not None else None
+        ),
+        "runtime_road_hotspot_repair_disabled_for_materialized_candidate": (
+            materialized_candidate is not None and not args.road_hotspot_repair_v1
+        ),
         "road_hotspot_repair_scope": (
             ["road_261323_0_f", "road_261308_0_f"]
             if args.road_hotspot_repair_v1

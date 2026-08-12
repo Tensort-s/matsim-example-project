@@ -83,6 +83,32 @@ class HongKongRoadHotspotRepairV1Test {
 		}
 	}
 
+	@Test
+	void materializerUsesTheSameValidatedMutation() {
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Network network = scenario.getNetwork();
+		Node a = node(network, "a", 0);
+		Node b = node(network, "b", 1);
+		Node c = node(network, "c", 2);
+		Node d = node(network, "d", 3);
+		Node e = node(network, "e", 4);
+		link(network, "road_261323_0_f", a, b, 10);
+		link(network, "road_105124_0_f", a, b, 12);
+		link(network, "road_261308_0_f", c, d, 10);
+		link(network, "detour1", c, e, 6);
+		link(network, "detour2", e, d, 6);
+
+		var stats = HongKongRoadHotspotRepairV1.materialize(scenario);
+
+		assertEquals(List.of(Id.createLinkId("road_105124_0_f")),
+				stats.replacementPaths().get(Id.createLinkId("road_261323_0_f")));
+		assertEquals(List.of(Id.createLinkId("detour1"), Id.createLinkId("detour2")),
+				stats.replacementPaths().get(Id.createLinkId("road_261308_0_f")));
+		for (Id<Link> linkId : HongKongRoadHotspotRepairV1.RESTRICTED_LINK_IDS) {
+			assertEquals(Set.of("walk"), network.getLinks().get(linkId).getAllowedModes());
+		}
+	}
+
 	private static Node node(Network network, String id, double x) {
 		NetworkFactory factory = network.getFactory();
 		Node node = factory.createNode(Id.createNodeId(id), new Coord(x, 0));
