@@ -182,3 +182,11 @@ logic, evidence-classed time-of-day plans, and an approach-capacity audit
 before any registry group is activated. The eight-junction public timing
 example is retained as an observed-partial pilot; its stage durations are not
 treated as pure green times or generalized into a Hong Kong-wide default.
+
+The subsequent territory-wide Stage-1 candidate is documented in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TPDM_PROXY_V3.md`. It uses this unchanged
+2,054-group universe to recover physical movements, planned 15-minute demand
+`q`, observed approach-flow comparisons, and separately calculated
+approach-level TPDM saturation flow `S`. Its status is
+`territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it creates or
+activates no signal stages, timing plans, controllers, or MATSim signal XML.

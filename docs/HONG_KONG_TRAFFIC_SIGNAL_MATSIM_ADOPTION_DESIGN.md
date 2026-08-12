@@ -485,6 +485,13 @@ advance that all remaining PT timing or road-stuck errors are signal-related.
 
 ## Current freeze and no-signal road audit
 
+The territory-wide pre-controller Stage-1 movement/demand/saturation candidate
+is documented separately in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TPDM_PROXY_V3.md`. Its status is
+`territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it deliberately stops
+before conflict grouping, stages, cycles, green splits, offsets, controllers,
+signal XML, or simulation.
+
 City-wide signal expansion remains frozen after the AM/PM mechanical
 sensitivities. The bounded v2 diagram-correction work above does not expand
 the active spatial scope beyond one high-confidence test junction.

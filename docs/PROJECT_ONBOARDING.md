@@ -658,7 +658,12 @@ transcription of the published arrows. The independent
 `pilot_v2_diagram_inferred` audit initially activates only `TS_K006` with 4
 non-U-turn movement signals and 3 diagram-derived groups; 7 examples remain
 deferred. The generic launcher can accept v2 only when it is explicitly staged
-as the signal payload; no v2 runtime or production adoption exists. City-wide
+as the signal payload; no v2 runtime or production adoption exists. The
+territory-wide Stage-1 movement registry, planned 15-minute demand `q`,
+observed approach-flow comparisons, and approach TPDM saturation proxy `S` are
+documented in `docs/HONG_KONG_TRAFFIC_SIGNAL_TPDM_PROXY_V3.md`. Its status is
+`territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it creates no stage,
+timing, controller, signal XML, or production configuration change. City-wide
 traffic-signal expansion is currently frozen while the
 fixed-route run57 road topology, congestion, stuck vehicles, and path
 anomalies are reviewed in
