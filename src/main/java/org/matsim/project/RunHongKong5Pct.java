@@ -27,6 +27,9 @@ import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
 import org.matsim.project.hongkong.pt.HongKongOrdinaryPtRaptorModule;
+import org.matsim.project.hongkong.road.HongKongRoadHotspotRepairV1;
+import org.matsim.project.hongkong.road.HongKongCarOriginAnchorObservationCatalog;
+import org.matsim.project.hongkong.road.HongKongCarOriginAnchorRepairModule;
 import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
 import org.matsim.project.hongkong.schoolbus.SchoolBusPassengerPhysicalEngine;
 import org.matsim.project.hongkong.schoolbus.SchoolBusPassengerPhysicalQSimModule;
@@ -64,6 +67,8 @@ public final class RunHongKong5Pct {
 						+ "[--student-school-mode-candidates=<directory>] "
 						+ "[--physical-nontaxi-modes] [--unlimited-ordinary-pt-capacity] "
 						+ "[--traffic-signals]"
+						+ " [--road-hotspot-repair-v1]"
+						+ " [--car-origin-anchor-observations=<path>]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -74,6 +79,7 @@ public final class RunHongKong5Pct {
 		boolean unlimitedOrdinaryPtCapacity = Arrays.asList(args)
 				.contains("--unlimited-ordinary-pt-capacity");
 		boolean trafficSignals = Arrays.asList(args).contains("--traffic-signals");
+		boolean roadHotspotRepairV1 = Arrays.asList(args).contains("--road-hotspot-repair-v1");
 		boolean householdEscortJointReRoute = Arrays.asList(args)
 				.contains("--household-escort-joint-reroute");
 		boolean householdEscortMaxUtility = Arrays.asList(args)
@@ -83,6 +89,7 @@ public final class RunHongKong5Pct {
 		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
 		Path householdJointPlanCandidates = optionPath(args, "--household-joint-plan-candidates=");
 		Path studentSchoolModeCandidates = optionPath(args, "--student-school-mode-candidates=");
+		Path carOriginAnchorObservations = optionPath(args, "--car-origin-anchor-observations=");
 		if (multimodalCosts && (ptFareRoot == null || carCostRoot == null)) {
 			throw new IllegalArgumentException(
 					"--multimodal-costs requires both --pt-fare-root and --car-cost-root.");
@@ -110,6 +117,15 @@ public final class RunHongKong5Pct {
 		if (householdJointPlanCandidates != null && !dynamicCarCosts) {
 			throw new IllegalArgumentException(
 					"--household-joint-plan-candidates requires --multimodal-costs --dynamic-car-costs.");
+		}
+		if (carOriginAnchorObservations != null && !dynamicCarCosts) {
+			throw new IllegalArgumentException(
+					"--car-origin-anchor-observations requires --multimodal-costs --dynamic-car-costs.");
+		}
+		if (carOriginAnchorObservations != null && householdJointPlanCandidates == null
+				&& householdEscortBindings == null) {
+			throw new IllegalArgumentException(
+					"Car origin-anchor repair requires a household binding catalog so joint driver legs can be guarded.");
 		}
 		if (householdJointPlanCandidates != null
 				&& (householdEscortBindings != null || householdEscortJointReRoute
@@ -214,6 +230,17 @@ public final class RunHongKong5Pct {
 					walkLinks, walkStats.clearedWalkRoutes(), walkStats.normalizedTransitLegs(),
 					walkStats.transitTrips());
 		}
+		if (roadHotspotRepairV1) {
+			var stats = HongKongRoadHotspotRepairV1.apply(scenario);
+			System.out.printf(
+					"Applied bounded no-signal road-hotspot repair: restrictedLinks=%,d, "
+							+ "populationRoutes=%,d, transitRoutes=%,d, remappedStops=%,d, "
+							+ "remappedActivities=%,d, "
+							+ "replacements=%s.%n",
+					stats.restrictedLinks(), stats.repairedPopulationRoutes(),
+					stats.repairedTransitRoutes(), stats.remappedTransitStops(),
+					stats.activityReferences(), stats.replacementPaths());
+		}
 		HouseholdEscortBindingCatalog householdEscortCatalog = householdEscortBindings == null
 				? (householdJointPlanCandidates == null ? null : HouseholdEscortBindingCatalog.empty())
 				: HouseholdEscortBindingCatalog.load(householdEscortBindings, scenario);
@@ -222,6 +249,9 @@ public final class RunHongKong5Pct {
 		StudentSchoolModeCandidateCatalog studentSchoolCatalog = studentSchoolModeCandidates == null
 				? StudentSchoolModeCandidateCatalog.empty()
 				: StudentSchoolModeCandidateCatalog.load(studentSchoolModeCandidates);
+		HongKongCarOriginAnchorObservationCatalog carOriginAnchorCatalog =
+				carOriginAnchorObservations == null ? null
+						: HongKongCarOriginAnchorObservationCatalog.load(carOriginAnchorObservations);
 		if (studentSchoolCatalog.enabled()) {
 			if (!config.transit().getTransitModes().contains("school_bus")) {
 				throw new IllegalArgumentException(
@@ -333,6 +363,14 @@ public final class RunHongKong5Pct {
 					+ "%s.%n",
 					householdJointCatalog.candidates().size(), householdJointPlanCandidates,
 					studentSchoolCatalog.enabled() ? "pt|taxi|walk|school_bus(unlimited)" : "disabled");
+		}
+		if (carOriginAnchorCatalog != null) {
+			controler.addOverridingModule(
+					new HongKongCarOriginAnchorRepairModule(carOriginAnchorCatalog));
+			System.out.printf(
+					"Enabled bounded private-Car origin-anchor audit/repair for %,d observed initial reverses; "
+							+ "active household waypoint legs are guarded.%n",
+					carOriginAnchorCatalog.observations().size());
 		}
 		if (householdEscortJointReRoute) {
 			controler.addOverridingModule(new HouseholdEscortJointReRouteModule(householdEscortCatalog));

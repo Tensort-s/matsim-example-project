@@ -7,6 +7,7 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.vehicles.Vehicle;
+import org.matsim.project.hongkong.road.HongKongCarOriginAnchorRepair;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -240,7 +241,8 @@ public final class HongKongDynamicCarCostRules {
 			String activityType,
 			double arrivalTimeS,
 			double departureTimeS) {
-		String facility = requireText(destinationFacilityId, "destinationFacilityId");
+		String facility = canonicalParkingFacilityId(
+				requireText(destinationFacilityId, "destinationFacilityId"));
 		String group = activityGroup(activityType);
 		Integer zone = tcsZoneByFacility.get(facility);
 		if (zone == null) {
@@ -305,7 +307,15 @@ public final class HongKongDynamicCarCostRules {
 
 	public boolean hasParkingZone(String destinationFacilityId) {
 		return destinationFacilityId != null
-				&& tcsZoneByFacility.containsKey(destinationFacilityId);
+				&& tcsZoneByFacility.containsKey(canonicalParkingFacilityId(destinationFacilityId));
+	}
+
+	/** Resolves a person/activity-specific routing proxy to its adopted parking facility. */
+	public static String canonicalParkingFacilityId(String destinationFacilityId) {
+		String facility = requireText(destinationFacilityId, "destinationFacilityId");
+		int marker = facility.indexOf(HongKongCarOriginAnchorRepair.FACILITY_PROXY_DELIMITER);
+		return marker < 0 ? facility : requireText(
+				facility.substring(0, marker), "canonicalDestinationFacilityId");
 	}
 
 	private double tollAt(String facility, double timeS) {

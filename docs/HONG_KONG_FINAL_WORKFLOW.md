@@ -563,6 +563,81 @@ lost-agent counter was 10,180, versus 10,074 for AM iteration 0 and 8,738 for
 no-signal run57 iteration 0. AM and PM controller files are therefore both
 mechanically valid, but neither peak plan is adopted as an all-day schedule.
 
+The eight-junction package above is now a historical `pilot_v1` mechanical
+baseline because its conflict-graph colouring did not read the Stage A/B/C/D
+arrows as movement evidence. The independent
+`hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred` package corrects
+that modelling boundary. It audits all eight source diagrams but initially
+compiles only `TS_K006` (Nathan Road / Jordan Road), the sole example where a
+high-confidence diagram interpretation is also faithfully enforceable by the
+current first-connector topology. Its 4 non-U-turn movement signals form 3
+diagram-derived groups over the observed `64/34/32` AM and PM stages; only 4
+approach capacities change. The other 7 intersections are explicitly deferred
+for clearer movement evidence or lane-level connector reconstruction. Static
+AM/PM validation passes. The generic signal launcher can now read v2's own
+build summary when v2 is deliberately staged as its payload, but no v2 runtime
+has been launched; it does not change the adopted network, city metadata, or
+run manifest.
+
+Traffic-signal expansion is now frozen without reverting the opt-in pilot.
+The fixed-plan, no-signal run57 iteration-1 road audit is documented in
+`docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`. It excludes 12,892 ordinary
+PT-passenger stuck/waiting events and separately identifies 2,307 road-vehicle
+stuck events, 62,669.620 vehicle-hours of road delay, a 97.7735% largest road
+strong-component node share, and concentrated path/topology candidates. The
+active production supply and run manifest remain unchanged; the next road
+work is fixed-supply repair and a paired no-signal/no-innovation rerun, not
+signal expansion or combined behavioural innovation.
+
+That first paired sensitivity is now complete as run62. The opt-in
+`--road-hotspot-repair-v1` redirects only two audited service-road shortcuts
+and synchronises affected population routes, transit vehicle routes, stops,
+and activities. Against run57, iteration-1 road delay falls 15.73% and road-
+vehicle stuck falls 17.77%. This result is not adopted into the production
+network: a residual 1,649.21 vehicle-hour queue remains at the Tate's Cairn
+three-lane-to-two-one-lane fork, and persistent short-connector locations need
+individual topology/source review. Full paths and metrics remain in
+`docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`; the run manifest and current
+production supply are unchanged.
+
+A second opt-in sensitivity now addresses private-Car activity-link direction
+without enabling ordinary innovation. The run62 event audit exposes 15,078
+unique initial reverse transitions as `person_id + private_car_trip_ordinal`
+observations. `--car-origin-anchor-observations=<csv>` compares the current and
+exact reverse-direction anchors with complete production Car routes, jointly
+including the previous Car arrival at middle activities, walking access,
+travel time, and the shared dynamic energy/toll rules. Only nearby, non-tolled,
+non-expressway high-confidence candidates that remove the departure reversal
+without creating an arrival reversal are applied. A per-activity proxy
+facility keeps the corrected routing link stable under later `ReRoute`, while
+dynamic parking canonicalises it to the original facility/TCS-zone identity.
+Active household joint driver and passenger legs on either side of the shared
+activity anchor are guarded because their stored NetworkRoutes contain
+physical passenger pickup/drop-off waypoints. Run63 and run64 are retained as
+invalid zero-application diagnostics: the former exposed an overly strict
+new-Car-tour test, and the latter exposed an incorrect facility requirement
+for facility-free departure activities. Run65 validates 1,708 direct Car
+anchor changes with all 3,956 bindings preserved and lost agents reduced from
+5,890 to 3,270. The stage-aware run66 also rebuilds the physical Walk access
+leg that feeds a `car interaction` anchor. Run66 exposed and rejects a mixed
+stage-leg `routingMode` installation; run67 preserves the enclosing Car trip's
+routing mode while replacing the physical Walk NetworkRoute. Run67 then
+exposed later-tour parking continuity: a non-adjacent earlier Car arrival must
+not be moved independently from the later departure. Run68 restricts automatic
+application to the first daily Car leg or a truly adjacent Car-arrival/
+departure pair. Detailed
+acceptance results are
+documented in
+`docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`. Run68 applies 4,633 bounded
+repairs while preserving all 3,956 active household bindings and zero dynamic-
+parking facility mismatches. The independent event audit reduces realised
+initial private-Car reversals from 15,078 to 10,435 and total road delay by
+8.2%, but records 33 more unfinished private-Car trips and 17 fewer completed
+joint bindings than run62. It is therefore the accepted bounded-v1
+sensitivity implementation, while remaining outside the production network
+and run manifest. No internal turn restriction is adopted without an OSM or
+official junction-layout evidence source.
+
 ## Known limitations
 
 ### School-bus candidate outside production

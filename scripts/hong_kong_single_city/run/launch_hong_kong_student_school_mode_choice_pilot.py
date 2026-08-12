@@ -54,6 +54,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--payload-root", type=Path, required=True)
     parser.add_argument("--release-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
+    parser.add_argument(
+        "--road-hotspot-repair-v1",
+        action="store_true",
+        help="Apply the bounded two-link no-signal road repair.",
+    )
+    parser.add_argument(
+        "--car-origin-anchor-observations",
+        type=Path,
+        help=(
+            "Event-derived initial private-Car reverse transitions. When supplied, "
+            "iteration 1 audits and applies only high-confidence direction repairs."
+        ),
+    )
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="96g")
     return parser.parse_args()
@@ -116,6 +129,11 @@ def main() -> int:
     payload = safe_server_path(args.payload_root, must_exist=True)
     release = safe_server_path(args.release_root, must_exist=False)
     run = safe_server_path(args.run_root, must_exist=False)
+    car_anchor_observations = (
+        safe_server_path(args.car_origin_anchor_observations, must_exist=True)
+        if args.car_origin_anchor_observations is not None
+        else None
+    )
     if release.exists() or run.exists():
         raise FileExistsError("Release and run roots must both be new directories")
 
@@ -153,6 +171,12 @@ def main() -> int:
     shutil.copy2(jar, release / "app" / jar.name)
     for name in ("home", "tmp", "logs"):
         (release / name).mkdir()
+    release_car_anchor_observations = None
+    if car_anchor_observations is not None:
+        release_car_anchor_observations = (
+            release / "input/initial_private_car_uturn_events.csv"
+        )
+        shutil.copy2(car_anchor_observations, release_car_anchor_observations)
 
     run.mkdir()
     config = run / "config_stage11_student_school_mode_it0_it1.xml"
@@ -187,6 +211,12 @@ def main() -> int:
         "--physical-nontaxi-modes",
         "--unlimited-ordinary-pt-capacity",
     ]
+    if args.road_hotspot_repair_v1:
+        command.append("--road-hotspot-repair-v1")
+    if release_car_anchor_observations is not None:
+        command.append(
+            f"--car-origin-anchor-observations={release_car_anchor_observations}"
+        )
     worker = run / "worker.sh"
     worker.write_text(
         "#!/usr/bin/env bash\n"
@@ -205,7 +235,15 @@ def main() -> int:
     )
     worker.chmod(worker.stat().st_mode | stat.S_IXUSR)
     metadata = {
-        "objective": "Stage 11 no-innovation integrated physical Car/PT/Walk/school-bus/car-passenger validation",
+        "objective": (
+            "Stage 11 no-signal private-Car origin-anchor repair validation"
+            if car_anchor_observations is not None
+            else (
+                "Stage 11 no-signal bounded road-hotspot repair validation"
+                if args.road_hotspot_repair_v1
+                else "Stage 11 no-innovation integrated physical Car/PT/Walk/school-bus/car-passenger validation"
+            )
+        ),
         "base_release": str(base),
         "release_root": str(release),
         "run_root": str(run),
@@ -242,6 +280,18 @@ def main() -> int:
             "SubtourModeChoice": 0.0,
             "TimeAllocationMutator": 0.0,
         },
+        "road_hotspot_repair_v1": args.road_hotspot_repair_v1,
+        "road_hotspot_repair_scope": (
+            ["road_261323_0_f", "road_261308_0_f"]
+            if args.road_hotspot_repair_v1
+            else []
+        ),
+        "car_origin_anchor_observations": (
+            str(car_anchor_observations)
+            if car_anchor_observations is not None
+            else None
+        ),
+        "car_origin_anchor_joint_binding_guard": True,
         "command": command,
         "started_at": datetime.now(timezone.utc).astimezone().isoformat(),
     }

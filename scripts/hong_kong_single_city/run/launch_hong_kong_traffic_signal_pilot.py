@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch a new no-innovation Stage 11 run with the eight-junction signal pilot."""
+"""Launch a new no-innovation Stage 11 run with a validated signal pilot."""
 
 from __future__ import annotations
 
@@ -115,12 +115,19 @@ def main() -> int:
     pilot = payload / "traffic_signal_pilot"
     pilot_network = pilot / "network_signal_capacity_deconvolved.xml.gz"
     pilot_signals = pilot / f"matsim_{args.period}"
+    pilot_summary_file = pilot / "pilot_build_summary.json"
     require_regular(base / "runtime/jdk-25/bin/java", executable=True)
     require_regular(template)
     require_regular(jar)
     require_regular(pilot_network)
+    require_regular(pilot_summary_file)
     for name in SIGNAL_FILENAMES:
         require_regular(pilot_signals / name)
+    pilot_summary = json.loads(pilot_summary_file.read_text(encoding="utf-8"))
+    pilot_version = pilot_summary.get("pilot_version", "pilot_v1_historical")
+    active_junctions = pilot_summary.get(
+        "active_junction_count", pilot_summary.get("junction_count")
+    )
 
     release.mkdir()
     shutil.copytree(base / "runtime", release / "runtime", symlinks=True)
@@ -198,28 +205,29 @@ def main() -> int:
     )
     worker.chmod(worker.stat().st_mode | stat.S_IXUSR)
     metadata = {
-        "objective": "Eight-junction traffic-signal integrated physical-mode mechanical gate",
+        "objective": f"{pilot_version} traffic-signal integrated physical-mode mechanical gate",
+        "pilot_version": pilot_version,
         "evidence_period": args.period,
-        "evidence_class": "observed_partial_timing_with_geometry_inferred_movement_mapping",
-        "junctions": 8,
-        "signal_movements": 62,
-        "controlled_approach_links": 32,
-        "amber_s": 3,
-        "red_amber_s": 2,
-        "minimum_intergreen_s": 5,
-        "controller_onset_gap_s": 6,
+        "stage_mapping_status": pilot_summary.get("stage_mapping_status", "unspecified"),
+        "junctions": active_junctions,
+        "active_junctions": active_junctions,
+        "signal_movements": pilot_summary.get("signal_movement_count"),
+        "controlled_approach_links": pilot_summary.get("controlled_approach_link_count"),
+        "amber_s": pilot_summary.get("amber_s"),
+        "red_amber_s": pilot_summary.get("red_amber_s"),
+        "minimum_intergreen_s": pilot_summary.get("minimum_intergreen_s"),
+        "controller_onset_gap_s": pilot_summary.get("controller_onset_gap_s"),
         "timing_semantics": (
             "MATSim event intergreen = configured onset gap + redAmber - amber"
         ),
-        "capacity_treatment": "32 final approach links replaced by TPDM saturation proxy",
-        "hash_gate_used": False,
+        "capacity_treatment": "audited final approach links replaced by TPDM saturation proxy",
         "base_release": str(base),
         "release_root": str(release),
         "run_root": str(run),
         "last_iteration": args.last_iteration,
         "ordinary_innovation": "frozen; KeepLastSelected only",
         "runtime_conflict_boundary": (
-            "multi-node physical junction clusters use fixed conflict-free stage separation; "
+            "multi-node physical junction clusters use audited fixed-stage separation; "
             "no fabricated single-node conflictingDirections file"
         ),
         "command": command,

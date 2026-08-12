@@ -111,6 +111,7 @@ docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
 docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md
 docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md
 docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md
+docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md
 ```
 
 When a historical command or path conflicts with the Hong Kong final workflow,
@@ -651,4 +652,15 @@ design is in `docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md`. The
 2,054-location registry is adoption-ready only as a spatial registry; traffic
 signals are not enabled in the production scenario. They are available only
 through the explicit Stage 11 `--traffic-signals` pilot path documented in the
-adoption design.
+adoption design. The former eight-junction `pilot_v1` is retained only as a
+historical mechanical baseline: its conflict-graph stage colouring was not a
+transcription of the published arrows. The independent
+`pilot_v2_diagram_inferred` audit initially activates only `TS_K006` with 4
+non-U-turn movement signals and 3 diagram-derived groups; 7 examples remain
+deferred. The generic launcher can accept v2 only when it is explicitly staged
+as the signal payload; no v2 runtime or production adoption exists. City-wide
+traffic-signal expansion is currently frozen while the
+fixed-route run57 road topology, congestion, stuck vehicles, and path
+anomalies are reviewed in
+`docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`; ordinary PT passengers left
+waiting at stops are explicitly outside that road audit.

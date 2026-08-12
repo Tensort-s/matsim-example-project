@@ -297,9 +297,9 @@ The first adopted signal supply must meet all of the following:
 - PT waits, vehicle stuck counts, approach queues, and journey times reported
   by mode and junction, rather than summarized only as a successful exit code.
 
-## Implemented pilot v1
+## Historical pilot v1
 
-The versioned `hong_kong_traffic_signals_2026_pilot_v1` package now implements
+The versioned `hong_kong_traffic_signals_2026_pilot_v1` package implemented
 the vehicle-control portion of Gates A--D. Its builder recovers each physical
 junction as a connected micro-node cluster, identifies 32 final approach
 links, enumerates 62 explicit `fromLink -> toLink` movements, and uses a
@@ -341,6 +341,15 @@ and marks crossing geometry, demand logic, and pedestrian stages as missing
 production-adoption blockers. Physical Walk therefore remains outside this
 vehicle-signal pilot's controlled pedestrian phases.
 
+Pilot v1 is retained as a historical mechanical-integration baseline, but its
+movement-to-stage mapping is no longer an acceptable diagram interpretation.
+It assigned network movements to the observed number of stages with conflict-
+graph colouring. That proves a conflict-free colouring exists; it does not
+prove that Stage A/B/C/D releases the arrows drawn in the source diagram. It
+also emitted direct reverse connectors as U-turn movements even though the
+example diagrams do not draw those U-turns. No new signal run should use v1
+as movement truth.
+
 Implementation entry points are:
 
 ```text
@@ -350,6 +359,67 @@ scripts/hong_kong_single_city/transit_supply/validate_hong_kong_traffic_signal_p
 scripts/hong_kong_single_city/run/launch_hong_kong_traffic_signal_pilot.py
 scripts/hong_kong_single_city/analysis_visualization/audit_hong_kong_traffic_signal_run.py
 ```
+
+## Pilot v2: diagram-inferred high-confidence release
+
+`hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred` replaces graph
+colouring with an explicit diagram registry. Published arrows are transcribed
+as permitted vehicle movements, and a junction is executable only when the
+current MATSim first-connector topology can enforce the same boundary. The
+registry separately records diagram confidence, network-expression
+confidence, activation status, and deferral reason. This first v2 release
+audits all eight examples but activates only `TS_K006`, Nathan Road / Jordan
+Road:
+
+- Stage A releases both Jordan Road approaches and their shown non-U-turn
+  movements;
+- Stage B releases the Nathan Road northbound approach and its shown non-U-turn
+  movements;
+- Stage C releases the Nathan Road southbound approach and its shown non-U-turn
+  movements;
+- four direct reverse connectors are excluded because no U-turn is drawn.
+
+At this junction, the diagram phases are complete approach bundles in the
+current micro-node network. Four `fromLink -> first internal connector`
+signals therefore represent all `ahead|left|right` exits without claiming
+lane-level precision. They form three signal groups. Both AM and PM use the
+observed 130-second `64/34/32` split, 3-second amber, 2-second red+amber and a
+5-second event-level intergreen. Only the four final approach capacities are
+deconvolved.
+
+The other seven examples are not silently approximated. `TS_K005` and
+`TS_K201` have high-confidence diagram features, including protected turns or
+greens continuing across adjacent stages, but their present first connectors
+also admit movements that the diagram withholds. `TS_K008`, `TS_K118`,
+`TS_K024`, `TS_K101`, and `TS_K025` need clearer arrow evidence, additional
+approach recovery, or lane-level connector reconstruction. They remain in
+`diagram_stage_inference.csv` and `deferred_junctions.csv`, but cannot enter
+the compiled signal files.
+
+The v2 compiler reads `signal_group_stage_windows.csv`, rather than assuming
+one group per stage. A group may therefore remain green through contiguous
+stages such as `B|C`, and a stage may contain no vehicle group when later
+evidence identifies a pedestrian-only or all-red stage. The current first
+release does not need either case, but the representation no longer prevents
+them. Static validation passes for one system, four signals, three groups,
+four capacity-only network changes, no active U-turn, no blocking shared-green
+pair, and a minimum 5-second event-level intergreen in both periods.
+
+Implementation entry points are:
+
+```text
+scripts/hong_kong_single_city/transit_supply/build_hong_kong_traffic_signal_pilot_v2_diagram_inferred.py
+src/main/java/org/matsim/project/hongkong/signals/BuildHongKongTrafficSignalPilotV2.java
+scripts/hong_kong_single_city/transit_supply/validate_hong_kong_traffic_signal_pilot_v2_diagram_inferred.py
+```
+
+This is an independent, ignored rebuildable pilot. It does not replace the
+production network and does not change `city.yaml` or the run manifest. The
+generic `--traffic-signals` launcher now reads the staged pilot's build summary
+instead of hard-coding v1 counts, so a payload explicitly staged as
+`traffic_signal_pilot` can select v2 without mislabelling it. No v2 runtime has
+yet been launched; adoption still requires an explicit v2 payload and a
+one-iteration gate.
 
 `RunHongKong5Pct` exposes an explicit `--traffic-signals` opt-in. Runs without
 that flag remain unchanged. Signal runs load the MATSim signals contrib and
@@ -412,3 +482,17 @@ This order deliberately separates physical location recovery, controller
 inference, capacity calibration, and behavioral innovation. It permits traffic
 signals to explain part of the present early-arrival bias without presuming in
 advance that all remaining PT timing or road-stuck errors are signal-related.
+
+## Current freeze and no-signal road audit
+
+City-wide signal expansion remains frozen after the AM/PM mechanical
+sensitivities. The bounded v2 diagram-correction work above does not expand
+the active spatial scope beyond one high-confidence test junction.
+The pilot implementation and explicit `--traffic-signals` opt-in remain in
+place; no-signal runs still omit the feature without reverting code or data.
+Before another signal run, the fixed-route no-signal run57 road layer is being
+reviewed independently for queue concentration, road-vehicle stuck events,
+turn legality, route loops, short-link storage, and disconnected fragments.
+The final event-level result and repair order are in
+`docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`. Ordinary PT passengers left
+waiting at stops are explicitly excluded from those road findings.

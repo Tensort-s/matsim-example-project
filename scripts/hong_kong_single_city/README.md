@@ -894,8 +894,38 @@ F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
 The generated directory contains 8 junction systems, 62 movement signals, 26
 groups, AM/PM controls, capacity and conflict audits, and an explicit
 pedestrian-phase blocker table. It is ignored rebuildable data and is not the
-adopted production supply. Runtime activation additionally requires the
-runner's `--traffic-signals` flag.
+adopted production supply. This v1 package is now historical because its stage
+membership came from conflict-graph colouring rather than the arrows drawn in
+the source diagram. Runtime activation additionally requires the runner's
+`--traffic-signals` flag, which still points to this historical v1 package.
+
+Build and validate the bounded diagram-inferred v2 package:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_traffic_signal_pilot_v2_diagram_inferred.py
+
+.\mvnw.cmd -q `
+  '-Dexec.mainClass=org.matsim.project.hongkong.signals.BuildHongKongTrafficSignalPilotV2' `
+  '-Dexec.args=data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred/network_signal_capacity_deconvolved.xml.gz data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred/matsim_am am' `
+  org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+
+.\mvnw.cmd -q `
+  '-Dexec.mainClass=org.matsim.project.hongkong.signals.BuildHongKongTrafficSignalPilotV2' `
+  '-Dexec.args=data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred/network_signal_capacity_deconvolved.xml.gz data/transit/hongkong/processed/hong_kong_traffic_signals_2026_pilot_v2_diagram_inferred/matsim_pm pm' `
+  org.codehaus.mojo:exec-maven-plugin:3.5.0:java
+
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\validate_hong_kong_traffic_signal_pilot_v2_diagram_inferred.py
+```
+
+v2 audits all eight diagrams but initially compiles only `TS_K006` (Nathan
+Road / Jordan Road): 4 non-U-turn movement signals, 3 diagram-derived groups,
+and 4 capacity-deconvolved approaches. The other 7 examples remain explicit
+deferred records. The generated package is ignored rebuildable data, has not
+yet had a runtime test, and is selected only when it is explicitly staged as
+the launcher's `traffic_signal_pilot` payload. The launcher reads the staged
+build summary, so v2 runs are not labelled with historical v1 counts.
 
 ## SimWrapper visualization
 
