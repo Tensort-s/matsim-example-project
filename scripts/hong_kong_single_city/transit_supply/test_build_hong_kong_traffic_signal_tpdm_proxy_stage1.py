@@ -51,6 +51,17 @@ class Stage1UnitTest(unittest.TestCase):
             [(('internal_a',), 'exit_a'), (('internal_b',), 'exit_b')],
         )
 
+    def test_reverse_exit_is_registered_before_internal_loop_filter(self) -> None:
+        approach = link("approach", "outside_w", "n0")
+        reverse_exit = link("reverse_exit", "n0", "outside_w")
+        outgoing = defaultdict(list)
+        outgoing["n0"].append(reverse_exit)
+        paths, truncated = enumerate_paths(
+            approach, {"n0"}, outgoing, max_internal_links=4, max_paths=10
+        )
+        self.assertFalse(truncated)
+        self.assertEqual([(sequence, item.link_id) for sequence, item in paths], [((), "reverse_exit")])
+
     def test_excluded_u_turn_never_enters_demand_matcher(self) -> None:
         base = {
             "from_link_id": "from", "internal_link_sequence": "inside",
@@ -61,7 +72,7 @@ class Stage1UnitTest(unittest.TestCase):
         ])
         self.assertNotIn("from", matcher)
         matcher = movement_matcher([
-            {**base, "legal_status": "unresolved", "demand_match_status": "excluded_shared_physical_path_between_registry_groups"},
+            {**base, "legal_status": "unresolved", "demand_match_status": "excluded_unresolved_shared_physical_path"},
         ])
         self.assertNotIn("from", matcher)
 
@@ -73,7 +84,7 @@ class Stage1UnitTest(unittest.TestCase):
         registry = [row for row in read_csv(registry_path) if row["signal_junction_id"] == "TS_K006"]
         candidates = [row for row in read_csv(candidate_path) if row["signal_junction_id"] == "TS_K006"]
         _, nodes, links = parse_network(DEFAULT_NETWORK)
-        _, _, _, _, _, regression = build_topology(
+        _, _, _, _, _, _, _, regression = build_topology(
             registry, candidates, nodes, links, max_internal_links=12, max_paths=2048
         )
         self.assertEqual(regression["status"], "pass")
@@ -104,6 +115,9 @@ class Stage1UnitTest(unittest.TestCase):
             "approach_flow_anchor_audit.csv", "approach_saturation_flow.csv",
             "saturation_flow_assumption_audit.csv", "stage1_qa_summary.json",
             "stage1_coverage_by_confidence.csv", "stage1_metadata.json",
+            "junction_seed_recovery_audit.csv",
+            "shared_physical_path_ownership_audit.csv",
+            "junction_network_repair_action_audit.csv",
         }
         self.assertTrue(all((DEFAULT_OUTPUT / name).exists() for name in required))
         movements = read_csv(DEFAULT_OUTPUT / "signal_movements.csv")
@@ -119,6 +133,9 @@ class Stage1UnitTest(unittest.TestCase):
             qa = json.load(stream)
         self.assertFalse(qa["stage_boundary"]["forbidden_outputs_created"])
         self.assertEqual(qa["ts_k006_v2_regression"]["status"], "pass")
+        self.assertLessEqual(qa["junction_coverage"]["completely_unexpressed"], 23)
+        self.assertLessEqual(qa["movement_topology"]["shared_path_signature_unresolved_count"], 44)
+        self.assertLessEqual(qa["movement_topology"]["topology_ambiguous_junction_count"], 102)
 
 
 if __name__ == "__main__":

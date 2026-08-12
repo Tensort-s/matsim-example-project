@@ -190,3 +190,7 @@ The subsequent territory-wide Stage-1 candidate is documented in
 approach-level TPDM saturation flow `S`. Its status is
 `territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it creates or
 activates no signal stages, timing plans, controllers, or MATSim signal XML.
+The bounded Stage 1.5 reconciliation retains all 2,054 groups, uses the
+registry's primary-node record for explicitly constrained seed recovery, and
+records unresolved shared-path ownership and possible common-network repairs
+without silently merging or deleting junctions.

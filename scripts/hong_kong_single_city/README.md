@@ -927,6 +927,15 @@ yet had a runtime test, and is selected only when it is explicitly staged as
 the launcher's `traffic_signal_pilot` payload. The launcher reads the staged
 build summary, so v2 runs are not labelled with historical v1 counts.
 
+Build the bounded Top-100, 96-bin time-of-day proxy with
+`build_hong_kong_traffic_signal_tod_proxy_top100.py`, compile it with
+`BuildHongKongTrafficSignalTodTop100`, and validate it with
+`validate_hong_kong_traffic_signal_tod_proxy_top100.py`. Full commands,
+assumptions, QA, and the opt-in adoption boundary are in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. When explicitly staged as
+the `traffic_signal_pilot` payload, the launcher selects its `matsim/` folder
+with `--period tod`; AM/PM behavior is unchanged.
+
 ## SimWrapper visualization
 
 Open the compact SimWrapper project for the final Ferry Core v1,

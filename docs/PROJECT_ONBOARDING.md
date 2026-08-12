@@ -663,9 +663,22 @@ territory-wide Stage-1 movement registry, planned 15-minute demand `q`,
 observed approach-flow comparisons, and approach TPDM saturation proxy `S` are
 documented in `docs/HONG_KONG_TRAFFIC_SIGNAL_TPDM_PROXY_V3.md`. Its status is
 `territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it creates no stage,
-timing, controller, signal XML, or production configuration change. City-wide
+timing, controller, signal XML, or production configuration change.
+The bounded Stage 1.5 reconciliation reclassifies connector fan-out as a later
+grouping issue, assigns shared paths only with unique evidence, and recovers
+safe registry primary-node seeds without changing the network. Its status is
+`stage1_5_network_expression_reconciled_candidate_not_adopted`; remaining
+common-topology repairs are audit-only. City-wide
 traffic-signal expansion is currently frozen while the
 fixed-route run57 road topology, congestion, stuck vehicles, and path
 anomalies are reviewed in
 `docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`; ordinary PT passengers left
 waiting at stops are explicitly outside that road audit.
+
+The first bounded Stage-2 controller candidate is documented in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. It selects 100 high-demand,
+safely expressible junctions and compiles 96 fixed 15-minute plans per system;
+it never applies one AM plan all day. The 9,600-plan candidate and its
+capacity-deconvolved network pass static MATSim reference validation, but are
+`top100_tod_15min_proxy_candidate_not_adopted`, opt-in only, and have not been
+run or adopted.

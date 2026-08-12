@@ -2,6 +2,9 @@
 
 Status: `territory_wide_tpdm_proxy_stage1_candidate_not_adopted`
 
+Network-expression reconciliation status:
+`stage1_5_network_expression_reconciled_candidate_not_adopted`.
+
 Stage 1 creates only a physical movement registry, planned movement/approach
 demand `q` in 15-minute bins, and an approach-level TPDM saturation-flow proxy
 `S`. It does **not** create stages, cycles, green splits, offsets, time-of-day
@@ -55,8 +58,30 @@ The territory-wide audit also detects registry groups whose recovered clusters
 overlap enough to produce the same complete physical path. Those movement rows
 remain visible as registry/topology QA, but are explicitly excluded from q
 matching: the builder neither assigns a vehicle arbitrarily to one group nor
-double-counts it at both groups. The completed build finds 198 shared path
-signatures affecting 411 movement rows.
+double-counts it at both groups. The original Stage-1 build found 198 shared
+path signatures affecting 411 movement rows.
+
+### Stage 1.5 reconciliation
+
+Stage 1.5 corrects a QA interpretation: a first connector reaching multiple
+exits is expected when complete physical movement paths are retained. It warns
+against grouping signals by first connector, but is not itself a failed network
+expression. Explicit alternative internal paths are likewise retained as
+Stage-2 grouping/lane-evidence questions rather than automatic topology review.
+
+For shared complete paths, exactly one q owner is selected only when evidence
+is unique: first an exclusive registry controlled-link candidate, then an
+exclusive original stopline seed, then a unique official controller reference,
+then a junction centroid within 30 m and at least 10 m nearer than the next
+candidate. Non-owner rows stay visible but are
+excluded to prevent double counting. Of 205 shared signatures after seed
+recovery, 167 have a unique owner and 38 remain unresolved; 258 duplicate or
+non-owner movement rows remain excluded.
+
+For groups without mapped seeds, the registry's already-recorded primary node
+is reused only within 60 m and at road-node degree two or greater. The recovery
+is `geometry_inferred` and changes no network ID. Fifteen of 37 no-seed groups
+recover; 22 remain unresolved.
 
 ### Geometry classification
 
@@ -82,8 +107,11 @@ paths matching the audited diagram boundary are
 `supported_by_published_diagram`. All U-turns are `u_turn_candidate`,
 `excluded_no_positive_evidence`, and `not_activated`.
 
-The candidate contains 14,707 paths, including 2,199 excluded U-turns and
-12,496 unresolved non-U-turn legal movements.
+The reconciled candidate contains 17,006 paths, including 4,437 excluded
+U-turns and 12,557 unresolved non-U-turn legal movements. The larger U-turn
+count corrects an enumeration-order defect: a reverse exit returning to the
+approach origin is now recorded before internal-loop visited-node filtering.
+Every recovered U-turn remains excluded from q.
 
 ## Planned demand q and scaling
 
@@ -153,10 +181,12 @@ lane-to-movement mapping is absent.
 
 ## Coverage, outputs, and validation
 
-Of 2,054 groups, 2,017 recover approaches, 2,015 recover movements, and 39 are
-unexpressed. After connector fan-out and shared-path review, 512 are expressed
-and 1,503 require review. The Stage-1 confidence distribution is 464 high, 48
-medium, and 1,542 review (including the 39 unexpressed groups).
+Of 2,054 groups, the reconciled build recovers approaches for 2,032 and any
+movement for 2,031. There are 2,030 groups with a non-U-turn design movement,
+23 unexpressed groups, and one group with only an excluded U-turn. After the
+fan-out correction, 1,930 are expressed, 101 have genuine shared-path topology
+review, and 23 are unexpressed. Confidence is 1,785 high, 145 medium, and 124
+review.
 
 Topology outputs are `signal_movements.csv`, `signal_approaches.csv`,
 `movement_topology_exceptions.csv`, `u_turn_candidates.csv`, and
@@ -166,10 +196,13 @@ Topology outputs are `signal_movements.csv`, `signal_approaches.csv`,
 `approach_flow_anchor_audit.csv`. S and QA outputs are
 `approach_saturation_flow.csv`, `saturation_flow_assumption_audit.csv`,
 `stage1_qa_summary.json`, `stage1_coverage_by_confidence.csv`, and
-`stage1_metadata.json`.
+`stage1_metadata.json`. Stage 1.5 adds `junction_seed_recovery_audit.csv`,
+`shared_physical_path_ownership_audit.csv`, and
+`junction_network_repair_action_audit.csv`.
 
-The eight diagram examples are validation only. All recover movements but all
-retain connector fan-out review. TS_K006 is a hard regression: all four V2
+The eight diagram examples are validation only. All recover movements; their
+connector fan-out remains a Stage-2 grouping warning, not a Stage-1 expression
+failure. TS_K006 is a hard regression: all four V2
 `fromLink -> first connector -> reachable exits` sets match exactly; mismatch
 stops the builder rather than changing V2 truth.
 
@@ -177,9 +210,17 @@ stops the builder rather than changing V2 truth.
 
 Current topology supports an auditable movement candidate, but blocks automatic
 territory-wide stage generation. Blockers are unresolved turn legality,
-missing turn lanes and lane-to-movement mapping, fan-out at 1,492 junctions, 39
-unexpressed groups, missing pedestrian clearance paths, and incomplete timing
-evidence. Taxi physical routes and reliable gradients are also absent.
+missing turn lanes and lane-to-movement mapping, 38 unresolved shared paths, 23
+unexpressed groups, one U-turn-only group, missing pedestrian clearance paths,
+and incomplete timing evidence. Taxi physical routes and reliable gradients
+are also absent.
+
+The repair audit identifies nine candidate link splits. Implementing them
+would be a common-topology change requiring stable replacement IDs and updates
+to plans, PT schedules, link attributes, and downstream references. Thirteen
+locations first require source/network-coverage review; one needs outbound car
+access or one-way review; one may be a cul-de-sac or non-junction signal. No
+such network change is made in Stage 1.5.
 
 Before Stage 2, resolve legal turns/lane groups, review fan-out and unexpressed
 groups, validate the seven deferred diagrams at movement level, and establish
@@ -187,3 +228,8 @@ critical-lane demand evidence. Overlapping registry clusters must also be
 reconciled before movement demand can cover their shared paths. Only then
 should conflicts, stages, cycles,
 green splits, offsets, or controllers be considered. Stage 1 stops here.
+
+The explicitly authorised bounded continuation is now documented in
+`HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. It does not change Stage 1 truth:
+it consumes the reconciled topology/q/S tables and produces a separate,
+opt-in 100-junction by 96-bin proxy candidate.

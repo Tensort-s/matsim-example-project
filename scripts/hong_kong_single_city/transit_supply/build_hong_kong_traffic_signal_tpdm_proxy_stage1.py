@@ -44,6 +44,7 @@ DEFAULT_ROAD_AUDIT = REPO_ROOT / "data/transit/hongkong/processed/road_speed_cap
 DEFAULT_OUTPUT = REPO_ROOT / "data/transit/hongkong/processed/hong_kong_traffic_signals_2026_v3_tpdm_proxy_stage1"
 
 MODEL_STATUS = "territory_wide_tpdm_proxy_stage1_candidate_not_adopted"
+RECONCILIATION_STATUS = "stage1_5_network_expression_reconciled_candidate_not_adopted"
 TIME_BIN_SECONDS = 15 * 60
 PRIVATE_CAR_EXPANSION = 20.0
 LANE_WIDTH_M = 3.25
@@ -53,6 +54,10 @@ TPDM_WIDTH_COEFFICIENT = 100.0
 TPDM_UPHILL_COEFFICIENT = 42.0
 MAX_INTERNAL_PATH_LINKS = 12
 MAX_PATHS_PER_APPROACH = 2048
+FALLBACK_PRIMARY_SEED_MAX_DISTANCE_M = 60.0
+FALLBACK_PRIMARY_SEED_MIN_DEGREE = 2
+SHARED_PATH_OWNER_MAX_DISTANCE_M = 30.0
+SHARED_PATH_OWNER_MIN_MARGIN_M = 10.0
 
 # Parameterised geometry classifier.  The two uncertainty bands deliberately
 # produce ``ambiguous`` instead of forcing marginal angles into a turn class.
@@ -158,6 +163,79 @@ def stable_id(prefix: str, *parts: str) -> str:
     return f"{prefix}__{readable}__{digest}"
 
 
+def point_segment_distance(px: float, py: float, a: Node, b: Node) -> tuple[float, float]:
+    dx = b.x - a.x
+    dy = b.y - a.y
+    denominator = dx * dx + dy * dy
+    fraction = 0.0 if denominator == 0 else max(
+        0.0, min(1.0, ((px - a.x) * dx + (py - a.y) * dy) / denominator)
+    )
+    return math.hypot(px - (a.x + fraction * dx), py - (a.y + fraction * dy)), fraction
+
+
+def build_network_repair_actions(
+    registry_rows: list[dict],
+    junction_audit: list[dict],
+    movements: list[dict],
+    nodes: dict[str, Node],
+    links: dict[str, Link],
+) -> list[dict]:
+    registry_by_id = {row["signal_junction_id"]: row for row in registry_rows}
+    non_uturn_counts = Counter(
+        row["signal_junction_id"] for row in movements if row["movement_type"] != "u_turn"
+    )
+    car_links = [link for link in links.values() if "car" in link.modes]
+    result = []
+    for audit in junction_audit:
+        junction_id = audit["signal_junction_id"]
+        if audit["network_expression_status"] != "unexpressed" and non_uturn_counts[junction_id] > 0:
+            continue
+        registry = registry_by_id[junction_id]
+        px = float(registry["x_epsg32650"])
+        py = float(registry["y_epsg32650"])
+        nearest = min(
+            (
+                (*point_segment_distance(px, py, nodes[link.from_node], nodes[link.to_node]), link)
+                for link in car_links
+            ),
+            key=lambda item: (item[0], item[2].link_id),
+        )
+        segment_distance, segment_fraction, nearest_link = nearest
+        if not registry["mapped_network_node_ids"]:
+            if segment_distance <= 40.0 and 0.05 <= segment_fraction <= 0.95:
+                action = "candidate_link_split_requires_common_topology_change"
+                reason = "Signal location is close to a long car link interior but no MATSim node represents the stopline."
+            else:
+                action = "source_location_and_network_coverage_review"
+                reason = "No bounded existing node recovery; nearest car geometry is not sufficient for an automatic split."
+        elif int(audit["approach_count"]) > 0 and int(audit["movement_count"]) == 0:
+            action = "review_outbound_car_access_or_one_way_encoding"
+            reason = "An approach enters the recovered cluster but no car-capable exit is reachable."
+        else:
+            action = "review_cul_de_sac_or_non_junction_signal_classification"
+            reason = "Only excluded U-turn topology is available; no non-U-turn signal-design movement exists."
+        result.append({
+            "signal_junction_id": junction_id,
+            "current_expression_status": audit["network_expression_status"],
+            "non_uturn_movement_count": non_uturn_counts[junction_id],
+            "recommended_action": action,
+            "reason": reason,
+            "nearest_car_link_id": nearest_link.link_id,
+            "nearest_car_link_distance_m": round(segment_distance, 6),
+            "nearest_car_link_fraction": round(segment_fraction, 6),
+            "nearest_car_link_length_m": nearest_link.length_m,
+            "primary_network_node_id": registry["primary_network_node_id"],
+            "primary_network_node_distance_m": registry["primary_network_node_distance_m"],
+            "network_modified": "false",
+            "merge_impact_if_implemented": (
+                "Would require stable link-split IDs plus updates to plans, PT schedule, link attributes, and downstream references."
+                if action == "candidate_link_split_requires_common_topology_change"
+                else "No automatic common-network change proposed."
+            ),
+        })
+    return result
+
+
 def enumerate_paths(
     approach: Link,
     internal_nodes: set[str],
@@ -174,12 +252,14 @@ def enumerate_paths(
     while stack:
         node_id, internal_sequence, visited = stack.pop()
         for link in reversed(outgoing.get(node_id, [])):
-            if "car" not in link.modes or link.to_node in visited:
+            if "car" not in link.modes:
                 continue
             if link.to_node not in internal_nodes:
                 paths.append((internal_sequence, link))
                 if len(paths) >= max_paths:
                     return paths, True
+                continue
+            if link.to_node in visited:
                 continue
             if len(internal_sequence) >= max_internal_links:
                 truncated = True
@@ -198,7 +278,7 @@ def build_topology(
     links: dict[str, Link],
     max_internal_links: int,
     max_paths: int,
-) -> tuple[list[dict], list[dict], list[dict], list[dict], list[dict], dict]:
+) -> tuple[list[dict], list[dict], list[dict], list[dict], list[dict], list[dict], list[dict], dict]:
     candidate_pairs = {
         (row["signal_junction_id"], row["controlled_link_candidate_id"])
         for row in candidate_rows
@@ -219,11 +299,50 @@ def build_topology(
     exceptions: list[dict] = []
     uturns: list[dict] = []
     junction_audit: list[dict] = []
+    seed_recovery_audit: list[dict] = []
+    shared_path_audit: list[dict] = []
     path_multiplicity: Counter[tuple[str, str, str]] = Counter()
 
     for registry in registry_rows:
         junction_id = registry["signal_junction_id"]
         seed_ids = set(filter(None, registry["mapped_network_node_ids"].split("|")))
+        original_seed_ids = set(seed_ids)
+        seed_evidence = "registry_mapped_network_nodes"
+        primary_distance = float(registry["primary_network_node_distance_m"])
+        primary_degree = int(registry["primary_network_node_degree"])
+        primary_node = registry["primary_network_node_id"]
+        if (
+            not seed_ids
+            and primary_node in nodes
+            and primary_distance <= FALLBACK_PRIMARY_SEED_MAX_DISTANCE_M
+            and primary_degree >= FALLBACK_PRIMARY_SEED_MIN_DEGREE
+        ):
+            seed_ids = {primary_node}
+            seed_evidence = "geometry_inferred_registry_primary_node_bounded_fallback"
+            seed_recovery_audit.append({
+                "signal_junction_id": junction_id,
+                "recovery_status": "recovered_bounded_primary_node_fallback",
+                "recovered_seed_node_id": primary_node,
+                "primary_node_distance_m": primary_distance,
+                "primary_node_degree": primary_degree,
+                "evidence": seed_evidence,
+                "confidence": "medium" if registry["source_coverage"] == "td_osm" else "review",
+                "network_modified": "false",
+                "notes": "Uses the primary node already recorded by the canonical registry; no link split or ID change.",
+            })
+        elif not seed_ids:
+            seed_evidence = "unresolved_no_safe_existing_node"
+            seed_recovery_audit.append({
+                "signal_junction_id": junction_id,
+                "recovery_status": "unresolved_no_safe_existing_node",
+                "recovered_seed_node_id": "",
+                "primary_node_distance_m": primary_distance,
+                "primary_node_degree": primary_degree,
+                "evidence": "unresolved",
+                "confidence": "review",
+                "network_modified": "false",
+                "notes": "Existing primary node exceeds bounded fallback evidence; inspect nearest road segment and possible link split.",
+            })
         missing_seeds = sorted(seed_ids.difference(nodes))
         internal_nodes: set[str] = set()
         radius = 0.0
@@ -256,6 +375,7 @@ def build_topology(
         ) if internal_nodes else []
         junction_movement_start = len(movements)
         topology_ambiguous = False
+        stage2_grouping_review = False
         exit_ids: set[str] = set()
 
         for approach in junction_approaches:
@@ -291,6 +411,7 @@ def build_topology(
                     "candidate_incoming_link" if (junction_id, approach.link_id) in candidate_pairs
                     else "recovered_from_micro_node_cluster"
                 ),
+                "junction_seed_evidence": seed_evidence,
                 "movement_count": len(paths),
                 "approach_topology_confidence": (
                     "review" if truncated or not paths else
@@ -368,16 +489,14 @@ def build_topology(
                 (junction_id, movement["from_link_id"], movement["exit_link_id"])
             ]
             if multiplicity > 1:
-                topology_ambiguous = True
-                movement["movement_topology_confidence"] = "review"
-                movement["review_flag"] = "true"
+                stage2_grouping_review = True
                 exceptions.append({
                     "signal_junction_id": junction_id,
                     "approach_id": movement["approach_id"],
                     "movement_id": movement["movement_id"],
                     "exception_type": "multiple_internal_paths_same_boundary",
-                    "severity": "review",
-                    "detail": f"path_count={multiplicity}",
+                    "severity": "information",
+                    "detail": f"path_count={multiplicity};full_internal_paths_are_explicit",
                 })
             if movement["legal_status"] == "unresolved":
                 exceptions.append({
@@ -393,7 +512,7 @@ def build_topology(
             first_exit[(movement["from_link_id"], movement["first_internal_link_id"])].add(movement["exit_link_id"])
         fanout_count = sum(1 for exits in first_exit.values() if len(exits) > 1)
         if fanout_count:
-            topology_ambiguous = True
+            stage2_grouping_review = True
         expression_status = (
             "unexpressed" if not junction_approaches or not junction_movements
             else "review" if topology_ambiguous
@@ -412,12 +531,16 @@ def build_topology(
             "diagram_network_expression_confidence": VALIDATION_NETWORK_EXPRESSION.get(junction_id, ("", ""))[0],
             "diagram_movement_validation_result": VALIDATION_NETWORK_EXPRESSION.get(junction_id, ("", ""))[1],
             "mapped_seed_count": len(seed_ids),
+            "original_mapped_seed_count": len(original_seed_ids),
+            "seed_evidence": seed_evidence,
             "internal_node_count": len(internal_nodes),
             "internal_radius_m": round(radius, 3),
             "approach_count": len(junction_approaches),
             "exit_count": len(exit_ids),
             "movement_count": len(junction_movements),
             "first_connector_multiple_exit_count": fanout_count,
+            "fanout_interpretation": "informational_full_movement_paths_preserved_do_not_group_by_first_connector" if fanout_count else "none",
+            "stage2_grouping_review": str(stage2_grouping_review).lower(),
             "topology_ambiguous": str(topology_ambiguous).lower(),
             "network_expression_status": expression_status,
             "junction_stage1_confidence": stage1_confidence,
@@ -430,21 +553,87 @@ def build_topology(
                 movement["from_link_id"], movement["internal_link_sequence"], movement["exit_link_id"]
             )].append(movement)
     shared_signatures = {key: values for key, values in signature_groups.items() if len(values) > 1}
+    registry_by_id = {row["signal_junction_id"]: row for row in registry_rows}
     affected_junctions: Counter[str] = Counter()
     for signature, shared_movements in shared_signatures.items():
         junction_ids = sorted({movement["signal_junction_id"] for movement in shared_movements})
+        scored = []
         for movement in shared_movements:
-            movement["movement_topology_confidence"] = "review"
-            movement["review_flag"] = "true"
-            movement["demand_match_status"] = "excluded_shared_physical_path_between_registry_groups"
-            affected_junctions[movement["signal_junction_id"]] += 1
+            registry = registry_by_id[movement["signal_junction_id"]]
+            stopline_node = links[movement["from_link_id"]].to_node
+            stopline = nodes[stopline_node]
+            distance = math.hypot(
+                stopline.x - float(registry["x_epsg32650"]),
+                stopline.y - float(registry["y_epsg32650"]),
+            )
+            scored.append({
+                "movement": movement,
+                "candidate": int((movement["signal_junction_id"], movement["from_link_id"]) in candidate_pairs),
+                "original_seed": int(stopline_node in set(filter(None, registry["mapped_network_node_ids"].split("|")))),
+                "official_reference": int(bool(registry["normalized_reference"])),
+                "distance_m": distance,
+            })
+        scored.sort(key=lambda item: (-item["candidate"], -item["original_seed"], item["distance_m"], item["movement"]["signal_junction_id"]))
+        owner = None
+        ownership_rule = "unresolved_no_unique_owner"
+        candidate_winners = [item for item in scored if item["candidate"]]
+        seed_winners = [item for item in scored if item["original_seed"]]
+        reference_winners = [item for item in scored if item["official_reference"]]
+        if len(candidate_winners) == 1:
+            owner = candidate_winners[0]
+            ownership_rule = "unique_registry_controlled_link_candidate"
+        elif not candidate_winners and len(seed_winners) == 1:
+            owner = seed_winners[0]
+            ownership_rule = "unique_original_registry_seed_stopline"
+        elif not candidate_winners and len(reference_winners) == 1:
+            owner = reference_winners[0]
+            ownership_rule = "unique_official_controller_reference"
+        elif len(scored) >= 2 and (
+            scored[0]["distance_m"] <= SHARED_PATH_OWNER_MAX_DISTANCE_M
+            and scored[1]["distance_m"] - scored[0]["distance_m"] >= SHARED_PATH_OWNER_MIN_MARGIN_M
+        ):
+            owner = scored[0]
+            ownership_rule = "unique_nearest_centroid_with_bounded_margin"
+        owner_junction = owner["movement"]["signal_junction_id"] if owner else ""
+        shared_path_audit.append({
+            "shared_path_id": stable_id("shared_path", *signature),
+            "from_link_id": signature[0],
+            "internal_link_sequence": signature[1],
+            "exit_link_id": signature[2],
+            "candidate_junction_ids": "|".join(junction_ids),
+            "owner_junction_id": owner_junction,
+            "ownership_rule": ownership_rule,
+            "owner_distance_m": round(owner["distance_m"], 6) if owner else "",
+            "second_distance_m": round(scored[1]["distance_m"], 6) if len(scored) > 1 else "",
+            "ownership_status": "resolved_unique_owner" if owner else "unresolved_excluded_from_q",
+            "network_modified": "false",
+        })
+        for movement in shared_movements:
+            is_owner = owner is not None and movement["movement_id"] == owner["movement"]["movement_id"]
+            if is_owner:
+                movement["demand_match_status"] = "eligible_resolved_shared_path_owner"
+                severity = "information"
+                exception_type = "shared_physical_path_resolved_unique_owner"
+            else:
+                movement["movement_topology_confidence"] = "review"
+                movement["review_flag"] = "true"
+                movement["demand_match_status"] = (
+                    "excluded_resolved_shared_path_non_owner" if owner
+                    else "excluded_unresolved_shared_physical_path"
+                )
+                affected_junctions[movement["signal_junction_id"]] += 1
+                severity = "review" if owner else "error"
+                exception_type = (
+                    "shared_physical_path_non_owner" if owner
+                    else "physical_path_shared_by_multiple_registry_junctions_unresolved"
+                )
             exceptions.append({
                 "signal_junction_id": movement["signal_junction_id"],
                 "approach_id": movement["approach_id"],
                 "movement_id": movement["movement_id"],
-                "exception_type": "physical_path_shared_by_multiple_registry_junctions",
-                "severity": "error",
-                "detail": "registry_junctions=" + "|".join(junction_ids),
+                "exception_type": exception_type,
+                "severity": severity,
+                "detail": "registry_junctions=" + "|".join(junction_ids) + ";owner=" + owner_junction + ";rule=" + ownership_rule,
             })
     for movement in movements:
         movement.setdefault("demand_match_status", "eligible_unique_physical_path")
@@ -469,7 +658,7 @@ def build_topology(
     }
     if regression["status"] != "pass":
         raise RuntimeError("TS_K006 automatic movement boundary differs from audited v2 truth: " + json.dumps(regression))
-    return movements, approaches, exceptions, uturns, junction_audit, regression
+    return movements, approaches, exceptions, uturns, junction_audit, seed_recovery_audit, shared_path_audit, regression
 
 
 def normalise_route_links(route_element) -> list[str]:
@@ -494,7 +683,7 @@ def movement_matcher(movements: list[dict]) -> dict[str, list[tuple[tuple[str, .
         # Excluded U-turns are registered but do not enter design demand.
         if (
             movement["legal_status"] == "excluded_no_positive_evidence"
-            or movement.get("demand_match_status") == "excluded_shared_physical_path_between_registry_groups"
+            or movement.get("demand_match_status", "").startswith("excluded_")
         ):
             continue
         suffix = tuple(filter(None, movement["internal_link_sequence"].split("|"))) + (movement["exit_link_id"],)
@@ -684,7 +873,7 @@ def extract_demand(
         "taxi_labelled_sampled_passenger_legs_without_physical_qvehicle": nonphysical_counts["taxi_passenger_legs"],
         "taxi_labelled_fullscale_passenger_leg_equivalent_not_vehicle_demand": nonphysical_counts["taxi_passenger_legs"] * PRIVATE_CAR_EXPANSION,
         "movement_rows_excluded_from_q_due_to_shared_registry_path": sum(
-            row.get("demand_match_status") == "excluded_shared_physical_path_between_registry_groups"
+            row.get("demand_match_status", "").startswith("excluded_")
             for row in movements
         ),
     }
@@ -907,7 +1096,7 @@ def main() -> None:
         raise ValueError(f"Canonical registry must contain 2,054 junctions, got {len(registry_rows)}")
     candidate_rows = read_csv(required[1])
     _, nodes, links = parse_network(args.network)
-    movements, approaches, exceptions, uturns, junction_audit, regression = build_topology(
+    movements, approaches, exceptions, uturns, junction_audit, seed_recovery_audit, shared_path_audit, regression = build_topology(
         registry_rows, candidate_rows, nodes, links,
         args.max_internal_path_links, args.max_paths_per_approach,
     )
@@ -916,6 +1105,9 @@ def main() -> None:
     )
     anchors, anchor_summary = build_anchors(args.road_audit_dir, approaches, approach_demand)
     saturation, saturation_audit, saturation_summary = build_saturation(approaches, args.road_audit_dir)
+    network_repair_actions = build_network_repair_actions(
+        registry_rows, junction_audit, movements, nodes, links
+    )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_table(args.output_dir / "signal_movements.csv", movements, ("signal_junction_id", "movement_id"))
@@ -923,6 +1115,9 @@ def main() -> None:
     write_table(args.output_dir / "movement_topology_exceptions.csv", exceptions, ("signal_junction_id", "exception_type"))
     write_table(args.output_dir / "u_turn_candidates.csv", uturns, ("signal_junction_id", "movement_id"))
     write_table(args.output_dir / "junction_network_expression_audit.csv", junction_audit, ("signal_junction_id",))
+    write_table(args.output_dir / "junction_seed_recovery_audit.csv", seed_recovery_audit, ("signal_junction_id", "recovery_status"))
+    write_table(args.output_dir / "shared_physical_path_ownership_audit.csv", shared_path_audit, ("shared_path_id", "ownership_status"))
+    write_table(args.output_dir / "junction_network_repair_action_audit.csv", network_repair_actions, ("signal_junction_id", "recommended_action"))
     write_table(args.output_dir / "vehicle_class_demand_scaling.csv", scaling, ("vehicle_class",))
     write_table(args.output_dir / "movement_demand_15min.csv", movement_demand, ("movement_id", "time_bin"))
     write_table(args.output_dir / "approach_demand_15min.csv", approach_demand, ("approach_id", "time_bin"))
@@ -950,8 +1145,12 @@ def main() -> None:
     write_table(args.output_dir / "stage1_coverage_by_confidence.csv", confidence_rows, ("entity_type", "confidence_or_status"))
 
     movement_types = Counter(row["movement_type"] for row in movements)
+    non_uturn_junctions = {
+        row["signal_junction_id"] for row in movements if row["movement_type"] != "u_turn"
+    }
     qa = {
         "status": MODEL_STATUS,
+        "reconciliation_status": RECONCILIATION_STATUS,
         "stage_boundary": {
             "included": ["movement_registry", "planned_demand_q", "approach_tpdm_saturation_flow_S"],
             "forbidden_outputs_created": False,
@@ -961,6 +1160,8 @@ def main() -> None:
             "canonical_registry_junction_count": len(registry_rows),
             "junctions_with_approaches": sum(int(row["approach_count"]) > 0 for row in junction_audit),
             "junctions_with_movements": sum(int(row["movement_count"]) > 0 for row in junction_audit),
+            "junctions_with_non_uturn_design_movements": len(non_uturn_junctions),
+            "junctions_without_non_uturn_design_movements": len(registry_rows) - len(non_uturn_junctions),
             "completely_unexpressed": expression_counts["unexpressed"],
             "expression_status_distribution": dict(expression_counts),
             "high_medium_review_distribution": dict(junction_confidence_counts),
@@ -973,15 +1174,40 @@ def main() -> None:
             "first_connector_multiple_exit_count": sum(int(row["first_connector_multiple_exit_count"]) for row in junction_audit),
             "topology_ambiguous_junction_count": sum(row["topology_ambiguous"] == "true" for row in junction_audit),
             "path_enumeration_truncation_count": sum(row["exception_type"] == "path_enumeration_truncated" for row in exceptions),
-            "physical_path_signature_shared_between_registry_groups_count": len({
-                (row["from_link_id"], row["internal_link_sequence"], row["exit_link_id"])
-                for row in movements
-                if row.get("demand_match_status") == "excluded_shared_physical_path_between_registry_groups"
-            }),
+            "physical_path_signature_shared_between_registry_groups_count": len(shared_path_audit),
+            "shared_path_signature_resolved_unique_owner_count": sum(row["ownership_status"] == "resolved_unique_owner" for row in shared_path_audit),
+            "shared_path_signature_unresolved_count": sum(row["ownership_status"] == "unresolved_excluded_from_q" for row in shared_path_audit),
             "movement_rows_excluded_from_q_due_to_shared_registry_path": sum(
-                row.get("demand_match_status") == "excluded_shared_physical_path_between_registry_groups"
+                row.get("demand_match_status", "").startswith("excluded_")
                 for row in movements
             ),
+            "movement_rows_restored_as_unique_shared_path_owner": sum(
+                row.get("demand_match_status") == "eligible_resolved_shared_path_owner"
+                for row in movements
+            ),
+            "movement_rows_deduplicated_as_resolved_non_owner": sum(
+                row.get("demand_match_status") == "excluded_resolved_shared_path_non_owner"
+                for row in movements
+            ),
+            "movement_rows_excluded_due_to_unresolved_shared_path": sum(
+                row.get("demand_match_status") == "excluded_unresolved_shared_physical_path"
+                for row in movements
+            ),
+            "junction_seed_recovery_distribution": dict(Counter(row["recovery_status"] for row in seed_recovery_audit)),
+            "network_repair_action_distribution": dict(Counter(row["recommended_action"] for row in network_repair_actions)),
+            "stage1_5_before_after": {
+                "baseline_unexpressed_junctions": 39,
+                "reconciled_unexpressed_junctions": expression_counts["unexpressed"],
+                "baseline_topology_review_junctions": 1503,
+                "reconciled_topology_review_junctions": expression_counts["review"],
+                "baseline_shared_path_signatures": 198,
+                "reconciled_shared_path_signatures": len(shared_path_audit),
+                "baseline_shared_path_movement_rows_excluded_from_q": 411,
+                "reconciled_unresolved_shared_path_movement_rows_excluded_from_q": sum(
+                    row.get("demand_match_status") == "excluded_unresolved_shared_physical_path"
+                    for row in movements
+                ),
+            },
         },
         "demand_q": demand_summary,
         "observed_flow_anchors": anchor_summary,
@@ -995,10 +1221,19 @@ def main() -> None:
             "tpdm_pcu_factors": PCU_FACTORS,
             "lane_width_m": LANE_WIDTH_M,
             "gradient": "unavailable_no_adjustment",
+            "bounded_primary_seed_recovery": {
+                "max_distance_m": FALLBACK_PRIMARY_SEED_MAX_DISTANCE_M,
+                "minimum_node_degree": FALLBACK_PRIMARY_SEED_MIN_DEGREE,
+            },
+            "shared_path_owner_distance_rule": {
+                "max_owner_distance_m": SHARED_PATH_OWNER_MAX_DISTANCE_M,
+                "minimum_margin_m": SHARED_PATH_OWNER_MIN_MARGIN_M,
+            },
         },
     }
     metadata = {
         "status": MODEL_STATUS,
+        "reconciliation_status": RECONCILIATION_STATUS,
         "inputs": {
             "registry_dir": str(args.registry_dir.resolve()),
             "network": str(args.network.resolve()),

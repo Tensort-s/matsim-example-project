@@ -43,7 +43,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--payload-root", type=Path, required=True)
     parser.add_argument("--release-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
-    parser.add_argument("--period", choices=("am", "pm"), required=True)
+    parser.add_argument("--period", choices=("am", "pm", "tod"), required=True)
     parser.add_argument("--last-iteration", type=int, default=1)
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="96g")
@@ -75,7 +75,8 @@ def write_config(path: Path, release: Path, run: Path, period: str) -> None:
             {"name": "usingFastCapacityUpdate", "value": "false"},
         )
     signals = ET.SubElement(root, "module", {"name": "signalsystems"})
-    signal_root = release / "input" / f"traffic_signals_{period}"
+    signal_directory = "traffic_signals_tod" if period == "tod" else f"traffic_signals_{period}"
+    signal_root = release / "input" / signal_directory
     parameters = {
         "useSignalsystems": "true",
         "signalsystems": str(signal_root / "signal_systems.xml"),
@@ -114,7 +115,7 @@ def main() -> int:
     jar = payload / "matsim-example-project-0.0.1-SNAPSHOT.jar"
     pilot = payload / "traffic_signal_pilot"
     pilot_network = pilot / "network_signal_capacity_deconvolved.xml.gz"
-    pilot_signals = pilot / f"matsim_{args.period}"
+    pilot_signals = pilot / ("matsim" if args.period == "tod" else f"matsim_{args.period}")
     pilot_summary_file = pilot / "pilot_build_summary.json"
     require_regular(base / "runtime/jdk-25/bin/java", executable=True)
     require_regular(template)

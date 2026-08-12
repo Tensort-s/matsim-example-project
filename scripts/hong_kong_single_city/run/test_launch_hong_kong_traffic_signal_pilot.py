@@ -48,6 +48,20 @@ class TrafficSignalConfigTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "already contains"):
                 write_config(config, root / "release", root / "run", "pm")
 
+    def test_tod_uses_explicit_tod_payload_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = root / "config.xml"
+            config.write_text("<config><module name='qsim'/></config>\n", encoding="utf-8")
+            release = root / "release"
+            write_config(config, release, root / "run", "tod")
+            module = ET.parse(config).getroot().find("./module[@name='signalsystems']")
+            values = {
+                item.get("name"): item.get("value")
+                for item in module.findall("./param")
+            }
+            self.assertIn("traffic_signals_tod", values["signalcontrol"])
+
 
 if __name__ == "__main__":
     unittest.main()

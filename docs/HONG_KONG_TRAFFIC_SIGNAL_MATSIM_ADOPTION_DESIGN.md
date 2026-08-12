@@ -491,6 +491,16 @@ is documented separately in
 `territory_wide_tpdm_proxy_stage1_candidate_not_adopted`; it deliberately stops
 before conflict grouping, stages, cycles, green splits, offsets, controllers,
 signal XML, or simulation.
+The bounded Stage 1.5 network-expression reconciliation is recorded in the
+same document. It does not edit the production network; candidate link splits
+remain separate common-topology actions because they would affect routed plans,
+PT schedules, link attributes, and downstream link references.
+
+The subsequent bounded Top-100 time-of-day implementation is documented in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. It replaces the invalid
+"one AM/PM plan all day" assumption with 96 contiguous 15-minute plans per
+system, but remains an uncoordinated geometry/demand proxy pending an A/B
+runtime gate and is not production adopted.
 
 City-wide signal expansion remains frozen after the AM/PM mechanical
 sensitivities. The bounded v2 diagram-correction work above does not expand
