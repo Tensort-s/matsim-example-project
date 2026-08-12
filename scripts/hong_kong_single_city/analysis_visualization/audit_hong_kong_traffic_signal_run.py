@@ -77,15 +77,30 @@ def iter_events(path: Path) -> Iterable[dict[str, str]]:
 def basic_event_counts(
     path: Path,
     controlled_links: set[str],
-) -> tuple[Counter[str], Counter[str]]:
+) -> tuple[Counter[str], Counter[str], Counter[str]]:
     event_types: Counter[str] = Counter()
     approach_entries: Counter[str] = Counter()
+    approach_entries_by_class: Counter[str] = Counter()
     for event in iter_events(path):
         event_type = event.get("type", "")
         event_types[event_type] += 1
         if event_type == "entered link" and event.get("link") in controlled_links:
             approach_entries[event["link"]] += 1
-    return event_types, approach_entries
+            approach_entries_by_class[classify_vehicle(event.get("vehicle", ""))] += 1
+    return event_types, approach_entries, approach_entries_by_class
+
+
+def classify_vehicle(vehicle: str) -> str:
+    token = vehicle.lower()
+    if "school_bus" in token:
+        return "school_bus"
+    if "veh_dep_gmb" in token or "_gmb_" in token:
+        return "gmb"
+    if "veh_dep_bus" in token or "_bus_" in token:
+        return "bus"
+    if token.startswith("hk_vehicle_"):
+        return "private_car"
+    return "other_road_vehicle"
 
 
 def main() -> int:
@@ -93,23 +108,41 @@ def main() -> int:
     events_path = event_file(args.run_root, args.iteration)
     if not events_path.is_file():
         raise FileNotFoundError(events_path)
-    movements = read_csv(args.pilot_dir / "signal_movements.csv")
-    conflicts = read_csv(args.pilot_dir / "movement_conflicts.csv")
+    tod = (args.pilot_dir / "tod_plan_assignments.csv").is_file()
+    movements = read_csv(
+        args.pilot_dir /
+        ("executable_signal_movements.csv" if tod else "signal_movements.csv")
+    )
+    conflicts = read_csv(args.pilot_dir / "movement_conflicts.csv") if not tod else []
     capacities = read_csv(args.pilot_dir / "capacity_deconvolution_audit.csv")
-    timing = read_csv(args.pilot_dir / "observed_timing_evidence.csv")
+    timing = read_csv(
+        args.pilot_dir /
+        ("tod_plan_assignments.csv" if tod else "observed_timing_evidence.csv")
+    )
     period = json.loads((args.run_root / "run_metadata.json").read_text(encoding="utf-8"))[
         "evidence_period"
     ]
-    controlled_links = {row["approach_link_id"] for row in capacities}
+    controlled_links = {
+        row["from_link_id" if tod else "approach_link_id"] for row in capacities
+    }
     group_stage = {
-        (row["signal_system_id"], row["signal_group_id"]): row["stage_label"]
+        (row["signal_system_id"], row["signal_group_id"]):
+        row["stage_id" if tod else "stage_label"]
         for row in movements
     }
-    cycle_by_system = {
-        row["signal_junction_id"]: int(row["cycle_s"])
-        for row in timing
-        if row["period"] == period
-    }
+    if tod:
+        cycle_by_system_bin = {
+            (row["signal_system_id"], int(row["time_bin_index"])): int(row["cycle_s"])
+            for row in timing
+        }
+        cycle_by_system = {}
+    else:
+        cycle_by_system_bin = {}
+        cycle_by_system = {
+            row["signal_junction_id"]: int(row["cycle_s"])
+            for row in timing
+            if row["period"] == period
+        }
     blocking_stage_pairs: set[tuple[str, str, str]] = set()
     movement_by_signal = {
         (row["signal_junction_id"], row["signal_id"]): row for row in movements
@@ -126,6 +159,7 @@ def main() -> int:
     transitions: dict[tuple[str, str], list[tuple[float, str]]] = defaultdict(list)
     event_types: Counter[str] = Counter()
     approach_entries: Counter[str] = Counter()
+    approach_entries_by_class: Counter[str] = Counter()
     active_green: dict[str, set[str]] = defaultdict(set)
     latest_red: dict[str, dict[str, float]] = defaultdict(dict)
     overlapping_green_violations: list[dict[str, object]] = []
@@ -137,6 +171,7 @@ def main() -> int:
         maximum_event_time = max(maximum_event_time, float(event.get("time", 0.0)))
         if event_type == "entered link" and event.get("link") in controlled_links:
             approach_entries[event["link"]] += 1
+            approach_entries_by_class[classify_vehicle(event.get("vehicle", ""))] += 1
         if event_type != "signalGroupStateChangedEvent":
             continue
         time = float(event["time"])
@@ -158,7 +193,7 @@ def main() -> int:
                         }
                     )
             for other in active_green[system]:
-                if (system, group, other) in blocking_stage_pairs:
+                if tod or (system, group, other) in blocking_stage_pairs:
                     overlapping_green_violations.append(
                         {"time": time, "system": system, "group": group, "other": other}
                     )
@@ -209,8 +244,15 @@ def main() -> int:
                         "next_green": following[:1],
                     }
                 )
-        cycle = cycle_by_system[system]
         for earlier, later in zip(green_times, green_times[1:]):
+            if tod:
+                earlier_bin = int(earlier // 900) % 96
+                later_bin = int(later // 900) % 96
+                if earlier_bin != later_bin:
+                    continue
+                cycle = cycle_by_system_bin[(system, earlier_bin)]
+            else:
+                cycle = cycle_by_system[system]
             if abs(later - earlier - cycle) > 1e-9:
                 cycle_violations.append(
                     {
@@ -226,16 +268,28 @@ def main() -> int:
     if args.baseline_run_root is not None:
         baseline_path = event_file(args.baseline_run_root, args.iteration)
         if baseline_path.is_file():
-            baseline_types, baseline_entries = basic_event_counts(
+            baseline_types, baseline_entries, baseline_entries_by_class = basic_event_counts(
                 baseline_path, controlled_links
             )
             baseline = {
                 "event_file": str(baseline_path),
                 "controlled_approach_link_entries": sum(baseline_entries.values()),
                 "person_stuck_events": baseline_types.get("stuckAndAbort", 0),
+                "controlled_approach_entries_by_vehicle_class": dict(
+                    baseline_entries_by_class
+                ),
                 "signal_delta_controlled_entries": (
                     sum(approach_entries.values()) - sum(baseline_entries.values())
                 ),
+                "signal_delta_controlled_entries_by_vehicle_class": {
+                    vehicle_class: (
+                        approach_entries_by_class[vehicle_class]
+                        - baseline_entries_by_class[vehicle_class]
+                    )
+                    for vehicle_class in sorted(
+                        set(approach_entries_by_class) | set(baseline_entries_by_class)
+                    )
+                },
             }
 
     violations = (
@@ -256,6 +310,9 @@ def main() -> int:
         "signal_state_events": event_types.get("signalGroupStateChangedEvent", 0),
         "controlled_approach_links_with_entries": len(approach_entries),
         "controlled_approach_link_entries": sum(approach_entries.values()),
+        "controlled_approach_entries_by_vehicle_class": dict(
+            approach_entries_by_class
+        ),
         "person_stuck_events": event_types.get("stuckAndAbort", 0),
         "missing_signal_groups": missing_groups,
         "blocking_overlapping_green_violations": overlapping_green_violations,

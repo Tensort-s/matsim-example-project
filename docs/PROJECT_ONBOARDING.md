@@ -679,6 +679,10 @@ The first bounded Stage-2 controller candidate is documented in
 `docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. It selects 100 high-demand,
 safely expressible junctions and compiles 96 fixed 15-minute plans per system;
 it never applies one AM plan all day. The 9,600-plan candidate and its
-capacity-deconvolved network pass static MATSim reference validation, but are
-`top100_tod_15min_proxy_candidate_not_adopted`, opt-in only, and have not been
-run or adopted.
+capacity-deconvolved network pass static MATSim reference validation. Its
+full-population, frozen-innovation runtime at
+`/mnt/DiskM/by/hk_stage11_traffic_signals_tod_top100_20260812_run1` also passes
+all signal mechanics checks, but relative to no-signal run57 road delay rises
+7.65% and road-vehicle stuck rises 3.34%. Its status is therefore
+`top100_tod_15min_runtime_validated_performance_not_adopted`; it remains
+opt-in and does not change the production network or run manifest.

@@ -499,8 +499,11 @@ PT schedules, link attributes, and downstream link references.
 The subsequent bounded Top-100 time-of-day implementation is documented in
 `docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`. It replaces the invalid
 "one AM/PM plan all day" assumption with 96 contiguous 15-minute plans per
-system, but remains an uncoordinated geometry/demand proxy pending an A/B
-runtime gate and is not production adopted.
+system. Its full-population iterations 0--1 frozen-innovation runtime passes
+the signal-mechanics gate across all 100 systems and 241 groups. Against the
+strict no-signal run57 control, however, iteration-1 road delay rises 7.65%
+and road-vehicle stuck rises 3.34%. The proxy is therefore mechanically
+validated but performance-blocked and not production adopted.
 
 City-wide signal expansion remains frozen after the AM/PM mechanical
 sensitivities. The bounded v2 diagram-correction work above does not expand

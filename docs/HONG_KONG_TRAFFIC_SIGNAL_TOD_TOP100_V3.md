@@ -1,6 +1,6 @@
 # Hong Kong traffic-signal V3 — Top-100 time-of-day proxy
 
-Status: `top100_tod_15min_proxy_candidate_not_adopted`
+Status: `top100_tod_15min_runtime_validated_performance_not_adopted`
 
 ## Purpose and scope
 
@@ -102,14 +102,85 @@ Static validation passes all 100 systems, 9,600 plans, 566 controlled turns,
 241 groups, and 23,136 group windows with zero missing/non-adjacent links,
 active U-turns, missing group references, or adjacent-cycle-grade violations.
 
+## Frozen-innovation runtime A/B gate
+
+The full 385,820-person iterations 0--1 signal sensitivity completed with exit
+code 0 at:
+
+```text
+/mnt/DiskM/by/hk_stage11_traffic_signals_tod_top100_20260812_release1/
+/mnt/DiskM/by/hk_stage11_traffic_signals_tod_top100_20260812_run1/
+/mnt/DiskM/by/hk_road_network_audit_20260812_tod_top100_run1_v2/
+```
+
+Run57 is the paired no-signal control. It predates run62 and has the same
+original road topology, population/plans, frozen ordinary innovation, QSim
+capacity factors, and 30:00 horizon. Run62 is not the control because it
+enables `--road-hotspot-repair-v1` at runtime. The signal candidate necessarily
+replaces the 391 controlled final-approach capacities with saturation-flow
+proxies; otherwise network practical capacity and signal `g/C` would be
+counted twice. Node/link IDs and topology are unchanged, but this capacity
+deconvolution means the comparison is the complete signal treatment rather
+than a controller-only toggle on byte-identical network XML.
+
+The iteration-1 signal event audit is `validated`: it observes 100 systems,
+241 groups and 1,538,332 state changes. There are zero missing groups,
+simultaneous incompatible greens, intergreen violations, amber/red+amber
+duration violations, or within-bin cycle violations. The 100 terminal
+red-yellow transitions at exactly 30:00 are horizon truncations, not timing
+violations. Of 391 controlled approach links, 384 carry iteration-1 traffic.
+
+Controlled-approach entry counts show a small aggregate reduction rather than
+a disappearance of traffic:
+
+| Vehicle class | no-signal run57 | TOD signal run1 | Change |
+|---|---:|---:|---:|
+| Private Car | 214,198 | 211,781 | -1.13% |
+| Bus | 179,690 | 179,481 | -0.12% |
+| GMB | 82,797 | 82,813 | +0.02% |
+| School bus | 4,771 | 4,799 | +0.59% |
+| **Total** | **481,456** | **478,874** | **-0.54%** |
+
+The stricter road outcome does not pass the performance-adoption gate:
+
+| Iteration-1 metric | no-signal run57 | TOD signal run1 | Change |
+|---|---:|---:|---:|
+| Road delay (vehicle-hours) | 62,669.620 | 67,462.307 | +7.65% |
+| Road-vehicle stuck | 2,307 | 2,384 | +3.34% |
+| Private-Car stuck | 1,175 | 1,256 | +6.89% |
+| Bus stuck | 578 | 628 | +8.65% |
+| GMB stuck | 547 | 499 | -8.78% |
+| School-bus stuck | 7 | 1 | -85.71% |
+| Links with >=100 traversals and mean/free-flow >1.5 | 3,655 | 4,018 | +9.93% |
+| Links with >=100 traversals and mean/free-flow >2 | 1,810 | 2,142 | +18.34% |
+
+The same signal-event parser counts 15,647 `stuckAndAbort` events in the
+signal run and 15,595 in run57 (+0.33%). This same-parser value supersedes the
+older 14,382 run57 figure only for this A/B table; the older pilot used a
+different person-stuck audit convention. QSim iteration-1 lost agents rise
+from 3,129 to 3,325. Ordinary innovation remains frozen and Taxi remains the
+only directly teleported main mode. All final student mode counts pass the
+student audit; all 1,002 selected school-bus trips depart, board, alight and
+arrive, improving the one terminal-onboard case in run57.
+
+The generic household-only pilot auditor is not an acceptance result for this
+integrated run because the later student selector legitimately changes some
+of its mode counts. Its failed JSON is retained in the run directory as a
+diagnostic rather than deleted. The combined physical audit and student audit
+are the applicable downstream checks. The road audit v2 predates the audit
+CLI's run-scope label option and therefore retains the stale descriptive value
+`disabled_baseline`; its event/network inputs and all numeric metrics above are
+the signal run. Future signal audits pass an explicit status label.
+
 ## Adoption boundary and next gate
 
 This is a basic proxy and not yet a validated operating signal network.
 Limitations are inferred approach-axis compatibility, missing pedestrian
 control, zero coordination offsets, capped oversaturated timing, and planned
-rather than iterated arrival demand. The generic Stage-11 launcher accepts the
-explicit `--period tod` payload, but no upload or simulation has been launched.
-The next safe step is a new one-iteration no-signal/TOD A/B gate with ordinary
-innovation frozen, followed by per-junction queues, stuck events, controlled
-entries, and private-car/Bus/GMB/school-bus outcome audits. Production adoption
-requires a separate decision after that gate.
+rather than iterated arrival demand. The runtime gate proves that the 96-plan
+controller is mechanically usable, but the +7.65% road-delay and +3.34%
+road-stuck regressions block production adoption. The next bounded step is not
+spatial expansion or ordinary innovation: rank the 100 systems by added
+queue/delay, retime the worst oversaturated 15-minute bins using realised
+run1 arrivals, and repeat this same run57 A/B gate. The production network,
+`city.yaml`, and run manifest remain unchanged.

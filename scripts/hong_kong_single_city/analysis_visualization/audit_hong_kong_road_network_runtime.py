@@ -100,6 +100,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--top-n", type=int, default=100)
+    parser.add_argument(
+        "--traffic-signal-status",
+        default="disabled_baseline",
+        help="Descriptive run-scope label written to the audit summary.",
+    )
     return parser.parse_args()
 
 
@@ -734,7 +739,7 @@ def main() -> int:
     summary = {
         "status": "audited",
         "scope": {
-            "traffic_signals": "disabled_baseline",
+            "traffic_signals": args.traffic_signal_status,
             "road_links": len(road_links),
             "road_nodes": len(road_nodes),
             "road_links_outside_largest_scc": sum(

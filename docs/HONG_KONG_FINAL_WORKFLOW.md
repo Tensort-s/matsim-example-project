@@ -563,6 +563,21 @@ lost-agent counter was 10,180, versus 10,074 for AM iteration 0 and 8,738 for
 no-signal run57 iteration 0. AM and PM controller files are therefore both
 mechanically valid, but neither peak plan is adopted as an all-day schedule.
 
+The successor Top-100 time-of-day sensitivity at
+`/mnt/DiskM/by/hk_stage11_traffic_signals_tod_top100_20260812_run1` uses 96
+fixed 15-minute plans per system and keeps ordinary innovation frozen. The
+full-population iterations 0--1 run exits zero. Its iteration-1 audit observes
+100 systems, 241 groups and 1,538,332 state changes with zero signal-reference,
+conflicting-green, intergreen, transition-duration, or within-bin cycle
+violations. Run57 is the strict no-signal control; run62 is excluded because
+it enables the road-hotspot repair. Against run57, road delay rises from
+62,669.620 to 67,462.307 vehicle-hours (+7.65%) and road-vehicle stuck rises
+from 2,307 to 2,384 (+3.34%), although GMB and school-bus stuck improve. This
+is a successful mechanical gate but a failed performance-adoption gate. The
+candidate remains opt-in; the production supply, city metadata, and run
+manifest are unchanged. Full class results and comparison boundaries are in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_TOP100_V3.md`.
+
 The eight-junction package above is now a historical `pilot_v1` mechanical
 baseline because its conflict-graph colouring did not read the Stage A/B/C/D
 arrows as movement evidence. The independent
