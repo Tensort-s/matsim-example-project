@@ -700,3 +700,17 @@ passes practical equivalence to run62. The paired signal run8 passes all
 mechanical and physical-mode checks but increases road delay 12.95% and road-
 vehicle stuck 3.52% versus run7. The signal controller is therefore not
 adopted and remains opt-in; production metadata is unchanged.
+
+The next static expansion is documented in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_ALL_EXPRESSED_V3.md`. From the same
+candidate8 road-hotspot Stage-1 input it applies one uniform geometry/TOD rule
+to all 1,930 expressed registry groups. Exactly 1,929 systems are activated;
+`TS_OSM_0185` is explicitly excluded because no safe non-U-turn movement
+survives the overlap filter. The eight public-diagram examples are ordinary
+members of this set and receive no special selection, grouping, or timing.
+The 185,184-plan MATSim candidate passes static references and a frozen
+release9/run9 runtime gate. All 1,929 systems and 3,742 groups appear with zero
+mechanics violations, but iteration-1 road delay is 73,950.69 vehicle-hours
+(+41.17% versus no-signal run7) and road-vehicle stuck is 2,276 (+16.18%). It
+therefore fails the performance-adoption gate, remains opt-in, and leaves
+production metadata unchanged.

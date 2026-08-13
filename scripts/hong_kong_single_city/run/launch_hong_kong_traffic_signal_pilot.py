@@ -36,6 +36,30 @@ SIGNAL_FILENAMES = (
 )
 
 
+def validate_all_expressed_binding(pilot_summary: dict, validation_summary: dict) -> None:
+    active_junctions = pilot_summary.get(
+        "active_junction_count", pilot_summary.get("junction_count")
+    )
+    expected = {
+        "status": "pass",
+        "selection_scope": "all_expressed",
+        "junction_count": active_junctions,
+        "public_diagram_junction_count": 8,
+        "diagram_special_treatment_count": 0,
+        "production_adopted": False,
+    }
+    mismatches = {
+        key: {"expected": value, "actual": validation_summary.get(key)}
+        for key, value in expected.items()
+        if validation_summary.get(key) != value
+    }
+    if mismatches:
+        raise ValueError(
+            "All-expressed signal payload failed validation binding: "
+            + json.dumps(mismatches, sort_keys=True)
+        )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-release", type=Path, required=True)
@@ -117,6 +141,7 @@ def main() -> int:
     pilot_network = pilot / "network_signal_capacity_deconvolved.xml.gz"
     pilot_signals = pilot / ("matsim" if args.period == "tod" else f"matsim_{args.period}")
     pilot_summary_file = pilot / "pilot_build_summary.json"
+    validation_summary_file = pilot / "tod_validation_summary.json"
     require_regular(base / "runtime/jdk-25/bin/java", executable=True)
     require_regular(template)
     require_regular(jar)
@@ -129,6 +154,11 @@ def main() -> int:
     active_junctions = pilot_summary.get(
         "active_junction_count", pilot_summary.get("junction_count")
     )
+    validation_summary = None
+    if pilot_version == "territory_wide_v3_tod_all_expressed_proxy":
+        require_regular(validation_summary_file)
+        validation_summary = json.loads(validation_summary_file.read_text(encoding="utf-8"))
+        validate_all_expressed_binding(pilot_summary, validation_summary)
 
     release.mkdir()
     shutil.copytree(base / "runtime", release / "runtime", symlinks=True)
@@ -214,6 +244,15 @@ def main() -> int:
         "active_junctions": active_junctions,
         "signal_movements": pilot_summary.get("signal_movement_count"),
         "controlled_approach_links": pilot_summary.get("controlled_approach_link_count"),
+        "signal_plan_count": pilot_summary.get("signal_plan_count"),
+        "public_diagram_junction_count": (
+            validation_summary.get("public_diagram_junction_count")
+            if validation_summary is not None else None
+        ),
+        "diagram_special_treatment_count": (
+            validation_summary.get("diagram_special_treatment_count")
+            if validation_summary is not None else None
+        ),
         "amber_s": pilot_summary.get("amber_s"),
         "red_amber_s": pilot_summary.get("red_amber_s"),
         "minimum_intergreen_s": pilot_summary.get("minimum_intergreen_s"),

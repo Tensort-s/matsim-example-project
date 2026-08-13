@@ -40,10 +40,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Compiles the bounded Top-100, 96-bin Hong Kong TOD signal proxy. */
+/** Compiles a bounded or all-expressed 96-bin Hong Kong TOD signal proxy. */
 public final class BuildHongKongTrafficSignalTodTop100 {
 
-	private static final int EXPECTED_SYSTEMS = 100;
 	private static final int EXPECTED_PLANS_PER_SYSTEM = 96;
 	private static final int DAY_SECONDS = 24 * 3600;
 	private static final int BIN_SECONDS = 15 * 60;
@@ -130,8 +129,8 @@ public final class BuildHongKongTrafficSignalTodTop100 {
 			});
 			group.addSignalId(signalId);
 		}
-		if (systems.size() != EXPECTED_SYSTEMS) {
-			throw new IllegalArgumentException("Expected exactly 100 signal systems, found " + systems.size());
+		if (systems.isEmpty()) {
+			throw new IllegalArgumentException("TOD candidate contains no signal systems");
 		}
 
 		Map<String, Map<String, Map<String, String>>> plansBySystem = indexUnique(planRows, "signal_system_id", "plan_id");
@@ -214,7 +213,7 @@ public final class BuildHongKongTrafficSignalTodTop100 {
 		new SignalControlWriter20(data.getSignalControlData()).write(outputDirectory.resolve("signal_control.xml").toString());
 		new AmberTimesWriter10(data.getAmberTimesData()).write(outputDirectory.resolve("amber_times.xml").toString());
 		new IntergreenTimesWriter10(data.getIntergreenTimesData()).write(outputDirectory.resolve("intergreen_times.xml").toString());
-		System.out.printf("Compiled Hong Kong TOD Top-100: systems=%,d signals=%,d groups=%,d plans=%,d output=%s%n",
+		System.out.printf("Compiled Hong Kong TOD candidate: systems=%,d signals=%,d groups=%,d plans=%,d output=%s%n",
 				systems.size(), signalRows.size(), groups.size(), planRows.size(), outputDirectory);
 	}
 

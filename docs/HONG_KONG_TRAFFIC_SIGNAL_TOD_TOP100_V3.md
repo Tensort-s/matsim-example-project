@@ -184,3 +184,12 @@ spatial expansion or ordinary innovation: rank the 100 systems by added
 queue/delay, retime the worst oversaturated 15-minute bins using realised
 run1 arrivals, and repeat this same run57 A/B gate. The production network,
 `city.yaml`, and run manifest remain unchanged.
+
+This was the recommendation at the close of the Top-100 experiment. A later
+explicitly authorized sensitivity instead expands the uniform proxy to all
+safely executable expressed groups. That separate candidate and its completed
+release9/run9 gate are documented in
+`HONG_KONG_TRAFFIC_SIGNAL_TOD_ALL_EXPRESSED_V3.md`. Run9 passes signal
+mechanics but further increases road delay and stuck vehicles, so it does not
+retroactively adopt this Top-100 controller or relax its failed performance
+gate.

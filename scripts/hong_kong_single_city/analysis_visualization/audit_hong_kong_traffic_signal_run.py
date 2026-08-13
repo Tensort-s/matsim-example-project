@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from bisect import bisect_left
 from collections import Counter, defaultdict
 import contextlib
 import csv
@@ -215,18 +216,27 @@ def main() -> int:
         red_yellow_times = [time for time, state in states if state == "REDYELLOW"]
         green_times = [time for time, state in states if state == "GREEN"]
         for yellow in yellow_times:
-            following = [red for red in red_times if red >= yellow]
-            if not following and yellow + 3.0 > maximum_event_time:
+            red_index = bisect_left(red_times, yellow)
+            next_red = red_times[red_index] if red_index < len(red_times) else None
+            if next_red is None and yellow + 3.0 > maximum_event_time:
                 terminal_transition_truncations.append(
                     {"system": system, "group": group, "state": "YELLOW", "time": yellow}
                 )
-            elif not following or abs(following[0] - yellow - 3.0) > 1e-9:
+            elif next_red is None or abs(next_red - yellow - 3.0) > 1e-9:
                 amber_violations.append(
-                    {"system": system, "group": group, "yellow": yellow, "next_red": following[:1]}
+                    {
+                        "system": system,
+                        "group": group,
+                        "yellow": yellow,
+                        "next_red": [] if next_red is None else [next_red],
+                    }
                 )
         for red_yellow in red_yellow_times:
-            following = [green for green in green_times if green >= red_yellow]
-            if not following and red_yellow + 2.0 > maximum_event_time:
+            green_index = bisect_left(green_times, red_yellow)
+            next_green = (
+                green_times[green_index] if green_index < len(green_times) else None
+            )
+            if next_green is None and red_yellow + 2.0 > maximum_event_time:
                 terminal_transition_truncations.append(
                     {
                         "system": system,
@@ -235,13 +245,13 @@ def main() -> int:
                         "time": red_yellow,
                     }
                 )
-            elif not following or abs(following[0] - red_yellow - 2.0) > 1e-9:
+            elif next_green is None or abs(next_green - red_yellow - 2.0) > 1e-9:
                 red_amber_violations.append(
                     {
                         "system": system,
                         "group": group,
                         "red_yellow": red_yellow,
-                        "next_green": following[:1],
+                        "next_green": [] if next_green is None else [next_green],
                     }
                 )
         for earlier, later in zip(green_times, green_times[1:]):

@@ -49,6 +49,12 @@ class TrafficSignalRuntimeAuditTests(unittest.TestCase):
         self.assertEqual(entries, {"a": 2})
         self.assertEqual(entries_by_class, {"private_car": 1, "bus": 1})
 
+    def test_bisect_finds_same_or_next_transition(self):
+        transition_times = [3.0, 63.0, 123.0]
+        self.assertEqual(MODULE.bisect_left(transition_times, 63.0), 1)
+        self.assertEqual(MODULE.bisect_left(transition_times, 64.0), 2)
+        self.assertEqual(MODULE.bisect_left(transition_times, 124.0), 3)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -39,6 +39,23 @@ class TodTop100Tests(unittest.TestCase):
             self.assertGreaterEqual(min(greens), MODULE.MIN_GREEN_SECONDS)
             self.assertEqual(sum(greens) + 2 * MODULE.CONTROLLER_CLEARANCE_SECONDS, cycle)
 
+    def test_green_allocation_supports_unified_one_and_five_axis_rule(self):
+        for ratios in ([0.0], [0.3], [0.2, 0.1, 0.1, 0.05, 0.05]):
+            cycle, _, _ = MODULE.recommended_cycle(ratios)
+            greens = MODULE.allocate_green(cycle, ratios)
+            self.assertEqual(len(greens), len(ratios))
+            self.assertGreaterEqual(min(greens), MODULE.MIN_GREEN_SECONDS)
+            self.assertEqual(
+                sum(greens) + len(ratios) * MODULE.CONTROLLER_CLEARANCE_SECONDS,
+                cycle,
+            )
+
+    def test_diagram_membership_is_not_an_executable_movement_rule(self):
+        ordinary = {"movement_type": "straight", "demand_match_status": "matched"}
+        self.assertTrue(MODULE.executable_movement(ordinary))
+        self.assertNotIn("signal_junction_id", ordinary)
+        self.assertEqual(len(MODULE.PUBLIC_DIAGRAM_JUNCTIONS), 8)
+
     def test_cycle_smoothing_never_undersizes_and_limits_grade_change(self):
         recommended = [60, 60, 100, 60, 75]
         smoothed = MODULE.smooth_cycle_indices(recommended)

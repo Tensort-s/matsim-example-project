@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Hong Kong Top-100, 96-bin TOD signal proxy and MATSim XML."""
+"""Validate a Hong Kong demand-ranked or all-expressed 96-bin TOD candidate."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from build_hong_kong_traffic_signal_pilot_v1 import parse_network, read_csv
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_CANDIDATE = REPO_ROOT / "data/transit/hongkong/processed/hong_kong_traffic_signals_2026_v3_tod_proxy_top100"
 DEFAULT_NETWORK = REPO_ROOT / "data/transit/hongkong/processed/matsim_road_pt_school_bus_supply_2026_v6_adoption_ready/network.xml.gz"
-EXPECTED_SYSTEMS = 100
 EXPECTED_BINS = 96
 BIN_SECONDS = 900
 DAY_SECONDS = 86400
@@ -27,6 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate-dir", type=Path, default=DEFAULT_CANDIDATE)
     parser.add_argument("--network", type=Path, default=DEFAULT_NETWORK)
+    parser.add_argument("--expected-systems", type=int, default=None)
     return parser.parse_args()
 
 
@@ -48,6 +48,7 @@ def validate(args: argparse.Namespace) -> dict:
     required = [args.candidate_dir / name for name in csv_names]
     required += [args.candidate_dir / "matsim" / name for name in xml_names]
     required.append(args.candidate_dir / "network_signal_capacity_deconvolved.xml.gz")
+    required.append(args.candidate_dir / "tod_qa_summary.json")
     missing = [str(path) for path in required if not path.is_file()]
     if missing:
         raise FileNotFoundError("Missing candidate outputs: " + ", ".join(missing))
@@ -59,14 +60,21 @@ def validate(args: argparse.Namespace) -> dict:
     windows = read_csv(args.candidate_dir / "tod_group_windows.csv")
     class_rows = read_csv(args.candidate_dir / "vehicle_class_stage_demand_15min.csv")
     capacity_rows = read_csv(args.candidate_dir / "capacity_deconvolution_audit.csv")
-    if len(selected) != EXPECTED_SYSTEMS or len(plans) != EXPECTED_SYSTEMS * EXPECTED_BINS:
-        raise AssertionError("Top-100/96-bin cardinality failed")
+    qa = json.loads((args.candidate_dir / "tod_qa_summary.json").read_text(encoding="utf-8"))
+    expected_systems = args.expected_systems if args.expected_systems is not None else int(qa["junction_count"])
+    if len(selected) != expected_systems or len(plans) != expected_systems * EXPECTED_BINS:
+        raise AssertionError("System/96-bin cardinality failed")
     selected_ids = {row["signal_junction_id"] for row in selected}
-    if len(selected_ids) != EXPECTED_SYSTEMS:
+    if len(selected_ids) != expected_systems:
         raise AssertionError("Selected junction IDs are not unique")
-    expected_ranks = list(range(1, EXPECTED_SYSTEMS + 1))
+    expected_ranks = list(range(1, expected_systems + 1))
     if sorted(int(row["demand_rank"]) for row in selected) != expected_ranks:
-        raise AssertionError("Demand ranks are not exactly 1..100")
+        raise AssertionError("Demand ranks are not contiguous")
+    if any(row.get("diagram_special_treatment") != "false" for row in selected):
+        raise AssertionError("A public diagram junction received special treatment")
+    diagram_rows = [row for row in selected if row.get("public_diagram_validation_member") == "true"]
+    if qa.get("selection_scope") == "all_expressed" and len(diagram_rows) != 8:
+        raise AssertionError("All eight public diagram junctions must use the unified expressed rule")
 
     stage_ids = {row["stage_id"] for row in stages}
     group_ids = {row["signal_group_id"] for row in stages}
@@ -81,7 +89,7 @@ def validate(args: argparse.Namespace) -> dict:
         if "u_turn" in row["movement_types"].split("|"):
             raise AssertionError("Executable TOD signal contains a U-turn")
 
-    _, _, network_links = parse_network(args.network)
+    _, network_nodes, network_links = parse_network(args.network)
     for row in signals:
         incoming = network_links.get(row["from_link_id"])
         outgoing = network_links.get(row["to_link_id"])
@@ -89,7 +97,7 @@ def validate(args: argparse.Namespace) -> dict:
             raise AssertionError("Controlled link pair is missing or non-adjacent")
         if incoming.from_node == outgoing.to_node:
             raise AssertionError("Controlled link pair is a U-turn")
-    _, _, candidate_links = parse_network(args.candidate_dir / "network_signal_capacity_deconvolved.xml.gz")
+    _, candidate_nodes, candidate_links = parse_network(args.candidate_dir / "network_signal_capacity_deconvolved.xml.gz")
     if len(capacity_rows) != len({row["approach_id"] for row in signals}):
         raise AssertionError("Capacity audit does not cover every controlled approach exactly once")
     changed_ids = set()
@@ -100,6 +108,28 @@ def validate(args: argparse.Namespace) -> dict:
             raise AssertionError("Candidate network capacity does not match audit")
     if set(network_links) != set(candidate_links):
         raise AssertionError("Candidate network changed link IDs")
+    if set(network_nodes) != set(candidate_nodes):
+        raise AssertionError("Candidate network changed node IDs")
+    changed_topology_or_attributes = [
+        link_id for link_id, source in network_links.items()
+        if (
+            source.from_node,
+            source.to_node,
+            source.length_m,
+            source.freespeed_m_s,
+            source.lanes,
+            source.modes,
+        ) != (
+            candidate_links[link_id].from_node,
+            candidate_links[link_id].to_node,
+            candidate_links[link_id].length_m,
+            candidate_links[link_id].freespeed_m_s,
+            candidate_links[link_id].lanes,
+            candidate_links[link_id].modes,
+        )
+    ]
+    if changed_topology_or_attributes:
+        raise AssertionError("Candidate network changed topology or non-capacity link attributes")
     unexpected_changes = [
         link_id for link_id in network_links
         if link_id not in changed_ids and network_links[link_id].capacity_veh_h != candidate_links[link_id].capacity_veh_h
@@ -158,12 +188,15 @@ def validate(args: argparse.Namespace) -> dict:
     xml_signals = descendants(systems_root, "signal")
     xml_groups = descendants(groups_root, "signalGroup")
     xml_plans = descendants(control_root, "signalPlan")
-    if (len(xml_systems), len(xml_signals), len(xml_groups), len(xml_plans)) != (EXPECTED_SYSTEMS, len(signals), len(stages), len(plans)):
+    if (len(xml_systems), len(xml_signals), len(xml_groups), len(xml_plans)) != (expected_systems, len(signals), len(stages), len(plans)):
         raise AssertionError("Compiled MATSim XML cardinality differs from design CSV")
 
     summary = {
         "status": "pass",
         "junction_count": len(selected),
+        "selection_scope": qa.get("selection_scope", "top_demand"),
+        "public_diagram_junction_count": len(diagram_rows),
+        "diagram_special_treatment_count": 0,
         "plans_per_junction": EXPECTED_BINS,
         "plan_count": len(plans),
         "stage_count": len(stages),

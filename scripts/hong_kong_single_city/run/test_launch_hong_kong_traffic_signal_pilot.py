@@ -3,7 +3,10 @@ from pathlib import Path
 import unittest
 import xml.etree.ElementTree as ET
 
-from launch_hong_kong_traffic_signal_pilot import write_config
+from launch_hong_kong_traffic_signal_pilot import (
+    validate_all_expressed_binding,
+    write_config,
+)
 
 
 class TrafficSignalConfigTest(unittest.TestCase):
@@ -61,6 +64,21 @@ class TrafficSignalConfigTest(unittest.TestCase):
                 for item in module.findall("./param")
             }
             self.assertIn("traffic_signals_tod", values["signalcontrol"])
+
+    def test_all_expressed_payload_requires_unified_diagram_validation(self) -> None:
+        pilot = {"active_junction_count": 1929}
+        valid = {
+            "status": "pass",
+            "selection_scope": "all_expressed",
+            "junction_count": 1929,
+            "public_diagram_junction_count": 8,
+            "diagram_special_treatment_count": 0,
+            "production_adopted": False,
+        }
+        validate_all_expressed_binding(pilot, valid)
+        invalid = dict(valid, diagram_special_treatment_count=1)
+        with self.assertRaisesRegex(ValueError, "validation binding"):
+            validate_all_expressed_binding(pilot, invalid)
 
 
 if __name__ == "__main__":

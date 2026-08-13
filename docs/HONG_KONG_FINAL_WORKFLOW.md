@@ -628,6 +628,20 @@ road delay rises 12.95% and road-vehicle stuck rises 3.52% versus run7.
 Accordingly this Top-100-by-96 signal controller is mechanically validated but
 not adopted; it remains an explicitly switchable sensitivity.
 
+The subsequent all-expressed candidate is documented in
+`docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_ALL_EXPRESSED_V3.md`. It uses the same
+road-hotspot candidate8 Stage-1 input and the same 96-bin timing rule. Of
+1,930 expressed registry groups, 1,929 retain a safe executable non-U-turn
+movement; `TS_OSM_0185` is machine-readably excluded rather than reactivating
+an overlap-filtered movement. All eight public-diagram examples use the same
+uniform geometry and timing rule. The resulting 185,184 plans and 1,929 MATSim
+systems pass static validation. Frozen release9/run9 also exits zero and sees
+every system and group with zero signal-mechanics violations. It nevertheless
+fails the performance gate: road delay is 73,950.69 vehicle-hours (+41.17%
+versus run7) and road-vehicle stuck is 2,276 (+16.18%). It remains an opt-in
+sensitivity; the production network, city metadata, and run manifest remain
+unchanged.
+
 A second opt-in sensitivity now addresses private-Car activity-link direction
 without enabling ordinary innovation. The run62 event audit exposes 15,078
 unique initial reverse transitions as `person_id + private_car_trip_ordinal`

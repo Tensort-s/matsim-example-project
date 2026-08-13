@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Build a 100-junction, 96-bin Hong Kong time-of-day signal proxy.
+"""Build a demand-ranked or all-expressed Hong Kong 96-bin TOD signal proxy.
 
-This is a deliberately bounded Stage-2 MVP.  It ranks only safely expressible
-Stage-1.5 junctions, keeps one geometry-derived stage template for the day,
-and changes cycle and green splits at exact 15-minute boundaries.  The output
-is rebuildable candidate data; it does not edit the road network or enable
-signals in the production configuration.
+The historical default remains the bounded Top-100 Stage-2 MVP.  The explicit
+``all_expressed`` scope activates every Stage-1.5 ``expressed`` registry group
+that retains at least one safe non-U-turn executable movement.  Both scopes
+use the same geometry-derived stage rule and change cycle and green splits at
+exact 15-minute boundaries.  Published diagram membership is provenance only
+and never changes selection, grouping, timing, or priority.  The output is
+rebuildable candidate data; it does not enable signals in production.
 """
 
 from __future__ import annotations
@@ -35,6 +37,11 @@ MIN_GREEN_SECONDS = 7
 AXIS_CLUSTER_TOLERANCE_DEGREES = 25.0
 WEBSTER_Y_LIMIT = 0.95
 MODEL_STATUS = "top100_tod_15min_proxy_candidate_not_adopted"
+ALL_EXPRESSED_MODEL_STATUS = "all_expressed_tod_15min_proxy_candidate_not_adopted"
+PUBLIC_DIAGRAM_JUNCTIONS = {
+    "TS_K005", "TS_K006", "TS_K008", "TS_K024",
+    "TS_K025", "TS_K101", "TS_K118", "TS_K201",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,6 +50,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--network", type=Path, default=DEFAULT_NETWORK)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--junction-count", type=int, default=100)
+    parser.add_argument(
+        "--selection-scope",
+        choices=("top_demand", "all_expressed"),
+        default="top_demand",
+        help="Use the historical demand-ranked count or every safely executable expressed registry group.",
+    )
     return parser.parse_args()
 
 
@@ -157,7 +170,15 @@ def allocate_green(cycle: int, stage_ratios: Sequence[float]) -> list[int]:
     return [MIN_GREEN_SECONDS + value for value in additions]
 
 
-def select_junctions(stage1_dir: Path, count: int) -> tuple[list[dict], dict[str, list[float]]]:
+def executable_movement(row: dict) -> bool:
+    return row["movement_type"] != "u_turn" and not row["demand_match_status"].startswith("excluded_")
+
+
+def select_junctions(
+    stage1_dir: Path,
+    count: int,
+    selection_scope: str,
+) -> tuple[list[dict], dict[str, list[float]], list[dict]]:
     audits = {row["signal_junction_id"]: row for row in read_csv(stage1_dir / "junction_network_expression_audit.csv")}
     profiles: dict[str, list[float]] = defaultdict(lambda: [0.0] * TIME_BIN_COUNT)
     totals: Counter[str] = Counter()
@@ -169,16 +190,31 @@ def select_junctions(stage1_dir: Path, count: int) -> tuple[list[dict], dict[str
     approaches_by_junction: dict[str, list[dict]] = defaultdict(list)
     for approach in read_csv(stage1_dir / "signal_approaches.csv"):
         approaches_by_junction[approach["signal_junction_id"]].append(approach)
+    active_approach_ids: dict[str, set[str]] = defaultdict(set)
+    for movement in read_csv(stage1_dir / "signal_movements.csv"):
+        if executable_movement(movement):
+            active_approach_ids[movement["signal_junction_id"]].add(movement["approach_id"])
     eligible = []
-    for junction_id, profile in profiles.items():
-        audit = audits.get(junction_id)
-        if audit is None or audit["network_expression_status"] != "expressed":
+    exclusions = []
+    for junction_id, audit in sorted(audits.items()):
+        if audit["network_expression_status"] != "expressed":
             continue
-        axis_count = len(cluster_approach_axes(approaches_by_junction[junction_id]))
-        # A one-axis site cannot express competing vehicular directions; more
-        # than four axes is too ambiguous for this bounded MVP.
-        if not 2 <= axis_count <= 4:
+        active_approaches = [
+            row for row in approaches_by_junction[junction_id]
+            if row["approach_id"] in active_approach_ids[junction_id]
+        ]
+        if not active_approaches:
+            exclusions.append({
+                "signal_junction_id": junction_id,
+                "network_expression_status": audit["network_expression_status"],
+                "activation_status": "excluded_no_safe_non_uturn_executable_movement",
+                "reason": "all_movements_removed_by_u_turn_or_registry_overlap_safety_filter",
+                "public_diagram_validation_member": str(junction_id in PUBLIC_DIAGRAM_JUNCTIONS).lower(),
+                "diagram_special_treatment": "false",
+            })
             continue
+        profile = profiles[junction_id]
+        axis_count = len(cluster_approach_axes(active_approaches))
         eligible.append({
             "signal_junction_id": junction_id,
             "peak_tpdm_pcu_per_hour": max(profile),
@@ -187,13 +223,15 @@ def select_junctions(stage1_dir: Path, count: int) -> tuple[list[dict], dict[str
             "approach_count": audit["approach_count"],
             "movement_count": audit["movement_count"],
             "inferred_stage_count": axis_count,
-            "selection_eligibility": "expressed_with_planned_demand_no_unresolved_registry_overlap_and_2to4_axes",
+            "selection_eligibility": "expressed_with_safe_non_uturn_executable_movement_unified_1to5_axis_rule",
+            "public_diagram_validation_member": str(junction_id in PUBLIC_DIAGRAM_JUNCTIONS).lower(),
+            "diagram_special_treatment": "false",
         })
     eligible.sort(key=lambda row: (-row["peak_tpdm_pcu_per_hour"], -row["daily_tpdm_pcu_count"], row["signal_junction_id"]))
-    selected = eligible[:count]
+    selected = eligible if selection_scope == "all_expressed" else eligible[:count]
     for rank, row in enumerate(selected, 1):
         row["demand_rank"] = rank
-    return selected, profiles
+    return selected, profiles, exclusions
 
 
 def build(args: argparse.Namespace) -> dict:
@@ -211,21 +249,32 @@ def build(args: argparse.Namespace) -> dict:
     if missing:
         raise FileNotFoundError("Missing required inputs: " + ", ".join(missing))
 
-    selected, junction_profiles = select_junctions(args.stage1_dir, args.junction_count)
-    if len(selected) != args.junction_count:
+    selected, junction_profiles, exclusions = select_junctions(
+        args.stage1_dir, args.junction_count, args.selection_scope
+    )
+    if args.selection_scope == "top_demand" and len(selected) != args.junction_count:
         raise ValueError(f"Requested {args.junction_count} junctions but only {len(selected)} are eligible")
+    model_status = MODEL_STATUS if args.selection_scope == "top_demand" else ALL_EXPRESSED_MODEL_STATUS
+    system_id_prefix = "tod_top100" if args.selection_scope == "top_demand" else "tod_expressed"
     selected_ids = {row["signal_junction_id"] for row in selected}
 
-    approaches = [row for row in read_csv(args.stage1_dir / "signal_approaches.csv") if row["signal_junction_id"] in selected_ids]
-    approach_by_id = {row["approach_id"]: row for row in approaches}
-    saturation = {row["approach_id"]: float(row["approach_saturation_flow_pcu_h"]) for row in read_csv(args.stage1_dir / "approach_saturation_flow.csv") if row["signal_junction_id"] in selected_ids}
     movements = [
         row for row in read_csv(args.stage1_dir / "signal_movements.csv")
         if row["signal_junction_id"] in selected_ids
-        and row["movement_type"] != "u_turn"
-        and not row["demand_match_status"].startswith("excluded_")
+        and executable_movement(row)
     ]
     movement_by_id = {row["movement_id"]: row for row in movements}
+    executable_approach_ids = {row["approach_id"] for row in movements}
+    approaches = [
+        row for row in read_csv(args.stage1_dir / "signal_approaches.csv")
+        if row["approach_id"] in executable_approach_ids
+    ]
+    approach_by_id = {row["approach_id"]: row for row in approaches}
+    saturation = {
+        row["approach_id"]: float(row["approach_saturation_flow_pcu_h"])
+        for row in read_csv(args.stage1_dir / "approach_saturation_flow.csv")
+        if row["approach_id"] in executable_approach_ids
+    }
 
     movement_q: dict[str, list[float]] = defaultdict(lambda: [0.0] * TIME_BIN_COUNT)
     class_q: dict[tuple[str, str], list[float]] = defaultdict(lambda: [0.0] * TIME_BIN_COUNT)
@@ -260,7 +309,7 @@ def build(args: argparse.Namespace) -> dict:
             stages.append(stage)
             stage_rows.append({
                 "signal_junction_id": junction_id,
-                "signal_system_id": f"tod_top100__{junction_id}",
+                "signal_system_id": f"{system_id_prefix}__{junction_id}",
                 "stage_index": index,
                 "stage_id": stage_id,
                 "signal_group_id": group_id,
@@ -291,7 +340,7 @@ def build(args: argparse.Namespace) -> dict:
         stage = next(item for item in stages_by_junction[junction_id] if item["stage_id"] == stage_id)
         signal_rows.append({
             "signal_junction_id": junction_id,
-            "signal_system_id": f"tod_top100__{junction_id}",
+            "signal_system_id": f"{system_id_prefix}__{junction_id}",
             "signal_id": signal_id,
             "signal_group_id": stage["group_id"],
             "stage_id": stage_id,
@@ -380,7 +429,7 @@ def build(args: argparse.Namespace) -> dict:
             plan_id = f"tod_{time_index:02d}"
             plan_rows.append({
                 "signal_junction_id": junction_id,
-                "signal_system_id": f"tod_top100__{junction_id}",
+                "signal_system_id": f"{system_id_prefix}__{junction_id}",
                 "plan_id": plan_id,
                 "time_bin_index": time_index,
                 "time_bin": bin_label(time_index),
@@ -404,7 +453,7 @@ def build(args: argparse.Namespace) -> dict:
                     raise AssertionError("Last green leaves no wrap-around clearance")
                 window_rows.append({
                     "signal_junction_id": junction_id,
-                    "signal_system_id": f"tod_top100__{junction_id}",
+                    "signal_system_id": f"{system_id_prefix}__{junction_id}",
                     "plan_id": plan_id,
                     "time_bin_index": time_index,
                     "time_bin": bin_label(time_index),
@@ -451,12 +500,16 @@ def build(args: argparse.Namespace) -> dict:
                     "evidence": "geometry_inferred_approach_bearing_not_lane_level_conflict_observation",
                 })
 
+    if args.output_dir.exists() and any(args.output_dir.iterdir()):
+        raise FileExistsError(f"Refusing non-empty output directory: {args.output_dir}")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "selected_junctions.csv", selected, (
         "demand_rank", "signal_junction_id", "peak_tpdm_pcu_per_hour", "daily_tpdm_pcu_count",
         "stage1_confidence", "approach_count", "movement_count", "selection_eligibility",
-        "inferred_stage_count",
+        "inferred_stage_count", "public_diagram_validation_member", "diagram_special_treatment",
     ))
+    if exclusions and args.selection_scope == "all_expressed":
+        write_csv(args.output_dir / "junction_activation_exclusions.csv", exclusions, tuple(exclusions[0]))
     write_csv(args.output_dir / "stage_templates.csv", stage_rows, tuple(stage_rows[0]))
     write_csv(args.output_dir / "executable_signal_movements.csv", signal_rows, tuple(signal_rows[0]))
     write_csv(args.output_dir / "approach_conflict_proxy.csv", conflict_rows, tuple(conflict_rows[0]))
@@ -473,14 +526,17 @@ def build(args: argparse.Namespace) -> dict:
         )
 
     summary = {
-        "status": MODEL_STATUS,
+        "status": model_status,
+        "selection_scope": args.selection_scope,
+        "expressed_registry_group_count": len(selected) + len(exclusions) if args.selection_scope == "all_expressed" else None,
+        "activation_exclusion_count": len(exclusions) if args.selection_scope == "all_expressed" else 0,
         "junction_count": len(selected),
         "time_bin_count_per_junction": TIME_BIN_COUNT,
         "plan_count": len(plan_rows),
         "stage_count": len(stage_rows),
         "signal_count": len(signal_rows),
         "group_window_count": len(window_rows),
-        "top100_cutoff_peak_tpdm_pcu_per_hour": selected[-1]["peak_tpdm_pcu_per_hour"],
+        "minimum_selected_peak_tpdm_pcu_per_hour": selected[-1]["peak_tpdm_pcu_per_hour"],
         "cycle_distribution": dict(sorted(cycle_distribution.items())),
         "timing_status_distribution": dict(design_status_distribution),
         "folded_post_midnight_tpdm_pcu_count": folded_after_midnight,
@@ -490,6 +546,7 @@ def build(args: argparse.Namespace) -> dict:
         "production_adopted": False,
         "signal_activation": "explicit_opt_in_only_after_payload_staging",
         "stage_template_policy": "fixed_all_day_geometry_inferred_opposing_axes",
+        "diagram_policy": "eight_public_diagram_junctions_use_the_same_unified_rule_without_special_treatment",
         "timing_policy": "96_nonoverlapping_15min_fixed_plans",
         "right_turn_policy": "no_protected_right_stage_without_lane_to_movement_evidence",
         "cycle_options_seconds": list(CYCLE_OPTIONS_SECONDS),
@@ -508,9 +565,9 @@ def build(args: argparse.Namespace) -> dict:
     }
     (args.output_dir / "tod_qa_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (args.output_dir / "pilot_build_summary.json").write_text(json.dumps({
-        "status": MODEL_STATUS,
-        "pilot_version": "territory_wide_v3_tod_top100_proxy",
-        "scope": "100_high_demand_expressible_junctions_x_96_15min_plans",
+        "status": model_status,
+        "pilot_version": "territory_wide_v3_tod_top100_proxy" if args.selection_scope == "top_demand" else "territory_wide_v3_tod_all_expressed_proxy",
+        "scope": "100_high_demand_expressible_junctions_x_96_15min_plans" if args.selection_scope == "top_demand" else "all_safely_executable_expressed_registry_groups_x_96_15min_plans",
         "active_junction_count": len(selected),
         "controlled_approach_link_count": len(capacity_rows),
         "signal_movement_count": len(signal_rows),
@@ -521,17 +578,22 @@ def build(args: argparse.Namespace) -> dict:
         "minimum_intergreen_s": 5,
         "controller_onset_gap_s": CONTROLLER_CLEARANCE_SECONDS,
         "stage_mapping_status": "geometry_inferred_opposing_axes_proxy",
+        "diagram_special_treatment": False,
+        "public_diagram_junction_count": len(PUBLIC_DIAGRAM_JUNCTIONS & selected_ids),
         "activation_windows": "96_contiguous_15min_time_of_day_plans",
         "offsets": "zero_uncoordinated_proxy",
         "capacity_treatment": "controlled_final_approaches_use_tpdm_saturation_proxy",
         "production_adopted": False,
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (args.output_dir / "tod_metadata.json").write_text(json.dumps({
-        "model_status": MODEL_STATUS,
+        "model_status": model_status,
+        "selection_scope": args.selection_scope,
+        "system_id_prefix": system_id_prefix,
         "stage1_dir": str(args.stage1_dir.resolve()),
         "network": str(args.network.resolve()),
         "output_dir": str(args.output_dir.resolve()),
-        "junction_selection": "descending peak 15-minute TPDM PCU/h, then daily PCU, then stable junction ID",
+        "junction_selection": "all expressed groups with a safe executable movement; demand rank retained for audit" if args.selection_scope == "all_expressed" else "descending peak 15-minute TPDM PCU/h, then daily PCU, then stable junction ID",
+        "diagram_policy": "validation provenance only; no special selection, grouping, timing, or priority",
         "time_bins": [bin_label(index) for index in range(TIME_BIN_COUNT)],
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return summary
