@@ -69,6 +69,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--period", choices=("am", "pm", "tod"), required=True)
     parser.add_argument("--last-iteration", type=int, default=1)
+    parser.add_argument("--stuck-time", type=int, default=600)
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="96g")
     return parser.parse_args()
@@ -124,10 +125,30 @@ def write_config(path: Path, release: Path, run: Path, period: str) -> None:
     ET.parse(path)
 
 
+def set_qsim_stuck_time(path: Path, stuck_time_s: int) -> None:
+    if stuck_time_s <= 0:
+        raise ValueError("stuck time must be positive")
+    tree = ET.parse(path)
+    parameters = tree.findall("./module[@name='qsim']/param[@name='stuckTime']")
+    if len(parameters) != 1:
+        raise ValueError(
+            f"Expected exactly one qsim.stuckTime parameter; found {len(parameters)}"
+        )
+    parameters[0].set("value", str(stuck_time_s))
+    with path.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        stream.write('<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">\n')
+        stream.write(ET.tostring(tree.getroot(), encoding="unicode"))
+        stream.write("\n")
+    ET.parse(path)
+
+
 def main() -> int:
     args = parse_args()
     if args.last_iteration < 0:
         raise ValueError("last iteration must be non-negative")
+    if args.stuck_time <= 0:
+        raise ValueError("stuck time must be positive")
     base = safe_server_path(args.base_release, must_exist=True)
     template = safe_server_path(args.config_template, must_exist=True)
     payload = safe_server_path(args.payload_root, must_exist=True)
@@ -190,6 +211,7 @@ def main() -> int:
     rewrite_household_run_config(config)
     configure_physical_school_bus(config)
     write_config(config, release, run, args.period)
+    set_qsim_stuck_time(config, args.stuck_time)
 
     household_candidates = release / "input/household_joint_plan_potential_candidates.csv"
     student_candidates = release / "input/school_bus_plan_candidates_5pct_v6"
@@ -265,6 +287,7 @@ def main() -> int:
         "release_root": str(release),
         "run_root": str(run),
         "last_iteration": args.last_iteration,
+        "stuck_time_s": args.stuck_time,
         "ordinary_innovation": "frozen; KeepLastSelected only",
         "runtime_conflict_boundary": (
             "multi-node physical junction clusters use audited fixed-stage separation; "

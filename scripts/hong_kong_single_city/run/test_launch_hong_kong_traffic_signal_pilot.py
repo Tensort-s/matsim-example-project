@@ -4,6 +4,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 from launch_hong_kong_traffic_signal_pilot import (
+    set_qsim_stuck_time,
     validate_all_expressed_binding,
     write_config,
 )
@@ -79,6 +80,22 @@ class TrafficSignalConfigTest(unittest.TestCase):
         invalid = dict(valid, diagram_special_treatment_count=1)
         with self.assertRaisesRegex(ValueError, "validation binding"):
             validate_all_expressed_binding(pilot, invalid)
+
+    def test_sets_explicit_positive_qsim_stuck_time(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            config = Path(directory) / "config.xml"
+            config.write_text(
+                "<config><module name='qsim'><param name='stuckTime' "
+                "value='600'/></module></config>\n",
+                encoding="utf-8",
+            )
+            set_qsim_stuck_time(config, 3600)
+            parameter = ET.parse(config).getroot().find(
+                "./module[@name='qsim']/param[@name='stuckTime']"
+            )
+            self.assertEqual("3600", parameter.get("value"))
+            with self.assertRaisesRegex(ValueError, "positive"):
+                set_qsim_stuck_time(config, 0)
 
 
 if __name__ == "__main__":

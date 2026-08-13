@@ -581,9 +581,13 @@ def main() -> int:
             stuck_by_link_class[(link_id, vehicle_class)] += 1
             hour = min(HOURS - 1, max(0, int(time_s // 3600)))
             stuck_by_hour_link_class[(hour, link_id, vehicle_class)] += 1
+            state = active.pop(vehicle, None)
+            if state is not None:
+                finalize_trip(state, time_s, "stuck")
+                person_vehicle.pop(state.person, None)
 
     for state in list(active.values()):
-        finalize_trip(state, maximum_event_time, "unfinished")
+        finalize_trip(state, maximum_event_time, "terminal_active")
 
     link_rows: list[dict[str, object]] = []
     for link_id, aggregate in runtime.items():

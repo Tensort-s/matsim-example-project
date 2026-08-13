@@ -166,3 +166,56 @@ The full road audit is retained at:
 The signal runtime auditor was also changed from repeated suffix scans to
 binary-search lookup of the next state transition. This preserves the audit
 semantics while avoiding quadratic post-processing at territory-wide scale.
+
+## Stuck-time sensitivity: release10a/run10a
+
+A controlled sensitivity changes only QSim `stuckTime` from 600 to 3,600
+seconds. `removeStuckVehicles=true`, the 30:00 horizon, network, plans,
+transit supply, signal XML, frozen innovation, and all other run settings are
+unchanged. Network and signal-control SHA256 values match run9. The new paths
+are:
+
+```text
+/mnt/DiskM/by/hk_stage11_road_hotspot_all_expressed_signals_stuck3600_20260813_release10a
+/mnt/DiskM/by/hk_stage11_road_hotspot_all_expressed_signals_stuck3600_20260813_run10a
+```
+
+An earlier release10 creation attempt used release9 as a launcher base and
+stopped before any run when the existing `traffic_signals_tod` directory made
+the fail-closed copy operation refuse an overwrite. Its partial release
+directory is retained for provenance; no run10 directory or MATSim result was
+created. Release10a correctly rebuilds from release7 plus the same validated
+payload used by run9.
+
+Run10a exits zero, but the higher threshold worsens road blocking:
+
+| Iteration-1 metric | run9, 600 s | run10a, 3,600 s | Change |
+|---|---:|---:|---:|
+| Road-vehicle `stuckAndAbort` | 2,276 | 13,552 | +495.43% |
+| Before 30:00 | 2,231 | 2,034 | -8.83% |
+| At the 30:00 terminal bucket | 45 | 11,518 | +11,473 |
+| Private Car stuck | 1,124 | 4,624 | +311.39% |
+| Bus stuck | 666 | 5,132 | +670.57% |
+| GMB stuck | 483 | 3,796 | +685.92% |
+| School-bus stuck | 3 | 0 | -3 |
+| Total road delay (veh-h) | 73,950.69 | 136,771.83 | +84.95% |
+| Road-link traversals | 23,843,160 | 22,507,755 | -5.60% |
+| Links with >=100 traversals and mean ratio >2 | 4,773 | 5,276 | +10.54% |
+
+The threshold postpones some ordinary aborts, but blocked vehicles remain on
+the network longer and propagate queues. At 30:00 MATSim emits
+`stuckAndAbort` for the remaining road vehicles, producing 11,518 terminal-
+bucket events. Consequently the lower pre-terminal count is not an operational
+improvement. `stuckTime=3600` is rejected for this scenario; run9's 600-second
+setting remains the reference sensitivity, without implying that run9 itself
+passes the signal performance gate.
+
+The road auditor now finalizes an active vehicle when its road
+`stuckAndAbort` is seen and labels only vehicles still active after the event
+stream as `terminal_active`. This prevents an aborted trip from also being
+reported as unfinished. Recomputed run9 and run10a summaries are retained at:
+
+```text
+/mnt/DiskM/by/hk_road_network_audit_20260813_all_expressed_signal_run9_terminal_v2
+/mnt/DiskM/by/hk_road_network_audit_20260813_all_expressed_signal_stuck3600_run10a_terminal_v2
+```

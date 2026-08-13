@@ -642,6 +642,13 @@ versus run7) and road-vehicle stuck is 2,276 (+16.18%). It remains an opt-in
 sensitivity; the production network, city metadata, and run manifest remain
 unchanged.
 
+A same-input run10a sensitivity raises only `stuckTime` from 600 to 3,600
+seconds. It is rejected: road `stuckAndAbort` rises from 2,276 to 13,552 and
+road delay from 73,950.69 to 136,771.83 vehicle-hours. Of the run10a stuck
+events, 11,518 occur in the 30:00 terminal bucket because vehicles retained
+longer in queues are aborted at the simulation horizon. The lower 2,034
+pre-terminal count therefore does not represent a network improvement.
+
 A second opt-in sensitivity now addresses private-Car activity-link direction
 without enabling ordinary innovation. The run62 event audit exposes 15,078
 unique initial reverse transitions as `person_id + private_car_trip_ordinal`

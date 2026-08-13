@@ -714,3 +714,10 @@ mechanics violations, but iteration-1 road delay is 73,950.69 vehicle-hours
 (+41.17% versus no-signal run7) and road-vehicle stuck is 2,276 (+16.18%). It
 therefore fails the performance-adoption gate, remains opt-in, and leaves
 production metadata unchanged.
+
+The subsequent run10a sensitivity changes only QSim `stuckTime` from 600 to
+3,600 seconds. It is not adopted: iteration-1 road `stuckAndAbort` rises from
+2,276 to 13,552 and delay rises from 73,950.69 to 136,771.83 vehicle-hours;
+11,518 of the new stuck events occur at the 30:00 terminal bucket. The longer
+threshold retains blocked vehicles and propagates queues rather than resolving
+the underlying signal/network congestion.
