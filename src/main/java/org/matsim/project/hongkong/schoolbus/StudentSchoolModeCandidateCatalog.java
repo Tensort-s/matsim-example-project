@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /** Immutable all-student mode and physical school-bus candidate registry. */
@@ -28,6 +29,7 @@ public final class StudentSchoolModeCandidateCatalog {
 
 	public static final String UNIVERSE_FILE = "school_trip_universe_v6.csv";
 	public static final String SCHOOL_BUS_FILE = "school_bus_physical_route_candidates_v6.csv";
+	public static final String CANDIDATE_ID_ATTRIBUTE = "hkSchoolBusCandidateId";
 
 	public record TripKey(String personId, int tripIndex) {
 	}
@@ -65,27 +67,40 @@ public final class StudentSchoolModeCandidateCatalog {
 
 	private final Map<TripKey, TripCandidate> trips;
 	private final Set<String> physicalSchoolBusStopIds;
+	private final Map<String, SchoolBusOption> schoolBusOptionsById;
 	private final Map<Id<Person>, List<SchoolBusTripSnapshot>> selectedSchoolBusTripSnapshots =
 			new LinkedHashMap<>();
-	private final Map<Id<Person>, List<SchoolBusDepartureGuard>> selectedSchoolBusDepartures =
+	private final Map<Id<Person>, List<SchoolBusLegGuard>> selectedSchoolBusLegs =
 			new LinkedHashMap<>();
 
 	private record SchoolBusTripSnapshot(int tripIndex, List<PlanElement> elements) {
 	}
 
-	private record SchoolBusDepartureGuard(Id<Link> boardingLinkId, double plannedTimeS) {
+	public record SelectedSchoolBusTiming(
+			double plannedLegDepartureTimeS, double scheduledBoardTimeS) {
+	}
+
+	private record SchoolBusLegGuard(
+			String candidateId, Id<Link> boardingLinkId,
+			double plannedLegDepartureTimeS, double scheduledBoardTimeS) {
 	}
 
 	private StudentSchoolModeCandidateCatalog(Map<TripKey, TripCandidate> trips) {
 		this.trips = Map.copyOf(trips);
 		Set<String> stopIds = new HashSet<>();
+		Map<String, SchoolBusOption> optionsById = new LinkedHashMap<>();
 		for (TripCandidate trip : trips.values()) {
 			for (SchoolBusOption option : trip.schoolBusOptions()) {
 				stopIds.add(option.boardingFacilityId());
 				stopIds.add(option.alightingFacilityId());
+				if (optionsById.putIfAbsent(option.candidateId(), option) != null) {
+					throw new IllegalArgumentException(
+							"Duplicate physical school-bus candidate " + option.candidateId());
+				}
 			}
 		}
 		this.physicalSchoolBusStopIds = Set.copyOf(stopIds);
+		this.schoolBusOptionsById = Map.copyOf(optionsById);
 	}
 
 	public static StudentSchoolModeCandidateCatalog empty() {
@@ -177,25 +192,36 @@ public final class StudentSchoolModeCandidateCatalog {
 		return stopId != null && physicalSchoolBusStopIds.contains(stopId.toString());
 	}
 
-	public synchronized boolean matchesSelectedSchoolBusDeparture(
-			Id<Person> personId, Id<Link> fromLinkId, double now) {
-		for (SchoolBusDepartureGuard guard : selectedSchoolBusDepartures.getOrDefault(
-				personId, List.of())) {
-			if (guard.boardingLinkId().equals(fromLinkId)
-					&& Math.abs(now - guard.plannedTimeS()) <= 3 * 3_600.0) return true;
+	/**
+	 * Resolves a selected physical school-bus leg by stable plan identity.
+	 *
+	 * <p>QSim departure time is deliberately not part of the identity: a passenger can
+	 * reach the boarding leg hours late after upstream delay. That is a missed-service
+	 * outcome to audit, not evidence that the current plan leg ceased to be a school-bus
+	 * leg.</p>
+	 */
+	public synchronized Optional<SelectedSchoolBusTiming> selectedSchoolBusTiming(
+			Id<Person> personId, String candidateId, Id<Link> fromLinkId) {
+		if (candidateId == null || fromLinkId == null) return Optional.empty();
+		for (SchoolBusLegGuard guard : selectedSchoolBusLegs.getOrDefault(personId, List.of())) {
+			if (guard.candidateId().equals(candidateId)
+					&& guard.boardingLinkId().equals(fromLinkId)) {
+				return Optional.of(new SelectedSchoolBusTiming(
+						guard.plannedLegDepartureTimeS(), guard.scheduledBoardTimeS()));
+			}
 		}
-		return false;
+		return Optional.empty();
 	}
 
 	/** Saves only physical school-bus trips before PrepareForSim can reroute them. */
 	public synchronized void snapshotSelectedSchoolBusPlans(Scenario scenario) {
 		selectedSchoolBusTripSnapshots.clear();
-		selectedSchoolBusDepartures.clear();
+		selectedSchoolBusLegs.clear();
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			Plan selected = person.getSelectedPlan();
 			if (selected == null) continue;
 			List<SchoolBusTripSnapshot> snapshots = new ArrayList<>();
-			List<SchoolBusDepartureGuard> departures = new ArrayList<>();
+			List<SchoolBusLegGuard> legs = new ArrayList<>();
 			List<TripStructureUtils.Trip> trips = TripStructureUtils.getTrips(selected);
 			for (int tripIndex = 0; tripIndex < trips.size(); tripIndex++) {
 				TripStructureUtils.Trip trip = trips.get(tripIndex);
@@ -207,19 +233,31 @@ public final class StudentSchoolModeCandidateCatalog {
 					if (!"pt".equals(leg.getMode())
 							|| !"school_bus".equals(leg.getRoutingMode())
 							|| leg.getRoute() == null || leg.getRoute().getStartLinkId() == null) continue;
-					departures.add(new SchoolBusDepartureGuard(
+					Object candidateId = leg.getAttributes().getAttribute(CANDIDATE_ID_ATTRIBUTE);
+					if (!(candidateId instanceof String value) || value.isBlank()) {
+						throw new IllegalStateException("Selected school-bus leg has no stable candidate ID for "
+								+ person.getId());
+					}
+					SchoolBusOption option = schoolBusOptionsById.get(value);
+					if (option == null) {
+						throw new IllegalStateException("Selected school-bus candidate is absent from the catalog: "
+								+ person.getId() + "/" + value);
+					}
+					legs.add(new SchoolBusLegGuard(
+							value,
 							leg.getRoute().getStartLinkId(),
 							leg.getDepartureTime().orElseThrow(() -> new IllegalStateException(
-									"Selected school-bus leg has no departure time for " + person.getId()))));
+									"Selected school-bus leg has no departure time for " + person.getId())),
+							option.scheduledBoardTimeS()));
 				}
 			}
 			if (!snapshots.isEmpty()) {
-				if (departures.size() != snapshots.size()) {
+				if (legs.size() != snapshots.size()) {
 					throw new IllegalStateException("Selected school-bus trip/departure mismatch for "
 							+ person.getId());
 				}
 				selectedSchoolBusTripSnapshots.put(person.getId(), List.copyOf(snapshots));
-				selectedSchoolBusDepartures.put(person.getId(), List.copyOf(departures));
+				selectedSchoolBusLegs.put(person.getId(), List.copyOf(legs));
 			}
 		}
 	}

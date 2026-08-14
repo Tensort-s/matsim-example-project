@@ -19,8 +19,9 @@ DEFAULT_NETWORK = REPO_ROOT / (
 )
 DEFAULT_OUTPUT = REPO_ROOT / (
     "data/transit/hongkong/processed/"
-    "hong_kong_traffic_signals_2026_v3_tod_proxy_all_expressed_road_hotspot_v1_candidate8"
+    "hong_kong_traffic_signals_2026_v3_tod_proxy_all_expressed_road_hotspot_v1_candidate9"
 )
+DEFAULT_STAGE_OVERRIDES = REPO_ROOT / "cities/hongkong/traffic_signal_priority_junction_overrides_v1.csv"
 
 
 def parse_args() -> argparse.Namespace:
@@ -28,6 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stage1-dir", type=Path, default=DEFAULT_STAGE1)
     parser.add_argument("--network", type=Path, default=DEFAULT_NETWORK)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--stage-overrides", type=Path, default=DEFAULT_STAGE_OVERRIDES)
     return parser.parse_args()
 
 

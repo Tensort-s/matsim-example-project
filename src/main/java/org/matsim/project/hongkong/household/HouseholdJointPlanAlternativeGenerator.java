@@ -124,6 +124,41 @@ public final class HouseholdJointPlanAlternativeGenerator {
 				driverSwitchTemplates, originalCarPassengerTrips, unbindTemplates);
 	}
 
+	/**
+	 * Removes the temporary person-plan templates after the household selector
+	 * has evaluated them and installed the selected composite plans.  Templates
+	 * are an internal choice-set representation, not independent MATSim plans:
+	 * leaving them in plan memory would allow a later generic plan selector to
+	 * choose an unbound {@code car_passenger} leg without its paired driver.
+	 */
+	public int removeTemplates() {
+		if (!applied) {
+			throw new IllegalStateException("Household joint-plan templates have not been generated.");
+		}
+		int removed = 0;
+		for (Person person : scenario.getPopulation().getPersons().values()) {
+			List<? extends Plan> templates = person.getPlans().stream()
+					.filter(HouseholdJointPlanAlternativeGenerator::isTemplate)
+					.toList();
+			for (Plan template : templates) {
+				if (template == person.getSelectedPlan()) {
+					throw new IllegalStateException(
+							"Cannot remove a selected household candidate template for " + person.getId());
+				}
+				if (!person.removePlan(template)) {
+					throw new IllegalStateException(
+							"Cannot remove household candidate template for " + person.getId());
+				}
+				removed++;
+			}
+		}
+		return removed;
+	}
+
+	private static boolean isTemplate(Plan plan) {
+		return Boolean.TRUE.equals(plan.getAttributes().getAttribute(TEMPLATE_ATTRIBUTE));
+	}
+
 	private Person requiredPerson(String personId) {
 		Person person = scenario.getPopulation().getPersons().get(Id.createPersonId(personId));
 		if (person == null) throw new IllegalArgumentException("Candidate references missing person " + personId);

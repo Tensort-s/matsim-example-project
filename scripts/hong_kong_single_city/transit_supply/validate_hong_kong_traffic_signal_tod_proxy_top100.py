@@ -88,6 +88,15 @@ def validate(args: argparse.Namespace) -> dict:
             raise AssertionError("Signal references unknown junction/stage/group")
         if "u_turn" in row["movement_types"].split("|"):
             raise AssertionError("Executable TOD signal contains a U-turn")
+    controlled_links_by_system: dict[str, set[str]] = defaultdict(set)
+    for row in signals:
+        controlled_links_by_system[row["from_link_id"]].add(row["signal_system_id"])
+    cross_system_control_links = {
+        link_id: systems for link_id, systems in controlled_links_by_system.items()
+        if len(systems) > 1
+    }
+    if cross_system_control_links:
+        raise AssertionError("A physical incoming link is controlled by multiple signal systems")
 
     _, network_nodes, network_links = parse_network(args.network)
     for row in signals:
@@ -140,6 +149,10 @@ def validate(args: argparse.Namespace) -> dict:
     groups_by_system: dict[str, set[str]] = defaultdict(set)
     for row in stages:
         groups_by_system[row["signal_system_id"]].add(row["signal_group_id"])
+    if qa.get("selection_scope") == "all_expressed" and any(
+        len(groups) < 2 for groups in groups_by_system.values()
+    ):
+        raise AssertionError("Active candidate contains a signal system without a competing vehicle stage")
     plans_by_system: dict[str, list[dict]] = defaultdict(list)
     for row in plans:
         plans_by_system[row["signal_system_id"]].append(row)
@@ -149,13 +162,17 @@ def validate(args: argparse.Namespace) -> dict:
 
     for system_id, local_plans in plans_by_system.items():
         ordered = sorted(local_plans, key=lambda row: int(row["time_bin_index"]))
+        boundary_shift = int(ordered[0]["start_time_s"])
+        if not 0 <= boundary_shift < BIN_SECONDS:
+            raise AssertionError(f"Invalid TOD boundary shift in {system_id}")
         if [int(row["time_bin_index"]) for row in ordered] != list(range(EXPECTED_BINS)):
             raise AssertionError(f"Missing/duplicate TOD bin in {system_id}")
         for index, row in enumerate(ordered):
             cycle = int(row["cycle_s"])
-            if int(row["start_time_s"]) != index * BIN_SECONDS:
+            expected_start = (index * BIN_SECONDS + boundary_shift) % DAY_SECONDS
+            if int(row["start_time_s"]) != expected_start:
                 raise AssertionError(f"Wrong plan start in {system_id} bin {index}")
-            expected_end = 0 if index == 95 else (index + 1) * BIN_SECONDS
+            expected_end = ((index + 1) * BIN_SECONDS + boundary_shift) % DAY_SECONDS
             if int(row["end_time_s"]) != expected_end or BIN_SECONDS % cycle or DAY_SECONDS % cycle:
                 raise AssertionError(f"Invalid plan boundary/cycle in {system_id} bin {index}")
             local_windows = sorted(windows_by_plan[(system_id, row["plan_id"])], key=lambda item: int(item["stage_index"]))
@@ -207,6 +224,8 @@ def validate(args: argparse.Namespace) -> dict:
         "stage_count_distribution": dict(sorted(Counter(len(value) for value in groups_by_system.values()).items())),
         "missing_or_nonadjacent_controlled_turns": 0,
         "active_u_turns": 0,
+        "cross_system_control_links": 0,
+        "active_single_stage_systems": sum(len(groups) == 1 for groups in groups_by_system.values()),
         "missing_plan_group_references": 0,
         "adjacent_cycle_grade_violations": 0,
         "controlled_approach_capacity_change_count": len(capacity_rows),
@@ -214,6 +233,24 @@ def validate(args: argparse.Namespace) -> dict:
         "candidate_network_capacity_modified": True,
         "production_adopted": False,
     }
+    ownership_path = args.candidate_dir / "cross_system_control_ownership_audit.csv"
+    deactivation_path = args.candidate_dir / "junction_deactivation_audit.csv"
+    priority_path = args.candidate_dir / "priority_junction_override_audit.csv"
+    if qa.get("selection_scope") == "all_expressed":
+        if not ownership_path.is_file() or not deactivation_path.is_file() or not priority_path.is_file():
+            raise AssertionError("All-expressed corrective audit tables are missing")
+        summary["cross_system_control_overlap_count_resolved"] = len(read_csv(ownership_path))
+        deactivations = read_csv(deactivation_path)
+        summary["no_competing_vehicle_stage_deactivation_count"] = sum(
+            row["deactivation_status"] == "deactivated_no_competing_vehicle_stage"
+            for row in deactivations
+        )
+        priority_rows = read_csv(priority_path)
+        summary["priority_junction_review_count"] = len(priority_rows)
+        summary["priority_junction_stage_override_count"] = sum(
+            row["implementation_status"] == "stage_override_applied"
+            for row in priority_rows
+        )
     (args.candidate_dir / "tod_validation_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

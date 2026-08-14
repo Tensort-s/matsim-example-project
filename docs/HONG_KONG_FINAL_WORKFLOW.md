@@ -642,6 +642,58 @@ versus run7) and road-vehicle stuck is 2,276 (+16.18%). It remains an opt-in
 sensitivity; the production network, city metadata, and run manifest remain
 unchanged.
 
+The local candidate9 corrective rebuild keeps candidate8 and run9 as
+historical evidence but enforces exclusive incoming-link control, deactivates
+all systems without a competing modeled vehicle stage, and applies audited
+bounded stage overrides to 7 of the 25 worst run9 systems. It compiles 1,445
+active systems and statically validates with zero duplicate controlled links
+or active one-stage systems. Candidate9 has not yet passed a frozen runtime
+gate, remains opt-in, and does not change production metadata.
+
+Candidate10 adds a fail-closed short-block corridor search on candidate9.
+It identifies 40 demand-valued linear corridors and implements fixed daily
+offsets for the 14 that pass exclusive-system, cycle, internal-saturation,
+TOD-boundary safety and alignment-error gates. These cover 47 systems; only
+33 receive non-zero offsets. Cycles, green splits, movements, signal groups,
+network and capacity remain unchanged. Static and MATSim XML validation pass,
+and a frozen release11/run11 A/B now rejects Candidate10. Although road delay
+falls 3.20% versus all-expressed run9, road-vehicle stuck rises 6.41%; versus
+no-signal run7, delay remains 36.65% higher and road-vehicle stuck 23.63%
+higher. The event audit also finds 47 cycle discontinuities in 11 offset
+systems, all at 15-minute plan boundaries. Candidate10 remains historical and
+does not change production metadata.
+
+Candidate11 moves each of those 47 corridor systems' complete 96-plan TOD
+boundary grid to its fixed daily offset, so every replacement occurs at a
+continuous stage-1 phase position without a new controller. The frozen
+release12/run12 iterations 0--1 run exits zero. Its event audit observes all
+1,445 systems and 3,243 groups with zero cycle discontinuities, conflicting
+greens, intergreen, amber, or red+amber violations; Candidate10's 47 boundary
+violations are eliminated. The road gate still fails: iteration-1 delay is
+72,010.88 vehicle-hours and road-vehicle stuck is 2,390, respectively 37.47%
+and 22.00% above no-signal run7. Candidate11 is therefore mechanically
+validated but remains an opt-in research candidate; production metadata and
+the no-signal baseline remain unchanged.
+
+The Candidate11 ordinary-innovation integration gate uses the explicit
+`--household-joint-plan-with-ordinary-innovation` option. Ordinary agents have
+positive route, subtour-mode and activity-time-plus-reroute strategies, so PT
+passengers may change departure time and rebuild their scheduled itinerary.
+The 47,867 household escort/joint or student candidate people remain inside
+their independent joint-choice modules and use `KeepLastSelected` for ordinary
+individual replanning. A full-facility parking-zone candidate adds 182,441
+strict Census/DCCA point-within assignments and leaves all 14 `border_*`
+anchors unpriced. The 22,578 non-special people with a border activity retain
+route and time innovation but cannot generate a new Car mode. Failed run13
+through run13c attempts are retained as diagnostics. Run13c proved the
+parking-universe fix and completed iteration 1, but a previously released
+non-candidate `car_passenger` plan returned from plan memory in iteration 2.
+Corrected release15/run13d protects every initial passenger-plan person and is
+also retained as a failed diagnostic: iteration 2 can still select a temporary
+candidate template. Release16 removes those templates after one-shot joint
+selection, and completed run13e is the validated integration result described
+below. It remains non-adopted.
+
 A same-input run10a sensitivity raises only `stuckTime` from 600 to 3,600
 seconds. It is rejected: road `stuckAndAbort` rises from 2,276 to 13,552 and
 road delay from 73,950.69 to 136,771.83 vehicle-hours. Of the run10a stuck
@@ -855,6 +907,28 @@ student remains aboard a traffic-stuck school bus at the 30:00 horizon, giving
 network-completion advisory, not a recurrence of the boarding defect. Ordinary
 plan innovation remains frozen and Step 6 is still not started.
 
+An opt-in Candidate11 integration gate now proves that ordinary innovation
+can coexist with the physical household/student modules. Server run
+`/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13e`
+retains the complete Candidate11 TOD signal system and exact iteration-0
+parity, then runs through iteration 10 with ordinary ReRoute,
+SubtourModeChoice and time-mutation-plus-rerouting enabled. Household escort,
+student mode and school-bus candidates remain a separately selected protected
+module; 47,867 involved people use `KeepLastSelected`, while 22,578 people
+with unpriced border anchors retain route/time innovation but cannot invent a
+Car tour. Temporary one-shot household templates are removed after composite
+plans are installed, preventing generic selection of an unbound
+`car_passenger` plan.
+
+The run13e audit verifies 9,411 changed Car network routes, 87,173 changed
+first PT boarding times and 156,895 changed PT service/vehicle sequences.
+QSim `lost` falls from 5,993 to 300 and average executed score rises from
+14.8631 to 30.4506. Final Walk share reaches 33.525% while PT falls to
+51.149%, so this is a successful mechanics/stability gate but not a calibrated
+equilibrium or production adoption. Candidate11's frozen road-performance
+rejection remains in force; neither city metadata nor the run manifest is
+changed.
+
 - Work OD is calibrated and Census-projected synthetic demand, not observed
   person-to-person movement.
 - DCCA school flows constrain destination classes, not a complete observed
@@ -883,3 +957,16 @@ plan innovation remains frozen and Step 6 is still not started.
 
 These limitations must remain visible in publications, validation summaries,
 and future model extensions.
+
+## Candidate11 open Taxi/Walk 20-QSim sensitivity (in progress)
+
+The explicit, non-production run contract and live server provenance are in
+`docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`. The active immutable
+attempt is `release18/run14a`; it preserves the run13e Candidate11 inputs,
+uses 16 global/QSim threads, executes QSim 0--19, opens a PCU-1 road-coupled
+Taxi proxy to ordinary mode innovation, applies adult/student Taxi fare
+coefficients of 0.10/0.15 util/HKD, and applies the 3.278342 util/h Walk
+overtime term once per main trip after ten cumulative minutes. Protected
+household/student selection enters QSim only at 5, 10 and 15. It entered
+iteration 0 but has not completed or passed any adoption gate, so no final
+manifest or city configuration is changed.

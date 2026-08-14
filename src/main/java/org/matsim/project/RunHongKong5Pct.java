@@ -14,6 +14,7 @@ import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.population.io.PopulationWriter;
+import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.contrib.signals.SignalSystemsConfigGroup;
 import org.matsim.contrib.signals.builder.Signals;
@@ -36,8 +37,11 @@ import org.matsim.project.hongkong.schoolbus.SchoolBusPassengerPhysicalQSimModul
 import org.matsim.project.hongkong.schoolbus.SchoolBusAwareTransitDriverAgentFactory;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
+import org.matsim.project.hongkong.taxi.HongKongTaxiFareUtilityPolicy;
+import org.matsim.project.hongkong.taxi.HongKongNetworkTaxiRoutingModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkQSimModule;
+import org.matsim.project.hongkong.walk.HongKongWalkOvertimeScoringComponentModule;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleUtils;
 
@@ -51,6 +55,8 @@ import java.util.Set;
 
 /** Loads and runs the Hong Kong 5% road/PT scenario with explicit car vehicles. */
 public final class RunHongKong5Pct {
+	private static final String UNPRICED_BORDER_SUBPOPULATION =
+			"hk_unpriced_border_no_car_mode_innovation";
 
 	private RunHongKong5Pct() {
 	}
@@ -64,11 +70,13 @@ public final class RunHongKong5Pct {
 						+ "[--household-escort-bindings=<path>] "
 						+ "[--household-escort-joint-reroute] [--household-escort-max-utility] "
 						+ "[--household-joint-plan-candidates=<path>] "
+						+ "[--household-joint-plan-with-ordinary-innovation] "
 						+ "[--student-school-mode-candidates=<directory>] "
 						+ "[--physical-nontaxi-modes] [--unlimited-ordinary-pt-capacity] "
 						+ "[--traffic-signals]"
 						+ " [--road-hotspot-repair-v1]"
 						+ " [--car-origin-anchor-observations=<path>]"
+						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -84,6 +92,11 @@ public final class RunHongKong5Pct {
 				.contains("--household-escort-joint-reroute");
 		boolean householdEscortMaxUtility = Arrays.asList(args)
 				.contains("--household-escort-max-utility");
+		boolean householdJointPlanWithOrdinaryInnovation = Arrays.asList(args)
+				.contains("--household-joint-plan-with-ordinary-innovation");
+		boolean allPersonNetworkTaxiInnovation = Arrays.asList(args)
+				.contains("--all-person-network-taxi-innovation");
+		boolean walkOvertimeScoring = Arrays.asList(args).contains("--walk-overtime-scoring");
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
 		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
@@ -137,6 +150,23 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 					"--student-school-mode-candidates currently requires --household-joint-plan-candidates.");
 		}
+		if (householdJointPlanWithOrdinaryInnovation && householdJointPlanCandidates == null) {
+			throw new IllegalArgumentException(
+					"--household-joint-plan-with-ordinary-innovation requires "
+							+ "--household-joint-plan-candidates.");
+		}
+		if ((allPersonNetworkTaxiInnovation || walkOvertimeScoring) && !multimodalCosts) {
+			throw new IllegalArgumentException(
+					"Open Taxi/Walk scoring options require --multimodal-costs.");
+		}
+		if (allPersonNetworkTaxiInnovation != walkOvertimeScoring) {
+			throw new IllegalArgumentException(
+					"This calibrated run requires network Taxi and Walk overtime scoring together.");
+		}
+		if (allPersonNetworkTaxiInnovation && !householdJointPlanWithOrdinaryInnovation) {
+			throw new IllegalArgumentException(
+					"All-person network Taxi innovation requires protected household innovation.");
+		}
 		if (unlimitedOrdinaryPtCapacity && !physicalNonTaxiModes) {
 			throw new IllegalArgumentException(
 					"--unlimited-ordinary-pt-capacity requires --physical-nontaxi-modes.");
@@ -173,8 +203,15 @@ public final class RunHongKong5Pct {
 			configurePhysicalPtAndWalk(config);
 			HongKongPhysicalWalkQSimModule.activateInConfig(config);
 		}
+		if (allPersonNetworkTaxiInnovation) {
+			HongKongNetworkTaxiRoutingModule.configure(config);
+		}
 		if (householdJointPlanCandidates != null) {
-			requireHouseholdSelectionOnly(config);
+			if (householdJointPlanWithOrdinaryInnovation) {
+				requireHouseholdSelectionWithOrdinaryInnovation(config);
+			} else {
+				requireHouseholdSelectionOnly(config);
+			}
 		}
 		if (householdEscortBindings != null || householdJointPlanCandidates != null) {
 			HouseholdEscortPhysicalQSimModule.activateInConfig(config);
@@ -187,7 +224,7 @@ public final class RunHongKong5Pct {
 			mainModes.add(SchoolBusAwareTransitDriverAgentFactory.SCHOOL_BUS_VEHICLE_MODE);
 			config.qsim().setMainModes(mainModes);
 		}
-		boolean noRideTaxiRouting = multimodalCosts
+		boolean noRideTaxiRouting = multimodalCosts && !allPersonNetworkTaxiInnovation
 				&& config.routing().getModeRoutingParams().containsKey(
 						HongKongNoRideTaxiRoutingModule.PASSENGER_DELEGATE_MODE);
 		if (multimodalCosts) {
@@ -199,6 +236,12 @@ public final class RunHongKong5Pct {
 			}
 		}
 		Scenario scenario = ScenarioUtils.loadScenario(config);
+		if (allPersonNetworkTaxiInnovation) {
+			var stats = HongKongNetworkTaxiRoutingModule.prepareScenario(scenario);
+			System.out.printf("Enabled road-coupled Taxi proxy on %,d Car links with %,d "
+					+ "person-local Taxi vehicles (PCU=1; no cruising/deadheading/fleet matching).%n",
+					stats.taxiEnabledCarLinks(), stats.personTaxiVehicles());
+		}
 		if (trafficSignals) {
 			scenario.addScenarioElement(
 					SignalsData.ELEMENT_NAME, new SignalsDataLoader(config).loadSignalsData());
@@ -249,6 +292,17 @@ public final class RunHongKong5Pct {
 		StudentSchoolModeCandidateCatalog studentSchoolCatalog = studentSchoolModeCandidates == null
 				? StudentSchoolModeCandidateCatalog.empty()
 				: StudentSchoolModeCandidateCatalog.load(studentSchoolModeCandidates);
+		if (householdJointPlanWithOrdinaryInnovation) {
+			int protectedPeople = protectHouseholdAndStudentCandidates(
+					scenario, householdJointCatalog, studentSchoolCatalog);
+			int borderPeople = restrictUnpricedBorderCarModeInnovation(scenario);
+			System.out.printf(
+					"Protected %,d household joint/escort or student candidate people from ordinary "
+							+ "individual replanning; %,d additional people with unpriced border activities "
+							+ "retain route and time innovation but cannot generate a new Car mode; all other "
+							+ "agents retain route, mode, and time innovation.%n",
+					protectedPeople, borderPeople);
+		}
 		HongKongCarOriginAnchorObservationCatalog carOriginAnchorCatalog =
 				carOriginAnchorObservations == null ? null
 						: HongKongCarOriginAnchorObservationCatalog.load(carOriginAnchorObservations);
@@ -309,7 +363,9 @@ public final class RunHongKong5Pct {
 			if (!scenario.getVehicles().getVehicles().containsKey(vehicleId)) {
 				throw new IllegalStateException("Person " + person.getId() + " references missing vehicle " + vehicleId);
 			}
-			VehicleUtils.insertVehicleIdsIntoAttributes(person, Map.of("car", vehicleId));
+			var vehicleIds = new java.util.LinkedHashMap<>(VehicleUtils.getVehicleIds(person));
+			vehicleIds.put("car", vehicleId);
+			VehicleUtils.insertVehicleIdsIntoAttributes(person, vehicleIds);
 			assignedVehicles++;
 		}
 
@@ -357,7 +413,8 @@ public final class RunHongKong5Pct {
 					bind(HouseholdJointPlanCandidateCatalog.class).toInstance(sharedJointCatalog);
 				}
 			});
-			controler.addOverridingModule(new HouseholdJointPlanInnovationModule(studentSchoolCatalog));
+			controler.addOverridingModule(new HouseholdJointPlanInnovationModule(
+					studentSchoolCatalog, allPersonNetworkTaxiInnovation));
 			System.out.printf("Enabled %,d all-car-household joint-plan candidates from %s; "
 					+ "baseline selection is preserved in iteration 0; independent student choices="
 					+ "%s.%n",
@@ -386,9 +443,14 @@ public final class RunHongKong5Pct {
 		if (noRideTaxiRouting) {
 			controler.addOverridingModule(new HongKongNoRideTaxiRoutingModule());
 		}
+		if (allPersonNetworkTaxiInnovation) {
+			controler.addOverridingModule(new HongKongNetworkTaxiRoutingModule());
+		}
 		if (multimodalCosts) {
 			controler.addOverridingModule(new HongKongMultimodalCostScoringModule(
-					HongKongTaxiScoringParameters.centralV1(),
+					allPersonNetworkTaxiInnovation
+							? HongKongTaxiFareUtilityPolicy.openInnovationV1()
+							: HongKongTaxiFareUtilityPolicy.historicalCentralV1(),
 					ptFareRoot,
 					carCostRoot,
 					dynamicCarCosts));
@@ -397,6 +459,11 @@ public final class RunHongKong5Pct {
 					ptFareRoot,
 					carCostRoot,
 					dynamicCarCosts);
+		}
+		if (walkOvertimeScoring) {
+			controler.addOverridingModule(new HongKongWalkOvertimeScoringComponentModule());
+			System.out.println("Enabled cumulative per-main-trip Walk overtime scoring: "
+					+ "threshold=600 s; slope=3.278342 util/h.");
 		}
 		if (!simulate) {
 			controler.addOverridingModule(new AbstractModule() {
@@ -645,6 +712,119 @@ public final class RunHongKong5Pct {
 						"Expected exactly one KeepLastSelected strategy for " + subpopulation);
 			}
 		}
+	}
+
+	private static void requireHouseholdSelectionWithOrdinaryInnovation(Config config) {
+		Map<String, Set<String>> positiveStrategies = new HashMap<>();
+		Set<String> required = Set.of(
+				"ChangeExpBeta", "ReRoute", "SubtourModeChoice",
+				"TimeAllocationMutator_ReRoute");
+		Set<String> borderRequired = Set.of(
+				"ChangeExpBeta", "ReRoute", "TimeAllocationMutator_ReRoute");
+		for (var settings : config.replanning().getStrategySettings()) {
+			String subpopulation = settings.getSubpopulation();
+			if (subpopulation == null || subpopulation.isBlank()) {
+				throw new IllegalArgumentException(
+						"Household-compatible ordinary innovation requires explicit strategy subpopulations.");
+			}
+			if (settings.getWeight() > 0.0) {
+				positiveStrategies.computeIfAbsent(subpopulation, ignored -> new HashSet<>())
+						.add(settings.getStrategyName());
+			}
+		}
+		if (positiveStrategies.isEmpty()) {
+			throw new IllegalArgumentException("No positive replanning strategies were configured.");
+		}
+		for (var entry : positiveStrategies.entrySet()) {
+			if (org.matsim.project.hongkong.household.HouseholdJointPlanSelector
+					.PROTECTED_SUBPOPULATION.equals(entry.getKey())) {
+				if (!entry.getValue().equals(Set.of("KeepLastSelected"))) {
+					throw new IllegalArgumentException(
+							"Protected household/student candidates must use KeepLastSelected only: "
+									+ entry.getValue());
+				}
+				continue;
+			}
+			if (UNPRICED_BORDER_SUBPOPULATION.equals(entry.getKey())) {
+				if (!entry.getValue().containsAll(borderRequired)
+						|| entry.getValue().contains("SubtourModeChoice")) {
+					throw new IllegalArgumentException(
+							"Unpriced-border people require route/time innovation without "
+									+ "SubtourModeChoice: " + entry.getValue());
+				}
+				continue;
+			}
+			if (!entry.getValue().containsAll(required)) {
+				Set<String> missing = new HashSet<>(required);
+				missing.removeAll(entry.getValue());
+				throw new IllegalArgumentException(
+						"Ordinary innovation is incomplete for " + entry.getKey()
+								+ "; missing positive strategies " + missing);
+			}
+		}
+	}
+
+	private static int protectHouseholdAndStudentCandidates(
+			Scenario scenario,
+			HouseholdJointPlanCandidateCatalog householdCandidates,
+			StudentSchoolModeCandidateCatalog studentCandidates) {
+		Set<Id<Person>> ids = new HashSet<>();
+		for (Person person : scenario.getPopulation().getPersons().values()) {
+			boolean hasOriginalPassengerLeg = person.getSelectedPlan().getPlanElements().stream()
+					.filter(Leg.class::isInstance)
+					.map(Leg.class::cast)
+					.anyMatch(leg -> "car_passenger".equals(leg.getMode()));
+			if (hasOriginalPassengerLeg) {
+				ids.add(person.getId());
+			}
+		}
+		for (var candidate : householdCandidates.candidates()) {
+			ids.add(Id.createPersonId(candidate.passengerPersonId()));
+			ids.add(Id.createPersonId(candidate.driverPersonId()));
+		}
+		for (var key : studentCandidates.trips().keySet()) {
+			ids.add(Id.createPersonId(key.personId()));
+		}
+		for (Id<Person> id : ids) {
+			Person person = scenario.getPopulation().getPersons().get(id);
+			if (person == null) {
+				throw new IllegalStateException("Special candidate person is absent: " + id);
+			}
+			PopulationUtils.putSubpopulation(
+					person, org.matsim.project.hongkong.household.HouseholdJointPlanSelector
+							.PROTECTED_SUBPOPULATION);
+		}
+		return ids.size();
+	}
+
+	private static int restrictUnpricedBorderCarModeInnovation(Scenario scenario) {
+		int protectedPeople = 0;
+		for (Person person : scenario.getPopulation().getPersons().values()) {
+			if (org.matsim.project.hongkong.household.HouseholdJointPlanSelector
+					.PROTECTED_SUBPOPULATION.equals(PopulationUtils.getSubpopulation(person))) {
+				continue;
+			}
+			boolean hasBorderActivity = person.getSelectedPlan().getPlanElements().stream()
+					.filter(Activity.class::isInstance)
+					.map(Activity.class::cast)
+					.map(Activity::getFacilityId)
+					.filter(java.util.Objects::nonNull)
+					.anyMatch(id -> id.toString().startsWith("border_"));
+			if (hasBorderActivity) {
+				boolean hasExistingCarLeg = person.getSelectedPlan().getPlanElements().stream()
+						.filter(Leg.class::isInstance)
+						.map(Leg.class::cast)
+						.anyMatch(leg -> "car".equals(leg.getMode()));
+				if (hasExistingCarLeg) {
+					throw new IllegalStateException(
+							"Unpriced border plan already contains Car and cannot be priced: "
+									+ person.getId());
+				}
+				PopulationUtils.putSubpopulation(person, UNPRICED_BORDER_SUBPOPULATION);
+				protectedPeople++;
+			}
+		}
+		return protectedPeople;
 	}
 
 	private static int clearPtRoutes(Scenario scenario) {

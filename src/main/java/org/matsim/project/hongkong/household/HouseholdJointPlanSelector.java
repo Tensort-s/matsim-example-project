@@ -42,6 +42,8 @@ import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareCalculator;
 import org.matsim.project.hongkong.taxi.HongKongTaxiLegAttributes;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
+import org.matsim.project.hongkong.taxi.HongKongTaxiFareUtilityPolicy;
+import org.matsim.project.hongkong.walk.HongKongWalkOvertimeUtility;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 import org.matsim.vehicles.Vehicle;
@@ -59,10 +61,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * One-shot household-level maximum-utility selector applied after MATSim's
- * ordinary replanning callback for iteration 1. Baseline plans therefore run
- * unchanged in iteration 0, while the selected household composites cannot be
- * replaced again before iteration 1. The selector may
+ * Scheduled household-level maximum-utility selector applied after iterations
+ * 4, 9 and 14, immediately before QSim iterations 5, 10 and 15 are prepared.
+ * Protected people cannot change mode at any other iteration. The selector may
  * bind screened household pairs physically, and it releases every original
  * {@code car_passenger} trip to its best routed PT, Taxi, or Walk alternative
  * when that trip is not selected for a real household vehicle binding.
@@ -70,6 +71,7 @@ import java.util.Set;
 public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private static final Logger LOG = LogManager.getLogger(HouseholdJointPlanSelector.class);
+	public static final String PROTECTED_SUBPOPULATION = "hk_household_student_protected";
 	private static final double DRIVER_CONSTANT = -0.5;
 	private static final double PASSENGER_CONSTANT = -1.5;
 	private static final double TRAVEL_UTILITY_PER_HOUR = -6.0;
@@ -137,10 +139,11 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private final HongKongDynamicCarCostRules costRules;
 	private final HongKongPtFareRuntimeCatalog ptFareCatalog;
 	private final HongKongTaxiFareCalculator taxiFareCalculator;
-	private final HongKongTaxiScoringParameters taxiParameters;
+	private final HongKongTaxiFareUtilityPolicy taxiPolicy;
 	private final Config config;
+	private final HouseholdJointPlanSelectionSchedule selectionSchedule;
 	private final double qsimEndTimeS;
-	private boolean applied;
+	private final Set<Integer> appliedSourceIterations = new HashSet<>();
 
 	@Inject
 	public HouseholdJointPlanSelector(
@@ -156,6 +159,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			HongKongDynamicCarCostRules costRules,
 			HongKongPtFareRuntimeCatalog ptFareCatalog,
 			HongKongTaxiFareCalculator taxiFareCalculator,
+			HongKongTaxiFareUtilityPolicy taxiPolicy,
+			HouseholdJointPlanSelectionSchedule selectionSchedule,
 			Config config) {
 		this.candidates = candidates;
 		this.bindings = bindings;
@@ -169,15 +174,17 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		this.costRules = costRules;
 		this.ptFareCatalog = ptFareCatalog;
 		this.taxiFareCalculator = taxiFareCalculator;
-		this.taxiParameters = HongKongTaxiScoringParameters.centralV1();
+		this.taxiPolicy = taxiPolicy;
+		this.selectionSchedule = selectionSchedule;
 		this.config = config;
 		this.qsimEndTimeS = config.qsim().getEndTime().orElse(30.0 * 3_600.0);
 	}
 
 	@Override
 	public void notifyReplanning(ReplanningEvent event) {
-		if (event.getIteration() != 1 || applied) return;
-		alternativeGenerator.generate();
+		if (!selectionSchedule.sourceIterations().contains(event.getIteration())
+				|| !appliedSourceIterations.add(event.getIteration())) return;
+		if (!selectionSchedule.rebuildWithoutTemplates()) alternativeGenerator.generate();
 		TripRouter router = tripRouterProvider.get();
 		Map<PersonTripKey, PassengerModeCandidate> releases = buildIndependentChoices(router);
 		Map<PersonTripKey, Double> originalPassengerUtilities = new HashMap<>();
@@ -230,8 +237,11 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		Installation installation = installSelections(releases, selected);
 		studentCandidates.snapshotSelectedSchoolBusPlans(scenario);
 		int repairedSelectedTaxiTrips = repairSelectedTaxiRoutes(router);
+		// Candidate utilities and routed alternatives are rebuilt directly from the
+		// latest selected plans at every window; no temporary plan templates are added.
+		int removedTemplates = selectionSchedule.rebuildWithoutTemplates()
+				? 0 : alternativeGenerator.removeTemplates();
 		bindings.replaceWithActiveBindings(installation.bindings());
-		applied = true;
 
 		long releasedPt = releases.values().stream()
 				.filter(value -> TransportMode.pt.equals(value.mode())).count();
@@ -244,20 +254,22 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		long selectedSwitch = selected.stream()
 				.filter(value -> value.candidate().driverRequiresCarSwitch()).count();
 		long selectedExistingCar = selected.size() - selectedSwitch;
-		LOG.info("Household joint-plan selector: source_iteration=0, candidate_pairs={}, "
+		LOG.info("Household joint-plan selector: selection_iteration={}, target_qsim_iteration={}, candidate_pairs={}, "
 				+ "candidate_households={}, driver_switch_candidates={}, infeasible_candidates={}, "
 				+ "selected_joint_pairs={}, selected_existing_car_pairs={}, selected_driver_switch_pairs={}, "
 				+ "active_physical_bindings={}, original_car_passenger_trips={}, "
 				+ "fallback_best_pt={}, fallback_best_taxi={}, fallback_best_walk={}, "
 				+ "independent_best_school_bus={}, "
 				+ "selected_plans_added={}, repaired_selected_taxi_trips={}, "
+				+ "temporary_candidate_templates_removed={}, "
 				+ "initial_selected_plans_preserved_through_iteration_0=true, "
 				+ "school_bus_candidates={}, school_bus_capacity_constraint=false, "
 				+ "probability_choice=false, driver_constraint=false",
+				 event.getIteration(), event.getIteration(),
 				 evaluations.size(), byHousehold.size(), switchCandidates, infeasible,
 				 selected.size(), selectedExistingCar, selectedSwitch, bindings.activeBindingCount(),
 				 releases.size(), releasedPt, releasedTaxi, releasedWalk, selectedSchoolBus,
-				 installation.selectedPlansAdded(), repairedSelectedTaxiTrips,
+				 installation.selectedPlansAdded(), repairedSelectedTaxiTrips, removedTemplates,
 				 studentCandidates.physicalSchoolBusOptionCount());
 	}
 
@@ -298,13 +310,19 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private Map<PersonTripKey, PassengerModeCandidate> buildIndependentChoices(TripRouter router) {
 		Map<PersonTripKey, PassengerModeCandidate> result = new LinkedHashMap<>();
+		Set<PersonTripKey> householdPassengerTrips = candidates.candidates().stream()
+				.map(candidate -> new PersonTripKey(
+						Id.createPersonId(candidate.passengerPersonId()), candidate.passengerTripIndex()))
+				.collect(java.util.stream.Collectors.toSet());
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			Plan plan = requiredSelectedPlan(person);
 			List<TripStructureUtils.Trip> trips = List.copyOf(TripStructureUtils.getTrips(plan));
 			for (int tripIndex = 0; tripIndex < trips.size(); tripIndex++) {
 				int currentTripIndex = tripIndex;
 				MainTrip trip = mainTrip(plan, tripIndex);
-				if (!"car_passenger".equals(mainMode(trip))) continue;
+				PersonTripKey key = new PersonTripKey(person.getId(), tripIndex);
+				if (!"car_passenger".equals(mainMode(trip))
+						&& !householdPassengerTrips.contains(key)) continue;
 				double departure = tripDeparture(trip);
 				PassengerModeCandidate pt = buildPtCandidate(person, trip, tripIndex, departure);
 				PassengerModeCandidate taxi = buildTaxiCandidate(router, person, trip, tripIndex, departure);
@@ -315,7 +333,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 								.thenComparingInt(value -> releaseTiePriority(value.mode())))
 						.orElseThrow(() -> new IllegalStateException(
 								"No real release mode for " + person.getId() + "/" + currentTripIndex));
-				result.put(new PersonTripKey(person.getId(), tripIndex), best);
+				result.put(key, best);
 				LOG.info("HK_CAR_PASSENGER_RELEASE_CANDIDATE passenger={} trip={} "
 						+ "pt_available={} pt_utility={} taxi_utility={} walk_utility={} selected_mode={}",
 						person.getId(), tripIndex, pt.available(), pt.utility(), taxi.utility(),
@@ -411,7 +429,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			fallbackPassenger = independent.utility();
 		} else {
 			fallbackPassenger = originalPassengerUtilities.computeIfAbsent(
-					passengerKey, ignored -> originalTripUtility(passengerTrip));
+					passengerKey, ignored -> originalTripUtility(passenger, passengerTrip));
 		}
 		double jointPassenger = passengerUtility(Math.max(0.0, passengerJointTime));
 
@@ -685,7 +703,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private PassengerModeCandidate buildTaxiCandidate(
 			TripRouter router, Person person, MainTrip trip, int tripIndex, double departure) {
 		AttributesImpl attributes = copyAttributes(firstLeg(trip).getAttributes());
-		setTaxiAttributes(attributes, 0.0, tripIndex);
+		setTaxiAttributes(attributes, 0.0, tripIndex, person);
 		List<PlanElement> elements = new ArrayList<>(router.calcRoute(
 				HongKongJointPlanModes.TAXI,
 				FacilitiesUtils.toFacility(trip.origin(), facilities),
@@ -699,7 +717,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		}
 		double fare = taxiFareCalculator.calculate(
 				taxi.getRoute().getDistance(), HongKongTaxiFareCalculator.UNRESOLVED).fareHkd();
-		setTaxiAttributes(taxi.getAttributes(), fare, tripIndex);
+		setTaxiAttributes(taxi.getAttributes(), fare, tripIndex, person);
+		HongKongTaxiScoringParameters taxiParameters = taxiPolicy.parametersFor(person);
 		setReleaseAttributes(taxi.getAttributes(), HongKongJointPlanModes.TAXI, tripIndex);
 		return new PassengerModeCandidate(HongKongJointPlanModes.TAXI, elements,
 				standardTripUtility(elements) + taxiParameters.fareScore(fare),
@@ -821,7 +840,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		schoolBus.setTravelTime(option.scheduledAlightTimeS() - accessArrival);
 		schoolBus.setRoute(passengerRoute);
 		setReleaseAttributes(schoolBus.getAttributes(), "school_bus", tripIndex);
-		schoolBus.getAttributes().putAttribute("hkSchoolBusCandidateId", option.candidateId());
+		schoolBus.getAttributes().putAttribute(
+				StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE, option.candidateId());
 
 		List<PlanElement> elements = new ArrayList<>();
 		elements.addAll(access);
@@ -976,7 +996,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		return time - departure;
 	}
 
-	private double originalTripUtility(MainTrip trip) {
+	private double originalTripUtility(Person person, MainTrip trip) {
 		double utility = standardTripUtility(trip.elements());
 		for (PlanElement element : trip.elements()) {
 			if (!(element instanceof Leg leg)) continue;
@@ -984,7 +1004,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 					&& Double.isFinite(leg.getRoute().getDistance())) {
 				double fare = taxiFareCalculator.calculate(
 						leg.getRoute().getDistance(), HongKongTaxiFareCalculator.UNRESOLVED).fareHkd();
-				utility += taxiParameters.fareScore(fare);
+				utility += taxiPolicy.parametersFor(person).fareScore(fare);
 			}
 			if (TransportMode.pt.equals(leg.getMode()) && leg.getRoute() instanceof TransitPassengerRoute first) {
 				Set<TransitPassengerRoute> visited = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -1000,7 +1020,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private double baselineDriverTripUtility(
 			Plan plan, int tripIndex, MainTrip trip, Person driver, Id<Vehicle> vehicleId) {
-		if (!TransportMode.car.equals(mainMode(trip))) return originalTripUtility(trip);
+		if (!TransportMode.car.equals(mainMode(trip))) return originalTripUtility(driver, trip);
 		NetworkRoute route = copyRoute(originalCarRoute(trip, vehicleId));
 		return evaluateCar(route, tripDeparture(trip), driver, vehicleId, trip.destination(),
 				nextCarTripDeparture(plan, tripIndex)).utility();
@@ -1021,7 +1041,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 					+ (params.getMarginalUtilityOfDistance()
 					+ config.scoring().getMarginalUtilityOfMoney() * params.getMonetaryDistanceRate()) * distance;
 		}
-		return utility;
+		return utility + (taxiPolicy.equals(HongKongTaxiFareUtilityPolicy.openInnovationV1())
+				? HongKongWalkOvertimeUtility.penaltyForTrip(elements) : 0.0);
 	}
 
 	static String scoringModeForLeg(Leg leg) {
@@ -1213,7 +1234,9 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		throw new IllegalStateException("Leg lacks travel time for mode " + leg.getMode());
 	}
 
-	private void setTaxiAttributes(Attributes attributes, double fare, int tripIndex) {
+	private void setTaxiAttributes(
+			Attributes attributes, double fare, int tripIndex, Person person) {
+		HongKongTaxiScoringParameters taxiParameters = taxiPolicy.parametersFor(person);
 		for (String name : HongKongTaxiLegAttributes.NAMES) attributes.removeAttribute(name);
 		attributes.putAttribute(HongKongTaxiLegAttributes.FARE_BASELINE_HKD, fare);
 		attributes.putAttribute(HongKongTaxiLegAttributes.TAXI_TYPE, HongKongTaxiFareCalculator.UNRESOLVED);

@@ -73,7 +73,8 @@ class StudentSchoolModeCandidateCatalogTest {
 		plan.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("home-link")));
 		Leg schoolBus = PopulationUtils.createLeg("pt");
 		TripStructureUtils.setRoutingMode(schoolBus, "school_bus");
-		schoolBus.getAttributes().putAttribute("hkSchoolBusCandidateId", "candidate-a");
+		schoolBus.getAttributes().putAttribute(
+				StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE, "candidate-a");
 		schoolBus.setDepartureTime(27_000.0);
 		schoolBus.setRoute(RouteUtils.createGenericRouteImpl(
 				Id.createLinkId("school-bus-start"), Id.createLinkId("school-bus-end")));
@@ -90,10 +91,20 @@ class StudentSchoolModeCandidateCatalogTest {
 		scenario.getPopulation().addPerson(person);
 
 		catalog.snapshotSelectedSchoolBusPlans(scenario);
-		assertTrue(catalog.matchesSelectedSchoolBusDeparture(
-				person.getId(), Id.createLinkId("school-bus-start"), 27_000.0));
-		assertFalse(catalog.matchesSelectedSchoolBusDeparture(
-				person.getId(), Id.createLinkId("ordinary-start"), 27_000.0));
+		var timing = catalog.selectedSchoolBusTiming(
+				person.getId(), "candidate-a", Id.createLinkId("school-bus-start"))
+				.orElseThrow();
+		assertEquals(27_000.0, timing.plannedLegDepartureTimeS());
+		assertEquals(27_000.0, timing.scheduledBoardTimeS());
+		assertTrue(catalog.selectedSchoolBusTiming(
+				person.getId(), "candidate-a", Id.createLinkId("school-bus-start")).isPresent());
+		assertFalse(catalog.selectedSchoolBusTiming(
+				person.getId(), "candidate-a", Id.createLinkId("ordinary-start")).isPresent());
+		assertFalse(catalog.selectedSchoolBusTiming(
+				person.getId(), "wrong-candidate", Id.createLinkId("school-bus-start")).isPresent());
+		// A QSim departure more than three hours late remains the same selected leg.
+		assertTrue(catalog.selectedSchoolBusTiming(
+				person.getId(), "candidate-a", Id.createLinkId("school-bus-start")).isPresent());
 		schoolBus.setRoute(RouteUtils.createGenericRouteImpl(
 				Id.createLinkId("rerouted-school-bus"), Id.createLinkId("rerouted-school")));
 		ordinaryPt.setRoute(RouteUtils.createGenericRouteImpl(
@@ -104,7 +115,7 @@ class StudentSchoolModeCandidateCatalogTest {
 		assertEquals(Id.createLinkId("school-bus-start"),
 				trips.get(0).getLegsOnly().getFirst().getRoute().getStartLinkId());
 		assertEquals("candidate-a", trips.get(0).getLegsOnly().getFirst()
-				.getAttributes().getAttribute("hkSchoolBusCandidateId"));
+				.getAttributes().getAttribute(StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE));
 		assertEquals(Id.createLinkId("prepared-pt-start"),
 				trips.get(1).getLegsOnly().getFirst().getRoute().getStartLinkId());
 	}

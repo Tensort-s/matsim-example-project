@@ -38,7 +38,9 @@ class HouseholdJointPlanAlternativeGeneratorTest {
 				0.0, 0.0);
 		var catalog = HouseholdJointPlanCandidateCatalog.of(List.of(candidate));
 
-		new HouseholdJointPlanAlternativeGenerator(catalog, scenario).generate();
+		HouseholdJointPlanAlternativeGenerator generator =
+				new HouseholdJointPlanAlternativeGenerator(catalog, scenario);
+		generator.generate();
 
 		assertSame(passengerBaseline, passenger.getSelectedPlan());
 		assertSame(driverBaseline, driver.getSelectedPlan());
@@ -64,6 +66,12 @@ class HouseholdJointPlanAlternativeGeneratorTest {
 		assertEquals(HouseholdJointPlanAlternativeGenerator.BASELINE_ROLE,
 				passengerBaseline.getAttributes().getAttribute(
 						HouseholdJointPlanAlternativeGenerator.ROLE_ATTRIBUTE));
+
+		assertEquals(5, generator.removeTemplates());
+		assertEquals(List.of(passengerBaseline), passenger.getPlans());
+		assertEquals(List.of(driverBaseline), driver.getPlans());
+		assertSame(passengerBaseline, passenger.getSelectedPlan());
+		assertSame(driverBaseline, driver.getSelectedPlan());
 	}
 
 	private static Person personWithOneTrip(Scenario scenario, String id, String mode) {

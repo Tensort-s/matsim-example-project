@@ -7,6 +7,7 @@ import org.matsim.project.hongkong.car.HongKongDynamicCarCostModule;
 import org.matsim.project.hongkong.pt.HongKongPtFareRuntimeCatalog;
 import org.matsim.project.hongkong.pt.HongKongPtFareScoringComponentModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareScoringComponentModule;
+import org.matsim.project.hongkong.taxi.HongKongTaxiFareUtilityPolicy;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 
 import java.nio.file.Path;
@@ -25,14 +26,14 @@ import java.util.Objects;
 public final class HongKongMultimodalCostScoringModule
 		extends AbstractModule {
 
-	private final HongKongTaxiScoringParameters taxiParameters;
+	private final HongKongTaxiFareUtilityPolicy taxiPolicy;
 	private final Path ptFareReleaseRoot;
 	private final Path carCostRoot;
 	private final boolean dynamicCarCosts;
 
 	public HongKongMultimodalCostScoringModule() {
 		this(
-				HongKongTaxiScoringParameters.centralV1(),
+				HongKongTaxiFareUtilityPolicy.historicalCentralV1(),
 				HongKongPtFareRuntimeCatalog.DEFAULT_RELEASE_ROOT,
 				HongKongCarEnergyCostCatalog.DEFAULT_CAR_COST_ROOT,
 				false);
@@ -42,7 +43,7 @@ public final class HongKongMultimodalCostScoringModule
 			HongKongTaxiScoringParameters taxiParameters,
 			Path ptFareReleaseRoot,
 			Path carCostRoot) {
-		this(taxiParameters, ptFareReleaseRoot, carCostRoot, false);
+		this(equalPolicy(taxiParameters), ptFareReleaseRoot, carCostRoot, false);
 	}
 
 	public HongKongMultimodalCostScoringModule(
@@ -50,8 +51,15 @@ public final class HongKongMultimodalCostScoringModule
 			Path ptFareReleaseRoot,
 			Path carCostRoot,
 			boolean dynamicCarCosts) {
-		this.taxiParameters =
-				Objects.requireNonNull(taxiParameters, "taxiParameters");
+		this(equalPolicy(taxiParameters), ptFareReleaseRoot, carCostRoot, dynamicCarCosts);
+	}
+
+	public HongKongMultimodalCostScoringModule(
+			HongKongTaxiFareUtilityPolicy taxiPolicy,
+			Path ptFareReleaseRoot,
+			Path carCostRoot,
+			boolean dynamicCarCosts) {
+		this.taxiPolicy = Objects.requireNonNull(taxiPolicy, "taxiPolicy");
 		this.ptFareReleaseRoot = Objects.requireNonNull(
 						ptFareReleaseRoot, "ptFareReleaseRoot")
 				.toAbsolutePath().normalize();
@@ -64,8 +72,7 @@ public final class HongKongMultimodalCostScoringModule
 	@Override
 	public void install() {
 		install(new HongKongMultimodalScoringModule());
-		install(new HongKongTaxiFareScoringComponentModule(
-				taxiParameters));
+		install(new HongKongTaxiFareScoringComponentModule(taxiPolicy));
 		install(new HongKongPtFareScoringComponentModule(
 				ptFareReleaseRoot));
 		if (dynamicCarCosts) {
@@ -74,5 +81,12 @@ public final class HongKongMultimodalCostScoringModule
 			install(new HongKongCarMarginalCostScoringComponentModule(
 					carCostRoot));
 		}
+	}
+
+	private static HongKongTaxiFareUtilityPolicy equalPolicy(
+			HongKongTaxiScoringParameters parameters) {
+		Objects.requireNonNull(parameters, "parameters");
+		return new HongKongTaxiFareUtilityPolicy(
+				parameters.fareUtilityPerHkd(), parameters.fareUtilityPerHkd());
 	}
 }

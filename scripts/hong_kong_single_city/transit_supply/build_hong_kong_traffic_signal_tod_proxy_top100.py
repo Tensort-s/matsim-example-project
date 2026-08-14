@@ -42,6 +42,7 @@ PUBLIC_DIAGRAM_JUNCTIONS = {
     "TS_K005", "TS_K006", "TS_K008", "TS_K024",
     "TS_K025", "TS_K101", "TS_K118", "TS_K201",
 }
+CONFIDENCE_PRIORITY = {"high": 2, "medium": 1, "low": 0}
 
 
 def parse_args() -> argparse.Namespace:
@@ -87,6 +88,79 @@ def cluster_approach_axes(approaches: Sequence[dict], tolerance: float = AXIS_CL
             clusters.append([approach])
     clusters.sort(key=lambda cluster: (axis_mean([float(item["approach_bearing_deg"]) for item in cluster]), min(item["approach_id"] for item in cluster)))
     return clusters
+
+
+def control_owner_priority(junction: dict) -> tuple:
+    """Prefer observed registry identity, then confidence and modeled demand."""
+    junction_id = junction["signal_junction_id"]
+    return (
+        not junction_id.startswith("TS_OSM_"),
+        CONFIDENCE_PRIORITY.get(junction["stage1_confidence"], -1),
+        float(junction["peak_tpdm_pcu_per_hour"]),
+        float(junction["daily_tpdm_pcu_count"]),
+        junction_id,
+    )
+
+
+def resolve_cross_system_control_ownership(
+    movements: Sequence[dict], selected: Sequence[dict]
+) -> tuple[list[dict], list[dict]]:
+    """Assign each physical incoming link to exactly one signal system."""
+    selected_by_id = {row["signal_junction_id"]: row for row in selected}
+    junctions_by_link: dict[str, set[str]] = defaultdict(set)
+    for movement in movements:
+        junctions_by_link[movement["from_link_id"]].add(movement["signal_junction_id"])
+    owner_by_link: dict[str, str] = {}
+    audit_rows = []
+    for from_link, junction_ids in sorted(junctions_by_link.items()):
+        if len(junction_ids) < 2:
+            continue
+        owner = max(junction_ids, key=lambda value: control_owner_priority(selected_by_id[value]))
+        owner_by_link[from_link] = owner
+        owner_movements = [
+            row for row in movements
+            if row["from_link_id"] == from_link and row["signal_junction_id"] == owner
+        ]
+        for excluded in sorted(junction_ids - {owner}):
+            excluded_movements = [
+                row for row in movements
+                if row["from_link_id"] == from_link and row["signal_junction_id"] == excluded
+            ]
+            audit_rows.append({
+                "from_link_id": from_link,
+                "owner_signal_junction_id": owner,
+                "excluded_signal_junction_id": excluded,
+                "owner_source_priority": "transport_department_registry" if not owner.startswith("TS_OSM_") else "osm_only",
+                "owner_peak_tpdm_pcu_per_hour": selected_by_id[owner]["peak_tpdm_pcu_per_hour"],
+                "excluded_peak_tpdm_pcu_per_hour": selected_by_id[excluded]["peak_tpdm_pcu_per_hour"],
+                "owner_movement_count": len(owner_movements),
+                "excluded_movement_count": len(excluded_movements),
+                "resolution": "exclusive_incoming_link_control_assigned_to_owner",
+            })
+    filtered = [
+        movement for movement in movements
+        if owner_by_link.get(movement["from_link_id"], movement["signal_junction_id"])
+        == movement["signal_junction_id"]
+    ]
+    return filtered, audit_rows
+
+
+def read_stage_overrides(path: Path | None) -> dict[str, dict]:
+    if path is None:
+        return {}
+    if not path.is_file():
+        raise FileNotFoundError(f"Missing stage override audit: {path}")
+    rows = read_csv(path)
+    result = {}
+    for row in rows:
+        junction_id = row["signal_junction_id"]
+        if junction_id in result:
+            raise ValueError(f"Duplicate stage override: {junction_id}")
+        tolerance = float(row["axis_cluster_tolerance_deg"])
+        if tolerance < AXIS_CLUSTER_TOLERANCE_DEGREES or tolerance > 45.0:
+            raise ValueError(f"Unsafe stage override tolerance for {junction_id}: {tolerance}")
+        result[junction_id] = row
+    return result
 
 
 def bin_label(index: int) -> str:
@@ -252,17 +326,22 @@ def build(args: argparse.Namespace) -> dict:
     selected, junction_profiles, exclusions = select_junctions(
         args.stage1_dir, args.junction_count, args.selection_scope
     )
+    expressed_registry_group_count = len(selected) + len(exclusions)
     if args.selection_scope == "top_demand" and len(selected) != args.junction_count:
         raise ValueError(f"Requested {args.junction_count} junctions but only {len(selected)} are eligible")
     model_status = MODEL_STATUS if args.selection_scope == "top_demand" else ALL_EXPRESSED_MODEL_STATUS
     system_id_prefix = "tod_top100" if args.selection_scope == "top_demand" else "tod_expressed"
     selected_ids = {row["signal_junction_id"] for row in selected}
+    stage_overrides = read_stage_overrides(getattr(args, "stage_overrides", None))
 
     movements = [
         row for row in read_csv(args.stage1_dir / "signal_movements.csv")
         if row["signal_junction_id"] in selected_ids
         and executable_movement(row)
     ]
+    ownership_rows: list[dict] = []
+    if args.selection_scope == "all_expressed":
+        movements, ownership_rows = resolve_cross_system_control_ownership(movements, selected)
     movement_by_id = {row["movement_id"]: row for row in movements}
     executable_approach_ids = {row["approach_id"] for row in movements}
     approaches = [
@@ -294,11 +373,85 @@ def build(args: argparse.Namespace) -> dict:
     for approach in approaches:
         by_junction_approaches[approach["signal_junction_id"]].append(approach)
 
+    deactivation_rows: list[dict] = []
+    override_audit_rows: list[dict] = []
+    active_selected = []
+    for row in selected:
+        junction_id = row["signal_junction_id"]
+        standard_clusters = cluster_approach_axes(by_junction_approaches[junction_id])
+        override = stage_overrides.get(junction_id)
+        tolerance = (
+            float(override["axis_cluster_tolerance_deg"])
+            if override is not None
+            else AXIS_CLUSTER_TOLERANCE_DEGREES
+        )
+        adjusted_clusters = cluster_approach_axes(
+            by_junction_approaches[junction_id], tolerance
+        )
+        if not adjusted_clusters:
+            deactivation_rows.append({
+                "signal_junction_id": junction_id,
+                "source_demand_rank": row["demand_rank"],
+                "standard_stage_count": 0,
+                "adjusted_stage_count": 0,
+                "deactivation_status": "deactivated_after_exclusive_control_ownership",
+                "reason": "no_executable_approach_remains_after_cross_system_control_resolution",
+            })
+        elif len(adjusted_clusters) == 1:
+            deactivation_rows.append({
+                "signal_junction_id": junction_id,
+                "source_demand_rank": row["demand_rank"],
+                "standard_stage_count": len(standard_clusters),
+                "adjusted_stage_count": 1,
+                "deactivation_status": "deactivated_no_competing_vehicle_stage",
+                "reason": "one_geometry_inferred_vehicle_stage_has_no_competing_modeled_vehicle_direction",
+            })
+        else:
+            row["inferred_stage_count"] = len(adjusted_clusters)
+            row["selection_eligibility"] = (
+                "expressed_exclusive_control_multi_stage_with_audited_priority_override"
+                if override is not None and tolerance != AXIS_CLUSTER_TOLERANCE_DEGREES
+                else "expressed_exclusive_control_multi_stage_unified_axis_rule"
+            )
+            active_selected.append(row)
+        if override is not None:
+            override_audit_rows.append({
+                **override,
+                "standard_stage_count_after_ownership": len(standard_clusters),
+                "adjusted_stage_count_after_ownership": len(adjusted_clusters),
+                "implementation_status": (
+                    "deactivated_no_competing_vehicle_stage"
+                    if len(adjusted_clusters) == 1
+                    else "stage_override_applied"
+                    if tolerance != AXIS_CLUSTER_TOLERANCE_DEGREES
+                    else "structure_retained_for_later_timing_calibration"
+                ),
+            })
+    selected = active_selected
+    for rank, row in enumerate(selected, 1):
+        row["demand_rank"] = rank
+    selected_ids = {row["signal_junction_id"] for row in selected}
+    movements = [row for row in movements if row["signal_junction_id"] in selected_ids]
+    movement_by_id = {row["movement_id"]: row for row in movements}
+    executable_approach_ids = {row["approach_id"] for row in movements}
+    approaches = [row for row in approaches if row["approach_id"] in executable_approach_ids]
+    approach_by_id = {row["approach_id"]: row for row in approaches}
+    saturation = {key: value for key, value in saturation.items() if key in executable_approach_ids}
+    by_junction_approaches = defaultdict(list)
+    for approach in approaches:
+        by_junction_approaches[approach["signal_junction_id"]].append(approach)
+
     stage_by_approach: dict[str, str] = {}
     stage_rows: list[dict] = []
     stages_by_junction: dict[str, list[dict]] = {}
     for junction_id in sorted(selected_ids):
-        clusters = cluster_approach_axes(by_junction_approaches[junction_id])
+        override = stage_overrides.get(junction_id)
+        tolerance = (
+            float(override["axis_cluster_tolerance_deg"])
+            if override is not None
+            else AXIS_CLUSTER_TOLERANCE_DEGREES
+        )
+        clusters = cluster_approach_axes(by_junction_approaches[junction_id], tolerance)
         stages = []
         for index, cluster in enumerate(clusters, 1):
             stage_id = f"stage__{junction_id}__{index:02d}"
@@ -316,7 +469,11 @@ def build(args: argparse.Namespace) -> dict:
                 "axis_bearing_deg": round(axis_mean([float(row["approach_bearing_deg"]) for row in cluster]), 6),
                 "approach_ids": "|".join(sorted(row["approach_id"] for row in cluster)),
                 "from_link_ids": "|".join(sorted(row["from_link_id"] for row in cluster)),
-                "stage_method": "geometry_inferred_opposing_approach_axis",
+                "stage_method": (
+                    "geometry_inferred_opposing_approach_axis_priority_override"
+                    if tolerance != AXIS_CLUSTER_TOLERANCE_DEGREES
+                    else "geometry_inferred_opposing_approach_axis"
+                ),
                 "stage_confidence": "proxy",
                 "protected_turn_policy": "none_without_lane_to_movement_evidence",
             })
@@ -382,11 +539,17 @@ def build(args: argparse.Namespace) -> dict:
     raw_approach_q: dict[str, list[float]] = defaultdict(lambda: [0.0] * TIME_BIN_COUNT)
     approach_class_q: dict[tuple[str, str], list[float]] = defaultdict(lambda: [0.0] * TIME_BIN_COUNT)
     for movement_id, values in movement_q.items():
-        approach_id = movement_by_id[movement_id]["approach_id"]
+        movement = movement_by_id.get(movement_id)
+        if movement is None:
+            continue
+        approach_id = movement["approach_id"]
         for index, value in enumerate(values):
             raw_approach_q[approach_id][index] += value
     for (movement_id, vehicle_class), values in class_q.items():
-        approach_id = movement_by_id[movement_id]["approach_id"]
+        movement = movement_by_id.get(movement_id)
+        if movement is None:
+            continue
+        approach_id = movement["approach_id"]
         for index, value in enumerate(values):
             approach_class_q[(approach_id, vehicle_class)][index] += value
     design_approach_q = {
@@ -510,6 +673,12 @@ def build(args: argparse.Namespace) -> dict:
     ))
     if exclusions and args.selection_scope == "all_expressed":
         write_csv(args.output_dir / "junction_activation_exclusions.csv", exclusions, tuple(exclusions[0]))
+    if ownership_rows:
+        write_csv(args.output_dir / "cross_system_control_ownership_audit.csv", ownership_rows, tuple(ownership_rows[0]))
+    if deactivation_rows:
+        write_csv(args.output_dir / "junction_deactivation_audit.csv", deactivation_rows, tuple(deactivation_rows[0]))
+    if override_audit_rows:
+        write_csv(args.output_dir / "priority_junction_override_audit.csv", override_audit_rows, tuple(override_audit_rows[0]))
     write_csv(args.output_dir / "stage_templates.csv", stage_rows, tuple(stage_rows[0]))
     write_csv(args.output_dir / "executable_signal_movements.csv", signal_rows, tuple(signal_rows[0]))
     write_csv(args.output_dir / "approach_conflict_proxy.csv", conflict_rows, tuple(conflict_rows[0]))
@@ -528,8 +697,22 @@ def build(args: argparse.Namespace) -> dict:
     summary = {
         "status": model_status,
         "selection_scope": args.selection_scope,
-        "expressed_registry_group_count": len(selected) + len(exclusions) if args.selection_scope == "all_expressed" else None,
+        "expressed_registry_group_count": expressed_registry_group_count if args.selection_scope == "all_expressed" else None,
         "activation_exclusion_count": len(exclusions) if args.selection_scope == "all_expressed" else 0,
+        "cross_system_control_overlap_count_resolved": len(ownership_rows),
+        "no_competing_vehicle_stage_deactivation_count": sum(
+            row["deactivation_status"] == "deactivated_no_competing_vehicle_stage"
+            for row in deactivation_rows
+        ),
+        "post_ownership_empty_deactivation_count": sum(
+            row["deactivation_status"] == "deactivated_after_exclusive_control_ownership"
+            for row in deactivation_rows
+        ),
+        "priority_junction_review_count": len(override_audit_rows),
+        "priority_junction_stage_override_count": sum(
+            row["implementation_status"] == "stage_override_applied"
+            for row in override_audit_rows
+        ),
         "junction_count": len(selected),
         "time_bin_count_per_junction": TIME_BIN_COUNT,
         "plan_count": len(plan_rows),
@@ -545,6 +728,8 @@ def build(args: argparse.Namespace) -> dict:
         "candidate_network_capacity_modified": True,
         "production_adopted": False,
         "signal_activation": "explicit_opt_in_only_after_payload_staging",
+        "cross_system_control_policy": "one_incoming_link_one_signal_system_registry_then_confidence_then_demand_priority",
+        "deactivate_no_competing_vehicle_stage": True,
         "stage_template_policy": "fixed_all_day_geometry_inferred_opposing_axes",
         "diagram_policy": "eight_public_diagram_junctions_use_the_same_unified_rule_without_special_treatment",
         "timing_policy": "96_nonoverlapping_15min_fixed_plans",
@@ -558,6 +743,7 @@ def build(args: argparse.Namespace) -> dict:
         "known_limitations": [
             "planned freeflow-propagated demand is not iterated equilibrium arrival flow",
             "approach-axis compatibility is a geometry proxy, not lane-level conflict evidence",
+            "priority-junction stage overrides remain bounded geometry proxies, not observed lane-level phase plans",
             "pedestrian phases and coordination offsets are absent",
             "oversaturated bins use a capped 100-second proxy cycle",
             "taxi has no physical QVehicle demand",
@@ -578,6 +764,15 @@ def build(args: argparse.Namespace) -> dict:
         "minimum_intergreen_s": 5,
         "controller_onset_gap_s": CONTROLLER_CLEARANCE_SECONDS,
         "stage_mapping_status": "geometry_inferred_opposing_axes_proxy",
+        "cross_system_control_overlap_count_resolved": len(ownership_rows),
+        "no_competing_vehicle_stage_deactivation_count": sum(
+            row["deactivation_status"] == "deactivated_no_competing_vehicle_stage"
+            for row in deactivation_rows
+        ),
+        "priority_junction_stage_override_count": sum(
+            row["implementation_status"] == "stage_override_applied"
+            for row in override_audit_rows
+        ),
         "diagram_special_treatment": False,
         "public_diagram_junction_count": len(PUBLIC_DIAGRAM_JUNCTIONS & selected_ids),
         "activation_windows": "96_contiguous_15min_time_of_day_plans",
@@ -594,6 +789,9 @@ def build(args: argparse.Namespace) -> dict:
         "output_dir": str(args.output_dir.resolve()),
         "junction_selection": "all expressed groups with a safe executable movement; demand rank retained for audit" if args.selection_scope == "all_expressed" else "descending peak 15-minute TPDM PCU/h, then daily PCU, then stable junction ID",
         "diagram_policy": "validation provenance only; no special selection, grouping, timing, or priority",
+        "cross_system_control_policy": "exclusive incoming-link ownership; registry identity, confidence, demand, then stable ID priority",
+        "single_stage_policy": "deactivated when no competing modeled vehicle stage remains",
+        "priority_stage_override_file": str(getattr(args, "stage_overrides", "")),
         "time_bins": [bin_label(index) for index in range(TIME_BIN_COUNT)],
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return summary

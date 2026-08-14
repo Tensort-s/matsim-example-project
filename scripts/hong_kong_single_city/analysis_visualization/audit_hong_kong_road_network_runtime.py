@@ -159,6 +159,8 @@ def geometry_endpoints(text: str) -> tuple[tuple[float, float] | None, tuple[flo
 
 
 def read_links(path: Path) -> dict[str, Link]:
+    if path.name.endswith((".xml", ".xml.gz")):
+        return read_network_links(path)
     result: dict[str, Link] = {}
     with binary_stream(path) as raw:
         text = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
@@ -179,6 +181,41 @@ def read_links(path: Path) -> dict[str, Link]:
                 from_xy=start,
                 to_xy=end,
             )
+    return result
+
+
+def read_network_links(path: Path) -> dict[str, Link]:
+    opener = gzip.open if path.suffix == ".gz" else Path.open
+    with opener(path, "rb") as stream:
+        root = ET.parse(stream).getroot()
+    nodes = {
+        element.get("id"): (float(element.get("x")), float(element.get("y")))
+        for element in root.iter()
+        if element.tag.rsplit("}", 1)[-1] == "node"
+    }
+    result: dict[str, Link] = {}
+    for element in root.iter():
+        if element.tag.rsplit("}", 1)[-1] != "link":
+            continue
+        link_id = element.get("id")
+        from_node = element.get("from")
+        to_node = element.get("to")
+        if link_id is None or from_node is None or to_node is None:
+            raise ValueError("MATSim network link lacks id/from/to")
+        result[link_id] = Link(
+            link_id=link_id,
+            from_node=from_node,
+            to_node=to_node,
+            length_m=float(element.get("length", "0")),
+            freespeed_m_s=float(element.get("freespeed", "0")),
+            capacity_veh_h=float(element.get("capacity", "0")),
+            lanes=float(element.get("permlanes", "1")),
+            modes=frozenset(filter(None, element.get("modes", "").split(","))),
+            from_xy=nodes.get(from_node),
+            to_xy=nodes.get(to_node),
+        )
+    if not result:
+        raise ValueError(f"No links found in MATSim network: {path}")
     return result
 
 

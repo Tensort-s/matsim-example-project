@@ -111,6 +111,7 @@ docs/HONG_KONG_PRIVATE_CAR_UNIFIED_MARGINAL_COST_INTERFACE.md
 docs/HONG_KONG_PRIVATE_CAR_SCORING_ADOPTION_DESIGN.md
 docs/HONG_KONG_TRAFFIC_SIGNAL_REGISTRY_2026.md
 docs/HONG_KONG_TRAFFIC_SIGNAL_MATSIM_ADOPTION_DESIGN.md
+docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_ALL_EXPRESSED_V3.md
 docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md
 ```
 
@@ -721,3 +722,41 @@ The subsequent run10a sensitivity changes only QSim `stuckTime` from 600 to
 11,518 of the new stuck events occur at the 30:00 terminal bucket. The longer
 threshold retains blocked vehicles and propagates queues rather than resolving
 the underlying signal/network congestion.
+
+The local candidate9 corrective rebuild retains run9 as a failed historical
+baseline. It assigns each incoming link to one signal system, deactivates all
+systems with fewer than two modeled vehicle stages, and records bounded
+geometry-stage decisions for the 25 worst run9 systems. Static validation
+passes for 1,445 active systems, but no new frozen runtime A/B has yet been
+completed; production inputs remain unchanged.
+
+The local candidate10 derivative performs an all-network short-block corridor
+search and implements 14 of 40 demand-valued candidates after fail-closed
+topology, exclusivity, cycle, saturation, alignment and TOD-boundary safety
+checks. It changes only fixed daily plan offsets for 33 of 1,445 systems;
+cycles, green splits, groups, movements, network and capacity remain identical
+to candidate9. Static validation passes, but release11/run11 runtime A/B
+rejects it: delay is 71,585.16 vehicle-hours and road-vehicle stuck is 2,422;
+47 cycle discontinuities occur in 11 offset systems at 15-minute boundaries.
+Candidate10 remains rejected and production inputs are unchanged. Because
+Candidate9 has no separate runtime run, the run9-to-run11 delta represents the
+combined Candidate9-plus-corridor package rather than an offset-only effect.
+
+Candidate11 repairs the 47 corridor systems' TOD boundary continuity without
+a continuous-clock controller; frozen run12 has zero runtime cycle
+discontinuities but still fails the road-performance gate. Follow-on opt-in
+run13e opens ordinary route, mode and departure-time innovation while keeping
+household escort and student-school choices as a protected joint module. It
+completes iterations 0--10: 9,411 aligned Car legs change route and 87,173
+retained-PT trips change first boarding time, while QSim `lost` falls from
+5,993 to 300. The strong shift to Walk makes this an integration/stability
+result, not a calibrated or adopted production scenario. Full provenance is
+in `docs/HONG_KONG_TRAFFIC_SIGNAL_TOD_ALL_EXPRESSED_V3.md`.
+
+The subsequent opt-in Candidate11 20-QSim Taxi/Walk sensitivity is documented
+in `docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`. It opens Taxi to
+ordinary mode innovation with an explicit PCU-1 road proxy, introduces
+adult/student fare coefficients and cumulative main-trip Walk overtime, and
+limits protected household/student mode changes to QSim iterations 5, 10 and
+15. This running experiment is not a production input and does not modify
+`city.yaml` or `run_manifest.json`.

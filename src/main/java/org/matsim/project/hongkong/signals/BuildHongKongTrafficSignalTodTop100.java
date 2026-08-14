@@ -144,6 +144,10 @@ public final class BuildHongKongTrafficSignalTodTop100 {
 			}
 			Map<Id<SignalGroup>, SignalGroupData> systemGroups = data.getSignalGroupsData()
 					.getSignalGroupDataBySystemId(systemId);
+			int boundaryShift = integer(systemPlans.get("tod_00"), "start_time_s");
+			if (boundaryShift < 0 || boundaryShift >= BIN_SECONDS) {
+				throw new IllegalArgumentException("Invalid TOD boundary shift for " + systemText + ": " + boundaryShift);
+			}
 
 			SignalSystemControllerData controller = data.getSignalControlData().getFactory()
 					.createSignalSystemControllerData(systemId);
@@ -156,7 +160,9 @@ public final class BuildHongKongTrafficSignalTodTop100 {
 				int start = integer(row, "start_time_s");
 				int end = integer(row, "end_time_s");
 				int cycle = integer(row, "cycle_s");
-				if (start != bin * BIN_SECONDS || end != (bin == 95 ? 0 : (bin + 1) * BIN_SECONDS)) {
+				int expectedStart = (bin * BIN_SECONDS + boundaryShift) % DAY_SECONDS;
+				int expectedEnd = ((bin + 1) * BIN_SECONDS + boundaryShift) % DAY_SECONDS;
+				if (start != expectedStart || end != expectedEnd) {
 					throw new IllegalArgumentException("Non-contiguous TOD plan bounds for " + systemText + " " + planText);
 				}
 				if (DAY_SECONDS % cycle != 0 || BIN_SECONDS % cycle != 0) {

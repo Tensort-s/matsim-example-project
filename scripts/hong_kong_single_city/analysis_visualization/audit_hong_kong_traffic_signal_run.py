@@ -25,6 +25,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pilot-dir", type=Path, required=True)
     parser.add_argument("--iteration", type=int, default=1)
     parser.add_argument("--baseline-run-root", type=Path)
+    parser.add_argument(
+        "--system-registry", type=Path,
+        help="Optional corridor registry; audit only implemented signal systems.",
+    )
     return parser.parse_args()
 
 
@@ -104,6 +108,21 @@ def classify_vehicle(vehicle: str) -> str:
     return "other_road_vehicle"
 
 
+def active_tod_plan(
+    time_s: float,
+    plans: list[tuple[int, int, int, int]],
+) -> tuple[int, int, int, int] | None:
+    """Return (bin, start, end, cycle) for the plan active at a daily time."""
+    tod = time_s % (24 * 3600)
+    for plan in plans:
+        _, start, end, _ = plan
+        if start < end and start <= tod < end:
+            return plan
+        if start > end and (tod >= start or tod < end):
+            return plan
+    return None
+
+
 def main() -> int:
     args = parse_args()
     events_path = event_file(args.run_root, args.iteration)
@@ -120,6 +139,18 @@ def main() -> int:
         args.pilot_dir /
         ("tod_plan_assignments.csv" if tod else "observed_timing_evidence.csv")
     )
+    if args.system_registry is not None:
+        registry = read_csv(args.system_registry)
+        selected_systems = {
+            system for row in registry if row["status"] == "implemented"
+            for system in row["signal_system_ids"].split("|")
+        }
+        movements = [row for row in movements if row["signal_system_id"] in selected_systems]
+        capacities = [
+            row for row in capacities
+            if "tod_expressed__" + row["signal_junction_id"] in selected_systems
+        ]
+        timing = [row for row in timing if row["signal_system_id"] in selected_systems]
     period = json.loads((args.run_root / "run_metadata.json").read_text(encoding="utf-8"))[
         "evidence_period"
     ]
@@ -132,13 +163,15 @@ def main() -> int:
         for row in movements
     }
     if tod:
-        cycle_by_system_bin = {
-            (row["signal_system_id"], int(row["time_bin_index"])): int(row["cycle_s"])
-            for row in timing
-        }
+        plans_by_system: dict[str, list[tuple[int, int, int, int]]] = defaultdict(list)
+        for row in timing:
+            plans_by_system[row["signal_system_id"]].append((
+                int(row["time_bin_index"]), int(row["start_time_s"]),
+                int(row["end_time_s"]), int(row["cycle_s"]),
+            ))
         cycle_by_system = {}
     else:
-        cycle_by_system_bin = {}
+        plans_by_system = {}
         cycle_by_system = {
             row["signal_junction_id"]: int(row["cycle_s"])
             for row in timing
@@ -256,11 +289,18 @@ def main() -> int:
                 )
         for earlier, later in zip(green_times, green_times[1:]):
             if tod:
-                earlier_bin = int(earlier // 900) % 96
-                later_bin = int(later // 900) % 96
-                if earlier_bin != later_bin:
+                earlier_plan = active_tod_plan(earlier, plans_by_system[system])
+                later_plan = active_tod_plan(later, plans_by_system[system])
+                if earlier_plan is None or later_plan is None:
+                    cycle_violations.append({
+                        "system": system, "group": group, "earlier": earlier,
+                        "later": later, "expected_cycle": None,
+                        "reason": "no_active_tod_plan",
+                    })
                     continue
-                cycle = cycle_by_system_bin[(system, earlier_bin)]
+                if earlier_plan[0] != later_plan[0]:
+                    continue
+                cycle = earlier_plan[3]
             else:
                 cycle = cycle_by_system[system]
             if abs(later - earlier - cycle) > 1e-9:

@@ -10,20 +10,27 @@ import java.util.Objects;
 /** Contributes only the canonical Taxi route-fare component. */
 public final class HongKongTaxiFareScoringComponentModule extends AbstractModule {
 
-	private final HongKongTaxiScoringParameters parameters;
+	private final HongKongTaxiFareUtilityPolicy policy;
 
 	public HongKongTaxiFareScoringComponentModule() {
-		this(HongKongTaxiScoringParameters.centralV1());
+		this(HongKongTaxiFareUtilityPolicy.historicalCentralV1());
 	}
 
 	public HongKongTaxiFareScoringComponentModule(
 			HongKongTaxiScoringParameters parameters) {
-		this.parameters = Objects.requireNonNull(parameters, "parameters");
+		this(new HongKongTaxiFareUtilityPolicy(
+				Objects.requireNonNull(parameters, "parameters").fareUtilityPerHkd(),
+				parameters.fareUtilityPerHkd()));
+	}
+
+	public HongKongTaxiFareScoringComponentModule(
+			HongKongTaxiFareUtilityPolicy policy) {
+		this.policy = Objects.requireNonNull(policy, "policy");
 	}
 
 	@Override
 	public void install() {
-		bind(HongKongTaxiScoringParameters.class).toInstance(parameters);
+		bind(HongKongTaxiFareUtilityPolicy.class).toInstance(policy);
 		bind(HongKongTaxiFareCalculator.class).toInstance(
 				new HongKongTaxiFareCalculator());
 		bind(HongKongTaxiFareScoringComponentFactory.class)

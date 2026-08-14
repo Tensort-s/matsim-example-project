@@ -219,3 +219,372 @@ reported as unfinished. Recomputed run9 and run10a summaries are retained at:
 /mnt/DiskM/by/hk_road_network_audit_20260813_all_expressed_signal_run9_terminal_v2
 /mnt/DiskM/by/hk_road_network_audit_20260813_all_expressed_signal_stuck3600_run10a_terminal_v2
 ```
+
+## Candidate9 corrective rebuild
+
+Candidate9 is a local, rebuildable successor to the failed run9 payload. It
+does not overwrite candidate8 or adopt signals into production. Its output is:
+
+```text
+data/transit/hongkong/processed/
+  hong_kong_traffic_signals_2026_v3_tod_proxy_all_expressed_road_hotspot_v1_candidate9/
+```
+
+The corrective build makes three bounded changes before generating TOD plans:
+
+1. Each physical incoming link receives one signal-system owner. Registry
+   identities are preferred over pure OSM identities; ties use Stage-1
+   confidence, peak demand, daily demand, then stable ID. This resolves all 11
+   run9 cross-system incoming-link overlaps. The displaced movements remain in
+   `cross_system_control_ownership_audit.csv`.
+2. A system with fewer than two modeled vehicle stages is not compiled. This
+   removes the 480 run9 one-stage systems without introducing an always-red or
+   periodic-clearance penalty. Ownership resolution additionally leaves
+   `TS_K562`, `TS_K732`, and `TS_OSM_0107` with one stage, so they are also
+   deactivated; `TS_OSM_0178` and `TS_OSM_0056` lose their only controlled
+   approaches. The complete disposition is in
+   `junction_deactivation_audit.csv`.
+3. The 25 highest run9 controlled-approach delay systems are explicitly
+   reviewed through the tracked
+   `cities/hongkong/traffic_signal_priority_junction_overrides_v1.csv` file.
+   Seven overfragmented geometry proxies use a bounded 40-degree axis
+   tolerance: `TS_H182`, `TS_K019`, `TS_NT689`, `TS_K484`, `TS_NT659`,
+   `TS_H222`, and `TS_K010`. Sixteen retain their safer existing two-axis
+   structure for later timing calibration; `TS_NT401` and `TS_NT542` are
+   deactivated as one-stage systems.
+
+`TS_H182` changes from five singleton stages to three stages. Its maximum
+15-minute critical-flow-ratio sum falls from 1.56 to 1.25 and its capped
+oversaturated bins fall from 52 to 29. The change is still a geometry proxy,
+not an observed lane-level phase plan.
+
+The rebuilt package contains 1,445 active systems, 3,243 groups, 6,941
+executable movement boundaries, 138,720 plans, and 4,719 capacity-treated
+approaches. Python validation and MATSim compilation pass with zero active
+single-stage systems, cross-system controlled links, missing or non-adjacent
+turns, U-turns, plan/group reference failures, or topology/ID changes. The
+eight public-diagram junctions still receive no special treatment.
+
+Candidate9 has not yet had a frozen runtime A/B test. It remains an explicit
+opt-in candidate and does not change `city.yaml`, the run manifest, or the
+no-signal baseline. A new server release/run must use new paths and compare
+against release7/run7 before any adoption decision.
+
+## Candidate10 short-block corridor offsets
+
+Candidate10 is a local, rebuildable derivative of candidate9. Its output is:
+
+```text
+data/transit/hongkong/processed/
+  hong_kong_traffic_signals_2026_v3_tod_proxy_all_expressed_road_hotspot_v1_candidate10_corridor/
+```
+
+The builder is
+`scripts/hong_kong_single_city/transit_supply/coordinate_hong_kong_traffic_signal_corridors.py`.
+It follows each candidate9 executable `ahead` movement from stop line to stop
+line through the road topology. A directed connection is retained only when
+the continuation is unique, changes direction by no more than 25 degrees, and
+reaches the next signal in 5--250 metres. A corridor needs at least three
+systems, a linear non-branching topology, end-to-end ahead-group continuity,
+and at least four valuable 15-minute bins. A valuable bin requires mean
+directional demand of at least 400 PCU/h, every block at least 100 PCU/h, a
+1.25 directional dominance ratio, equal cycles, and no internal 100-second or
+oversaturated system. Isolated single bins are removed.
+
+The all-network search finds 1,128 directed signal connections and 40 linear
+corridors with modeled demand value. Fourteen pass all implementation gates;
+six are excluded because they share a system with a higher-value corridor,
+and twenty fail the fixed-offset safety/alignment gate. The implemented set
+contains 47 distinct systems and 350 valuable corridor/time-bin combinations.
+No implemented system belongs to two corridors.
+
+MATSim changes plan objects exactly at 15-minute boundaries and does not reset
+the old group state. Candidate10 therefore uses one fixed daily offset per
+implemented system rather than jumping offset at a TOD boundary. The 96 TOD
+plans still retain their candidate9 cycles and green splits; TOD demand is
+used to select the primary coordination direction and valuable periods. Each
+fixed offset minimizes error against those valuable bins and must have mean
+alignment error no greater than 10 seconds and maximum error no greater than
+18 seconds. The daily leader remains at zero. This produces 33 non-zero-offset
+systems and 3,168 non-zero-offset plans. Candidate10 applies no offset to the
+remaining 1,398 systems.
+
+The implemented blocks are 46.596--245.677 metres long, mean 137.0 metres.
+No 5--25 metre storage-critical block passes all topology, demand and safety
+gates, so candidate10 does not claim a near-synchronous short-storage repair.
+The complete results and exclusions are recorded in:
+
+```text
+signal_corridor_registry.csv
+signal_corridor_links.csv
+tod_corridor_direction_15min.csv
+tod_corridor_offsets.csv
+corridor_exclusions.csv
+```
+
+MATSim XML compilation and the generic signal validator pass. The dedicated
+corridor validator confirms that only `offset_s` changes relative to
+candidate9: network, capacity, systems, groups, movements, green windows,
+cycles and green splits are byte-identical or field-identical as applicable.
+It also reports zero out-of-cycle offsets, unsafe TOD plan transitions,
+multi-corridor systems, or compiled-XML offset mismatches.
+
+## Candidate10 frozen runtime gate: release11/run11
+
+Candidate10 was tested through iterations 0--1 without overwriting any prior
+result:
+
+```text
+/mnt/DiskM/by/hk_traffic_signals_candidate10_corridor_20260813_payload1
+/mnt/DiskM/by/hk_stage11_candidate10_corridor_signals_20260813_release11
+/mnt/DiskM/by/hk_stage11_candidate10_corridor_signals_20260813_run11
+/mnt/DiskM/by/hk_road_network_audit_20260813_candidate10_corridor_run11_v4
+```
+
+The comparison keeps release7's network/plans/transit supply, the run7 JAR,
+iterations 0--1, a 30:00 horizon, `stuckTime=600`, `KeepLastSelected`, physical
+non-Taxi modes, and unlimited ordinary PT capacity. Run11 exits zero. The
+physical-mode audit passes. The student audit passes its binding and route
+checks, but one of 1,003 selected school-bus legs is stuck and does not alight
+or arrive, so it is `validated_with_network_stuck_limitations`.
+
+| Iteration-1 metric | run7 no signal | run8 Top-100 | run9 all expressed | run11 Candidate10 |
+|---|---:|---:|---:|---:|
+| Total road delay (veh-h) | 52,383.98 | 59,167.95 | 73,950.69 | 71,585.16 |
+| Road-vehicle stuck | 1,959 | 2,028 | 2,276 | 2,422 |
+| Private Car stuck | 967 | 950 | 1,124 | 1,162 |
+| Bus stuck | 536 | 575 | 666 | 667 |
+| GMB stuck | 453 | 500 | 483 | 585 |
+| School-bus stuck | 3 | 3 | 3 | 8 |
+| Links with >=100 traversals and mean ratio >2 | 1,788 | 2,192 | 4,773 | 4,816 |
+
+Against run9, Candidate10 lowers delay by 3.20% but raises road-vehicle stuck
+by 6.41%. Against no-signal run7, delay remains 36.65% higher and road-vehicle
+stuck 23.63% higher. The largest stuck deterioration is GMB (+102 versus
+run9), while Bus is essentially unchanged (+1). Run9 predates the Candidate9
+ownership/deactivation/stage corrections, and Candidate9 has no separate
+runtime run. The run9-to-run11 change therefore measures the combined
+Candidate9-plus-corridor package and cannot identify the offset-only causal
+effect.
+
+The signal event gate fails for a separate controller reason. All 1,445
+systems and 3,243 groups are observed, with zero missing groups, conflicting
+simultaneous greens, intergreen, amber, or red+amber violations. However, 47
+cycle-duration discontinuities occur in 11 offset systems. Every violation is
+at or within one second of a 15-minute plan boundary. Thus the static
+Candidate10 assumption that a repeated fixed offset would preserve phase
+continuity across MATSim TOD plan replacement is false at runtime. The
+controller still restarts/repositions affected programs at plan changes.
+
+Candidate10 therefore fails both the signal-mechanics gate and the road
+performance gate. It remains a rejected, opt-in historical sensitivity. It
+does not update `city.yaml`, the run manifest, or the production/no-signal
+baseline. Any later corridor attempt must avoid 96 independently replaced
+offset plans, or implement a controller whose phase clock is explicitly
+continuous across TOD timing changes.
+
+## Candidate11 safe TOD boundaries: release12/run12
+
+Candidate11 retains Candidate10's 47 selected corridors, groups, cycle
+lengths, green splits and offsets, but moves each corridor system's complete
+set of 96 TOD plan boundaries to its fixed daily offset. This makes every plan
+replacement occur at the same stage-1 phase position on both sides of the
+boundary. Thirty-three systems require a non-zero shift; the maximum shift is
+53 seconds. No continuous-clock controller is introduced.
+
+The full frozen iterations 0--1 validation used new, non-overwriting paths:
+
+```text
+/mnt/DiskM/by/hk_traffic_signals_candidate11_safe_boundaries_20260813_payload1
+/mnt/DiskM/by/hk_stage11_candidate11_safe_boundaries_20260813_release12
+/mnt/DiskM/by/hk_stage11_candidate11_safe_boundaries_20260813_run12
+/mnt/DiskM/by/hk_road_network_audit_20260814_candidate11_safe_boundaries_run12_v2
+```
+
+Run12 retains release11's network, plans, transit supply, cost inputs and
+application JAR; only the Candidate11 signal XML changes. It uses a 30:00
+horizon, `stuckTime=600`, iterations 0--1, and zero weight for ordinary
+`ReRoute`, `SubtourModeChoice`, and `TimeAllocationMutator`. The explicitly
+enabled household-joint and student-school selectors remain active between
+iterations. Run12 exits zero. Iteration-0/1 QSim `lost` counts are 5,993 and
+3,617, versus 5,961 and 3,656 in Candidate10 run11.
+
+The signal event audit passes. All 1,445 systems and 3,243 groups are seen;
+there are zero missing groups, blocking simultaneous greens, intergreen,
+amber, red+amber, or cycle-duration violations. In particular, Candidate10's
+47 runtime cycle discontinuities fall to zero. The 1,418 terminal transition
+truncations are states cut off by the configured 30:00 simulation horizon and
+are not blocking violations.
+
+| Iteration-1 metric | run7 no signal | run11 Candidate10 | run12 Candidate11 |
+|---|---:|---:|---:|
+| Total road delay (veh-h) | 52,383.98 | 71,585.16 | 72,010.88 |
+| Road-vehicle stuck | 1,959 | 2,422 | 2,390 |
+| Private Car stuck | 967 | 1,162 | 1,114 |
+| Bus stuck | 536 | 667 | 690 |
+| GMB stuck | 453 | 585 | 578 |
+| School-bus stuck | 3 | 8 | 8 |
+| Links with >=100 traversals and mean ratio >2 | 1,788 | 4,816 | 4,808 |
+
+Relative to Candidate10, Candidate11 raises total road delay by 0.59% and
+reduces road-vehicle stuck by 1.32%. Relative to the paired no-signal run7,
+delay remains 37.47% higher and road-vehicle stuck 22.00% higher. Candidate11
+therefore passes the signal-mechanics/period-continuity gate but fails the road
+performance gate. It remains an opt-in research candidate and does not update
+`city.yaml`, `run_manifest.json`, or the production/no-signal baseline.
+
+## Candidate11 ordinary-innovation integration gate
+
+The next technical gate keeps the complete Candidate11 signal package and the
+same physical household escort, student-school, road, PT and cost inputs, but
+opens ordinary individual replanning through a new explicit runner option:
+
+```text
+--household-joint-plan-with-ordinary-innovation
+```
+
+Without this option, the existing household/student entry point retains its
+historical frozen-strategy guard. With it, every ordinary resident, visitor
+and mainland-Hong-Kong-resident subpopulation must have positive
+`ChangeExpBeta`, `ReRoute`, `SubtourModeChoice`, and
+`TimeAllocationMutator_ReRoute` weights. The last strategy mutates activity
+times and then reroutes the complete trip, so a PT passenger can choose a new
+departure time and rebuild the itinerary against the applicable scheduled
+departure rather than retaining a stale boarding route. Private-Car routing
+uses the same experienced-link energy and toll rules as scoring.
+
+Household joint/escort candidates and student-school-mode candidates cannot be
+independently mutated without breaking shared vehicle waypoints or the
+separately audited school-mode choice. The runner therefore assigns their
+47,867 distinct people to `hk_household_student_protected`, whose only
+ordinary strategy is `KeepLastSelected`. The one-shot joint selector remains
+active after iteration 0 and installs the same independently evaluated
+escort/student candidates. This is a protected candidate module inside an
+otherwise open-innovation run, not a claim that these 47,867 people optimize
+individual plans independently.
+
+Opening Car mode choice expands the possible parking-destination universe far
+beyond the 1,266 exact repairs used by the earlier household driver-switch
+gate. The reproducible builder
+`scripts/hong_kong_single_city/demand_generation/prepare_hong_kong_open_innovation_parking_zones.py`
+audits all 228,220 activity facilities. Of these, 44,499 already have a unique
+zone in the Car feasibility table and 1,266 use the accepted repair table. It
+adds 182,441 strict point-within Census/DCCA assignments, producing 183,707
+repair rows and zero uncovered non-border facilities. New-Town polygons take
+deterministic precedence at the five exact polygon overlaps. No nearest-zone
+or default-zone fallback is allowed. All 14 `border_*` facilities remain
+explicitly unpriced because parking at a cross-boundary model anchor has no
+defensible TCS interpretation.
+
+The 22,578 non-special people whose initial plan contains a `border_*`
+activity are assigned to `hk_unpriced_border_no_car_mode_innovation`. They
+retain `ChangeExpBeta`, `ReRoute`, and `TimeAllocationMutator_ReRoute`, but do
+not receive `SubtourModeChoice`; the runner also fails at startup if any such
+initial plan already contains Car. Thus PT schedule-time adaptation remains
+available while the model cannot invent an unpriced cross-boundary Car tour.
+
+Server provenance is retained under new, non-overwriting paths:
+
+```text
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_release13
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13a
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_release14
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13b
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13c
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_release15
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13d
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_release16
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_run13e
+/mnt/DiskM/by/hk_stage11_candidate11_open_innovation_20260814_audit13e_v3
+/mnt/DiskM/by/hk_road_network_audit_20260814_candidate11_open_innovation_run13e_v2
+```
+
+The first `run13` failed before scenario loading because its rewritten config
+lost the MATSim DOCTYPE. `run13a` proved exact iteration-0 parity with frozen
+run12 (score, mode shares and QSim `lost=5,993`) and executed 31,931 ordinary
+ReRoute, 47,772 SubtourModeChoice and 16,057 time-mutation/reroute strategies,
+but stopped in iteration 1 when a newly chosen Car destination lacked a TCS
+zone. `run13b` stopped before model loading because the thin Maven JAR was
+uploaded instead of the repository-root shaded JAR. These outputs are failed
+diagnostics and must not be analyzed as completed simulations. Release14 adds
+the full exact facility-zone candidate and corrected shaded JAR. `run13c`
+completes iteration 1 and proves that the parking-universe repair works, but
+fails at the start of iteration 2 when a previously released, non-candidate
+`car_passenger` plan returns from ordinary plan memory. Release15/run13d adds
+every person whose initial plan contains `car_passenger` to the protected
+union (112 additional people, 47,867 total). Run13d nevertheless fails in
+iteration 2 when a temporary unbound `car_passenger` template is selected
+from ordinary MATSim plan memory. Subpopulation protection alone is therefore
+insufficient: the one-shot choice templates are implementation artifacts, not
+admissible plans.
+
+Release16 removes all 26,780 temporary templates immediately after the
+one-shot household/student selector installs 42,549 selected composite plans.
+The templates remain available during exact candidate evaluation but cannot
+be selected by later generic strategies. The targeted Java suite passes, and
+run13e exits zero through iteration 10. It preserves exact iteration-0 parity
+with run12: average score 14.8630959, identical mode shares and QSim
+`lost=5,993`.
+
+At iteration 10 the average executed score is 30.4505981 and `lost=300`, a
+94.99% reduction from iteration 0. Final shares are 6.125% Car, 0.520% bound
+`car_passenger`, 51.149% PT, 8.681% Taxi and 33.525% Walk. The large
+ten-iteration PT-to-Walk shift proves ordinary mode choice is active, but is
+also a calibration warning: run13e is an integration/stability gate, not an
+adopted behavioral equilibrium.
+
+The iteration-0/10 audit directly verifies every requested innovation path.
+Among 28,656 Car legs alignable by person and leg ordinal, 9,411 change their
+network-link sequence. Of 343,395 trips retaining PT, 86,798 change main-trip
+departure time, 87,173 change first PT boarding time, and 156,895 change the
+transit service/vehicle sequence. Common-trip departure offsets have
+p05/p50/p95 of -1,110/0/+1,240 seconds. The final plan file contains
+1,375,073 plans and zero temporary household-joint templates.
+
+The protected modules remain physical. The selector evaluates 9,289 joint
+pairs in 5,789 households, installs 3,865 active bindings and selects 1,018
+independent school-bus trips. In iteration 10, 3,764 of 3,865 escort rides
+complete; other outcomes are classified as traffic-stuck or beyond the 30:00
+horizon. No unbound passenger exception occurs. Dynamic Car costing records
+4,422,285 link entries, 16,283 tolled entries and 28,208 parking events with
+zero parking-facility mismatches.
+
+The iteration-10 signal event audit remains `validated`: all 1,445 systems
+and 3,243 groups appear in 22,781,520 state events, with zero missing groups,
+conflicting simultaneous greens, intergreen, amber, red+amber or cycle-time
+violations. The listed incomplete transitions are states truncated by the
+30:00 simulation horizon, not controller discontinuities.
+
+The separate iteration-10 road audit excludes ordinary PT-passenger and
+non-road stuck events. It records 21,479,800 road-link traversals, 19,493.38
+vehicle-hours of delay and 126 road-vehicle stuck events: 84 private Car, 29
+Bus, 13 GMB and zero school bus. There are 3,539 links with at least 100
+traversals and mean travel-time ratio above two. These are run13e absolute
+outcomes, not a new signal/no-signal causal A/B; the valid signal adoption
+comparison remains the paired frozen run12-versus-run7 gate.
+
+Run13e remains opt-in. It does not update `city.yaml`, `run_manifest.json`, or
+the production/no-signal baseline. Candidate11 already failed the paired
+frozen road-performance adoption gate; ordinary adaptation does not convert
+that earlier causal A/B into signal-performance acceptance.
+
+### Candidate11 open Taxi/Walk 20-QSim follow-on
+
+The follow-on sensitivity keeps the same Candidate11 network, signal XML,
+plans, schedule and protected candidate registries. Its active immutable
+server attempt is:
+
+```text
+/mnt/DiskM/by/hk_stage11_candidate11_open_taxi_walk_20260814_release18
+/mnt/DiskM/by/hk_stage11_candidate11_open_taxi_walk_20260814_run14a
+```
+
+The first `release17/run14` attempt is retained as a pre-iteration failure:
+the compact release16 PT mirror omitted one adopted light-rail fare parquet.
+run14a restores the exact provenance split used by run13e: complete PT fares
+from release11 and dynamic Car tables from release16. It completed all-person
+route preparation and entered iteration 0 on 2026-08-14. Its behavioral and
+output contract is recorded in
+`docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`; it remains opt-in and
+cannot change Candidate11's earlier frozen signal A/B rejection.

@@ -1,9 +1,13 @@
+import gzip
+from pathlib import Path
+import tempfile
 import unittest
 
 from audit_hong_kong_road_network_runtime import (
     Link,
     classify_vehicle,
     geometry_endpoints,
+    read_links,
     strongly_connected_components,
 )
 
@@ -50,6 +54,22 @@ class RoadRuntimeAuditTest(unittest.TestCase):
         self.assertEqual({"a", "b"}, components[0])
         self.assertNotIn("c", out_degree)
         self.assertEqual(1, in_degree["c"])
+
+    def test_read_matsim_network_xml_gz(self) -> None:
+        network = b'''<?xml version="1.0" encoding="UTF-8"?>
+<network><nodes><node id="a" x="1" y="2"/><node id="b" x="3" y="4"/></nodes>
+<links><link id="ab" from="a" to="b" length="25" freespeed="10"
+capacity="1800" permlanes="2" modes="car,bus"/></links></network>'''
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "network.xml.gz"
+            with gzip.open(path, "wb") as stream:
+                stream.write(network)
+            links = read_links(path)
+        link = links["ab"]
+        self.assertEqual((1.0, 2.0), link.from_xy)
+        self.assertEqual((3.0, 4.0), link.to_xy)
+        self.assertEqual(frozenset({"car", "bus"}), link.modes)
+        self.assertEqual(2.5, link.freeflow_s)
 
 
 if __name__ == "__main__":

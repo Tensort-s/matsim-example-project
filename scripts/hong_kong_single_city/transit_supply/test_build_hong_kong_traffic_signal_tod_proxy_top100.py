@@ -30,6 +30,43 @@ class TodTop100Tests(unittest.TestCase):
             {"north", "south"}, {"east", "west"}
         ])
 
+    def test_cross_system_control_prefers_registry_then_demand(self):
+        selected = [
+            {
+                "signal_junction_id": "TS_K014", "stage1_confidence": "high",
+                "peak_tpdm_pcu_per_hour": 4736, "daily_tpdm_pcu_count": 46128,
+            },
+            {
+                "signal_junction_id": "TS_OSM_0178", "stage1_confidence": "medium",
+                "peak_tpdm_pcu_per_hour": 160, "daily_tpdm_pcu_count": 420,
+            },
+            {
+                "signal_junction_id": "TS_K732", "stage1_confidence": "high",
+                "peak_tpdm_pcu_per_hour": 728, "daily_tpdm_pcu_count": 4894,
+            },
+            {
+                "signal_junction_id": "TS_K776", "stage1_confidence": "high",
+                "peak_tpdm_pcu_per_hour": 1442, "daily_tpdm_pcu_count": 11102,
+            },
+        ]
+        movements = [
+            {"movement_id": "a", "from_link_id": "road_a", "signal_junction_id": "TS_K014"},
+            {"movement_id": "b", "from_link_id": "road_a", "signal_junction_id": "TS_OSM_0178"},
+            {"movement_id": "c", "from_link_id": "road_b", "signal_junction_id": "TS_K732"},
+            {"movement_id": "d", "from_link_id": "road_b", "signal_junction_id": "TS_K776"},
+        ]
+        filtered, audit = MODULE.resolve_cross_system_control_ownership(movements, selected)
+        self.assertEqual({row["movement_id"] for row in filtered}, {"a", "d"})
+        self.assertEqual(len(audit), 2)
+
+    def test_priority_override_can_merge_overfragmented_axes(self):
+        approaches = [
+            {"approach_id": str(index), "approach_bearing_deg": str(value)}
+            for index, value in enumerate((11, 42, 73, 101, 144))
+        ]
+        self.assertEqual(len(MODULE.cluster_approach_axes(approaches, 25)), 5)
+        self.assertEqual(len(MODULE.cluster_approach_axes(approaches, 40)), 3)
+
     def test_cycle_options_all_fit_exact_15_minute_windows(self):
         self.assertTrue(all(900 % cycle == 0 for cycle in MODULE.CYCLE_OPTIONS_SECONDS))
 

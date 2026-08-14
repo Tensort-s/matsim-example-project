@@ -16,17 +16,17 @@ public final class HongKongTaxiFareScoringComponentFactory
 
 	public static final String COMPONENT_ID = "taxi_route_fare_v1";
 
-	private final HongKongTaxiScoringParameters parameters;
+	private final HongKongTaxiFareUtilityPolicy policy;
 	private final HongKongTaxiFareCalculator fareCalculator;
 
 	@Inject
 	public HongKongTaxiFareScoringComponentFactory(
 			Scenario scenario,
-			HongKongTaxiScoringParameters parameters,
+			HongKongTaxiFareUtilityPolicy policy,
 			HongKongTaxiFareCalculator fareCalculator) {
 		this(
 				Objects.requireNonNull(scenario, "scenario").getConfig(),
-				parameters,
+				policy,
 				fareCalculator);
 	}
 
@@ -34,9 +34,25 @@ public final class HongKongTaxiFareScoringComponentFactory
 			Config config,
 			HongKongTaxiScoringParameters parameters,
 			HongKongTaxiFareCalculator fareCalculator) {
-		this.parameters = Objects.requireNonNull(parameters, "parameters");
+		this(config, new HongKongTaxiFareUtilityPolicy(
+				parameters.fareUtilityPerHkd(), parameters.fareUtilityPerHkd()), fareCalculator);
+	}
+
+	public HongKongTaxiFareScoringComponentFactory(
+			Scenario scenario,
+			HongKongTaxiScoringParameters parameters,
+			HongKongTaxiFareCalculator fareCalculator) {
+		this(Objects.requireNonNull(scenario, "scenario").getConfig(), parameters, fareCalculator);
+	}
+
+	HongKongTaxiFareScoringComponentFactory(
+			Config config,
+			HongKongTaxiFareUtilityPolicy policy,
+			HongKongTaxiFareCalculator fareCalculator) {
+		this.policy = Objects.requireNonNull(policy, "policy");
 		this.fareCalculator = Objects.requireNonNull(fareCalculator, "fareCalculator");
-		this.parameters.validateConfig(Objects.requireNonNull(config, "config"));
+		HongKongTaxiScoringParameters.centralV1()
+				.validateConfig(Objects.requireNonNull(config, "config"));
 	}
 
 	@Override
@@ -51,6 +67,7 @@ public final class HongKongTaxiFareScoringComponentFactory
 
 	@Override
 	public HongKongScoringComponent createComponent(Person person) {
+		HongKongTaxiScoringParameters parameters = policy.parametersFor(person);
 		return new HongKongTaxiFareScoring(
 				routeFareScheduleFor(Objects.requireNonNull(person, "person")),
 				parameters);

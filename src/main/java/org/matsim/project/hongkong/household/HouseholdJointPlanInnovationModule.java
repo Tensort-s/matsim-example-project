@@ -10,18 +10,29 @@ import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
 /** Installs the household selector after ordinary replanning and before iteration 1. */
 public final class HouseholdJointPlanInnovationModule extends AbstractModule {
 	private final StudentSchoolModeCandidateCatalog studentCandidates;
+	private final HouseholdJointPlanSelectionSchedule selectionSchedule;
 
 	public HouseholdJointPlanInnovationModule() {
-		this(StudentSchoolModeCandidateCatalog.empty());
+		this(StudentSchoolModeCandidateCatalog.empty(), false);
 	}
 
 	public HouseholdJointPlanInnovationModule(StudentSchoolModeCandidateCatalog studentCandidates) {
+		this(studentCandidates, false);
+	}
+
+	public HouseholdJointPlanInnovationModule(
+			StudentSchoolModeCandidateCatalog studentCandidates,
+			boolean targetIterations5_10_15) {
 		this.studentCandidates = studentCandidates;
+		this.selectionSchedule = targetIterations5_10_15
+				? HouseholdJointPlanSelectionSchedule.targetIterations5_10_15()
+				: HouseholdJointPlanSelectionSchedule.historicalOneShot();
 	}
 
 	@Override
 	public void install() {
 		bind(StudentSchoolModeCandidateCatalog.class).toInstance(studentCandidates);
+		bind(HouseholdJointPlanSelectionSchedule.class).toInstance(selectionSchedule);
 		bind(HouseholdJointPlanAlternativeGenerator.class).in(Singleton.class);
 		bind(HouseholdJointPlanSelector.class).in(Singleton.class);
 		addControlerListenerBinding().to(HouseholdJointPlanSelector.class);

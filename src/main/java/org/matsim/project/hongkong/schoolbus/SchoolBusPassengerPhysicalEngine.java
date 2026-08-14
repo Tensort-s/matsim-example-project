@@ -18,6 +18,7 @@ import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 import org.matsim.core.router.TripStructureUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Sends every {@code pt} passenger leg to MATSim's physical transit stop
@@ -48,6 +49,9 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 	private final AtomicLong physicalSchoolBusDepartures = new AtomicLong();
 	private final AtomicLong physicalRegularPtDepartures = new AtomicLong();
 	private final AtomicLong delegatedPtDepartures = new AtomicLong();
+	private final AtomicLong delayedSchoolBusStopArrivals = new AtomicLong();
+	private final AtomicLong missedSchoolBusDepartures = new AtomicLong();
+	private final AtomicReference<Double> maximumMissedSchoolBusLatenessS = new AtomicReference<>(0.0);
 	private InternalInterface internalInterface;
 
 	@Inject
@@ -70,17 +74,33 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 		if (!"pt".equals(agent.getMode())) {
 			return false;
 		}
-		String routingMode = routingMode(agent);
-		boolean selectedSchoolBus = catalog.matchesSelectedSchoolBusDeparture(
-				agent.getId(), fromLinkId, now);
+		Leg currentLeg = currentLeg(agent);
+		String routingMode = TripStructureUtils.getRoutingMode(currentLeg);
+		Object candidateValue = currentLeg.getAttributes().getAttribute(
+				StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE);
+		String candidateId = candidateValue instanceof String value ? value : null;
+		boolean schoolBusRoutingMode = "school_bus".equals(routingMode);
+		var schoolBusTiming = catalog.selectedSchoolBusTiming(
+				agent.getId(), candidateId, fromLinkId);
+		boolean selectedSchoolBus = schoolBusTiming.isPresent();
+		if (schoolBusRoutingMode != selectedSchoolBus) {
+			throw new IllegalStateException("PT physical-mode guard disagrees with the selected "
+					+ "school-bus catalog: person=" + agent.getId() + ", routingMode="
+					+ routingMode + ", candidateId=" + candidateId + ", fromLink="
+					+ fromLinkId + ", departure=" + now);
+		}
 		if (!selectedSchoolBus && !physicalRegularPt) {
 			delegatedPtDepartures.incrementAndGet();
 			return false;
 		}
-		if ("school_bus".equals(routingMode) != selectedSchoolBus) {
-			throw new IllegalStateException("PT physical-mode guard disagrees with the selected "
-					+ "school-bus catalog: person=" + agent.getId() + ", routingMode="
-					+ routingMode + ", fromLink=" + fromLinkId + ", departure=" + now);
+		if (selectedSchoolBus) {
+			var timing = schoolBusTiming.orElseThrow();
+			if (now > timing.plannedLegDepartureTimeS() + 1e-6) {
+				delayedSchoolBusStopArrivals.incrementAndGet();
+			}
+			double missedBy = Math.max(0.0, now - timing.scheduledBoardTimeS());
+			if (missedBy > 1e-6) missedSchoolBusDepartures.incrementAndGet();
+			maximumMissedSchoolBusLatenessS.accumulateAndGet(missedBy, Math::max);
 		}
 		Id<TransitStopFacility> stopId = passenger.getDesiredAccessStopId();
 		if (selectedSchoolBus && !catalog.isPhysicalSchoolBusStop(stopId)) {
@@ -110,13 +130,13 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 		return true;
 	}
 
-	private static String routingMode(MobsimAgent agent) {
+	private static Leg currentLeg(MobsimAgent agent) {
 		if (!(agent instanceof PlanAgent planAgent)
 				|| !(planAgent.getCurrentPlanElement() instanceof Leg leg)) {
 			throw new IllegalStateException("PT passenger is not backed by a current plan leg: "
 					+ agent.getId());
 		}
-		return TripStructureUtils.getRoutingMode(leg);
+		return leg;
 	}
 
 	@Override
@@ -129,13 +149,19 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 		physicalSchoolBusDepartures.set(0);
 		physicalRegularPtDepartures.set(0);
 		delegatedPtDepartures.set(0);
+		delayedSchoolBusStopArrivals.set(0);
+		missedSchoolBusDepartures.set(0);
+		maximumMissedSchoolBusLatenessS.set(0.0);
 	}
 
 	@Override
 	public void afterMobsim() {
 		System.out.printf("Physical PT departure handler: school-bus=%,d; regular-pt=%,d; "
-				+ "delegated-pt=%,d.%n", physicalSchoolBusDepartures.get(),
-				physicalRegularPtDepartures.get(), delegatedPtDepartures.get());
+				+ "delegated-pt=%,d; delayed-school-bus-stop-arrivals=%,d; "
+				+ "missed-school-bus-departures=%,d; max-missed-school-bus-lateness-s=%.1f.%n",
+				physicalSchoolBusDepartures.get(), physicalRegularPtDepartures.get(),
+				delegatedPtDepartures.get(), delayedSchoolBusStopArrivals.get(),
+				missedSchoolBusDepartures.get(), maximumMissedSchoolBusLatenessS.get());
 	}
 
 	@Override
