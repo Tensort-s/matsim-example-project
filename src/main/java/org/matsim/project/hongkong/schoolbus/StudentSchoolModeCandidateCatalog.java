@@ -10,6 +10,7 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
+import org.matsim.pt.routes.TransitPassengerRoute;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,6 +69,7 @@ public final class StudentSchoolModeCandidateCatalog {
 	private final Map<TripKey, TripCandidate> trips;
 	private final Set<String> physicalSchoolBusStopIds;
 	private final Map<String, SchoolBusOption> schoolBusOptionsById;
+	private final Map<String, List<SchoolBusOption>> schoolBusOptionsByPerson;
 	private final Map<Id<Person>, List<SchoolBusTripSnapshot>> selectedSchoolBusTripSnapshots =
 			new LinkedHashMap<>();
 	private final Map<Id<Person>, List<SchoolBusLegGuard>> selectedSchoolBusLegs =
@@ -89,7 +91,9 @@ public final class StudentSchoolModeCandidateCatalog {
 		this.trips = Map.copyOf(trips);
 		Set<String> stopIds = new HashSet<>();
 		Map<String, SchoolBusOption> optionsById = new LinkedHashMap<>();
-		for (TripCandidate trip : trips.values()) {
+		Map<String, List<SchoolBusOption>> optionsByPerson = new LinkedHashMap<>();
+		for (var entry : trips.entrySet()) {
+			TripCandidate trip = entry.getValue();
 			for (SchoolBusOption option : trip.schoolBusOptions()) {
 				stopIds.add(option.boardingFacilityId());
 				stopIds.add(option.alightingFacilityId());
@@ -97,10 +101,16 @@ public final class StudentSchoolModeCandidateCatalog {
 					throw new IllegalArgumentException(
 							"Duplicate physical school-bus candidate " + option.candidateId());
 				}
+				optionsByPerson.computeIfAbsent(entry.getKey().personId(), ignored -> new ArrayList<>())
+						.add(option);
 			}
 		}
 		this.physicalSchoolBusStopIds = Set.copyOf(stopIds);
 		this.schoolBusOptionsById = Map.copyOf(optionsById);
+		Map<String, List<SchoolBusOption>> immutableByPerson = new LinkedHashMap<>();
+		optionsByPerson.forEach((person, options) ->
+				immutableByPerson.put(person, List.copyOf(options)));
+		this.schoolBusOptionsByPerson = Map.copyOf(immutableByPerson);
 	}
 
 	public static StudentSchoolModeCandidateCatalog empty() {
@@ -193,6 +203,79 @@ public final class StudentSchoolModeCandidateCatalog {
 	}
 
 	/**
+	 * Reattaches the stable candidate key to frozen experienced school-bus plans.
+	 * MATSim's routed experienced-plan writer can preserve the physical transit
+	 * route while dropping the pre-routing leg metadata.  The catalog trip key
+	 * plus both physical endpoint links makes the recovery deterministic.
+	 */
+	public int restoreMissingSelectedSchoolBusCandidateIds(Scenario scenario) {
+		int restored = 0;
+		for (Person person : scenario.getPopulation().getPersons().values()) {
+			Plan selected = person.getSelectedPlan();
+			if (selected == null) continue;
+			List<TripStructureUtils.Trip> planTrips = TripStructureUtils.getTrips(selected);
+			for (int tripIndex = 0; tripIndex < planTrips.size(); tripIndex++) {
+				TripStructureUtils.Trip trip = planTrips.get(tripIndex);
+				boolean physicalTransitRoute = trip.getLegsOnly().stream()
+						.filter(leg -> "pt".equals(leg.getMode()))
+						.map(Leg::getRoute)
+						.anyMatch(TransitPassengerRoute.class::isInstance);
+				if (!physicalTransitRoute) {
+					// The original Candidate11 plans contain legacy one-leg generic
+					// school_bus abstractions. Before the first protected choice window
+					// they historically fell back to ordinary PT. They are not v6
+					// physical candidates and must not be snapshotted as such merely
+					// because mode normalization preserved their routingMode.
+					for (Leg leg : trip.getLegsOnly()) {
+						if ("school_bus".equals(leg.getRoutingMode())) {
+							leg.setRoutingMode("pt");
+						}
+					}
+					continue;
+				}
+				List<SchoolBusOption> personOptions = schoolBusOptionsByPerson.getOrDefault(
+						person.getId().toString(), List.of());
+				if (personOptions.isEmpty()) continue;
+				boolean matchedPhysicalSchoolBus = false;
+				for (Leg leg : trip.getLegsOnly()) {
+					if (!"pt".equals(leg.getMode())
+							|| leg.getRoute() == null) continue;
+					List<SchoolBusOption> matches = personOptions.stream()
+							.filter(option -> option.boardingLinkId().equals(
+									leg.getRoute().getStartLinkId().toString()))
+							.filter(option -> option.alightingLinkId().equals(
+									leg.getRoute().getEndLinkId().toString()))
+							.filter(option -> !(leg.getRoute() instanceof TransitPassengerRoute route)
+									|| route.getRouteId() != null && option.transitRouteId().equals(
+											route.getRouteId().toString()))
+							.toList();
+					if (matches.isEmpty()) continue;
+					if (matches.size() != 1) {
+						throw new IllegalStateException("Cannot uniquely restore selected school-bus candidate: "
+								+ person.getId() + "/" + tripIndex + ", matches=" + matches.size());
+					}
+					String stableCandidateId = matches.getFirst().candidateId();
+					Object existing = leg.getAttributes().getAttribute(CANDIDATE_ID_ATTRIBUTE);
+					if (existing != null && !stableCandidateId.equals(existing)) {
+						throw new IllegalStateException("Conflicting selected school-bus candidate ID: "
+								+ person.getId() + "/" + tripIndex + ", existing=" + existing
+								+ ", matched=" + stableCandidateId);
+					}
+					if (existing == null || existing instanceof String value && value.isBlank()) {
+						leg.getAttributes().putAttribute(CANDIDATE_ID_ATTRIBUTE, stableCandidateId);
+						restored++;
+					}
+					matchedPhysicalSchoolBus = true;
+				}
+				if (matchedPhysicalSchoolBus) {
+					for (Leg leg : trip.getLegsOnly()) leg.setRoutingMode("school_bus");
+				}
+			}
+		}
+		return restored;
+	}
+
+	/**
 	 * Resolves a selected physical school-bus leg by stable plan identity.
 	 *
 	 * <p>QSim departure time is deliberately not part of the identity: a passenger can
@@ -211,6 +294,37 @@ public final class StudentSchoolModeCandidateCatalog {
 			}
 		}
 		return Optional.empty();
+	}
+
+	/** Strict fallback for an experienced plan truncated after a school-bus leg. */
+	public synchronized Optional<SelectedSchoolBusTiming> inferTruncatedSchoolBusTiming(
+			Id<Person> personId, Leg leg, Id<Link> fromLinkId) {
+		if (personId == null || leg == null || fromLinkId == null || leg.getRoute() == null) {
+			return Optional.empty();
+		}
+		Object existing = leg.getAttributes().getAttribute(CANDIDATE_ID_ATTRIBUTE);
+		String existingId = existing instanceof String value && !value.isBlank() ? value : null;
+		List<SchoolBusOption> matches = schoolBusOptionsByPerson
+				.getOrDefault(personId.toString(), List.of()).stream()
+				.filter(option -> option.boardingLinkId().equals(fromLinkId.toString()))
+				.filter(option -> leg.getRoute().getEndLinkId() != null
+						&& option.alightingLinkId().equals(leg.getRoute().getEndLinkId().toString()))
+				.filter(option -> existingId == null || option.candidateId().equals(existingId))
+				.filter(option -> !(leg.getRoute() instanceof TransitPassengerRoute route)
+						|| route.getRouteId() != null
+						&& option.transitRouteId().equals(route.getRouteId().toString()))
+				.toList();
+		if (matches.isEmpty()) return Optional.empty();
+		if (matches.size() != 1) {
+			throw new IllegalStateException("Ambiguous truncated school-bus leg: person="
+					+ personId + ", fromLink=" + fromLinkId + ", matches=" + matches.size());
+		}
+		SchoolBusOption option = matches.getFirst();
+		leg.getAttributes().putAttribute(CANDIDATE_ID_ATTRIBUTE, option.candidateId());
+		return Optional.of(new SelectedSchoolBusTiming(
+				leg.getDepartureTime().orElseThrow(() -> new IllegalStateException(
+						"Truncated school-bus leg has no departure time for " + personId)),
+				option.scheduledBoardTimeS()));
 	}
 
 	/** Saves only physical school-bus trips before PrepareForSim can reroute them. */

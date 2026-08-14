@@ -47,6 +47,7 @@ public final class HongKongNetworkTaxiRoutingModule extends AbstractModule {
 			scenario.getVehicles().addVehicleType(type);
 		}
 		int vehicles = 0;
+		var fareCalculator = new HongKongTaxiFareCalculator();
 		for (var person : scenario.getPopulation().getPersons().values()) {
 			var vehicleId = VehicleUtils.createVehicleId(person,
 					HongKongTaxiScoringParameters.TAXI_MODE);
@@ -61,10 +62,21 @@ public final class HongKongNetworkTaxiRoutingModule extends AbstractModule {
 			VehicleUtils.insertVehicleIdsIntoAttributes(person, ids);
 			vehicles++;
 			for (var plan : person.getPlans()) {
+				var completeTripLegs = java.util.Collections.newSetFromMap(
+						new java.util.IdentityHashMap<org.matsim.api.core.v01.population.Leg, Boolean>());
+				for (var trip : org.matsim.core.router.TripStructureUtils.getTrips(plan)) {
+					completeTripLegs.addAll(trip.getLegsOnly());
+				}
+				int fallbackTaxiIndex = org.matsim.core.router.TripStructureUtils.getTrips(plan).size();
 				for (var element : plan.getPlanElements()) {
-					if (element instanceof org.matsim.api.core.v01.population.Leg leg
-							&& HongKongTaxiScoringParameters.TAXI_MODE.equals(leg.getRoutingMode())) {
+					if (!(element instanceof org.matsim.api.core.v01.population.Leg leg)
+							|| !HongKongTaxiScoringParameters.TAXI_MODE.equals(leg.getRoutingMode())) continue;
+					if (completeTripLegs.contains(leg)) {
 						leg.setRoute(null);
+					} else if (leg.getRoute() != null) {
+						HongKongNetworkTaxiRouting.stampMissingFareMetadata(
+								leg, fallbackTaxiIndex++, fareCalculator,
+								"all_person_network_taxi_proxy_v1_truncated");
 					}
 				}
 			}

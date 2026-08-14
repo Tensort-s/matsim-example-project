@@ -33,8 +33,15 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 			if (person.getSelectedPlan() == null) continue;
 			for (var element : person.getSelectedPlan().getPlanElements()) {
 				if (element instanceof Leg leg
-						&& scenario.getConfig().transit().getTransitModes().contains(leg.getMode())) {
+						&& scenario.getConfig().transit().getTransitModes().contains(leg.getMode())
+						&& !"pt".equals(leg.getMode())) {
+					String routingMode = TripStructureUtils.getRoutingMode(leg);
 					leg.setMode("pt");
+					// Leg.setMode deliberately clears routingMode. Preserve the
+					// main-trip identity while only changing the QSim execution mode;
+					// this also protects unfinished plans that end in a stage activity
+					// and therefore are not returned by TripStructureUtils.getTrips().
+					if (routingMode != null) leg.setRoutingMode(routingMode);
 					normalized++;
 				}
 			}
@@ -82,6 +89,13 @@ public final class SchoolBusPassengerPhysicalEngine implements MobsimEngine, Dep
 		boolean schoolBusRoutingMode = "school_bus".equals(routingMode);
 		var schoolBusTiming = catalog.selectedSchoolBusTiming(
 				agent.getId(), candidateId, fromLinkId);
+		if (schoolBusTiming.isEmpty() && schoolBusRoutingMode) {
+			schoolBusTiming = catalog.inferTruncatedSchoolBusTiming(
+					agent.getId(), currentLeg, fromLinkId);
+			Object restored = currentLeg.getAttributes().getAttribute(
+					StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE);
+			candidateId = restored instanceof String value ? value : candidateId;
+		}
 		boolean selectedSchoolBus = schoolBusTiming.isPresent();
 		if (schoolBusRoutingMode != selectedSchoolBus) {
 			throw new IllegalStateException("PT physical-mode guard disagrees with the selected "

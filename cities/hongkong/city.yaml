@@ -226,6 +226,71 @@ stage11_no_ride_candidate:
     school_bus_candidates: 0
     limitation: "deterministic maximum utility without choice probability or driver acceptance constraint; no selected new driver Car day in validation; not the adopted 50-iteration output or equilibrium"
 
+physical_taxi_dvrp_v1_candidate:
+  status: "low_cost_run25_and_full_pcu1_ab_validated_formal_run3_active_not_current_production"
+  branch: "codex/hk-taxi-dvrp-v1"
+  documentation: "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md"
+  fleet_scale_policy: "15500 model vehicles are deliberately not multiplied by the 5% resident sample rate"
+  fleet_total: 15500
+  fleet_by_type: {urban: 13083, new_territories: 2353, lantau: 64}
+  passenger_capacity_per_vehicle: 4
+  selected_pcu_after_bounded_congestion_gate: 1.0
+  dispatcher: "MATSim Taxi/DVRP minimum-wait assignment"
+  reoptimization_interval_s: 30
+  pickup_duration_s: 60
+  dropoff_duration_s: 30
+  shift_model: "one staggered continuous 18-hour window per vehicle; starts from 00:00 through 10:00 and service may extend to 28:00"
+  start_link_model: "fixed-seed TCS26 Taxi-origin and feasible Car lane-km prior; PT-only links, signal internal connectors, and dead ends excluded"
+  wait_definition: "PassengerPickedUp - PassengerRequestSubmitted"
+  scoring:
+    trip_constant_util: -9
+    non_wait_taxi_time_util_per_h: -6
+    wait_time_util_per_h: -12
+    adult_fare_util_per_hkd: -0.10
+    student_fare_util_per_hkd: -0.15
+  qsim_stuck_time_s: 3600
+  remove_stuck_vehicles: false
+  full_fleet_server_artifact: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_payload1/build/fleet15500/hong_kong_taxi_fleet.xml.gz"
+  accepted_low_cost_run:
+    server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_smoke0p5_run25"
+    iteration_range: [0, 0]
+    exit_code: 0
+    submitted_requests: 2717
+    completed_requests: 1417
+    waiting_requests_at_horizon: 531
+    onboard_requests_at_horizon: 767
+    rejected_or_invalid_requests: 2
+    wait_p50_s: 583
+    wait_p90_s: 75444
+    empty_distance_share: 0.2292
+    qsim_lost: 223
+    interpretation: "technical execution and request-conservation gate only; not service-quality, congestion, calibration, production, or equilibrium evidence"
+  full_5pct_fixed_plan_ab:
+    status: "completed_exit0_pcu1_passed"
+    frozen_plans_sha256: "92c2fa254b8eb2f2d93de20d4d68ec1f9d1fba12b975246f2b0e8b2d7d1ab753"
+    taxi_legs: 118854
+    proxy_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_gate_proxy_run5"
+    physical_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_gate_pcu1_run2"
+    proxy_iteration1_qsim_lost: 0
+    physical_iteration1_qsim_lost: 18
+    proxy_iteration1_walk_stuck: 221
+    physical_iteration1_walk_stuck: 379
+    physical_submitted_requests: 64814
+    physical_completed_requests: 14144
+    physical_waiting_requests_at_horizon: 42463
+    physical_onboard_requests_at_horizon: 8189
+    physical_rejected_or_invalid_requests: 18
+    physical_wait_p50_s: 49311
+    physical_wait_p90_s: 76636
+    physical_empty_distance_share: 0.29647
+    decision: "retain highest passing PCU 1.0; do not activate TPDM or lower-PCU candidates"
+  formal_50qsim_status: "run3_active"
+  formal_50qsim_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run3"
+  formal_50qsim_jar_sha256: "ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30"
+  heartbeat_id: "formal50-heartbeat"
+  failed_attempt_policy: "retain every immutable payload, release, and run directory; never overwrite or relabel a failed attempt"
+  limitation: "PCU 1 passes a bounded same-input congestion gate but is not an observed calibration; iteration 49, final request conservation, and output integrity remain outstanding"
+
 simulation_parameters:
   iterations: 50
   flow_capacity_factor: 0.1
@@ -248,6 +313,7 @@ documentation:
   car_cost_model: "docs/HONG_KONG_CAR_COST_MODEL.md"
   dynamic_car_cost_runtime: "docs/HONG_KONG_DYNAMIC_CAR_COST_RUNTIME.md"
   household_selector: "docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md"
+  physical_taxi_dvrp_v1: "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md"
 
 offline_audits:
   car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"

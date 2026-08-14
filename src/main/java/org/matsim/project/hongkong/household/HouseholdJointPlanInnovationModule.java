@@ -23,10 +23,16 @@ public final class HouseholdJointPlanInnovationModule extends AbstractModule {
 	public HouseholdJointPlanInnovationModule(
 			StudentSchoolModeCandidateCatalog studentCandidates,
 			boolean targetIterations5_10_15) {
-		this.studentCandidates = studentCandidates;
-		this.selectionSchedule = targetIterations5_10_15
+		this(studentCandidates, targetIterations5_10_15
 				? HouseholdJointPlanSelectionSchedule.targetIterations5_10_15()
-				: HouseholdJointPlanSelectionSchedule.historicalOneShot();
+				: HouseholdJointPlanSelectionSchedule.historicalOneShot());
+	}
+
+	public HouseholdJointPlanInnovationModule(
+			StudentSchoolModeCandidateCatalog studentCandidates,
+			HouseholdJointPlanSelectionSchedule selectionSchedule) {
+		this.studentCandidates = studentCandidates;
+		this.selectionSchedule = java.util.Objects.requireNonNull(selectionSchedule);
 	}
 
 	@Override

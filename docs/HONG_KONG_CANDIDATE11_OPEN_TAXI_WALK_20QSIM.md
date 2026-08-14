@@ -2,8 +2,8 @@
 
 ## Status
 
-This is an in-progress Candidate11 sensitivity run, not an adopted production
-result.  It preserves the Candidate11 signal/network/plans/transit inputs used
+This is a completed Candidate11 sensitivity run, not an adopted production
+result. It preserves the Candidate11 signal/network/plans/transit inputs used
 by run13e and changes only the explicitly listed behavioral and operational
 settings.  MATSim endpoint semantics make `firstIteration=0` and
 `lastIteration=19` exactly 20 QSim executions.
@@ -123,3 +123,17 @@ The completed output remains a sensitivity result rather than an adopted
 production equilibrium.  Its mode share, delay, stuck-agent, score, and
 completion trends must therefore be reported with the completed-output audit
 rather than inferred from the successful process exit alone.
+
+## Finite-fleet successor
+
+The next opt-in candidate replaces the run14b person-local PCU-1 Taxi proxy
+with a finite, reusable 15,500-vehicle MATSim Taxi/DVRP fleet. It is documented
+separately in `docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md`. Run14b remains the
+historical no-fleet behavioral baseline for that A/B comparison; it is not
+retroactively interpreted as fleet dispatch, waiting, deadheading, or vehicle
+reuse.
+
+The successor's 0.5% run25 smoke test exits zero and conserves 2,717 requests,
+but the full 5% fixed-plan A/B gate and formal 50-QSim run are still in
+progress. The physical fleet is therefore a branch candidate, not current
+production or a completed replacement for run14b.

@@ -958,15 +958,61 @@ changed.
 These limitations must remain visible in publications, validation summaries,
 and future model extensions.
 
-## Candidate11 open Taxi/Walk 20-QSim sensitivity (in progress)
+## Candidate11 open Taxi/Walk 20-QSim sensitivity (completed, non-production)
 
-The explicit, non-production run contract and live server provenance are in
-`docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`. The active immutable
-attempt is `release18/run14a`; it preserves the run13e Candidate11 inputs,
+The explicit, non-production run contract and server provenance are in
+`docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`. The accepted immutable
+attempt is `release19/run14b`; it preserves the run13e Candidate11 inputs,
 uses 16 global/QSim threads, executes QSim 0--19, opens a PCU-1 road-coupled
 Taxi proxy to ordinary mode innovation, applies adult/student Taxi fare
 coefficients of 0.10/0.15 util/HKD, and applies the 3.278342 util/h Walk
 overtime term once per main trip after ten cumulative minutes. Protected
 household/student selection enters QSim only at 5, 10 and 15. It entered
-iteration 0 but has not completed or passed any adoption gate, so no final
-manifest or city configuration is changed.
+and completed all 20 QSim executions with exit code 0. It remains a sensitivity
+and passed no production-adoption gate, so the adopted scenario is unchanged.
+
+## Physical Taxi/DVRP v1 candidate (A/B passed; formal run active)
+
+The finite-fleet successor is defined in
+`docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md`. It is an opt-in branch candidate,
+not an adopted production input. It replaces 385,820 person-local Taxi road
+proxies with exactly 15,500 reusable MATSim Taxi/DVRP vehicles: Urban 13,083,
+New Territories 2,353, and Lantau 64. The fleet is deliberately not scaled by
+the 5% resident sample. Every vehicle has capacity four, a staggered single
+18-hour service window, an inferred fixed-seed start link, and PCU 1.0 as the
+first-test prior. Start links exclude PT-only links, signal internal
+connectors, and dead ends.
+
+The dispatcher uses minimum-wait assignment with 30-second reoptimisation,
+60-second pickup and 30-second drop-off. A vehicle remains available after a
+completed drop-off. Waiting is measured from request submission to pickup and
+receives `-12 util/h`; other Taxi time receives `-6 util/h`. The per-trip
+constant is `-9`, with fare coefficients `-0.10 util/HKD` for adults and
+`-0.15 util/HKD` for students. `removeStuckVehicles=false` and
+`stuckTime=3600 s` preserve DVRP consistency and queue feedback.
+
+The accepted low-cost server test is
+`/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_smoke0p5_run25`.
+Iteration 0 exits zero and conserves all requests: 2,717 submitted equals
+1,417 completed plus 531 waiting, 767 onboard, and 2 rejected/invalid. Median
+wait is 583 seconds, p90 wait is 75,444 seconds, empty-distance share is
+0.2292, and QSim lost is 223. These values establish technical execution and
+accounting only; the long wait tail and horizon backlog explicitly prevent a
+service-quality or supply-adequacy claim.
+
+The full 5% same-selected-plan A/B gate exits zero. Proxy `gate_proxy_run5`
+reports iteration-1 QSim lost 0, Walk stuck 221 and mean leg duration 1,577 s;
+physical PCU-1 `gate_pcu1_run2` reports 18, 379 and 1,688 s respectively. The
+physical Taxi audit conserves 64,814 requests and records median/p90 wait of
+49,311/76,636 s plus empty-distance share 0.29647. PCU 1.0 therefore passes
+the bounded congestion gate; no TPDM capacity or lower-PCU candidate is used.
+
+Formal `...formal50_run3` is active. The schedule allows ordinary route/mode/time
+innovation through iteration 34, uses only `ChangeExpBeta` in 35--49, and
+applies protected household/student joint choices before QSim 5, 15, 25, and
+35. Its active 30-minute Heartbeat follows only live-state evidence and may
+repair/relaunch only after an actual premature exit. Formal run1 and run2 are
+retained failed attempts; run3 uses payload31 JAR SHA256
+`ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30`.
+No current production path, `current_final_run`, or adopted Candidate11 status
+is changed by this candidate metadata.

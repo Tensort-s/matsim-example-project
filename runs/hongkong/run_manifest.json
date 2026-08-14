@@ -461,6 +461,69 @@
       },
       "innovation_phase": "not_started_by_scope",
       "notes": "Iterations 0-1, exit code 0. The physical Walk clock repair eliminates both run56 boarding symptoms: all 1,002 selected school-bus legs depart and all 1,002 board the correct physical vehicle. One correctly boarded passenger remains aboard a traffic-stuck school bus at the 30:00 horizon, so only the downstream completion advisory remains. The physical non-Taxi audit passes, Taxi remains the sole directly teleported main mode, the adopted 10% PT source file is unchanged, and ordinary innovation remains frozen."
+    },
+    {
+      "name": "candidate11_physical_taxi_dvrp_v1_smoke0p5_run25",
+      "role": "finite_reusable_taxi_fleet_low_cost_technical_gate_not_current_final_output",
+      "status": "completed_exit0_request_conservation_validated",
+      "iterations": 1,
+      "iteration_range": [0, 0],
+      "server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_smoke0p5_run25",
+      "full_fleet_artifact": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_payload1/build/fleet15500/hong_kong_taxi_fleet.xml.gz",
+      "fleet_contract": {
+        "full_model_vehicles_not_scaled_by_resident_sample": 15500,
+        "urban": 13083,
+        "new_territories": 2353,
+        "lantau": 64,
+        "passenger_capacity": 4,
+        "initial_pcu_prior": 1.0,
+        "service_window": "one staggered 18-hour window per vehicle, ending no later than 28:00",
+        "dispatch": "MATSim Taxi/DVRP minimum-wait assignment, 30-second reoptimization, 60-second pickup, 30-second dropoff, reusable after dropoff"
+      },
+      "taxi_scoring": {
+        "trip_constant_util": -9,
+        "non_wait_taxi_time_util_per_h": -6,
+        "wait_time_util_per_h": -12,
+        "adult_fare_util_per_hkd": -0.10,
+        "student_fare_util_per_hkd": -0.15,
+        "wait_definition": "PassengerPickedUp - PassengerRequestSubmitted"
+      },
+      "request_accounting": {
+        "submitted": 2717,
+        "completed": 1417,
+        "waiting_at_horizon": 531,
+        "onboard_at_horizon": 767,
+        "rejected_or_invalid": 2,
+        "conservation_passed": true
+      },
+      "wait_p50_s": 583,
+      "wait_p90_s": 75444,
+      "empty_distance_share": 0.2292,
+      "qsim_lost": 223,
+      "full_5pct_fixed_plan_ab_status": "completed_exit0_pcu1_passed",
+      "frozen_full_gate_plans_sha256": "92c2fa254b8eb2f2d93de20d4d68ec1f9d1fba12b975246f2b0e8b2d7d1ab753",
+      "proxy_gate_server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_gate_proxy_run5",
+      "physical_pcu1_gate_server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_gate_pcu1_run2",
+      "physical_pcu1_gate_iteration1": {
+        "submitted": 64814,
+        "completed": 14144,
+        "waiting_at_horizon": 42463,
+        "onboard_at_horizon": 8189,
+        "rejected_or_invalid": 18,
+        "wait_p50_s": 49311,
+        "wait_p90_s": 76636,
+        "empty_distance_share": 0.29647,
+        "qsim_lost": 18,
+        "walk_stuck": 379
+      },
+      "proxy_gate_iteration1": {"qsim_lost": 0, "walk_stuck": 221},
+      "pcu_decision": "retain highest passing PCU 1.0; no TPDM or lower-PCU candidate activated",
+      "formal_50qsim_status": "run3_active",
+      "formal_50qsim_server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run3",
+      "formal_50qsim_jar_sha256": "ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30",
+      "heartbeat_id": "formal50-heartbeat",
+      "documentation": "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md",
+      "notes": "Iteration 0 exits zero and request states conserve exactly. The long p90 wait and 1,298 waiting/onboard requests at the horizon are retained supply-demand feedback, so run25 validates mechanics and accounting only. The exact frozen-plan proxy/physical A/B exits zero and PCU 1 passes the bounded congestion gate. Formal run3 is active and iteration 49 remains outstanding. Failed attempts stay in immutable server directories. This candidate does not replace current_final_run or adopt Candidate11 signals."
     }
   ],
   "shared_inputs": {

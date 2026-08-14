@@ -51,6 +51,29 @@ public final class HongKongNetworkTaxiRouting implements RoutingModule {
 		return result;
 	}
 
+	static void stampMissingFareMetadata(
+			Leg taxi,
+			int mainTripIndex,
+			HongKongTaxiFareCalculator fareCalculator,
+			String classificationSource) {
+		double distance = taxi.getRoute() == null ? Double.NaN : taxi.getRoute().getDistance();
+		if (!Double.isFinite(distance) || distance < 0.0) {
+			throw new IllegalStateException("Network Taxi route has invalid distance " + distance);
+		}
+		Object currentType = taxi.getAttributes().getAttribute(HongKongTaxiLegAttributes.TAXI_TYPE);
+		String taxiType = currentType instanceof String value && !value.isBlank()
+				? value : HongKongTaxiFareCalculator.UNRESOLVED;
+		putIfMissing(taxi, HongKongTaxiLegAttributes.FARE_BASELINE_HKD,
+				fareCalculator.calculate(distance, taxiType).fareHkd());
+		putIfBlank(taxi, HongKongTaxiLegAttributes.TAXI_TYPE, taxiType);
+		putIfBlank(taxi, HongKongTaxiLegAttributes.FARE_SCOPE,
+				HongKongTaxiScoringParameters.DISTANCE_ONLY_SCOPE);
+		putIfBlank(taxi, HongKongTaxiLegAttributes.FARE_MODEL_VERSION,
+				HongKongTaxiScoringParameters.FARE_MODEL_VERSION);
+		putIfBlank(taxi, HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE, classificationSource);
+		putIfMissing(taxi, HongKongTaxiLegAttributes.MAIN_TRIP_INDEX, mainTripIndex);
+	}
+
 	private static String stringAttribute(RoutingRequest request, String name, String fallback) {
 		Object value = request.getAttributes().getAttribute(name);
 		return value == null || value.toString().isBlank() ? fallback : value.toString();
@@ -58,5 +81,14 @@ public final class HongKongNetworkTaxiRouting implements RoutingModule {
 
 	private static void put(Leg leg, String name, Object value) {
 		leg.getAttributes().putAttribute(name, value);
+	}
+
+	private static void putIfMissing(Leg leg, String name, Object value) {
+		if (leg.getAttributes().getAttribute(name) == null) put(leg, name, value);
+	}
+
+	private static void putIfBlank(Leg leg, String name, String value) {
+		Object current = leg.getAttributes().getAttribute(name);
+		if (!(current instanceof String text) || text.isBlank()) put(leg, name, value);
 	}
 }

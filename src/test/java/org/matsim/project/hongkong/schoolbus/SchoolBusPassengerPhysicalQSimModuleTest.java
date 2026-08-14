@@ -37,7 +37,9 @@ class SchoolBusPassengerPhysicalQSimModuleTest {
 		var person = scenario.getPopulation().getFactory().createPerson(Id.createPersonId("student"));
 		var plan = scenario.getPopulation().getFactory().createPlan();
 		plan.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("a")));
-		plan.addLeg(PopulationUtils.createLeg("school_bus"));
+		var schoolBusLeg = PopulationUtils.createLeg("school_bus");
+		schoolBusLeg.setRoutingMode("school_bus");
+		plan.addLeg(schoolBusLeg);
 		plan.addActivity(PopulationUtils.createActivityFromLinkId("school", Id.createLinkId("b")));
 		person.addPlan(plan);
 		person.setSelectedPlan(plan);
@@ -47,5 +49,29 @@ class SchoolBusPassengerPhysicalQSimModuleTest {
 				.normalizeGenericPassengerTransitModes(scenario));
 		assertEquals("pt", ((org.matsim.api.core.v01.population.Leg)
 				plan.getPlanElements().get(1)).getMode());
+		assertEquals("school_bus", ((org.matsim.api.core.v01.population.Leg)
+				plan.getPlanElements().get(1)).getRoutingMode());
+	}
+
+	@Test
+	void doesNotClearRoutingModeWhenExecutionModeIsAlreadyPt() {
+		Config config = ConfigUtils.createConfig();
+		config.transit().setTransitModes(Set.of("pt", "school_bus"));
+		var scenario = ScenarioUtils.createScenario(config);
+		var person = scenario.getPopulation().getFactory().createPerson(Id.createPersonId("unfinished"));
+		var plan = scenario.getPopulation().getFactory().createPlan();
+		plan.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("a")));
+		var ptLeg = PopulationUtils.createLeg("pt");
+		ptLeg.setRoutingMode("pt");
+		plan.addLeg(ptLeg);
+		plan.addActivity(PopulationUtils.createActivityFromLinkId(
+				"pt interaction", Id.createLinkId("b")));
+		person.addPlan(plan);
+		person.setSelectedPlan(plan);
+		scenario.getPopulation().addPerson(person);
+
+		assertEquals(0, SchoolBusPassengerPhysicalEngine
+				.normalizeGenericPassengerTransitModes(scenario));
+		assertEquals("pt", ptLeg.getRoutingMode());
 	}
 }

@@ -20,6 +20,15 @@ import org.matsim.contrib.signals.SignalSystemsConfigGroup;
 import org.matsim.contrib.signals.builder.Signals;
 import org.matsim.contrib.signals.data.SignalsData;
 import org.matsim.contrib.signals.data.SignalsDataLoader;
+import org.matsim.contrib.drt.run.DrtControlerCreator;
+import org.matsim.contrib.dvrp.run.DvrpConfigGroup;
+import org.matsim.contrib.dvrp.run.DvrpModule;
+import org.matsim.contrib.dvrp.run.DvrpQSimComponents;
+import org.matsim.contrib.taxi.optimizer.rules.RuleBasedRequestInserter;
+import org.matsim.contrib.taxi.optimizer.rules.RuleBasedTaxiOptimizerParams;
+import org.matsim.contrib.taxi.run.MultiModeTaxiConfigGroup;
+import org.matsim.contrib.taxi.run.MultiModeTaxiModule;
+import org.matsim.contrib.taxi.run.TaxiConfigGroup;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
 import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
 import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
@@ -27,11 +36,13 @@ import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorMo
 import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
+import org.matsim.project.hongkong.household.HouseholdJointPlanSelectionSchedule;
 import org.matsim.project.hongkong.pt.HongKongOrdinaryPtRaptorModule;
 import org.matsim.project.hongkong.road.HongKongRoadHotspotRepairV1;
 import org.matsim.project.hongkong.road.HongKongCarOriginAnchorObservationCatalog;
 import org.matsim.project.hongkong.road.HongKongCarOriginAnchorRepairModule;
 import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
+import org.matsim.project.hongkong.schoolbus.SchoolBusAwarePrepareForMobsim;
 import org.matsim.project.hongkong.schoolbus.SchoolBusPassengerPhysicalEngine;
 import org.matsim.project.hongkong.schoolbus.SchoolBusPassengerPhysicalQSimModule;
 import org.matsim.project.hongkong.schoolbus.SchoolBusAwareTransitDriverAgentFactory;
@@ -39,6 +50,11 @@ import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareUtilityPolicy;
 import org.matsim.project.hongkong.taxi.HongKongNetworkTaxiRoutingModule;
+import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiAuditModule;
+import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiFleetLoader;
+import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiFleetRegistry;
+import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiParameters;
+import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiRoutePreparation;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkQSimModule;
 import org.matsim.project.hongkong.walk.HongKongWalkOvertimeScoringComponentModule;
@@ -77,6 +93,10 @@ public final class RunHongKong5Pct {
 						+ " [--road-hotspot-repair-v1]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
+						+ " [--fixed-plans-network-taxi-proxy]"
+						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.1>]"
+						+ " [--taxi-wait-utility-per-hour=-12]]"
+						+ " [--household-joint-selection-iterations=5,15,25,35]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -96,6 +116,8 @@ public final class RunHongKong5Pct {
 				.contains("--household-joint-plan-with-ordinary-innovation");
 		boolean allPersonNetworkTaxiInnovation = Arrays.asList(args)
 				.contains("--all-person-network-taxi-innovation");
+		boolean fixedPlansNetworkTaxiProxy = Arrays.asList(args)
+				.contains("--fixed-plans-network-taxi-proxy");
 		boolean walkOvertimeScoring = Arrays.asList(args).contains("--walk-overtime-scoring");
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
@@ -103,6 +125,37 @@ public final class RunHongKong5Pct {
 		Path householdJointPlanCandidates = optionPath(args, "--household-joint-plan-candidates=");
 		Path studentSchoolModeCandidates = optionPath(args, "--student-school-mode-candidates=");
 		Path carOriginAnchorObservations = optionPath(args, "--car-origin-anchor-observations=");
+		Path taxiDvrpFleet = optionPath(args, "--taxi-dvrp-fleet=");
+		Double taxiDvrpPcuOption = optionDouble(args, "--taxi-dvrp-pcu=");
+		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
+		String householdSelectionIterationsOption = optionString(
+				args, "--household-joint-selection-iterations=");
+		boolean physicalTaxi = taxiDvrpFleet != null;
+		boolean networkTaxiProxy = usesNetworkTaxiProxy(
+				allPersonNetworkTaxiInnovation, fixedPlansNetworkTaxiProxy, physicalTaxi);
+		double taxiDvrpPcu = taxiDvrpPcuOption == null ? 1.0 : taxiDvrpPcuOption;
+		double taxiWaitUtility = taxiWaitUtilityOption == null ? -12.0 : taxiWaitUtilityOption;
+		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null)) {
+			throw new IllegalArgumentException(
+					"Taxi DVRP PCU/wait options require --taxi-dvrp-fleet.");
+		}
+		if (physicalTaxi && !multimodalCosts) {
+			throw new IllegalArgumentException(
+					"Physical Taxi requires --multimodal-costs so fare and time are scored exactly once.");
+		}
+		if (physicalTaxi && networkTaxiProxy) {
+			throw new IllegalArgumentException(
+					"Physical Taxi and the person-local network Taxi proxy are mutually exclusive.");
+		}
+		if (fixedPlansNetworkTaxiProxy && householdJointPlanWithOrdinaryInnovation) {
+			throw new IllegalArgumentException(
+					"The fixed-plan Taxi proxy cannot enable household ordinary innovation.");
+		}
+		if (householdSelectionIterationsOption != null
+				&& (!householdJointPlanWithOrdinaryInnovation || householdJointPlanCandidates == null)) {
+			throw new IllegalArgumentException(
+					"--household-joint-selection-iterations requires protected household ordinary innovation.");
+		}
 		if (multimodalCosts && (ptFareRoot == null || carCostRoot == null)) {
 			throw new IllegalArgumentException(
 					"--multimodal-costs requires both --pt-fare-root and --car-cost-root.");
@@ -146,20 +199,16 @@ public final class RunHongKong5Pct {
 			throw new IllegalArgumentException(
 					"All-household joint-plan innovation is mutually exclusive with historical escort pilots.");
 		}
-		if (studentSchoolModeCandidates != null && householdJointPlanCandidates == null) {
-			throw new IllegalArgumentException(
-					"--student-school-mode-candidates currently requires --household-joint-plan-candidates.");
-		}
 		if (householdJointPlanWithOrdinaryInnovation && householdJointPlanCandidates == null) {
 			throw new IllegalArgumentException(
 					"--household-joint-plan-with-ordinary-innovation requires "
 							+ "--household-joint-plan-candidates.");
 		}
-		if ((allPersonNetworkTaxiInnovation || walkOvertimeScoring) && !multimodalCosts) {
+		if ((physicalTaxi || networkTaxiProxy || walkOvertimeScoring) && !multimodalCosts) {
 			throw new IllegalArgumentException(
 					"Open Taxi/Walk scoring options require --multimodal-costs.");
 		}
-		if (allPersonNetworkTaxiInnovation != walkOvertimeScoring) {
+		if ((physicalTaxi || networkTaxiProxy) != walkOvertimeScoring) {
 			throw new IllegalArgumentException(
 					"This calibrated run requires network Taxi and Walk overtime scoring together.");
 		}
@@ -188,6 +237,18 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0], new SignalSystemsConfigGroup());
+		HouseholdJointPlanSelectionSchedule householdSelectionSchedule =
+				householdSelectionIterationsOption == null
+						? (allPersonNetworkTaxiInnovation
+								? HouseholdJointPlanSelectionSchedule.targetIterations5_10_15()
+								: HouseholdJointPlanSelectionSchedule.historicalOneShot())
+						: HouseholdJointPlanSelectionSchedule.targetIterations(
+								parseStrictIterationSchedule(
+										householdSelectionIterationsOption,
+										config.controller().getLastIteration()));
+		if (physicalTaxi) {
+			configurePhysicalTaxi(config, taxiDvrpPcu, taxiWaitUtility);
+		}
 		SignalSystemsConfigGroup signalConfig = ConfigUtils.addOrGetModule(
 				config, SignalSystemsConfigGroup.class);
 		if (trafficSignals && !signalConfig.isUseSignalSystems()) {
@@ -203,7 +264,7 @@ public final class RunHongKong5Pct {
 			configurePhysicalPtAndWalk(config);
 			HongKongPhysicalWalkQSimModule.activateInConfig(config);
 		}
-		if (allPersonNetworkTaxiInnovation) {
+		if (networkTaxiProxy) {
 			HongKongNetworkTaxiRoutingModule.configure(config);
 		}
 		if (householdJointPlanCandidates != null) {
@@ -219,12 +280,12 @@ public final class RunHongKong5Pct {
 		if (studentSchoolModeCandidates != null || physicalNonTaxiModes) {
 			SchoolBusPassengerPhysicalQSimModule.activateInConfig(config);
 		}
-		if (studentSchoolModeCandidates != null) {
+		if (studentSchoolModeCandidates != null || physicalNonTaxiModes) {
 			var mainModes = new java.util.LinkedHashSet<>(config.qsim().getMainModes());
 			mainModes.add(SchoolBusAwareTransitDriverAgentFactory.SCHOOL_BUS_VEHICLE_MODE);
 			config.qsim().setMainModes(mainModes);
 		}
-		boolean noRideTaxiRouting = multimodalCosts && !allPersonNetworkTaxiInnovation
+		boolean noRideTaxiRouting = !physicalTaxi && multimodalCosts && !networkTaxiProxy
 				&& config.routing().getModeRoutingParams().containsKey(
 						HongKongNoRideTaxiRoutingModule.PASSENGER_DELEGATE_MODE);
 		if (multimodalCosts) {
@@ -235,8 +296,17 @@ public final class RunHongKong5Pct {
 				HongKongNoRideTaxiRoutingModule.configure(config);
 			}
 		}
-		Scenario scenario = ScenarioUtils.loadScenario(config);
-		if (allPersonNetworkTaxiInnovation) {
+		Scenario scenario = physicalTaxi
+				? DrtControlerCreator.createScenarioWithDrtRouteFactory(config)
+				: ScenarioUtils.createScenario(config);
+		ScenarioUtils.loadScenario(scenario);
+		if (physicalTaxi) {
+			int restoredHomeOnlyPlans = normalizeEmptyHomeOnlyPlans(scenario);
+			System.out.printf(
+					"Restored %,d empty home-only plans as one stationary home activity for DVRP agent compatibility.%n",
+					restoredHomeOnlyPlans);
+		}
+		if (networkTaxiProxy) {
 			var stats = HongKongNetworkTaxiRoutingModule.prepareScenario(scenario);
 			System.out.printf("Enabled road-coupled Taxi proxy on %,d Car links with %,d "
 					+ "person-local Taxi vehicles (PCU=1; no cruising/deadheading/fleet matching).%n",
@@ -349,9 +419,33 @@ public final class RunHongKong5Pct {
 					finalStats.normalizedTransitLegs(), finalStats.transitTrips(),
 					finalStats.clearedWalkRoutes(), walkVehicleIds);
 		}
+		if (studentSchoolCatalog.enabled()) {
+			int restoredCandidateIds = studentSchoolCatalog
+					.restoreMissingSelectedSchoolBusCandidateIds(scenario);
+			studentSchoolCatalog.snapshotSelectedSchoolBusPlans(scenario);
+			System.out.printf(
+					"Restored %,d stable candidate IDs and snapshotted frozen experienced school-bus trips before initial PrepareForSim.%n",
+					restoredCandidateIds);
+		}
 		if (clearPtRoutes) {
 			int clearedPtRoutes = clearPtRoutes(scenario);
 			System.out.printf("Cleared %,d existing pt routes for SwissRailRaptor rerouting.%n", clearedPtRoutes);
+		}
+		HongKongPhysicalTaxiFleetLoader.FleetLoadStats physicalTaxiFleetStats = null;
+		if (physicalTaxi) {
+			physicalTaxiFleetStats = HongKongPhysicalTaxiFleetLoader.load(
+					scenario, taxiDvrpFleet, taxiDvrpPcu);
+			var routeStats = HongKongPhysicalTaxiRoutePreparation.prepare(scenario);
+			System.out.printf(
+					"Enabled physical Taxi fleet: vehicles=%,d, pcu=%.2f, service=%.0f..%.0f, "
+							+ "taxiLegs=%,d, convertedRoutes=%,d, copiedTripAttributes=%,d, "
+							+ "removedLegacyProxyVehicles=%,d, removedLegacyPersonMappings=%,d.%n",
+					physicalTaxiFleetStats.vehicles(), physicalTaxiFleetStats.pcu(),
+					physicalTaxiFleetStats.earliestServiceBegin(),
+					physicalTaxiFleetStats.latestServiceEnd(), routeStats.taxiLegs(),
+					routeStats.convertedRoutes(), routeStats.copiedTripAttributes(),
+					physicalTaxiFleetStats.removedLegacyProxyVehicles(),
+					physicalTaxiFleetStats.removedLegacyPersonMappings());
 		}
 		int assignedVehicles = 0;
 		for (Person person : scenario.getPopulation().getPersons().values()) {
@@ -372,6 +466,20 @@ public final class RunHongKong5Pct {
 		System.out.printf("Loaded %,d persons; assigned %,d explicit car vehicles.%n",
 			scenario.getPopulation().getPersons().size(), assignedVehicles);
 		Controler controler = new Controler(scenario);
+		if (physicalTaxi) {
+			MultiModeTaxiConfigGroup taxiConfig = MultiModeTaxiConfigGroup.get(config);
+			controler.addOverridingModule(new DvrpModule());
+			controler.addOverridingModule(new MultiModeTaxiModule());
+			controler.addOverridingModule(new HongKongPhysicalTaxiAuditModule(
+					physicalTaxiParameters(config, taxiWaitUtility),
+					new HongKongPhysicalTaxiFleetRegistry(
+							physicalTaxiFleetStats.serviceWindows())));
+			controler.configureQSimComponents(
+					DvrpQSimComponents.activateAllModes(taxiConfig));
+			System.out.println(
+					"Enabled official Taxi/DVRP passenger engine and assignment optimizer; "
+							+ "person-local Taxi proxy is disabled.");
+		}
 		if (trafficSignals) {
 			Signals.configure(controler);
 			System.out.println("Enabled explicit movement-level traffic-signal control.");
@@ -394,6 +502,27 @@ public final class RunHongKong5Pct {
 					householdEscortCatalog.bindings().size(), householdEscortBindings == null
 						? " (delayed selection after iteration 0)" : " from " + householdEscortBindings);
 		}
+		if ((studentSchoolCatalog.enabled() || physicalNonTaxiModes)
+				&& householdJointCatalog == null) {
+			StudentSchoolModeCandidateCatalog sharedStudentCatalog = studentSchoolCatalog;
+			HouseholdEscortBindingCatalog sharedEmptyOrExistingEscortCatalog =
+					householdEscortCatalog == null
+							? HouseholdEscortBindingCatalog.empty()
+							: householdEscortCatalog;
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					bind(StudentSchoolModeCandidateCatalog.class).toInstance(sharedStudentCatalog);
+					bind(HouseholdEscortBindingCatalog.class)
+							.toInstance(sharedEmptyOrExistingEscortCatalog);
+					if (sharedStudentCatalog.enabled()) {
+						bind(org.matsim.core.controler.PrepareForMobsimImpl.class);
+						bind(org.matsim.core.controler.PrepareForMobsim.class)
+								.to(SchoolBusAwarePrepareForMobsim.class);
+					}
+				}
+			});
+		}
 		if (studentSchoolCatalog.enabled() || physicalNonTaxiModes) {
 			controler.addQSimModule(new SchoolBusPassengerPhysicalQSimModule());
 			System.out.println(physicalNonTaxiModes
@@ -403,7 +532,9 @@ public final class RunHongKong5Pct {
 		if (physicalNonTaxiModes) {
 			controler.addOverridingModule(new HongKongPhysicalWalkModule());
 			controler.addQSimModule(new HongKongPhysicalWalkQSimModule());
-			System.out.println("Enabled capacity-free network-physical Walk; Taxi remains teleported.");
+			System.out.println(physicalTaxi
+					? "Enabled capacity-free network-physical Walk; Taxi uses the finite DVRP fleet."
+					: "Enabled capacity-free network-physical Walk; Taxi remains teleported.");
 		}
 		if (householdJointCatalog != null) {
 			HouseholdJointPlanCandidateCatalog sharedJointCatalog = householdJointCatalog;
@@ -414,7 +545,7 @@ public final class RunHongKong5Pct {
 				}
 			});
 			controler.addOverridingModule(new HouseholdJointPlanInnovationModule(
-					studentSchoolCatalog, allPersonNetworkTaxiInnovation));
+					studentSchoolCatalog, householdSelectionSchedule));
 			System.out.printf("Enabled %,d all-car-household joint-plan candidates from %s; "
 					+ "baseline selection is preserved in iteration 0; independent student choices="
 					+ "%s.%n",
@@ -443,12 +574,12 @@ public final class RunHongKong5Pct {
 		if (noRideTaxiRouting) {
 			controler.addOverridingModule(new HongKongNoRideTaxiRoutingModule());
 		}
-		if (allPersonNetworkTaxiInnovation) {
+		if (networkTaxiProxy) {
 			controler.addOverridingModule(new HongKongNetworkTaxiRoutingModule());
 		}
 		if (multimodalCosts) {
 			controler.addOverridingModule(new HongKongMultimodalCostScoringModule(
-					allPersonNetworkTaxiInnovation
+					physicalTaxi || networkTaxiProxy
 							? HongKongTaxiFareUtilityPolicy.openInnovationV1()
 							: HongKongTaxiFareUtilityPolicy.historicalCentralV1(),
 					ptFareRoot,
@@ -479,6 +610,51 @@ public final class RunHongKong5Pct {
 			new PopulationWriter(scenario.getPopulation(), scenario.getNetwork()).write(routedPlans.toString());
 			System.out.println("Wrote routed plans to " + routedPlans);
 		}
+	}
+
+	static int normalizeEmptyHomeOnlyPlans(Scenario scenario) {
+		int restored = 0;
+		for (Person person : scenario.getPopulation().getPersons().values()) {
+			Plan plan = person.getSelectedPlan();
+			if (plan == null || plan.getPlanElements().stream().anyMatch(Activity.class::isInstance)) {
+				continue;
+			}
+			if (!plan.getPlanElements().isEmpty()) {
+				throw new IllegalStateException(
+						"Selected plan has legs but no activity: person=" + person.getId());
+			}
+			Object householdValue = person.getAttributes().getAttribute("householdId");
+			String householdId = householdValue instanceof String text && !text.isBlank()
+					? text : null;
+			var facilityId = Id.create(
+					"home_" + (householdId == null ? person.getId() : householdId),
+					org.matsim.facilities.ActivityFacility.class);
+			var facility = scenario.getActivityFacilities().getFacilities().get(facilityId);
+			if (facility == null && householdId != null) {
+				facilityId = Id.create(
+						"home_" + person.getId(), org.matsim.facilities.ActivityFacility.class);
+				facility = scenario.getActivityFacilities().getFacilities().get(facilityId);
+			}
+			if (facility == null || facility.getLinkId() == null) {
+				throw new IllegalStateException(
+						"Empty home-only plan has no link-referenced home facility: person="
+								+ person.getId() + ", facility=" + facilityId);
+			}
+			Activity home = PopulationUtils.createActivityFromLinkId("home", facility.getLinkId());
+			home.setFacilityId(facilityId);
+			home.setCoord(facility.getCoord());
+			plan.addActivity(home);
+			restored++;
+		}
+		return restored;
+	}
+
+	static boolean usesNetworkTaxiProxy(
+			boolean allPersonNetworkTaxiInnovation,
+			boolean fixedPlansNetworkTaxiProxy,
+			boolean physicalTaxi) {
+		return fixedPlansNetworkTaxiProxy
+				|| (allPersonNetworkTaxiInnovation && !physicalTaxi);
 	}
 
 	private static void configurePhysicalPtAndWalk(Config config) {
@@ -679,6 +855,119 @@ public final class RunHongKong5Pct {
 			result = Path.of(value).toAbsolutePath().normalize();
 		}
 		return result;
+	}
+
+	private static Double optionDouble(String[] args, String prefix) {
+		Double result = null;
+		for (String argument : args) {
+			if (!argument.startsWith(prefix)) continue;
+			if (result != null) throw new IllegalArgumentException("Duplicate option: " + prefix);
+			String value = argument.substring(prefix.length());
+			if (value.isBlank()) throw new IllegalArgumentException("Empty numeric option: " + prefix);
+			try {
+				result = Double.parseDouble(value);
+			} catch (NumberFormatException error) {
+				throw new IllegalArgumentException("Invalid numeric option: " + argument, error);
+			}
+		}
+		return result;
+	}
+
+	private static String optionString(String[] args, String prefix) {
+		String result = null;
+		for (String argument : args) {
+			if (!argument.startsWith(prefix)) continue;
+			if (result != null) throw new IllegalArgumentException("Duplicate option: " + prefix);
+			result = argument.substring(prefix.length());
+			if (result.isBlank()) throw new IllegalArgumentException("Empty option: " + prefix);
+		}
+		return result;
+	}
+
+	static Set<Integer> parseStrictIterationSchedule(String value, int lastIteration) {
+		if (lastIteration < 1) throw new IllegalArgumentException("lastIteration must be positive");
+		var result = new java.util.LinkedHashSet<Integer>();
+		int previous = -1;
+		for (String token : value.split(",", -1)) {
+			if (token.isBlank() || !token.equals(token.trim())) {
+				throw new IllegalArgumentException("Invalid household selection iteration list: " + value);
+			}
+			int iteration;
+			try {
+				iteration = Integer.parseInt(token);
+			} catch (NumberFormatException error) {
+				throw new IllegalArgumentException("Invalid household selection iteration: " + token, error);
+			}
+			if (iteration < 1 || iteration > lastIteration) {
+				throw new IllegalArgumentException(
+						"Household selection iteration outside 1.." + lastIteration + ": " + iteration);
+			}
+			if (iteration <= previous || !result.add(iteration)) {
+				throw new IllegalArgumentException(
+						"Household selection iterations must be unique and strictly increasing: " + value);
+			}
+			previous = iteration;
+		}
+		if (result.isEmpty()) throw new IllegalArgumentException("Empty household selection iteration list");
+		return java.util.Collections.unmodifiableSet(result);
+	}
+
+	static void configurePhysicalTaxi(
+			Config config, double pcu, double totalWaitUtilityPerHour) {
+		if (!HongKongPhysicalTaxiFleetLoader.ALLOWED_PCU.contains(pcu)) {
+			throw new IllegalArgumentException(
+					"Taxi PCU must be one of " + HongKongPhysicalTaxiFleetLoader.ALLOWED_PCU
+							+ "; actual=" + pcu);
+		}
+		var modeParams = config.scoring().getModes().get(HongKongTaxiScoringParameters.TAXI_MODE);
+		if (modeParams == null) {
+			throw new IllegalArgumentException("Physical Taxi requires scoring mode params for taxi.");
+		}
+		new HongKongPhysicalTaxiParameters(
+				modeParams.getMarginalUtilityOfTraveling(), totalWaitUtilityPerHour);
+		var networkModes = new java.util.LinkedHashSet<>(config.routing().getNetworkModes());
+		networkModes.remove(HongKongTaxiScoringParameters.TAXI_MODE);
+		config.routing().setNetworkModes(networkModes);
+		var mainModes = new java.util.LinkedHashSet<>(config.qsim().getMainModes());
+		mainModes.remove(HongKongTaxiScoringParameters.TAXI_MODE);
+		config.qsim().setMainModes(mainModes);
+		config.routing().removeTeleportedModeParams(HongKongTaxiScoringParameters.TAXI_MODE);
+
+		MultiModeTaxiConfigGroup multiTaxi = new MultiModeTaxiConfigGroup();
+		config.addModule(multiTaxi);
+		TaxiConfigGroup taxi = new TaxiConfigGroup();
+		taxi.mode = HongKongTaxiScoringParameters.TAXI_MODE;
+		taxi.destinationKnown = true;
+		taxi.vehicleDiversion = false;
+		taxi.onlineVehicleTracker = false;
+		taxi.pickupDuration = 60;
+		taxi.dropoffDuration = 30;
+		taxi.taxisFile = null;
+		taxi.breakSimulationIfNotAllRequestsServed = false;
+		taxi.numberOfThreads = Math.max(1, config.global().getNumberOfThreads());
+		RuleBasedTaxiOptimizerParams optimizer = new RuleBasedTaxiOptimizerParams();
+		optimizer.goal = RuleBasedRequestInserter.Goal.MIN_WAIT_TIME;
+		optimizer.reoptimizationTimeStep = 30;
+		optimizer.nearestRequestsLimit = 30;
+		optimizer.nearestVehiclesLimit = 30;
+		taxi.addParameterSet(optimizer);
+		multiTaxi.addParameterSet(taxi);
+
+		DvrpConfigGroup dvrp = new DvrpConfigGroup();
+		dvrp.setNetworkModes(Set.of(org.matsim.api.core.v01.TransportMode.car));
+		dvrp.setMobsimMode(org.matsim.api.core.v01.TransportMode.car);
+		config.addModule(dvrp);
+		config.qsim().setRemoveStuckVehicles(false);
+		config.qsim().setStuckTime(3600);
+		config.eventsManager().setSynchronizeOnSimSteps(true);
+	}
+
+	private static HongKongPhysicalTaxiParameters physicalTaxiParameters(
+			Config config, double totalWaitUtilityPerHour) {
+		return new HongKongPhysicalTaxiParameters(
+				config.scoring().getModes().get(HongKongTaxiScoringParameters.TAXI_MODE)
+						.getMarginalUtilityOfTraveling(),
+				totalWaitUtilityPerHour);
 	}
 
 	private static void requireHouseholdSelectionOnly(Config config) {

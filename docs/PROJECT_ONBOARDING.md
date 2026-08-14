@@ -99,6 +99,7 @@ docs/HONG_KONG_TAXI_UTILITY_DESIGN.md
 docs/HONG_KONG_TAXI_JAVA_SCORING.md
 docs/HONG_KONG_TAXI_LOAD_TEST.md
 docs/HONG_KONG_TAXI_SMOKE_TEST.md
+docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md
 docs/HONG_KONG_PT_ITINERARY_AND_STUCK_GOVERNANCE.md
 docs/HONG_KONG_PT_FARE_MODEL.md
 docs/HONG_KONG_CAR_COST_MODEL.md
@@ -758,5 +759,23 @@ in `docs/HONG_KONG_CANDIDATE11_OPEN_TAXI_WALK_20QSIM.md`. It opens Taxi to
 ordinary mode innovation with an explicit PCU-1 road proxy, introduces
 adult/student fare coefficients and cumulative main-trip Walk overtime, and
 limits protected household/student mode changes to QSim iterations 5, 10 and
-15. This running experiment is not a production input and does not modify
-`city.yaml` or `run_manifest.json`.
+15. Corrected run14b completes QSim iterations 0--19 with exit code 0. It is a
+completed sensitivity, not a production input.
+
+The finite-fleet successor is documented in
+`docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md`. It replaces 385,820 person-local
+Taxi road proxies with an opt-in 15,500-vehicle MATSim Taxi/DVRP fleet: Urban
+13,083, New Territories 2,353, and Lantau 64. Vehicles have inferred fixed-
+seed start links, one staggered 18-hour service window, capacity four, and an
+initial PCU prior of 1.0. Passenger waiting is event-derived and receives a
+larger time penalty than in-vehicle Taxi time. The 0.5% run25 smoke gate exits
+zero and conserves all 2,717 requests, but its p90 wait is 75,444 seconds and
+531 requests are still waiting plus 767 onboard at the horizon. It therefore
+proves execution and accounting only. The full 5% fixed-plan A/B gate now exits
+zero for both the proxy (`gate_proxy_run5`) and physical PCU-1
+(`gate_pcu1_run2`) executions. Physical Taxi adds 18 QSim-lost and 158
+Walk-stuck agents relative to the proxy, so PCU 1.0 passes the bounded
+congestion gate and no TPDM/lower-PCU candidate is activated. Formal run3 is
+active under `...formal50_run3` with a 30-minute Heartbeat; it is not yet a
+final result. The candidate remains outside current production, and all failed
+server attempts remain immutable provenance.

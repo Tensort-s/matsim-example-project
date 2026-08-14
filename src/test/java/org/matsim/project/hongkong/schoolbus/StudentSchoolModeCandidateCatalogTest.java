@@ -1,6 +1,7 @@
 package org.matsim.project.hongkong.schoolbus;
 
 import org.junit.jupiter.api.Test;
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Leg;
@@ -11,10 +12,16 @@ import org.matsim.core.population.PopulationUtils;
 import org.matsim.core.population.routes.RouteUtils;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.pt.routes.DefaultTransitPassengerRoute;
+import org.matsim.pt.transitSchedule.api.Departure;
+import org.matsim.pt.transitSchedule.api.TransitLine;
+import org.matsim.pt.transitSchedule.api.TransitRoute;
+import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -118,5 +125,94 @@ class StudentSchoolModeCandidateCatalogTest {
 				.getAttributes().getAttribute(StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE));
 		assertEquals(Id.createLinkId("prepared-pt-start"),
 				trips.get(1).getLegsOnly().getFirst().getRoute().getStartLinkId());
+	}
+
+	@Test
+	void restoresMissingCandidateIdFromStableTripAndPhysicalEndpoints() throws Exception {
+		Path directory = Path.of("target", "test-data", "student-school-mode-id-restore");
+		Files.createDirectories(directory);
+		Files.writeString(directory.resolve(StudentSchoolModeCandidateCatalog.UNIVERSE_FILE), """
+				person_id,trip_index,direction,student_stage,original_mode_audit_only,crowfly_distance_m
+				student,0,inbound_am,primary,walk,1200
+				""");
+		Files.writeString(directory.resolve(StudentSchoolModeCandidateCatalog.SCHOOL_BUS_FILE), """
+				candidate_id,person_id,trip_index,direction,route_id,transit_line_id,transit_route_id,departure_id,vehicle_id,boarding_facility_id,alighting_facility_id,boarding_link_id,alighting_link_id,scheduled_board_time_s,scheduled_alight_time_s,home_stop_distance_m,campus_stop_distance_m,vehicle_capacity
+				candidate-a,student,0,inbound_am,route,line,transit-route,departure,vehicle,home-stop,school-stop,home-link,school-link,27000,28200,200,20,19
+				""");
+		StudentSchoolModeCandidateCatalog catalog = StudentSchoolModeCandidateCatalog.load(directory);
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Person person = scenario.getPopulation().getFactory().createPerson(Id.createPersonId("student"));
+		Plan plan = scenario.getPopulation().getFactory().createPlan();
+		plan.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("home-link")));
+		var scheduleFactory = scenario.getTransitSchedule().getFactory();
+		TransitStopFacility boarding = scheduleFactory.createTransitStopFacility(
+				Id.create("home-stop", TransitStopFacility.class), new Coord(0, 0), false);
+		boarding.setLinkId(Id.createLinkId("home-link"));
+		TransitStopFacility alighting = scheduleFactory.createTransitStopFacility(
+				Id.create("school-stop", TransitStopFacility.class), new Coord(1, 1), false);
+		alighting.setLinkId(Id.createLinkId("school-link"));
+		TransitRouteStop firstStop = scheduleFactory.createTransitRouteStop(boarding, 0, 0);
+		TransitRouteStop lastStop = scheduleFactory.createTransitRouteStop(alighting, 1200, 1200);
+		TransitRoute transitRoute = scheduleFactory.createTransitRoute(
+				Id.create("transit-route", TransitRoute.class),
+				RouteUtils.createLinkNetworkRouteImpl(
+						Id.createLinkId("home-link"), Id.createLinkId("school-link")),
+				List.of(firstStop, lastStop), "school_bus");
+		TransitLine line = scheduleFactory.createTransitLine(Id.create("line", TransitLine.class));
+		line.addRoute(transitRoute);
+		Leg schoolBus = PopulationUtils.createLeg("pt");
+		schoolBus.setRoutingMode("school_bus");
+		schoolBus.setDepartureTime(27_000.0);
+		schoolBus.setRoute(new DefaultTransitPassengerRoute(
+				boarding, line, transitRoute, alighting));
+		plan.addLeg(schoolBus);
+		plan.addActivity(PopulationUtils.createActivityFromLinkId("school", Id.createLinkId("school-link")));
+		person.addPlan(plan);
+		person.setSelectedPlan(plan);
+		scenario.getPopulation().addPerson(person);
+
+		assertEquals(1, catalog.restoreMissingSelectedSchoolBusCandidateIds(scenario));
+		assertEquals("candidate-a", schoolBus.getAttributes().getAttribute(
+				StudentSchoolModeCandidateCatalog.CANDIDATE_ID_ATTRIBUTE));
+		assertEquals(0, catalog.restoreMissingSelectedSchoolBusCandidateIds(scenario));
+		var truncatedTiming = catalog.inferTruncatedSchoolBusTiming(
+				person.getId(), schoolBus, Id.createLinkId("home-link")).orElseThrow();
+		assertEquals(27_000.0, truncatedTiming.plannedLegDepartureTimeS());
+		assertEquals(27_000.0, truncatedTiming.scheduledBoardTimeS());
+		catalog.snapshotSelectedSchoolBusPlans(scenario);
+		assertTrue(catalog.selectedSchoolBusTiming(
+				person.getId(), "candidate-a", Id.createLinkId("home-link")).isPresent());
+	}
+
+	@Test
+	void demotesLegacyGenericSchoolBusWithoutPhysicalCandidateToOrdinaryPt() throws Exception {
+		Path directory = Path.of("target", "test-data", "student-school-mode-legacy-fallback");
+		Files.createDirectories(directory);
+		Files.writeString(directory.resolve(StudentSchoolModeCandidateCatalog.UNIVERSE_FILE), """
+				person_id,trip_index,direction,student_stage,original_mode_audit_only,crowfly_distance_m
+				student,0,inbound_am,primary,school_bus,1200
+				""");
+		Files.writeString(directory.resolve(StudentSchoolModeCandidateCatalog.SCHOOL_BUS_FILE), """
+				candidate_id,person_id,trip_index,direction,route_id,transit_line_id,transit_route_id,departure_id,vehicle_id,boarding_facility_id,alighting_facility_id,boarding_link_id,alighting_link_id,scheduled_board_time_s,scheduled_alight_time_s,home_stop_distance_m,campus_stop_distance_m,vehicle_capacity
+				""");
+		StudentSchoolModeCandidateCatalog catalog = StudentSchoolModeCandidateCatalog.load(directory);
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Person person = scenario.getPopulation().getFactory().createPerson(Id.createPersonId("student"));
+		Plan plan = scenario.getPopulation().getFactory().createPlan();
+		plan.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("home-link")));
+		Leg legacy = PopulationUtils.createLeg("pt");
+		legacy.setRoutingMode("school_bus");
+		legacy.setDepartureTime(27_000.0);
+		legacy.setRoute(RouteUtils.createGenericRouteImpl(
+				Id.createLinkId("home-link"), Id.createLinkId("school-link")));
+		plan.addLeg(legacy);
+		plan.addActivity(PopulationUtils.createActivityFromLinkId("school", Id.createLinkId("school-link")));
+		person.addPlan(plan);
+		person.setSelectedPlan(plan);
+		scenario.getPopulation().addPerson(person);
+
+		assertEquals(0, catalog.restoreMissingSelectedSchoolBusCandidateIds(scenario));
+		assertEquals("pt", legacy.getRoutingMode());
+		catalog.snapshotSelectedSchoolBusPlans(scenario);
 	}
 }

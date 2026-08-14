@@ -7,12 +7,16 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.population.PopulationUtils;
+import org.matsim.core.population.routes.RouteUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.vehicles.VehicleUtils;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HongKongNetworkTaxiRoutingModuleTest {
@@ -42,5 +46,44 @@ class HongKongNetworkTaxiRoutingModuleTest {
 				VehicleUtils.getVehicleIds(person).get("taxi"));
 		assertEquals(1.0, taxiVehicle.getType().getPcuEquivalents());
 		assertEquals("taxi", taxiVehicle.getType().getNetworkMode());
+	}
+
+	@Test
+	void reroutesCompleteTaxiTripsButPreservesTruncatedExperiencedRoute() {
+		var config = ConfigUtils.createConfig();
+		HongKongNetworkTaxiRoutingModule.configure(config);
+		var scenario = ScenarioUtils.createScenario(config);
+		var person = scenario.getPopulation().getFactory().createPerson(Id.createPersonId("p"));
+		var complete = scenario.getPopulation().getFactory().createPlan();
+		complete.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("a")));
+		var completeTaxi = PopulationUtils.createLeg("taxi");
+		completeTaxi.setRoutingMode("taxi");
+		completeTaxi.setRoute(RouteUtils.createGenericRouteImpl(Id.createLinkId("a"), Id.createLinkId("b")));
+		complete.addLeg(completeTaxi);
+		complete.addActivity(PopulationUtils.createActivityFromLinkId("work", Id.createLinkId("b")));
+		person.addPlan(complete);
+		var truncated = scenario.getPopulation().getFactory().createPlan();
+		truncated.addActivity(PopulationUtils.createActivityFromLinkId("home", Id.createLinkId("a")));
+		var truncatedTaxi = PopulationUtils.createLeg("taxi");
+		truncatedTaxi.setRoutingMode("taxi");
+		var truncatedRoute = RouteUtils.createGenericRouteImpl(Id.createLinkId("a"), Id.createLinkId("b"));
+		truncatedRoute.setDistance(1000.0);
+		truncatedTaxi.setRoute(truncatedRoute);
+		truncated.addLeg(truncatedTaxi);
+		truncated.addActivity(PopulationUtils.createActivityFromLinkId(
+				"taxi interaction", Id.createLinkId("b")));
+		person.addPlan(truncated);
+		person.setSelectedPlan(complete);
+		scenario.getPopulation().addPerson(person);
+
+		HongKongNetworkTaxiRoutingModule.prepareScenario(scenario);
+		assertNull(completeTaxi.getRoute());
+		assertNotNull(truncatedTaxi.getRoute());
+		assertEquals(HongKongTaxiFareCalculator.UNRESOLVED,
+				truncatedTaxi.getAttributes().getAttribute(HongKongTaxiLegAttributes.TAXI_TYPE));
+		assertEquals("all_person_network_taxi_proxy_v1_truncated",
+				truncatedTaxi.getAttributes().getAttribute(HongKongTaxiLegAttributes.CLASSIFICATION_SOURCE));
+		assertNotNull(truncatedTaxi.getAttributes().getAttribute(
+				HongKongTaxiLegAttributes.FARE_BASELINE_HKD));
 	}
 }

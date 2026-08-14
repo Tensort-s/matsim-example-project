@@ -21,4 +21,8 @@ public record HouseholdJointPlanSelectionSchedule(
 	public static HouseholdJointPlanSelectionSchedule targetIterations5_10_15() {
 		return new HouseholdJointPlanSelectionSchedule(Set.of(5, 10, 15), true);
 	}
+
+	public static HouseholdJointPlanSelectionSchedule targetIterations(Set<Integer> iterations) {
+		return new HouseholdJointPlanSelectionSchedule(iterations, true);
+	}
 }
