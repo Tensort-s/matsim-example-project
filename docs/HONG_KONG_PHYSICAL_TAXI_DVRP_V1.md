@@ -6,7 +6,7 @@ This document defines the opt-in physical Taxi/DVRP v1 candidate developed on
 branch `codex/hk-taxi-dvrp-v1`. It is not an adopted production input, final
 simulation, or replacement for the current Hong Kong production scenario. The
 low-cost `run25` technical experiment and the full-population fixed-plan A/B
-gate have completed successfully. The formal 50-QSim run3 is active. No result below promotes Candidate11 signals or this Taxi fleet into
+gate have completed successfully. The formal 50-QSim run4 is active. No result below promotes Candidate11 signals or this Taxi fleet into
 `current_model` or `current_final_run`.
 
 The candidate replaces the earlier person-local PCU-1 Taxi proxy with a finite,
@@ -193,20 +193,25 @@ compact Taxi audit written each iteration.
 The current immutable formal attempt is:
 
 ```text
-payload: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_payload31
-release: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_release3
-run:     /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run3
-JAR:     ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30
+payload: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_payload32
+release: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_release4
+run:     /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run4
+JAR:     412a2445f6c4818f2dbe0a8629905f3fa004fd467bc578e021d01c570ba5515e
 ```
 
 It started on 2026-08-15 with PCU 1.0. Run1 failed before QSim because the
 physical fleet and person-local proxy were both enabled; run2 failed before
 QSim because legacy generic school-bus plans were misclassified as physical
-v6 candidates. Both remain immutable. Run3 restores the historical initial
+v6 candidates. Run3 restored the historical initial
 behavior: all 9,626 legacy generic school-bus legs fall back to ordinary PT,
-while later exact physical candidates retain strict stable-ID checks.
+while later exact physical candidates retain strict stable-ID checks, but it
+exited after iteration 4 when a coincident-origin/destination Taxi alternative
+legitimately routed to an empty trip and the protected selector assumed a Taxi
+leg must exist. Run4 treats that zero-distance Taxi alternative as unavailable
+and lets zero-distance Walk or another real candidate participate. All failed
+attempts remain immutable.
 
-Run3 has not yet completed or passed its final accounting, reference,
+Run4 has not yet completed or passed its final accounting, reference,
 strategy-schedule, performance, or output-integrity checks. The active
 30-minute Heartbeat may
 diagnose and relaunch a process that has actually exited early into a new

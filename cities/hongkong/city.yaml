@@ -227,7 +227,7 @@ stage11_no_ride_candidate:
     limitation: "deterministic maximum utility without choice probability or driver acceptance constraint; no selected new driver Car day in validation; not the adopted 50-iteration output or equilibrium"
 
 physical_taxi_dvrp_v1_candidate:
-  status: "low_cost_run25_and_full_pcu1_ab_validated_formal_run3_active_not_current_production"
+  status: "low_cost_run25_and_full_pcu1_ab_validated_formal_run4_active_not_current_production"
   branch: "codex/hk-taxi-dvrp-v1"
   documentation: "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md"
   fleet_scale_policy: "15500 model vehicles are deliberately not multiplied by the 5% resident sample rate"
@@ -284,9 +284,10 @@ physical_taxi_dvrp_v1_candidate:
     physical_wait_p90_s: 76636
     physical_empty_distance_share: 0.29647
     decision: "retain highest passing PCU 1.0; do not activate TPDM or lower-PCU candidates"
-  formal_50qsim_status: "run3_active"
-  formal_50qsim_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run3"
-  formal_50qsim_jar_sha256: "ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30"
+  formal_50qsim_status: "run4_active"
+  formal_50qsim_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run4"
+  formal_50qsim_jar_sha256: "412a2445f6c4818f2dbe0a8629905f3fa004fd467bc578e021d01c570ba5515e"
+  formal_run3_failure: "completed iterations 0-4, then exited during QSim-5 protected selection because a coincident-facility Taxi route returned no Taxi leg"
   heartbeat_id: "formal50-heartbeat"
   failed_attempt_policy: "retain every immutable payload, release, and run directory; never overwrite or relabel a failed attempt"
   limitation: "PCU 1 passes a bounded same-input congestion gate but is not an observed calibration; iteration 49, final request conservation, and output integrity remain outstanding"

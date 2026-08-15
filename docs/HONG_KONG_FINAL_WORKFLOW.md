@@ -1007,12 +1007,16 @@ physical Taxi audit conserves 64,814 requests and records median/p90 wait of
 49,311/76,636 s plus empty-distance share 0.29647. PCU 1.0 therefore passes
 the bounded congestion gate; no TPDM capacity or lower-PCU candidate is used.
 
-Formal `...formal50_run3` is active. The schedule allows ordinary route/mode/time
+Formal `...formal50_run4` is active. The schedule allows ordinary route/mode/time
 innovation through iteration 34, uses only `ChangeExpBeta` in 35--49, and
 applies protected household/student joint choices before QSim 5, 15, 25, and
-35. Its active 30-minute Heartbeat follows only live-state evidence and may
+35. Run3 completed iterations 0--4 but exited during the QSim-5 protected
+selection because a legitimate coincident-facility Taxi route returned no Taxi
+leg. Run4 marks that zero-distance Taxi alternative unavailable and retains
+the other real choices. Its active 30-minute Heartbeat follows only live-state evidence and may
 repair/relaunch only after an actual premature exit. Formal run1 and run2 are
-retained failed attempts; run3 uses payload31 JAR SHA256
-`ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30`.
+also retained failed attempts; run3 remains immutable failure evidence. Run4
+uses payload32 JAR SHA256
+`412a2445f6c4818f2dbe0a8629905f3fa004fd467bc578e021d01c570ba5515e`.
 No current production path, `current_final_run`, or adopted Candidate11 status
 is changed by this candidate metadata.

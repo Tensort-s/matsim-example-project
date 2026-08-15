@@ -775,7 +775,11 @@ proves execution and accounting only. The full 5% fixed-plan A/B gate now exits
 zero for both the proxy (`gate_proxy_run5`) and physical PCU-1
 (`gate_pcu1_run2`) executions. Physical Taxi adds 18 QSim-lost and 158
 Walk-stuck agents relative to the proxy, so PCU 1.0 passes the bounded
-congestion gate and no TPDM/lower-PCU candidate is activated. Formal run3 is
-active under `...formal50_run3` with a 30-minute Heartbeat; it is not yet a
+congestion gate and no TPDM/lower-PCU candidate is activated. Formal run3
+completed iterations 0--4, then exposed a legitimate zero-distance Taxi route
+returning no Taxi leg during the QSim-5 protected selection. The selector now
+marks that Taxi alternative unavailable instead of dereferencing an empty
+result. Formal run4 is active under `...formal50_run4` with a 30-minute
+Heartbeat; it is not yet a
 final result. The candidate remains outside current production, and all failed
 server attempts remain immutable provenance.

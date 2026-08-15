@@ -58,6 +58,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -709,9 +710,15 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 				FacilitiesUtils.toFacility(trip.origin(), facilities),
 				FacilitiesUtils.toFacility(trip.destination(), facilities),
 				departure, person, attributes));
-		Leg taxi = elements.stream().filter(Leg.class::isInstance).map(Leg.class::cast)
-				.filter(leg -> HongKongJointPlanModes.TAXI.equals(leg.getMode()))
-				.findFirst().orElseThrow();
+		Optional<Leg> routedTaxi = findTaxiLeg(elements);
+		if (routedTaxi.isEmpty()) {
+			// MATSim legitimately returns an empty trip for coincident origin and
+			// destination facilities. In that case Taxi is not a distinct
+			// alternative; keep it unavailable and let the zero-distance Walk (or
+			// another real candidate) participate in the protected choice.
+			return unavailable(HongKongJointPlanModes.TAXI, "taxi_router_no_taxi_leg");
+		}
+		Leg taxi = routedTaxi.orElseThrow();
 		if (taxi.getRoute() == null || !Double.isFinite(taxi.getRoute().getDistance())) {
 			throw new IllegalStateException("Taxi release lacks route distance: " + person.getId());
 		}
@@ -723,6 +730,12 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		return new PassengerModeCandidate(HongKongJointPlanModes.TAXI, elements,
 				standardTripUtility(elements) + taxiParameters.fareScore(fare),
 				tripTravelTime(elements), fare, true, Double.NaN, "taxi");
+	}
+
+	static Optional<Leg> findTaxiLeg(List<PlanElement> elements) {
+		return elements.stream().filter(Leg.class::isInstance).map(Leg.class::cast)
+				.filter(leg -> HongKongJointPlanModes.TAXI.equals(leg.getMode()))
+				.findFirst();
 	}
 
 	private PassengerModeCandidate buildWalkCandidate(

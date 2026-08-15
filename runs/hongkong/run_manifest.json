@@ -518,12 +518,13 @@
       },
       "proxy_gate_iteration1": {"qsim_lost": 0, "walk_stuck": 221},
       "pcu_decision": "retain highest passing PCU 1.0; no TPDM or lower-PCU candidate activated",
-      "formal_50qsim_status": "run3_active",
-      "formal_50qsim_server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run3",
-      "formal_50qsim_jar_sha256": "ba27bbf3e9c7b42c403b44f6195a4c416b2a8fb9c1bdf9a3f38b422311517b30",
+      "formal_50qsim_status": "run4_active",
+      "formal_50qsim_server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_formal50_run4",
+      "formal_50qsim_jar_sha256": "412a2445f6c4818f2dbe0a8629905f3fa004fd467bc578e021d01c570ba5515e",
+      "formal_run3_failure": "completed iterations 0-4, then exited during QSim-5 protected selection because a coincident-facility Taxi route returned no Taxi leg",
       "heartbeat_id": "formal50-heartbeat",
       "documentation": "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md",
-      "notes": "Iteration 0 exits zero and request states conserve exactly. The long p90 wait and 1,298 waiting/onboard requests at the horizon are retained supply-demand feedback, so run25 validates mechanics and accounting only. The exact frozen-plan proxy/physical A/B exits zero and PCU 1 passes the bounded congestion gate. Formal run3 is active and iteration 49 remains outstanding. Failed attempts stay in immutable server directories. This candidate does not replace current_final_run or adopt Candidate11 signals."
+      "notes": "Iteration 0 exits zero and request states conserve exactly. The long p90 wait and 1,298 waiting/onboard requests at the horizon are retained supply-demand feedback, so run25 validates mechanics and accounting only. The exact frozen-plan proxy/physical A/B exits zero and PCU 1 passes the bounded congestion gate. Formal run4 is active after the run3 zero-distance Taxi candidate repair, and iteration 49 remains outstanding. Failed attempts stay in immutable server directories. This candidate does not replace current_final_run or adopt Candidate11 signals."
     }
   ],
   "shared_inputs": {

@@ -50,6 +50,16 @@ class HouseholdJointPlanSelectorTest {
 	}
 
 	@Test
+	void treatsCoincidentFacilityTaxiRoutingWithoutTaxiLegAsNoAlternative() {
+		assertTrue(HouseholdJointPlanSelector.findTaxiLeg(java.util.List.of()).isEmpty());
+		assertTrue(HouseholdJointPlanSelector.findTaxiLeg(java.util.List.of(
+				PopulationUtils.createLeg(TransportMode.walk))).isEmpty());
+		var taxi = PopulationUtils.createLeg("taxi");
+		assertEquals(taxi, HouseholdJointPlanSelector.findTaxiLeg(
+				java.util.List.of(taxi)).orElseThrow());
+	}
+
+	@Test
 	void boundPassengerLegCarriesStableRouteThroughPrepareForMobsim() {
 		var candidate = candidate("joint", "passenger", 0, "driver", 0, false);
 
