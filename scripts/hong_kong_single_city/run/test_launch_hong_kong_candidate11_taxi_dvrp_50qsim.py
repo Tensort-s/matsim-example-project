@@ -59,6 +59,7 @@ TEMPLATE = """<config>
     </parameterset>
   </module>
   <module name="subtourModeChoice"/>
+  <module name="signalsystems"><param name="useSignalsystems" value="true"/></module>
 </config>
 """
 
@@ -195,6 +196,35 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
                 proxy_profile.fixed_selected_plans,
             ),
         )
+
+    def test_nosignal_run7_profile_is_one_frozen_qsim(self) -> None:
+        network = Path("/mnt/DiskM/by/example/run7_network.xml.gz")
+        root = self.derive("nosignal-run7-it0")
+        self.assertEqual("0", values(root, "controller")["firstIteration"])
+        self.assertEqual("0", values(root, "controller")["lastIteration"])
+        self.assertEqual("0.1", values(root, "qsim")["flowCapacityFactor"])
+        self.temporary.cleanup()
+        self.temporary = tempfile.TemporaryDirectory()
+        temp_root = Path(self.temporary.name)
+        template = temp_root / "template.xml"
+        destination = temp_root / "derived" / "config.xml"
+        template.write_text(TEMPLATE, encoding="utf-8")
+        derive_config(
+            template, destination, temp_root / "run",
+            RUN_PROFILES["nosignal-run7-it0"], network_input=network,
+        )
+        derived = ET.parse(destination).getroot()
+        self.assertEqual(str(network), values(derived, "network")["inputNetworkFile"])
+        self.assertEqual("false", values(derived, "signalsystems")["useSignalsystems"])
+
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=1.0, taxi_wait_utility_per_hour=-12.0,
+            profile=RUN_PROFILES["nosignal-run7-it0"], xms="16g", xmx="128g",
+        )
+        self.assertNotIn("--traffic-signals", command)
 
     def test_command_uses_physical_fleet_and_explicit_scoring_contract(self) -> None:
         command = build_command(

@@ -182,6 +182,55 @@ The highest PCU passing the technical gate is used. If 0.10 also fails, the
 formal run may still proceed at 0.10 but must carry an explicit failed-
 congestion-gate label and PCU sensitivity report.
 
+## No-signal run7-network fixed-plan iteration-0 check
+
+The immutable no-signal comparison is:
+
+```text
+failed config-only attempt:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_it0_run1
+accepted run:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_it0_run2
+release:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_it0_release2
+```
+
+Run2 completed iteration 0 with exit code 0. It uses the run7 road-hotspot
+network, SHA256
+`7fd409368c5dbd8695cb4c0ef916229602f2918b88056ae05b441b532b6103cb`,
+the same 385,820-person frozen selected plans and 15,500-vehicle fleet as the
+physical gate, Taxi PCU 1.0, 16 global/QSim threads, and
+`useSignalsystems=false`. The Java command omits `--traffic-signals`. Run1 is
+retained as failure evidence: it used the wrong case for the MATSim
+`useSignalsystems` parameter and exited during config parsing before QSim.
+
+Of 743,614 selected trips, 401,964 completed by the 30-hour horizon, or
+54.0555%. Selected-plan mode shares and completed-trip results are:
+
+| Main mode | Selected trips | Selected share | Completed | Completion | Mean completed trip time |
+|---|---:|---:|---:|---:|---:|
+| Car | 40,576 | 5.4566% | 3,253 | 8.0171% | 162.85 min |
+| Car passenger | 1,635 | 0.2199% | 1,555 | 95.1070% | 50.81 min |
+| PT | 318,884 | 42.8830% | 136,194 | 42.7096% | 82.85 min |
+| Taxi | 118,854 | 15.9833% | 11,974 | 10.0745% | 112.30 min |
+| Walk | 263,665 | 35.4572% | 248,988 | 94.4335% | 129.87 min |
+
+Mean times above are computed only from rows that exist in `0.trips.csv.zst`;
+they are full completed-trip durations and have strong survivor bias. They do
+not assign a zero duration to unfinished trips. For completed Taxi requests,
+the event-audited mean request-to-pickup wait is 9.44 minutes and mean
+pickup-to-drop-off time is 100.23 minutes; the 112.30-minute trip mean also
+contains access/egress components.
+
+Taxi accounting conserves exactly: 62,598 submitted equals 11,974 completed
+plus 42,656 waiting, 7,950 onboard and 18 rejected/invalid. Only 62,598 of the
+118,854 selected Taxi trips reached request submission because unfinished
+earlier trips prevent later daily trips from starting. Removing signals does
+not restore the old run7 completion level; the finite fleet, its empty and
+occupied traffic, and the inherited selected demand remain the dominant
+constraints in this one-QSim diagnostic. The result is a technical
+comparison, not an equilibrium or an adopted no-signal model.
+
 The intended formal run executes QSim iterations 0--49 with 16 global/QSim
 threads. Ordinary route, mode, and activity-time innovation remains available
 through iteration 34; iterations 35--49 keep only `ChangeExpBeta`. Protected
@@ -213,10 +262,8 @@ attempts remain immutable.
 
 Run4 has not yet completed or passed its final accounting, reference,
 strategy-schedule, performance, or output-integrity checks. The active
-30-minute Heartbeat may
-diagnose and relaunch a process that has actually exited early into a new
-immutable attempt; it must not terminate a live run merely because an
-iteration is slow or congested.
+server process was not stopped. The user disabled the 30-minute Heartbeat, so
+there is no active automatic monitor or relaunch task.
 
 ## Adoption boundary
 

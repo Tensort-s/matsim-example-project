@@ -39,6 +39,8 @@ class RunProfile:
     taxi_execution: str = "dvrp"
     requires_plans_override: bool = False
     fixed_selected_plans: bool = False
+    traffic_signals: bool = True
+    requires_network_override: bool = False
 
 
 RUN_PROFILES = {
@@ -54,6 +56,12 @@ RUN_PROFILES = {
     "gate-0-1-proxy": RunProfile(
         0, 1, 0.1, None, 385_820,
         taxi_execution="proxy", requires_plans_override=True, fixed_selected_plans=True,
+    ),
+    "nosignal-run7-it0": RunProfile(
+        0, 0, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=True, traffic_signals=False,
+        requires_network_override=True,
     ),
 }
 
@@ -78,6 +86,10 @@ def parse_args() -> argparse.Namespace:
         "--plans-input",
         type=Path,
         help="Override the plans file in the template; mandatory for smoke-0p5.",
+    )
+    parser.add_argument(
+        "--network-input", type=Path,
+        help="Override the network in the template; required by nosignal-run7-it0.",
     )
     parser.add_argument("--release-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
@@ -191,6 +203,7 @@ def derive_config(
     profile: RunProfile,
     *,
     plans_input: Path | None = None,
+    network_input: Path | None = None,
 ) -> list[str]:
     tree = ET.parse(template)
     root = tree.getroot()
@@ -255,6 +268,10 @@ def derive_config(
     set_param(subtour, "chainBasedModes", "car")
     if plans_input is not None:
         set_param(module(root, "plans"), "inputPlansFile", str(plans_input))
+    if network_input is not None:
+        set_param(module(root, "network"), "inputNetworkFile", str(network_input))
+    if not profile.traffic_signals:
+        set_param(module(root, "signalsystems"), "useSignalsystems", "false")
 
     destination.parent.mkdir(parents=True, exist_ok=False)
     with destination.open("x", encoding="utf-8", newline="\n") as handle:
@@ -381,10 +398,11 @@ def build_command(
         f"--pt-fare-root={cost_root / 'pt_fare_v1'}",
         f"--car-cost-root={cost_root / 'car_cost_v1'}",
         "--physical-nontaxi-modes", "--unlimited-ordinary-pt-capacity",
-        "--traffic-signals",
         "--walk-overtime-scoring",
         f"--student-school-mode-candidates={runtime / 'input/school_bus_plan_candidates_5pct_v6'}",
     ]
+    if profile.traffic_signals:
+        command.append("--traffic-signals")
     # Fixed gate/smoke plans are experienced physical itineraries from run14b.
     # Clearing their valid PT routes would discard that frozen network state and
     # can split a school-bus trip into inconsistent per-leg routing modes.  The
@@ -422,6 +440,10 @@ def main() -> int:
     profile = RUN_PROFILES[args.profile]
     if profile.requires_plans_override and args.plans_input is None:
         raise ValueError(f"--plans-input is required for profile {args.profile}")
+    if profile.requires_network_override and args.network_input is None:
+        raise ValueError(f"--network-input is required for profile {args.profile}")
+    if not profile.requires_network_override and args.network_input is not None:
+        raise ValueError(f"--network-input is forbidden for profile {args.profile}")
     if args.profile == "formal-50" and args.plans_input is not None:
         raise ValueError("formal-50 must use the original Candidate11 plans from the template")
     if profile.taxi_execution == "dvrp" and args.taxi_fleet is None:
@@ -441,6 +463,7 @@ def main() -> int:
     payload_jar = safe(args.payload_jar, exists=True)
     source_fleet = safe(args.taxi_fleet, exists=True) if args.taxi_fleet else None
     plans_input = safe(args.plans_input, exists=True) if args.plans_input else None
+    source_network = safe(args.network_input, exists=True) if args.network_input else None
     effective_plans = plans_input or safe(
         plans_path_from_template(template), exists=True
     )
@@ -458,6 +481,8 @@ def main() -> int:
     ]
     if source_fleet is not None:
         required_files.append(source_fleet)
+    if source_network is not None:
+        required_files.append(source_network)
     if not profile.fixed_selected_plans:
         required_files.append(
             runtime / "input/household_joint_plan_potential_candidates.csv"
@@ -506,6 +531,12 @@ def main() -> int:
         fleet_suffix = ".xml.gz" if source_fleet.suffix.lower() == ".gz" else ".xml"
         fleet = release / f"input/taxi_fleet{fleet_suffix}"
         shutil.copy2(source_fleet, fleet)
+    network = None
+    if source_network is not None:
+        (release / "input").mkdir(exist_ok=True)
+        network_suffix = ".xml.gz" if source_network.suffix.lower() == ".gz" else ".xml"
+        network = release / f"input/network{network_suffix}"
+        shutil.copy2(source_network, network)
     cost_root = release / "data/transport_costs/hongkong"
     cost_root.mkdir(parents=True)
     shutil.copytree(pt_source, cost_root / "pt_fare_v1")
@@ -515,7 +546,8 @@ def main() -> int:
 
     config = run / f"config_candidate11_taxi_dvrp_{args.profile}.xml"
     frozen_strategies = derive_config(
-        template, config, run, profile, plans_input=plans_input
+        template, config, run, profile, plans_input=plans_input,
+        network_input=network,
     )
     java = runtime / "runtime/jdk-25/bin/java"
     command = build_command(
@@ -559,6 +591,7 @@ def main() -> int:
         "remove_stuck_vehicles": False,
         "output_interval": 10,
         "fixed_selected_plans": profile.fixed_selected_plans,
+        "traffic_signals": profile.traffic_signals,
         "taxi_execution": profile.taxi_execution,
         "innovation_disable_after_iteration": None if profile.fixed_selected_plans else 34,
         "fraction_of_iterations_to_disable_innovation": (
@@ -602,6 +635,16 @@ def main() -> int:
             "taxi_legs_in_plan_memory": population_audit.taxi_legs,
             "sha256": sha256(effective_plans),
         },
+        "network": (
+            {
+                "override_source": str(source_network),
+                "override_source_sha256": sha256(source_network),
+                "release_copy": str(network),
+                "release_copy_sha256": sha256(network),
+            }
+            if source_network is not None and network is not None
+            else {"override_source": None}
+        ),
         "runtime_input_release": str(runtime),
         "previous_app_release": str(previous),
         "pt_fare_source": str(pt_source),
