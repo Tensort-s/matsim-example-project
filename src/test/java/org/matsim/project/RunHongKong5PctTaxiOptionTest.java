@@ -71,7 +71,7 @@ class RunHongKong5PctTaxiOptionTest {
 		teleported.setTeleportedModeSpeed(10.0);
 		config.routing().addTeleportedModeParams(teleported);
 
-		RunHongKong5Pct.configurePhysicalTaxi(config, 0.1, -12.0);
+		RunHongKong5Pct.configurePhysicalTaxi(config, 0.05, -12.0);
 
 		assertFalse(config.routing().getNetworkModes().contains("taxi"));
 		assertFalse(config.qsim().getMainModes().contains("taxi"));

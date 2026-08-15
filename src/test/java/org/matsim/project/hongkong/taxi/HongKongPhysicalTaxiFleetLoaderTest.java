@@ -40,12 +40,12 @@ class HongKongPhysicalTaxiFleetLoaderTest {
 				</vehicles>
 				""");
 
-		var stats = HongKongPhysicalTaxiFleetLoader.load(scenario, fleet, 0.25);
+		var stats = HongKongPhysicalTaxiFleetLoader.load(scenario, fleet, 0.05);
 		assertEquals(1, stats.vehicles());
-		assertEquals(0.25, stats.pcu());
+		assertEquals(0.05, stats.pcu());
 		Vehicle vehicle = scenario.getVehicles().getVehicles().get(Id.createVehicleId("hk_taxi_00001"));
 		assertNotNull(vehicle);
-		assertEquals(0.25, vehicle.getType().getPcuEquivalents());
+		assertEquals(0.05, vehicle.getType().getPcuEquivalents());
 		assertEquals(4, vehicle.getType().getCapacity().getSeats());
 		assertEquals("taxi", vehicle.getAttributes().getAttribute(
 				DvrpVehicleSpecificationWithMatsimVehicle.DVRP_MODE));

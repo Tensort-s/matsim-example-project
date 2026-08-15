@@ -26,7 +26,7 @@ HOUSEHOLD_SELECTION_ITERATIONS = (5, 15, 25, 35)
 NON_INNOVATIVE_STRATEGIES = frozenset(
     {"ChangeExpBeta", "SelectExpBeta", "KeepLastSelected"}
 )
-ALLOWED_TAXI_PCU = (1.0, 0.75, 0.5, 0.25, 0.1)
+ALLOWED_TAXI_PCU = (1.0, 0.75, 0.5, 0.25, 0.1, 0.05)
 
 
 @dataclass(frozen=True)
@@ -41,6 +41,7 @@ class RunProfile:
     fixed_selected_plans: bool = False
     traffic_signals: bool = True
     requires_network_override: bool = False
+    expected_initial_taxi_legs: int | None = None
 
 
 RUN_PROFILES = {
@@ -62,6 +63,12 @@ RUN_PROFILES = {
         taxi_execution="dvrp", requires_plans_override=True,
         fixed_selected_plans=True, traffic_signals=False,
         requires_network_override=True,
+    ),
+    "nosignal-run7-original-it0": RunProfile(
+        0, 0, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=False,
+        traffic_signals=False, requires_network_override=True,
+        expected_initial_taxi_legs=44_000,
     ),
 }
 
@@ -428,8 +435,16 @@ def build_command(
         command.extend([
             f"--household-joint-plan-candidates={runtime / 'input/household_joint_plan_potential_candidates.csv'}",
             "--household-joint-plan-with-ordinary-innovation",
-            f"--household-joint-selection-iterations={','.join(map(str, HOUSEHOLD_SELECTION_ITERATIONS))}",
         ])
+        active_selection_iterations = tuple(
+            iteration for iteration in HOUSEHOLD_SELECTION_ITERATIONS
+            if profile.first_iteration <= iteration <= profile.last_iteration
+        )
+        if active_selection_iterations:
+            command.append(
+                "--household-joint-selection-iterations="
+                + ",".join(map(str, active_selection_iterations))
+            )
         if "--all-person-network-taxi-innovation" not in command:
             command.append("--all-person-network-taxi-innovation")
     return command
@@ -444,8 +459,11 @@ def main() -> int:
         raise ValueError(f"--network-input is required for profile {args.profile}")
     if not profile.requires_network_override and args.network_input is not None:
         raise ValueError(f"--network-input is forbidden for profile {args.profile}")
-    if args.profile == "formal-50" and args.plans_input is not None:
-        raise ValueError("formal-50 must use the original Candidate11 plans from the template")
+    if args.profile in {"formal-50", "nosignal-run7-original-it0"} \
+            and args.plans_input is not None:
+        raise ValueError(
+            f"{args.profile} must use the original Candidate11 plans from the template"
+        )
     if profile.taxi_execution == "dvrp" and args.taxi_fleet is None:
         raise ValueError(f"--taxi-fleet is required for profile {args.profile}")
     if profile.taxi_execution == "proxy" and args.taxi_fleet is not None:
@@ -519,6 +537,12 @@ def main() -> int:
         raise ValueError(
             f"Profile {args.profile} requires stable selected plans containing Taxi legs: "
             f"{effective_plans}"
+        )
+    if profile.expected_initial_taxi_legs is not None \
+            and population_audit.taxi_legs != profile.expected_initial_taxi_legs:
+        raise ValueError(
+            f"Profile {args.profile} requires {profile.expected_initial_taxi_legs} "
+            f"initial Taxi legs; found {population_audit.taxi_legs} in {effective_plans}"
         )
 
     release.mkdir()
@@ -604,7 +628,10 @@ def main() -> int:
             frozen_strategies if profile.fixed_selected_plans else []
         ),
         "protected_selection_target_iterations": (
-            [] if profile.fixed_selected_plans else list(HOUSEHOLD_SELECTION_ITERATIONS)
+            [] if profile.fixed_selected_plans else [
+                iteration for iteration in HOUSEHOLD_SELECTION_ITERATIONS
+                if profile.first_iteration <= iteration <= profile.last_iteration
+            ]
         ),
         "household_joint_catalog_loaded": not profile.fixed_selected_plans,
         "student_school_catalog_loaded": True,

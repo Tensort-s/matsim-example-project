@@ -5,6 +5,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 from launch_hong_kong_candidate11_taxi_dvrp_50qsim import (
+    ALLOWED_TAXI_PCU,
     HOUSEHOLD_SELECTION_ITERATIONS,
     RUN_NAME_PREFIX,
     RUN_PROFILES,
@@ -225,6 +226,31 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             profile=RUN_PROFILES["nosignal-run7-it0"], xms="16g", xmx="128g",
         )
         self.assertNotIn("--traffic-signals", command)
+
+    def test_nosignal_original_profile_replans_before_one_qsim_and_allows_pcu_005(self) -> None:
+        self.assertIn(0.05, ALLOWED_TAXI_PCU)
+        profile = RUN_PROFILES["nosignal-run7-original-it0"]
+        self.assertEqual((0, 0), (profile.first_iteration, profile.last_iteration))
+        self.assertFalse(profile.fixed_selected_plans)
+        self.assertFalse(profile.traffic_signals)
+        self.assertTrue(profile.requires_network_override)
+        self.assertEqual(44_000, profile.expected_initial_taxi_legs)
+
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-12.0,
+            profile=profile, xms="16g", xmx="96g",
+        )
+        self.assertIn("--taxi-dvrp-pcu=0.05", command)
+        self.assertIn("--all-person-network-taxi-innovation", command)
+        self.assertIn("--clear-pt-routes", command)
+        self.assertNotIn("--traffic-signals", command)
+        self.assertFalse(any(
+            item.startswith("--household-joint-selection-iterations=")
+            for item in command
+        ))
 
     def test_command_uses_physical_fleet_and_explicit_scoring_contract(self) -> None:
         command = build_command(

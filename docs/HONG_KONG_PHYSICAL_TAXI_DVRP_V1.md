@@ -178,6 +178,9 @@ would have been, in order:
    signal-controlled links and takes the higher of existing and TPDM capacity;
 2. Taxi PCU sensitivities 0.75, 0.50, 0.25, then 0.10.
 
+A later user-authorised diagnostic extends the explicit sensitivity set to
+PCU 0.05. It is not silently substituted for the PCU-1 formal run.
+
 The highest PCU passing the technical gate is used. If 0.10 also fails, the
 formal run may still proceed at 0.10 but must carry an explicit failed-
 congestion-gate label and PCU sensitivity report.
@@ -230,6 +233,72 @@ not restore the old run7 completion level; the finite fleet, its empty and
 occupied traffic, and the inherited selected demand remain the dominant
 constraints in this one-QSim diagnostic. The result is a technical
 comparison, not an equilibrium or an adopted no-signal model.
+
+## Original-plan, no-signal, PCU-0.05 iteration-0 smoke
+
+The accepted joint-correction smoke is:
+
+```text
+payload: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_original_pcu005_it0_payload3
+release: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_original_pcu005_it0_release3
+run:     /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260815_nosignal_run7_original_pcu005_it0_run3
+JAR:     9efb79d4db9a52a3a96227438a390c0659c7cbd6bbcd0e5ccb46b294632d8536
+```
+
+It uses the same run7-network SHA as the preceding no-signal check, disables
+signals, keeps the 15,500-vehicle fleet, changes Taxi road weight to PCU 0.05,
+and returns to the original Candidate11 plans with SHA256
+`393dd8967d84c69fe974d33a0945eda3fa6eccd0a42b1f3744016542d61cf855`.
+Those plans contain 44,000 initial Taxi candidate legs but no run14b
+experienced proxy scores. Ordinary replanning before QSim 0 selects 43,999
+Taxi trips. No protected household/student joint-selection target falls in
+the one-QSim 0--0 window.
+
+Run3 completed with exit code 0, normal shutdown, no OOM, five QSim-lost
+agents, and five rejected equal-origin/destination-link Taxi requests. Its
+selected-plan and completed-trip audit is:
+
+| Main mode | Selected trips | Selected share | Completed | Completion | Mean completed trip time |
+|---|---:|---:|---:|---:|---:|
+| Car | 67,718 | 9.1066% | 29,743 | 43.9219% | 43.89 min |
+| Car passenger | 2,734 | 0.3677% | 2,734 | 100.0000% | 8.06 min |
+| PT | 546,893 | 73.5453% | 390,615 | 71.4244% | 55.94 min |
+| Taxi | 43,999 | 5.9169% | 22,327 | 50.7443% | 43.48 min |
+| Walk | 82,270 | 11.0635% | 79,096 | 96.1420% | 89.47 min |
+
+Overall, 524,515 of 743,614 selected trips complete, or 70.5359%. Mean times
+are calculated only from completed `0.trips.csv.zst` rows and retain survivor
+bias. The average executed person score is -25.7459.
+
+Taxi accounting conserves exactly: 32,368 submitted equals 22,327 completed,
+1,387 waiting, 8,649 onboard and 5 rejected. Completed-request mean wait is
+2.76 minutes and mean in-vehicle time is 40.51 minutes. The all-request wait
+distribution is p50 45 seconds, p90 296 seconds, p95 7,873 seconds and p99
+62,227 seconds. Of 15,500 fleet vehicles, 14,089 serve at least one request;
+completed services per fleet vehicle are 1.4405. Empty VKT is 24,985.173 km,
+occupied VKT 318,072.572 km, and the empty-distance share is 0.07283.
+
+The same original-plan iteration-0 selected mode shares occur in formal run4.
+Formal run4 iteration 0, which instead uses the Candidate10/Candidate11
+signalled supply and Taxi PCU 1.0, completes 51.8843% overall; mode completion
+is 20.0892% Car, 51.7979% PT, 18.9618% Taxi and 94.6384% Walk. The new smoke
+therefore improves overall completion by 18.6516 percentage points, but the
+comparison changes both Taxi PCU and road/signal supply and cannot attribute
+the gain to PCU alone.
+
+Technical acceptance passes: configuration provenance, PCU, signal switch,
+network/JAR hashes, request conservation, shutdown and output integrity all
+pass. Transport-performance acceptance remains partial: 177,936 agents are
+still active at the 30-hour horizon and the 70.5359% trip completion rate is
+well below the historical non-DVRP run7 result. This smoke is suitable as
+evidence for the next controlled gate, not as a final adopted configuration.
+
+The first launcher payload stopped before release/run creation because its
+guard incorrectly interpreted “no proxy score” as zero Taxi candidate legs.
+Payload2/release2/run2 then stopped before QSim because a 0--0 smoke was given
+formal joint-selection targets 5,15,25,35. Both are retained. Payload3 omits
+out-of-window joint-selection targets, preserves formal-50 scheduling, and
+adds PCU 0.05 to the explicit Java and launcher allowlists.
 
 The intended formal run executes QSim iterations 0--49 with 16 global/QSim
 threads. Ordinary route, mode, and activity-time innovation remains available
