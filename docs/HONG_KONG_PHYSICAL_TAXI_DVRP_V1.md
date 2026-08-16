@@ -392,6 +392,15 @@ The immutable link-audit outputs are stored under
 `run3/road_runtime_audit_causal_v1` for the PCU-0.05 physical run, beneath the
 full run roots listed above.
 
+An independent road-supply sensitivity candidate was subsequently generated
+under
+`/mnt/DiskM/by/hk_stage11_road_hotspot_tpdm_v4_three_candidate_20260816_candidate2`.
+It adds the TPDM Volume 4 lane saturation candidate to the existing
+two-candidate maximum and raises the summed physical-road capacity diagnostic
+by 40.3407%. It was not used by the Taxi runs described above and has not yet
+passed a QSim adoption gate. See
+`docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`.
+
 The intended formal run executes QSim iterations 0--49 with 16 global/QSim
 threads. Ordinary route, mode, and activity-time innovation remains available
 through iteration 34; iterations 35--49 keep only `ChangeExpBeta`. Protected

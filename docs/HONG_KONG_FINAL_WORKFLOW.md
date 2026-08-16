@@ -224,6 +224,13 @@ Details:
 - `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`
 - `docs/HONG_KONG_MATSIM_PUBLIC_TRANSPORT_DATA.md`
 - `docs/HONG_KONG_ROAD_CLASS_LANE_FINAL_DECISIONS.md`
+- `docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`
+
+The TPDM Volume 4 three-candidate network is an immutable, non-adopted
+sensitivity candidate built from the road-hotspot V1 materialized network. It
+raises the summed physical-road link-capacity diagnostic by 40.3407% while
+preserving topology and every non-capacity link field. It has not replaced the
+production supply and still requires a frozen QSim comparison before adoption.
 
 ### 8. MATSim agents and plans
 

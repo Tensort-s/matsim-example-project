@@ -842,6 +842,22 @@ The environment requires `xlrd>=2.0.1`. The road/PT supply builder
 automatically reapplies the generated route-direction attributes on subsequent
 rebuilds. See `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`.
 
+Build an immutable three-candidate capacity network by retaining the existing
+two-candidate maximum and adding the independent TPDM Volume 4 lane formula:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_tpdm_v4_three_candidate_network.py `
+  --input-network <network.xml.gz> `
+  --output-dir <new-immutable-directory> `
+  --lane-width-m 3.25 `
+  --capacity-rounding-vph 50
+```
+
+The builder changes only capacities on physical road links and writes a
+link-level CSV plus JSON summary. See
+`docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`.
+
 ## Traffic-signal location registry
 
 Download the Transport Department Traffic Aids traffic-light layers and build

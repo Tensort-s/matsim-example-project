@@ -607,6 +607,11 @@ baseline is retained beside the formal network, while full audit tables and
 maps are under `data/transit/hongkong/processed/road_speed_capacity_2026_v1/`.
 See `docs/HONG_KONG_ROAD_SPEED_CAPACITY.md`; `.venv_geo311` includes
 `xlrd>=2.0.1` for the official ATC `.xls` workbooks.
+The separate TPDM Volume 4 three-candidate network experiment is documented in
+`docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`. It retains the existing
+two-candidate maximum and applies `max(existing, TPDM)` only to physical road
+links. It is a non-adopted capacity sensitivity candidate, not the current
+production network.
 The v1 demand build created a route-specific stop-link schedule copy under
 `data/matsim_agents/hongkong/typical_weekday_5pct_v1/`; v2 uses the active
 Ferry Core v1 cap010 supply instead. Representative vehicle
