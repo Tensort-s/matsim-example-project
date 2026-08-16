@@ -252,6 +252,56 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             for item in command
         ))
 
+    def test_teleported_control_matches_run7_without_physical_taxi_flags(self) -> None:
+        profile = RUN_PROFILES["nosignal-run7-teleported-control-it0"]
+        self.assertEqual("teleported", profile.taxi_execution)
+        self.assertEqual((0, 0), (profile.first_iteration, profile.last_iteration))
+        self.assertFalse(profile.traffic_signals)
+        self.assertTrue(profile.requires_network_override)
+        self.assertEqual(44_000, profile.expected_initial_taxi_legs)
+
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=None,
+            taxi_pcu=1.0, taxi_wait_utility_per_hour=-12.0,
+            profile=profile, xms="16g", xmx="96g",
+        )
+        self.assertIn("--clear-pt-routes", command)
+        self.assertFalse(any(
+            item.startswith("--household-joint-plan-candidates=") for item in command
+        ))
+        forbidden = (
+            "--taxi-dvrp-fleet=", "--taxi-dvrp-pcu=",
+            "--taxi-wait-utility-per-hour=",
+            "--household-joint-selection-iterations=",
+        )
+        self.assertFalse(any(item.startswith(forbidden) for item in command))
+        self.assertNotIn("--fixed-plans-network-taxi-proxy", command)
+        self.assertNotIn("--all-person-network-taxi-innovation", command)
+        self.assertNotIn("--household-joint-plan-with-ordinary-innovation", command)
+        self.assertNotIn("--walk-overtime-scoring", command)
+        self.assertNotIn("--traffic-signals", command)
+
+    def test_old_stuck_control_changes_only_qsim_stuck_policy(self) -> None:
+        current = RUN_PROFILES["nosignal-run7-teleported-control-it0"]
+        historical = RUN_PROFILES["nosignal-run7-teleported-oldstuck-it0"]
+        self.assertEqual(3600, current.stuck_time_s)
+        self.assertFalse(current.remove_stuck_vehicles)
+        self.assertEqual(600, historical.stuck_time_s)
+        self.assertTrue(historical.remove_stuck_vehicles)
+        comparable_fields = (
+            "first_iteration", "last_iteration", "capacity_factor",
+            "expected_fleet_size", "expected_population_size",
+            "taxi_execution", "requires_plans_override",
+            "fixed_selected_plans", "traffic_signals",
+            "requires_network_override", "expected_initial_taxi_legs",
+        )
+        self.assertEqual(
+            tuple(getattr(current, name) for name in comparable_fields),
+            tuple(getattr(historical, name) for name in comparable_fields),
+        )
+
     def test_command_uses_physical_fleet_and_explicit_scoring_contract(self) -> None:
         command = build_command(
             java=Path("/runtime/java"), jar=Path("/release/app.jar"),

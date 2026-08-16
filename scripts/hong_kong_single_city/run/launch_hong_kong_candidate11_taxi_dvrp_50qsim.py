@@ -42,6 +42,8 @@ class RunProfile:
     traffic_signals: bool = True
     requires_network_override: bool = False
     expected_initial_taxi_legs: int | None = None
+    stuck_time_s: int = 3600
+    remove_stuck_vehicles: bool = False
 
 
 RUN_PROFILES = {
@@ -70,13 +72,26 @@ RUN_PROFILES = {
         traffic_signals=False, requires_network_override=True,
         expected_initial_taxi_legs=44_000,
     ),
+    "nosignal-run7-teleported-control-it0": RunProfile(
+        0, 0, 0.1, None, 385_820,
+        taxi_execution="teleported", fixed_selected_plans=False,
+        traffic_signals=False, requires_network_override=True,
+        expected_initial_taxi_legs=44_000,
+    ),
+    "nosignal-run7-teleported-oldstuck-it0": RunProfile(
+        0, 0, 0.1, None, 385_820,
+        taxi_execution="teleported", fixed_selected_plans=False,
+        traffic_signals=False, requires_network_override=True,
+        expected_initial_taxi_legs=44_000,
+        stuck_time_s=600, remove_stuck_vehicles=True,
+    ),
 }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Create an immutable physical-Taxi release/run and launch it, or "
+            "Create an immutable Taxi experiment release/run and launch it, or "
             "stop after preparation with --prepare-only."
         )
     )
@@ -87,7 +102,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--payload-jar", type=Path, required=True)
     parser.add_argument(
         "--taxi-fleet", type=Path,
-        help="Required for DVRP profiles and forbidden for gate-0-1-proxy.",
+        help="Required for DVRP profiles and forbidden for non-DVRP profiles.",
     )
     parser.add_argument(
         "--plans-input",
@@ -238,8 +253,11 @@ def derive_config(
     set_param(qsim, "numberOfThreads", "16")
     set_param(qsim, "flowCapacityFactor", str(profile.capacity_factor))
     set_param(qsim, "storageCapacityFactor", str(profile.capacity_factor))
-    set_param(qsim, "stuckTime", "3600")
-    set_param(qsim, "removeStuckVehicles", "false")
+    set_param(qsim, "stuckTime", str(profile.stuck_time_s))
+    set_param(
+        qsim, "removeStuckVehicles",
+        "true" if profile.remove_stuck_vehicles else "false",
+    )
     if profile.taxi_execution == "dvrp":
         set_param(qsim, "simStarttimeInterpretation", "onlyUseStarttime")
 
@@ -405,9 +423,10 @@ def build_command(
         f"--pt-fare-root={cost_root / 'pt_fare_v1'}",
         f"--car-cost-root={cost_root / 'car_cost_v1'}",
         "--physical-nontaxi-modes", "--unlimited-ordinary-pt-capacity",
-        "--walk-overtime-scoring",
         f"--student-school-mode-candidates={runtime / 'input/school_bus_plan_candidates_5pct_v6'}",
     ]
+    if profile.taxi_execution != "teleported":
+        command.append("--walk-overtime-scoring")
     if profile.traffic_signals:
         command.append("--traffic-signals")
     # Fixed gate/smoke plans are experienced physical itineraries from run14b.
@@ -429,13 +448,22 @@ def build_command(
         if fleet is not None:
             raise ValueError("Proxy command construction must not receive a Taxi fleet")
         command.append("--fixed-plans-network-taxi-proxy")
+    elif profile.taxi_execution == "teleported":
+        if fleet is not None:
+            raise ValueError("Teleported control must not receive a Taxi fleet")
+        # This control runs only iteration 0 from the untouched Candidate11
+        # plans.  Do not load either Taxi innovation or the household selector:
+        # neither can affect the requested frozen QSim, and the household
+        # validation intentionally rejects the ordinary ChangeExpBeta selector
+        # still present in the source configuration.
+        return command
     else:
         raise ValueError(f"Unsupported Taxi execution: {profile.taxi_execution}")
     if not profile.fixed_selected_plans:
-        command.extend([
-            f"--household-joint-plan-candidates={runtime / 'input/household_joint_plan_potential_candidates.csv'}",
-            "--household-joint-plan-with-ordinary-innovation",
-        ])
+        command.append(
+            f"--household-joint-plan-candidates={runtime / 'input/household_joint_plan_potential_candidates.csv'}"
+        )
+        command.append("--household-joint-plan-with-ordinary-innovation")
         active_selection_iterations = tuple(
             iteration for iteration in HOUSEHOLD_SELECTION_ITERATIONS
             if profile.first_iteration <= iteration <= profile.last_iteration
@@ -459,19 +487,23 @@ def main() -> int:
         raise ValueError(f"--network-input is required for profile {args.profile}")
     if not profile.requires_network_override and args.network_input is not None:
         raise ValueError(f"--network-input is forbidden for profile {args.profile}")
-    if args.profile in {"formal-50", "nosignal-run7-original-it0"} \
+    if args.profile in {
+        "formal-50", "nosignal-run7-original-it0",
+        "nosignal-run7-teleported-control-it0",
+        "nosignal-run7-teleported-oldstuck-it0",
+    } \
             and args.plans_input is not None:
         raise ValueError(
             f"{args.profile} must use the original Candidate11 plans from the template"
         )
     if profile.taxi_execution == "dvrp" and args.taxi_fleet is None:
         raise ValueError(f"--taxi-fleet is required for profile {args.profile}")
-    if profile.taxi_execution == "proxy" and args.taxi_fleet is not None:
+    if profile.taxi_execution != "dvrp" and args.taxi_fleet is not None:
         raise ValueError(f"--taxi-fleet is forbidden for profile {args.profile}")
-    if profile.taxi_execution == "proxy" and (
+    if profile.taxi_execution != "dvrp" and (
         args.taxi_pcu != 1.0 or args.taxi_wait_utility_per_hour != -12.0
     ):
-        raise ValueError("Proxy profile does not accept Taxi DVRP PCU/wait overrides")
+        raise ValueError("Non-DVRP profiles do not accept Taxi DVRP PCU/wait overrides")
     if args.taxi_wait_utility_per_hour >= 0:
         raise ValueError("Taxi wait utility per hour must be negative")
 
@@ -501,7 +533,10 @@ def main() -> int:
         required_files.append(source_fleet)
     if source_network is not None:
         required_files.append(source_network)
-    if not profile.fixed_selected_plans:
+    if (
+        not profile.fixed_selected_plans
+        and profile.taxi_execution != "teleported"
+    ):
         required_files.append(
             runtime / "input/household_joint_plan_potential_candidates.csv"
         )
@@ -602,7 +637,11 @@ def main() -> int:
     worker.chmod(worker.stat().st_mode | stat.S_IXUSR)
 
     metadata = {
-        "objective": "Candidate11 physical Taxi DVRP with explicit fleet matching and waiting",
+        "objective": (
+            "Candidate11 physical Taxi DVRP with explicit fleet matching and waiting"
+            if profile.taxi_execution == "dvrp"
+            else "Candidate11 no-physical-Taxi control with teleported Taxi"
+        ),
         "profile": args.profile,
         "qsim_iterations": list(
             range(profile.first_iteration, profile.last_iteration + 1)
@@ -611,8 +650,8 @@ def main() -> int:
         "qsim_threads": 16,
         "flow_capacity_factor": profile.capacity_factor,
         "storage_capacity_factor": profile.capacity_factor,
-        "stuck_time_s": 3600,
-        "remove_stuck_vehicles": False,
+        "stuck_time_s": profile.stuck_time_s,
+        "remove_stuck_vehicles": profile.remove_stuck_vehicles,
         "output_interval": 10,
         "fixed_selected_plans": profile.fixed_selected_plans,
         "traffic_signals": profile.traffic_signals,
@@ -633,7 +672,10 @@ def main() -> int:
                 if profile.first_iteration <= iteration <= profile.last_iteration
             ]
         ),
-        "household_joint_catalog_loaded": not profile.fixed_selected_plans,
+        "household_joint_catalog_loaded": (
+            not profile.fixed_selected_plans
+            and profile.taxi_execution != "teleported"
+        ),
         "student_school_catalog_loaded": True,
         "taxi": (
             {
@@ -648,11 +690,15 @@ def main() -> int:
             }
             if source_fleet is not None and fleet is not None
             else {
-                "execution": "proxy",
+                "execution": profile.taxi_execution,
                 "fleet_size": None,
-                "pcu": 1.0,
+                "pcu": 1.0 if profile.taxi_execution == "proxy" else None,
                 "wait_utility_per_hour": None,
-                "proxy_contract": "person-local network Taxi; no cruising/deadheading/fleet matching",
+                "execution_contract": (
+                    "person-local network Taxi; no cruising/deadheading/fleet matching"
+                    if profile.taxi_execution == "proxy"
+                    else "teleported Taxi; no Taxi vehicle enters QSim"
+                ),
             }
         ),
         "plans": {

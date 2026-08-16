@@ -300,6 +300,98 @@ formal joint-selection targets 5,15,25,35. Both are retained. Payload3 omits
 out-of-window joint-selection targets, preserves formal-50 scheduling, and
 adds PCU 0.05 to the explicit Java and launcher allowlists.
 
+## Teleported-Taxi causal controls for the completion loss
+
+Two additional immutable controls isolate the low completion rate without
+changing the run7 road-hotspot network, original Candidate11 plans, signal
+switch, 16-thread allocation, 30-hour horizon or application JAR. Both retain
+all 44,000 selected Taxi legs but execute Taxi as the ordinary teleported mode,
+so no Taxi vehicle enters QSim:
+
+```text
+new stuck policy, failed selector-contract attempt:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_nosignal_run7_teleported_control_it0_run1
+new stuck policy, accepted:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_nosignal_run7_teleported_control_it0_run2
+old stuck policy, accepted:
+  /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_nosignal_run7_teleported_oldstuck_it0_run1
+JAR:
+  9efb79d4db9a52a3a96227438a390c0659c7cbd6bbcd0e5ccb46b294632d8536
+plans:
+  393dd8967d84c69fe974d33a0945eda3fa6eccd0a42b1f3744016542d61cf855
+network:
+  7fd409368c5dbd8695cb4c0ef916229602f2918b88056ae05b441b532b6103cb
+```
+
+The failed control exited before population loading because the command
+unnecessarily loaded the household selector alongside `ChangeExpBeta`. The
+accepted iteration-0 control omits that inactive selector. The second accepted
+control differs from it only in the two historical run7 QSim settings:
+`stuckTime=600 s` and `removeStuckVehicles=true`, instead of 3,600 s and
+`false`. Both accepted runs exit 0 with normal shutdown.
+Run2's metadata field `household_joint_catalog_loaded=true` is a launcher
+bookkeeping defect; its recorded Java command correctly contains no household
+catalog argument. The launcher now derives that field from the actual
+teleported-control contract, and the old-stuck control records `false`.
+
+| Execution | Stuck policy | Completed trips | Completion | Active at 30:00 | QSim lost |
+|---|---|---:|---:|---:|---:|
+| Historical run7 | 600 s, remove | 710,910 | 95.6020% | 14,048 | 5,863 |
+| Same current JAR, teleported Taxi | 600 s, remove | 703,285 | 94.5766% | 17,263 | 9,853 |
+| Same current JAR, teleported Taxi | 3,600 s, retain | 610,237 | 82.0637% | 110,161 | 0 |
+| Same current JAR, physical Taxi PCU 0.05 | 3,600 s, retain | 524,515 | 70.5359% | 177,936 | 5 |
+
+Using only the three same-JAR rows, changing the stuck policy costs 12.5129
+percentage points and adding the physical fleet costs a further 11.5277
+points. They explain respectively 52.05% and 47.95% of the 24.0407-point
+same-JAR loss. The remaining 1.0254-point difference between historical run7
+and the same-JAR old-stuck control is a historical runtime/application
+difference and is not attributed to the stuck policy.
+
+Mode-specific completion confirms different mechanisms. The stuck-policy
+change reduces Car from 90.2168% to 58.5103% and PT from 94.1369% to 81.5183%.
+Adding the fleet then reduces Car to 43.9219%, PT to 71.4244% and Taxi from
+95.7841% to 50.7443%. Walk changes only from 97.1423% to 96.1420% in the fleet
+step. The unfinished-request audit also shows that the Taxi loss is not only
+pre-pickup waiting: 8,649 requests are already onboard at the horizon, versus
+1,387 still waiting.
+
+Completed-trip means must not be read as congestion-free evidence. Across
+all modes the completed-row weighted mean rises from 52.42 minutes under the
+old stuck policy, to 53.55 minutes under the retained-stuck control, and to
+59.54 minutes with the physical fleet. On identical completed trip keys, the
+stuck-policy change increases Car time by 37.32% and PT time by 18.42%. The
+fleet step adds another 60.46% for Car, 17.60% for PT and 310.90% for Taxi.
+The raw Car mean can fall when long trips disappear from the completed sample;
+that is survivor bias, not a travel-time improvement.
+
+The link-event audit locates the network mechanism. Without physical Taxi,
+the retained-stuck control already has 241,217.48 road vehicle-hours of delay
+and 46,428 road-vehicle stuck events: 19,669 Bus, 15,571 GMB, 10,894 private
+Car and 294 school-bus. Adding PCU-0.05 Taxi increases delay to 373,836.23
+vehicle-hours (+54.98%), road-vehicle stuck events to 71,682 (+54.39%) and
+links with at least 100 traversals and mean travel-time ratio above 2 from
+3,116 to 3,912 (+25.55%). It adds 9,920 stuck Taxi-fleet vehicle movements
+and also increases Bus, GMB and private-Car stuck counts by 8,333, 3,759 and
+3,183 respectively. Road link traversals nevertheless fall by 1.53%, evidence
+of gridlock rather than useful added throughput.
+
+The fleet also creates 53,400 road-vehicle movement episodes, including 9,877
+initial immediate U-turns; 9,563 of those fleet movements become stuck. For
+example `road_8769_0_f` changes from 1.05 million seconds of delay and 730 s
+mean traversal time in the teleported control to 18.73 million seconds and
+10,356 s with the fleet, with 869 Taxi-fleet traversals on that link. PCU 0.05
+is confirmed by the runtime log, but it does not remove discrete vehicles,
+empty pickup travel, topology interactions or queue blocking. The completion
+loss is therefore a combination of previously hidden network gridlock and a
+real fleet-loading/initial-routing amplification, not excessive Taxi PCU
+alone.
+
+The immutable link-audit outputs are stored under
+`run2/road_runtime_audit_control_v1` for the teleported control and
+`run3/road_runtime_audit_causal_v1` for the PCU-0.05 physical run, beneath the
+full run roots listed above.
+
 The intended formal run executes QSim iterations 0--49 with 16 global/QSim
 threads. Ordinary route, mode, and activity-time innovation remains available
 through iteration 34; iterations 35--49 keep only `ChangeExpBeta`. Protected
