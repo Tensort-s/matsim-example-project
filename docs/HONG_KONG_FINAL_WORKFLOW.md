@@ -230,7 +230,9 @@ The TPDM Volume 4 three-candidate network is an immutable, non-adopted
 sensitivity candidate built from the road-hotspot V1 materialized network. It
 raises the summed physical-road link-capacity diagnostic by 40.3407% while
 preserving topology and every non-capacity link field. It has not replaced the
-production supply and still requires a frozen QSim comparison before adoption.
+production supply. A no-signal, physical-Taxi PCU-0.05 iteration-0 smoke raises
+completion from 70.5359% to 74.7509% against the otherwise matched old-network
+run, but multi-iteration and signal-enabled validation remain open.
 
 ### 8. MATSim agents and plans
 

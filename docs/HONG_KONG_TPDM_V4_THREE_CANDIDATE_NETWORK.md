@@ -6,7 +6,8 @@ This is a generated, full-scale **non-adopted candidate**. It preserves the
 road-hotspot V1 materialized topology and all non-capacity link attributes,
 then adds an independent TPDM Volume 4 saturation-flow candidate to the two
 capacity candidates already represented by each source-link capacity. It has
-not replaced the production network and has not yet been validated in QSim.
+not replaced the production network. One full-population iteration-0 smoke is
+documented below; multi-iteration and signal-enabled validation remain open.
 
 ## Immutable inputs and outputs
 
@@ -100,6 +101,47 @@ Per directional lane count:
 - Signal-controlled links keep this value as base road supply. Signal timing
   must impose its separate effective loss; the TPDM maximum must not be applied
   again after signal deconvolution.
+
+## Full-population iteration-0 smoke
+
+The first controlled full-population smoke completed successfully under:
+
+```text
+release: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_tpdm3_pcu005_it0_release1
+run:     /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_tpdm3_pcu005_it0_run1
+```
+
+It uses the original 385,820-person Candidate11 plans, no signals, the same
+15,500-vehicle physical Taxi fleet and application JAR as the preceding run7
+road-hotspot control, Taxi PCU 0.05, `stuckTime=3600`, and
+`removeStuckVehicles=false`. The only material road-supply change in the pair
+is the network capacity XML. Both runs have the same 743,614 selected trips.
+
+| Main mode | Selected | Old completed | New completed | Old completion | New completion | Change | Old mean completed time | New mean completed time |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Car | 67,718 | 29,743 | 36,108 | 43.9219% | 53.3211% | +9.3993 pp | 43.89 min | 34.47 min |
+| Car passenger | 2,734 | 2,734 | 2,734 | 100.0000% | 100.0000% | 0.0000 pp | 8.06 min | 8.06 min |
+| PT | 546,893 | 390,615 | 411,861 | 71.4244% | 75.3092% | +3.8849 pp | 55.94 min | 50.87 min |
+| Taxi | 43,999 | 22,327 | 25,839 | 50.7443% | 58.7263% | +7.9820 pp | 43.48 min | 34.58 min |
+| Walk | 82,270 | 79,096 | 79,316 | 96.1420% | 96.4094% | +0.2674 pp | 89.47 min | 89.51 min |
+| **All** | **743,614** | **524,515** | **555,858** | **70.5359%** | **74.7509%** | **+4.2150 pp** | **59.54 min** | **54.35 min** |
+
+Mean times use only completed rows from `0.trips.csv.zst`; unfinished trips do
+not receive zero time. On the stricter 515,196-trip intersection that completes
+in both runs with the same trip ID and main mode, the weighted mean falls from
+56.05 to 52.07 minutes, or 7.10%. The matched reductions are 18.14% for Car,
+8.54% for PT, and 20.55% for Taxi; walk and car-passenger times are unchanged.
+This confirms that the raw mean-time reduction is not solely survivor-set
+turnover.
+
+The run exits 0 after iteration 0, records five QSim-lost agents, and has no
+OOM or illegal network/route/vehicle/reference error. Taxi accounting conserves
+34,332 submitted requests as 25,839 completed, 1,003 waiting, 7,485 onboard,
+and five rejected. The candidate materially improves the controlled smoke but
+does not remove the finite-fleet/network limitation: completion remains below
+the 82.0637% same-JAR teleported-Taxi retained-stuck control. It therefore
+remains a tested sensitivity candidate rather than an adopted production
+network.
 
 ## Reproduction
 

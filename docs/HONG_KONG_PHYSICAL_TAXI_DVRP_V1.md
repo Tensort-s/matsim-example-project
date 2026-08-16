@@ -397,9 +397,19 @@ under
 `/mnt/DiskM/by/hk_stage11_road_hotspot_tpdm_v4_three_candidate_20260816_candidate2`.
 It adds the TPDM Volume 4 lane saturation candidate to the existing
 two-candidate maximum and raises the summed physical-road capacity diagnostic
-by 40.3407%. It was not used by the Taxi runs described above and has not yet
-passed a QSim adoption gate. See
+by 40.3407%. It was not used by the Taxi runs described above. See
 `docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`.
+
+The subsequent full-population iteration-0 smoke uses that network with the
+same original plans, no-signal setup, 15,500-vehicle fleet, Taxi PCU 0.05,
+`stuckTime=3600`, and retained stuck vehicles as the accepted run7-network
+physical-Taxi run3. It is stored under
+`/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260816_tpdm3_pcu005_it0_run1`
+and exits 0. Overall completion rises from 70.5359% to 74.7509%, while mean
+completed-trip time falls from 59.54 to 54.35 minutes. On 515,196 identical
+trip keys completed in both runs, mean time falls by 7.10%. The improvement is
+material but remains below the 82.0637% teleported-Taxi retained-stuck control,
+so it does not by itself close the physical-fleet completion gap.
 
 The intended formal run executes QSim iterations 0--49 with 16 global/QSim
 threads. Ordinary route, mode, and activity-time innovation remains available
