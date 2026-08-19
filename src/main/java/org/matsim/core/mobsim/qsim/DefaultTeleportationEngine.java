@@ -40,6 +40,7 @@ import org.matsim.vis.snapshotwriters.TeleportationVisData;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -78,6 +79,7 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 			new PriorityQueue<>(new TeleportationEntryComparator());
 	private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData =
 			new LinkedHashMap<>();
+	private final Object teleportationStateLock = new Object();
 	private InternalInterface internalInterface;
 	private final Scenario scenario;
 	private final EventsManager eventsManager;
@@ -110,7 +112,7 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 	}
 
 	@Override
-	public synchronized boolean handleDeparture(double now, MobsimAgent agent, Id<Link> linkId) {
+	public boolean handleDeparture(double now, MobsimAgent agent, Id<Link> linkId) {
 		Objects.requireNonNull(agent, "Teleporting MobsimAgent must not be null");
 		if (agent.getExpectedTravelTime().isUndefined()) {
 			LogManager.getLogger(this.getClass()).info("mode: {}", agent.getMode());
@@ -133,8 +135,6 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 		if (travelTime == 0 && !delayInstantTeleportationArrivals) {
 			handlePersonTeleportationArrival(agent, now);
 		} else {
-			this.teleportationList.add(new TeleportationEntry(arrivalTime, agent));
-
 			// === below here is only visualization, no dynamics ===
 			Id<Person> agentId = agent.getId();
 			Link currLink = this.scenario.getNetwork().getLinks().get(linkId);
@@ -143,17 +143,24 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo =
 					new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData.put(agentId, agentInfo);
+			synchronized (teleportationStateLock) {
+				this.teleportationList.add(new TeleportationEntry(arrivalTime, agent));
+				this.teleportationData.put(agentId, agentInfo);
+			}
 		}
 
 		return true;
 	}
 
 	@Override
-	public synchronized Collection<AgentSnapshotInfo> addAgentSnapshotInfo(
+	public Collection<AgentSnapshotInfo> addAgentSnapshotInfo(
 			Collection<AgentSnapshotInfo> snapshotList) {
 		double time = internalInterface.getMobsim().getSimTimer().getTimeOfDay();
-		for (TeleportationVisData teleportationVisData : teleportationData.values()) {
+		Collection<TeleportationVisData> visualizationSnapshot;
+		synchronized (teleportationStateLock) {
+			visualizationSnapshot = List.copyOf(teleportationData.values());
+		}
+		for (TeleportationVisData teleportationVisData : visualizationSnapshot) {
 			teleportationVisData.updatePosition(time);
 			snapshotList.add(teleportationVisData);
 		}
@@ -161,19 +168,26 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 	}
 
 	@Override
-	public synchronized void doSimStep(double time) {
+	public void doSimStep(double time) {
 		handleTeleportationArrivals(time);
 	}
 
 	private void handleTeleportationArrivals(double now) {
-		while (!teleportationList.isEmpty()) {
-			var entry = teleportationList.peek();
-			if (entry.arrivalTime() <= now) {
+		while (true) {
+			TeleportationEntry entry;
+			synchronized (teleportationStateLock) {
+				entry = teleportationList.peek();
+				if (entry == null || entry.arrivalTime() > now) {
+					return;
+				}
 				teleportationList.poll();
-				handlePersonTeleportationArrival(entry.agent(), now);
-			} else {
-				break;
 			}
+			// Never invoke QSim or event callbacks while holding our collection lock.
+			// Those callbacks can immediately arrange another teleporting departure.
+			if (entry.agent() == null) {
+				throw new IllegalStateException("Teleportation queue contains a null agent");
+			}
+			handlePersonTeleportationArrival(entry.agent(), now);
 		}
 	}
 
@@ -183,23 +197,29 @@ public final class DefaultTeleportationEngine implements TeleportationEngine {
 		this.eventsManager.processEvent(
 				new TeleportationArrivalEvent(now, agent.getId(), distance, agent.getMode()));
 		agent.endLegAndComputeNextState(now);
-		this.teleportationData.remove(agent.getId());
+		synchronized (teleportationStateLock) {
+			this.teleportationData.remove(agent.getId());
+		}
 		internalInterface.arrangeNextAgentState(agent);
 	}
 
 	@Override
-	public synchronized void afterMobsim() {
+	public void afterMobsim() {
 		double now = internalInterface.getMobsim().getSimTimer().getTimeOfDay();
-		for (var entry : teleportationList) {
+		Collection<TeleportationEntry> remainingEntries;
+		synchronized (teleportationStateLock) {
+			remainingEntries = List.copyOf(teleportationList);
+			teleportationList.clear();
+		}
+		for (var entry : remainingEntries) {
 			MobsimAgent agent = entry.agent();
 			eventsManager.processEvent(
 					new PersonStuckEvent(now, agent.getId(), agent.getDestinationLinkId(), agent.getMode()));
 		}
-		teleportationList.clear();
 	}
 
 	@Override
-	public synchronized void setInternalInterface(InternalInterface internalInterface) {
+	public void setInternalInterface(InternalInterface internalInterface) {
 		this.internalInterface = internalInterface;
 	}
 

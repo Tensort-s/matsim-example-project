@@ -19,8 +19,10 @@ import org.matsim.core.utils.misc.OptionalTime;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.Queue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,7 +64,65 @@ class DefaultTeleportationEngineConcurrencyTest {
 		assertEquals(threadCount * departuresPerThread, queue.size());
 	}
 
+	@Test
+	void arrivalCallbacksDoNotHoldTheTeleportationCollectionLock() throws Exception {
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		Id<Link> departureLinkId = Id.createLinkId("departure");
+		Id<Link> destinationLinkId = Id.createLinkId("destination");
+		addLinks(scenario.getNetwork(), departureLinkId, destinationLinkId);
+		DefaultTeleportationEngine engine = new DefaultTeleportationEngine(
+				scenario, EventsUtils.createEventsManager(), false, true);
+		engine.setInternalInterface((InternalInterface) Proxy.newProxyInstance(
+				InternalInterface.class.getClassLoader(),
+				new Class<?>[] {InternalInterface.class},
+				(proxy, method, args) -> null));
+
+		Object qsimStateLock = new Object();
+		CountDownLatch qsimStateLockHeld = new CountDownLatch(1);
+		CountDownLatch arrivalCallbackEntered = new CountDownLatch(1);
+		MobsimAgent arrivingAgent = agent("arriving", destinationLinkId, () -> {
+			arrivalCallbackEntered.countDown();
+			synchronized (qsimStateLock) {
+				// Models QSim.arrangeNextAgentState acquiring its own state monitor.
+			}
+		});
+		engine.handleDeparture(0, arrivingAgent, departureLinkId);
+
+		ExecutorService executor = Executors.newFixedThreadPool(2, runnable -> {
+			Thread thread = new Thread(runnable);
+			thread.setDaemon(true);
+			return thread;
+		});
+		Future<?> departure = executor.submit(() -> {
+			synchronized (qsimStateLock) {
+				qsimStateLockHeld.countDown();
+				assertTrue(arrivalCallbackEntered.await(5, TimeUnit.SECONDS));
+				engine.handleDeparture(
+						1,
+						agent("departing", destinationLinkId),
+						departureLinkId);
+			}
+			return null;
+		});
+		assertTrue(qsimStateLockHeld.await(5, TimeUnit.SECONDS));
+		Future<?> arrivals = executor.submit(() -> {
+			engine.doSimStep(61);
+			return null;
+		});
+
+		departure.get(5, TimeUnit.SECONDS);
+		arrivals.get(5, TimeUnit.SECONDS);
+		executor.shutdownNow();
+	}
+
 	private static MobsimAgent agent(String id, Id<Link> destinationLinkId) {
+		return agent(id, destinationLinkId, () -> { });
+	}
+
+	private static MobsimAgent agent(
+			String id,
+			Id<Link> destinationLinkId,
+			Runnable arrivalCallback) {
 		return (MobsimAgent) Proxy.newProxyInstance(
 				MobsimAgent.class.getClassLoader(),
 				new Class<?>[] {MobsimAgent.class},
@@ -72,6 +132,10 @@ class DefaultTeleportationEngineConcurrencyTest {
 					case "getExpectedTravelDistance" -> 1_000.0;
 					case "getMode" -> "walk";
 					case "getDestinationLinkId" -> destinationLinkId;
+					case "notifyArrivalOnLinkByNonNetworkMode" -> {
+						arrivalCallback.run();
+						yield null;
+					}
 					case "toString" -> id;
 					case "hashCode" -> id.hashCode();
 					case "equals" -> proxy == args[0];

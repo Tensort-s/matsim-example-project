@@ -252,14 +252,26 @@ Run2 started on 2026-08-20 in new immutable directories:
 
 Its shaded JAR SHA256 is
 `6911ffcea769dde3a14aab9ffa8e9eef4fb0e7e690279d7050879c5257cd86de`.
-The project-local engine preserves MATSim 2026.0 behavior while serializing
-all access to the two mutable teleportation collections. The Hong Kong CLI
-also installs a fatal-main-thread handler which emits
-`FATAL_HK_MAIN_THREAD` and exits the JVM with code 1, so a monitor thread can
-no longer hide a dead simulation. The revised heartbeat treats fatal markers
-or nonzero exit as an interruption even if a matching Java PID remains, and
-only terminates such a residual after inspecting its thread state. This is an
-active sensitivity and is not an adopted production run.
+Run2 completed iterations 0--4 and the iteration-5 protected joint selection,
+then stalled near QSim 15:00. A saved `jcmd Thread.print -l` reported one
+Java-level deadlock: the main thread held the teleportation-engine monitor
+while waiting for the QSim state monitor, and an events worker held the QSim
+state monitor while entering the teleportation engine. The coarse
+whole-method synchronization added after run1 had made the two mutable
+collections safe but inverted these locks. The exact run2 JVM was terminated
+after its PID, command, process tree, and deadlock were verified; the immutable
+run is retained with exit code 143 and the thread dump at
+`heartbeat_thread_dump_20260820T0249.txt`.
+
+Run3 started in new immutable `payload3`, `release3`, and `run3` directories.
+Its shaded JAR SHA256 is
+`fb9457792d15efe98e695522755c50888dda1fa9eed85e1923d1ba42f3728897`.
+The engine now protects only its internal queue and map with a dedicated lock,
+and releases that lock before emitting events or calling QSim callbacks. A
+direct lock-inversion regression, the focused Taxi tests, and the complete
+181-test Maven suite pass. The heartbeat also treats an explicit JVM deadlock
+as an interruption even when the PID remains alive. Run3 is the active
+sensitivity and is not an adopted production run.
 
 ## Limitations and next gate
 

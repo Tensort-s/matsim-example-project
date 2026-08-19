@@ -853,17 +853,21 @@ concurrent access corrupted MATSim 2026.0's plain teleportation
 `PriorityQueue`. Its main thread exited, but a non-daemon memory observer left
 the Java PID alive and exposed a process-only heartbeat blind spot. The
 residual process was terminated after PID/command/thread-state verification
-and the immutable failed directory was preserved. The current active 50-QSim
-sensitivity is
-`...candidate5b_signal_pttime1_formal50_run2`: Candidate5B road supply,
+and the immutable failed directory was preserved. Run2 then completed
+iterations 0--4 and reached the iteration-5 QSim before a `jcmd` thread dump
+confirmed a Java-level lock inversion between the teleportation engine and
+QSim state monitor. Its exact process was terminated after evidence capture;
+run2 is preserved with exit code 143. The current active 50-QSim sensitivity
+is `...candidate5b_signal_pttime1_formal50_run3`: Candidate5B road supply,
 Candidate11 TOD signals, calibrated/day-2 PT, 15,500 physical Taxi vehicles at
 PCU 0.05, a 30:00 horizon, and retained stuck vehicles. It uses 16 threads,
 ends innovation after iteration 34, and applies protected joint selection at
-5, 15, 25, and 35. Run2 uses JAR SHA256
-`6911ffcea769dde3a14aab9ffa8e9eef4fb0e7e690279d7050879c5257cd86de`,
-which serializes teleportation-engine shared state and forces a nonzero JVM
-exit after an uncaught main-thread failure. A revised 30-minute Heartbeat
-checks fatal log state independently of PID liveness and can diagnose and
+5, 15, 25, and 35. Run3 uses JAR SHA256
+`fb9457792d15efe98e695522755c50888dda1fa9eed85e1923d1ba42f3728897`.
+Its teleportation collections use a narrow dedicated lock which is always
+released before events or QSim callbacks; both a direct lock-inversion test
+and all 181 Maven tests pass. The revised 30-minute Heartbeat checks fatal log
+state and explicit JVM deadlocks independently of PID liveness, and can
 terminate only a verified residual JVM before an immutable restart. It is not
 yet a final result; the candidate remains outside current production.
 
