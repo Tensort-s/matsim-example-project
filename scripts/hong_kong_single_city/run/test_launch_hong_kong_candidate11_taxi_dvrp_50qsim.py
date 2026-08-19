@@ -10,6 +10,7 @@ from launch_hong_kong_candidate11_taxi_dvrp_50qsim import (
     RUN_NAME_PREFIX,
     RUN_PROFILES,
     audit_population,
+    audit_road_supply_registry,
     build_command,
     count_fleet_vehicles,
     count_population_persons,
@@ -60,6 +61,11 @@ TEMPLATE = """<config>
     </parameterset>
   </module>
   <module name="subtourModeChoice"/>
+  <module name="transit">
+    <param name="useTransit" value="true"/>
+    <param name="transitScheduleFile" value="schedule.xml.gz"/>
+    <param name="vehiclesFile" value="vehicles.xml.gz"/>
+  </module>
   <module name="signalsystems"><param name="useSignalsystems" value="true"/></module>
 </config>
 """
@@ -135,6 +141,15 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         ):
             self.assertEqual("10", controller[name])
         self.assertEqual("true", values(root, "scoring")["writeExperiencedPlans"])
+
+        candidate5b = RUN_PROFILES["formal-50-candidate5b"]
+        self.assertEqual((0, 49), (
+            candidate5b.first_iteration, candidate5b.last_iteration,
+        ))
+        self.assertTrue(candidate5b.traffic_signals)
+        self.assertTrue(candidate5b.requires_network_override)
+        self.assertFalse(candidate5b.fixed_selected_plans)
+        self.assertEqual(44_000, candidate5b.expected_initial_taxi_legs)
 
         replanning = root.find("./module[@name='replanning']")
         assert replanning is not None
@@ -251,6 +266,100 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             item.startswith("--household-joint-selection-iterations=")
             for item in command
         ))
+
+    def test_candidate5b_signal_profile_changes_only_signal_runtime_contract(self) -> None:
+        signal = RUN_PROFILES["signal-candidate5b-original-it0"]
+        no_signal = RUN_PROFILES["nosignal-run7-original-it0"]
+        comparable = (
+            "first_iteration", "last_iteration", "capacity_factor",
+            "expected_fleet_size", "expected_population_size", "taxi_execution",
+            "fixed_selected_plans", "requires_network_override",
+            "expected_initial_taxi_legs", "stuck_time_s", "remove_stuck_vehicles",
+        )
+        self.assertEqual(
+            tuple(getattr(signal, name) for name in comparable),
+            tuple(getattr(no_signal, name) for name in comparable),
+        )
+        self.assertTrue(signal.traffic_signals)
+        self.assertFalse(no_signal.traffic_signals)
+
+        self.temporary = tempfile.TemporaryDirectory()
+        temp_root = Path(self.temporary.name)
+        template = temp_root / "template.xml"
+        destination = temp_root / "derived" / "config.xml"
+        template.write_text(TEMPLATE, encoding="utf-8")
+        derive_config(
+            template, destination, temp_root / "run", signal,
+            network_input=Path("/mnt/DiskM/by/example/candidate5b.xml.gz"),
+        )
+        root = ET.parse(destination).getroot()
+        self.assertEqual("true", values(root, "signalsystems")["useSignalsystems"])
+        self.assertEqual("false", values(root, "qsim")["usingFastCapacityUpdate"])
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-12.0,
+            profile=signal, xms="16g", xmx="96g",
+        )
+        self.assertIn("--traffic-signals", command)
+        self.assertIn("--clear-pt-routes", command)
+
+    def test_transit_schedule_and_vehicle_overrides_are_atomic(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            template = root / "template.xml"
+            destination = root / "derived" / "config.xml"
+            template.write_text(TEMPLATE, encoding="utf-8")
+            schedule = Path("/mnt/DiskM/by/example/transitSchedule_day2.xml.gz")
+            vehicles = Path("/mnt/DiskM/by/example/transitVehicles_day2.xml.gz")
+            derive_config(
+                template,
+                destination,
+                root / "run",
+                RUN_PROFILES["nosignal-run7-original-it0"],
+                transit_schedule_input=schedule,
+                transit_vehicles_input=vehicles,
+            )
+            derived = ET.parse(destination).getroot()
+            self.assertEqual(str(schedule), values(derived, "transit")["transitScheduleFile"])
+            self.assertEqual(str(vehicles), values(derived, "transit")["vehiclesFile"])
+
+            with self.assertRaisesRegex(ValueError, "supplied together"):
+                derive_config(
+                    template,
+                    root / "other" / "config.xml",
+                    root / "run2",
+                    RUN_PROFILES["nosignal-run7-original-it0"],
+                    transit_schedule_input=schedule,
+                )
+
+    def test_explicit_storage_registry_is_an_opt_in_physical_taxi_flag(self) -> None:
+        registry = Path("/release/input/road_supply_parameters_v2.csv")
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-12.0,
+            profile=RUN_PROFILES["nosignal-run7-original-it0"],
+            xms="16g", xmx="96g", road_supply_registry=registry,
+        )
+        self.assertIn(f"--road-supply-registry={registry}", command)
+
+    def test_road_supply_registry_audit_accepts_dynamic_override_count(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "road_supply_parameters_v3.csv"
+            path.write_text(
+                "link_id,storage_capacity_override,flow_capacity_override\n"
+                "a,true,true\n"
+                "b,true,false\n"
+                "c,false,false\n",
+                encoding="utf-8",
+            )
+            audit = audit_road_supply_registry(path)
+            self.assertEqual(3, audit.road_links)
+            self.assertEqual(2, audit.storage_overrides)
+            self.assertEqual(1, audit.flow_overrides)
 
     def test_teleported_control_matches_run7_without_physical_taxi_flags(self) -> None:
         profile = RUN_PROFILES["nosignal-run7-teleported-control-it0"]

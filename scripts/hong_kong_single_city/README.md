@@ -858,6 +858,140 @@ The builder changes only capacities on physical road links and writes a
 link-level CSV plus JSON summary. See
 `docs/HONG_KONG_TPDM_V4_THREE_CANDIDATE_NETWORK.md`.
 
+The first bounded road-continuity builder is retained only to reproduce the
+superseded Candidate1 length/lane sensitivity:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_road_continuity_candidate.py `
+  --input-network <network_tpdm_v4_three_candidate.xml.gz> `
+  --hotspot-links <hotspot_links.csv> `
+  --hotspot-neighbors <hotspot_neighbors.csv> `
+  --output-dir <new-immutable-directory>
+```
+
+Do not adopt that output: changing `length` also changes physical distance and
+free-flow travel time.
+
+Build Candidate2 from the same frozen TPDM3 runtime audit. It keeps the network
+byte-identical and writes a full road-supply registry plus direct QSim storage
+overrides for exactly 114 unique downstream links:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_explicit_storage_candidate.py `
+  --input-network <network_tpdm_v4_three_candidate.xml.gz> `
+  --hotspot-links <hotspot_links.csv> `
+  --hotspot-neighbors <hotspot_neighbors.csv> `
+  --output-dir <new-immutable-directory>
+```
+
+For each selected link the direct capacity is the maximum of continuity lanes
+`x` PCU, physical/default storage, the per-step buffer floor, and the
+free-flow-flow floor. Flow capacity remains the TPDM3 value and is independently
+switchable. Enable the runtime layer with
+`--road-supply-registry=<road_supply_parameters_v2.csv>` together with physical
+Taxi PCU 0.05. Omitting the switch restores standard MATSim storage. See
+`docs/HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`.
+
+To build Candidate3, which gives every physical road link a storage floor of
+at least its physical lane count while preserving the 114 frozen continuity
+floors, add:
+
+```text
+--storage-scope all-roads --expected-road-links 86417
+```
+
+Candidate3 writes `road_supply_parameters_v3.csv`. It changes QSim storage
+only; link lengths, lane counts, free speeds, topology, IDs, modes, and flow
+capacities remain the TPDM3 values. The matched no-signal physical-Taxi PCU
+0.05 iteration-0 smoke exits 0 and reaches 76.3236% completion, compared with
+75.6400% for the 114-link Candidate2 and 74.7509% for TPDM3 default storage.
+
+Build the bounded Candidate4 full connector-chain flow/storage sensitivity
+from Candidate3 and its 3,134-link blocked-inflow audit:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_connector_chain_supply_candidate.py `
+  --input-network <network_tpdm_v4_three_candidate.xml.gz> `
+  --candidate3-registry <road_supply_parameters_v3.csv> `
+  --blocked-link-audit <blocked_link_supply_runtime_audit.csv> `
+  --previous-relationships <continuity_candidate_relationships_v3.csv> `
+  --route-directions <hybrid_capacity_route_directions.csv> `
+  --output-dir <new-immutable-directory>
+```
+
+A short lane-drop chain is selected only when every impaired same-street
+segment can be traced to a recovered cross-section. Ambiguous or truncated
+chains are rejected atomically. Accepted segments receive both a QSim-only
+TPDM Volume 4 flow floor based on the upstream continuity lanes and storage
+recalculated with that flow. The physical network remains byte-identical;
+runtime requested/actual flow and storage are audited separately. See
+`docs/HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`.
+
+Build Candidate5 Stage A when the bounded chain intervention is insufficient:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_aggressive_road_supply_candidate.py `
+  --stage A `
+  --input-network <candidate4-physical-network.xml.gz> `
+  --baseline-registry <road_supply_parameters_v4.csv> `
+  --source-registry <road_supply_parameters_v4.csv> `
+  --runtime-supply-audit <candidate4-explicit-storage-audit.csv> `
+  --blocked-link-audit <candidate3-blocked-link-audit.csv> `
+  --output-dir <new-immutable-directory>
+```
+
+Stage A applies a finite 30-second QSim-flow storage buffer to all 3,134
+blocked links and expands every representation-review seed through nearby
+short or lane-deficient branches/cycles. It writes an independent
+`storage_floor_pcu`, QSim-only flow overrides, and component membership while
+copying the physical network byte-for-byte. Stages B/C consume the previous
+stage registry and runtime audit, but should be run only if the preceding
+stage requires further sensitivity testing. The accepted Stage A smoke reaches
+89.6187% completion and reduces blocked seconds 67.5237% versus Candidate4.
+A subsequent cause audit nevertheless identified 552 links blocked for at
+least six hours, so Stage B was run as an explicitly more aggressive road-only
+sensitivity:
+
+```powershell
+F:\Matsim\matsim-example-project\.venv_geo311\Scripts\python.exe `
+  .\scripts\hong_kong_single_city\transit_supply\build_hong_kong_aggressive_road_supply_candidate.py `
+  --stage B `
+  --input-network <candidate5a-physical-network.xml.gz> `
+  --baseline-registry <road_supply_parameters_v4.csv> `
+  --source-registry <road_supply_parameters_v5a.csv> `
+  --runtime-supply-audit <candidate5a-explicit-storage-audit.csv> `
+  --blocked-link-audit <candidate3-blocked-link-audit.csv> `
+  --output-dir <new-immutable-directory>
+```
+
+Stage B merges overlapping severe **core** chains before adding a one-link
+entry/exit boundary layer, so shared boundaries cannot merge unrelated
+corridors. It applies the flow and 60-second storage floors to every link in
+the rebuilt chain, not only the severe seed. This remains an opt-in
+sensitivity; see
+`docs/HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`.
+
+The corrected Candidate5B smoke reaches 94.8452% completion and cuts blocked
+seconds 96.1449% versus Candidate5A. It passes every road gate, but the
+combined gate remains false because PT passengers waiting before first
+boarding fall only 18.55% instead of 50%. Do not proceed automatically to
+Stage C: separate experienced PT arrival timing and second-day service first.
+
+That separation is implemented by
+`transit_supply/build_hong_kong_experienced_pt_timetable_candidate.py`.
+It preserves original PT identifiers, fits a route-stop delay shape and
+smoothed 15-minute route shift from a completed frozen events file, and wraps
+00:00--06:00 departures into 24:00--30:00 with deterministic `__day2`
+departure/vehicle IDs. Supply overrides are passed atomically with
+`--transit-schedule-input` and `--transit-vehicles-input`. The matched
+Candidate5B smoke reaches 96.3699% completion and reduces combined unresolved
+PT states by 28.97%; it remains a non-production sensitivity documented in
+`docs/HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.
+
 ## Traffic-signal location registry
 
 Download the Transport Department Traffic Aids traffic-light layers and build
@@ -1110,3 +1244,21 @@ Outputs are under `data/transport_costs/hongkong/pt_fare_v1/`. These scripts
 are offline read-only consumers of the adopted MATSim inputs. They do not
 modify plans, config, scoring, network, transit schedule, vehicles, or Java
 runners. See `docs/HONG_KONG_PT_FARE_MODEL.md`.
+
+## Candidate5B traffic-signal A/B
+
+Use the `signal-candidate5b-original-it0` launcher profile and
+`run/audit_hong_kong_candidate5b_signal_ab.py`. The frozen A/B retains the same
+original plans, PT supply, Candidate5B physical network/registry, Taxi fleet,
+and Taxi PCU 0.05, and changes only the Candidate11 TOD signal switch. The
+corrected signal run exits zero, raises completion from 94.8452% to 97.1698%,
+and adds 1.835 minutes to trips completed in both arms. See
+`docs/HONG_KONG_CANDIDATE5B_SIGNAL_AB.md`; it is not production-adopted.
+
+Holding those signals fixed and supplying the experienced-time/day-2 PT files
+atomically rebuilds ordinary PT itineraries through `--clear-pt-routes`.
+The matched iteration-0 follow-up reaches 98.4483% completion, makes common
+completed trips 1.809 minutes faster, and cuts combined unresolved PT
+passenger states 45.54%. It remains non-production because regular PT vehicle
+stuck events at 30:00 rise from 9 to 850; see
+`docs/HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.

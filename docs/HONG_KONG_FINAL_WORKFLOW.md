@@ -234,6 +234,68 @@ production supply. A no-signal, physical-Taxi PCU-0.05 iteration-0 smoke raises
 completion from 70.5359% to 74.7509% against the otherwise matched old-network
 run, but multi-iteration and signal-enabled validation remain open.
 
+The subsequent bounded road-continuity candidate is documented in
+`docs/HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`. It is generated from that
+TPDM3 smoke's hotspot audit for 114 unique downstream links and 116 frozen
+same-street dominant relationships. The adopted design for the experiment is
+Candidate2: physical network bytes and all flow capacities remain TPDM3, while
+an optional QSim registry directly overrides storage on only those 114 links.
+Candidate1's length/lane change is superseded because it altered physical
+distance and free-flow time. Candidate2's matched no-signal physical-Taxi
+PCU-0.05 iteration-0 smoke exits 0 and raises completion from 74.7509% to
+75.6400%; it has not replaced production supply.
+Candidate3 is the broader, still non-adopted sensitivity: it applies an
+independent lower bound of at least one PCU per physical lane to all 86,417
+road links, while retaining the frozen continuity `x` on the 114 targets.
+The TPDM3 physical network and all flow capacities remain byte-for-byte and
+numerically unchanged. Its matched smoke is recorded in the dedicated road
+continuity candidate document: exit 0, 76.3236% completion versus 75.6400% for
+Candidate2 and 74.7509% for TPDM3 default storage. It is technically feasible
+but has not replaced the adopted production supply.
+Candidate4 is a bounded response to the Candidate3 blocked-inflow audit. A
+short same-street lane-drop connector is changed only if the entire impaired
+chain can be followed to a recovered cross-section; otherwise the seed is
+rejected and no chain segment is selected. The 90-seed build accepts 39
+complete chains covering 57 links and rejects 51 atomically. All accepted
+links receive both a QSim-only TPDM Volume 4 flow floor and storage recomputed
+with that flow, while the scenario network remains byte-identical. The
+retrospective audit identifies eight Candidate2/3 chains that had stopped one
+segment early and now includes each missing segment. Candidate4 is an
+optional, non-adopted sensitivity and does not change the production supply.
+Its matched smoke exits 0 and reaches 76.4148% completion, only 0.0912
+percentage points above Candidate3. Requested/actual storage and flow match,
+but common completed trips are 0.704 minutes slower and network-wide blocked
+seconds rise 0.5412%; it therefore passes technical rather than performance
+adoption.
+Candidate5A is a more aggressive QSim-only response. It retains the identical
+physical network, gives all 3,134 blocked links a finite 30-second flow buffer,
+and expands 365 representation-review seeds through local short/deficient
+branches and cycles. The resulting 231 components cover 1,609 links. Its
+matched frozen iteration-0 smoke exits 0 and reaches 89.6187% completion;
+blocked seconds fall 67.5237% versus Candidate4 and common completed trips are
+9.609 minutes faster. The initial Stage A gate passes, but a subsequent cause
+audit identifies 552 residual links blocked for at least six hours.
+Candidate5B therefore rebuilds complete local chains around those links,
+merging core chains before attaching a non-merging entry/exit boundary layer.
+Its corrected build has 14 components and 2,507 unique links, with Stage B
+flow and 60-second storage floors applied to the complete chain. The matched
+smoke exits 0, reaches 94.8452% completion, cuts blocked seconds 96.1449%
+versus Candidate5A, and is 3.267 minutes faster on common completed trips.
+All road gates pass. The combined gate remains false only because PT waiting
+before first boarding falls 18.55% rather than the required 50%; Candidate5C
+is not run because further road expansion would confound the experienced PT
+timing/next-day-service problem. Both stages remain non-adopted sensitivities.
+The separate experienced-PT candidate now fits a route-stop delay shape plus
+smoothed 15-minute route shift from Candidate5B events, preserves every
+original line/route/stop ID, and adds 3,322 deterministic `__day2` departures
+and vehicles for 24:00--30:00. Its matched iteration-0 smoke exits 0 and raises
+completion to 96.3699%; waiting before first boarding falls 38.05% and the
+combined waiting/onboard unresolved PT state falls 28.97%. All day-2 drivers
+execute, while road blocked seconds fall 1.09%. This passes the corrected
+smoke gate but remains non-production pending repeat-seed and short
+multi-iteration stability checks; see
+`HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.
+
 ### 8. MATSim agents and plans
 
 The v1 directory is the compulsory work, school, escort, and border baseline.
@@ -1029,3 +1091,19 @@ uses payload32 JAR SHA256
 `412a2445f6c4818f2dbe0a8629905f3fa004fd467bc578e021d01c570ba5515e`.
 No current production path, `current_final_run`, or adopted Candidate11 status
 is changed by this candidate metadata.
+
+## Candidate5B signal A/B (opt-in)
+
+The Candidate5B signal A/B deliberately retains the original transit schedule
+and identical selected plans. The corrected signal arm executes all 1,445
+Candidate11 systems and 3,243 groups while retaining all 86,417 explicit
+road-supply queues. Completion increases from 94.8452% to 97.1698%, but common
+completed trips take 1.835 minutes longer. It is an iteration-0 sensitivity,
+not an adopted production change; see `HONG_KONG_CANDIDATE5B_SIGNAL_AB.md`.
+The subsequent fixed-signal experienced-PT/day-2 test rebuilds ordinary PT
+itineraries without changing activity times or signal XML. Completion reaches
+98.4483%, common completed trips are 1.809 minutes faster, and combined
+unresolved PT passenger states fall 45.54% relative to the original-PT signal
+arm. Because regular PT vehicle stuck events at 30:00 rise from 9 to 850, this
+also remains an opt-in sensitivity pending vehicle-block/horizon attribution;
+see `HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.

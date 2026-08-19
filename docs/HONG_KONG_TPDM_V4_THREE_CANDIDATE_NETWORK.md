@@ -143,6 +143,17 @@ the 82.0637% same-JAR teleported-Taxi retained-stuck control. It therefore
 remains a tested sensitivity candidate rather than an adopted production
 network.
 
+The runtime hotspot audit from this smoke subsequently produced the separate
+bounded road-continuity candidate documented in
+`HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`. Candidate2 keeps this TPDM3
+network byte-identical and applies direct QSim storage capacities to 114 unique
+links selected by 116 same-street dominant relationships. Its lower bound is
+the continuity lane count `x` PCU, subject to physical/default and queue-safety
+floors. Flow capacity is not changed. The earlier virtual-length Candidate1 is
+superseded. Candidate2's matched smoke exits 0 and raises completion from
+74.7509% to 75.6400%, but it remains a non-adopted sensitivity rather than
+production supply.
+
 ## Reproduction
 
 ```powershell

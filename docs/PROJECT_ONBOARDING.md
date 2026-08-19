@@ -612,6 +612,69 @@ The separate TPDM Volume 4 three-candidate network experiment is documented in
 two-candidate maximum and applies `max(existing, TPDM)` only to physical road
 links. It is a non-adopted capacity sensitivity candidate, not the current
 production network.
+The bounded downstream road-continuity experiment derived from that TPDM3
+smoke is documented in `docs/HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`.
+It freezes 116 same-street dominant relationships (114 unique downstream
+links). Candidate1's virtual-length method is retained only as superseded
+provenance. Candidate2 preserves the TPDM3 network byte-for-byte and supplies
+114 direct QSim storage capacities through a full road-supply registry, with
+`x` continuity lanes as the PCU lower bound and explicit queue-safety floors.
+Flow capacity remains independent and unchanged. Candidate2 remains a
+non-adopted sensitivity. Its matched no-signal, physical-Taxi PCU-0.05 smoke
+completed with exit code 0: completion rises from 74.7509% to 75.6400%, and
+the 552,044 trip IDs completed in both cases are 1.210 minutes faster on
+average. See the candidate document for the completed-set composition effect
+and per-link storage audit.
+Candidate3 extends the same explicit-storage lower-bound formula to all 86,417
+physical road links: the 114 continuity targets retain their frozen upstream
+lane floor, while every other link uses its physical lane count as `x`.
+Physical network bytes and every flow capacity remain unchanged. Candidate3
+increases effective storage by 18.1603% relative to Candidate2. Its matched
+iteration-0 smoke exits 0 and raises completion from 75.6400% to 76.3236%; the
+558,734 trips completed in both versions are 2.352 minutes faster on average.
+It passes technical acceptance but remains a non-adopted sensitivity pending
+calibration and multi-iteration validation.
+Candidate4 responds to the Candidate3 blocked-inflow audit without changing
+the physical network. It applies an all-or-nothing full-chain rule to short,
+same-street lane-drop connectors and gives only complete, unambiguous chains
+both a QSim-only TPDM Volume 4 flow floor and storage recalculated from that
+flow. Of 90 seeds, 39 complete chains select 57 unique link segments and 51
+ambiguous chains are rejected with zero partial selection. A retrospective
+audit finds and completes all eight truncated chains in the prior candidate,
+including `road_104307_0_r -> road_104308_0_f`. The physical network SHA stays
+`2cc70f...7979`. Its matched smoke exits 0 and raises completion only from
+76.3236% to 76.4148% versus Candidate3; common completed trips are 0.704
+minutes slower and network-wide blocked seconds rise 0.5412%. Candidate4
+passes structural/runtime QA but remains non-adopted because the performance
+case is mixed.
+Candidate5A is the deliberately aggressive follow-up. It gives all 3,134
+blocked links a finite 30-second flow buffer and expands all 365
+representation-review seeds across local short/deficient connector branches
+and cycles. The 365 seeds merge to 231 components covering 1,609 links; 834
+links gain QSim flow relative to Candidate4 and 3,656 gain storage. The
+physical network remains byte-identical. Its matched iteration-0 smoke exits
+0, raises completion to 89.6187%, reduces all-link blocked seconds by 67.5237%
+versus Candidate4, and makes the 566,742 common completed trips 9.609 minutes
+faster. Stage A passes its initial gate. A later cause audit nevertheless
+found 552 residual links blocked for at least six hours. At the user's request
+Candidate5B rebuilds their complete
+local core chains before attaching a non-merging entry/exit boundary layer.
+The corrected build has 14 components covering 2,507 unique links and applies
+both the Stage B flow target and 60-second storage floor across each complete
+chain. Its matched smoke exits 0, reaches 94.8452% completion, and reduces
+blocked seconds 96.1449% versus Candidate5A. The road gates pass, but the
+combined gate does not: PT passengers waiting before first boarding fall only
+18.55%, showing that the remaining bottleneck is experienced PT timing and
+next-day service rather than road supply. Candidate5C is not run. Candidate5A
+and Candidate5B remain opt-in, non-production sensitivities; see
+`HONG_KONG_ROAD_CONTINUITY_116_CANDIDATE.md`.
+The follow-up experienced-PT/day-2 candidate preserves all original
+line/route/stop IDs, calibrates route-stop and 15-minute timing from the
+Candidate5B frozen events, and adds 3,322 departures for 24:00--30:00. Its
+matched smoke exits 0, raises completion from 94.8452% to 96.3699%, and cuts
+combined unresolved PT states by 28.97%. It passes the smoke gate but is not
+adopted without repeat-seed and multi-iteration validation; see
+`HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.
 The v1 demand build created a route-specific stop-link schedule copy under
 `data/matsim_agents/hongkong/typical_weekday_5pct_v1/`; v2 uses the active
 Ferry Core v1 cap010 supply instead. Representative vehicle
@@ -784,7 +847,42 @@ congestion gate and no TPDM/lower-PCU candidate is activated. Formal run3
 completed iterations 0--4, then exposed a legitimate zero-distance Taxi route
 returning no Taxi leg during the QSim-5 protected selection. The selector now
 marks that Taxi alternative unavailable instead of dereferencing an empty
-result. Formal run4 is active under `...formal50_run4` with a 30-minute
-Heartbeat; it is not yet a
-final result. The candidate remains outside current production, and all failed
-server attempts remain immutable provenance.
+result. Formal run4 is a historical pre-Candidate5B attempt. Candidate5B
+formal run1 completed iterations 0--8, then failed in iteration 9 when
+concurrent access corrupted MATSim 2026.0's plain teleportation
+`PriorityQueue`. Its main thread exited, but a non-daemon memory observer left
+the Java PID alive and exposed a process-only heartbeat blind spot. The
+residual process was terminated after PID/command/thread-state verification
+and the immutable failed directory was preserved. The current active 50-QSim
+sensitivity is
+`...candidate5b_signal_pttime1_formal50_run2`: Candidate5B road supply,
+Candidate11 TOD signals, calibrated/day-2 PT, 15,500 physical Taxi vehicles at
+PCU 0.05, a 30:00 horizon, and retained stuck vehicles. It uses 16 threads,
+ends innovation after iteration 34, and applies protected joint selection at
+5, 15, 25, and 35. Run2 uses JAR SHA256
+`6911ffcea769dde3a14aab9ffa8e9eef4fb0e7e690279d7050879c5257cd86de`,
+which serializes teleportation-engine shared state and forces a nonzero JVM
+exit after an uncaught main-thread failure. A revised 30-minute Heartbeat
+checks fatal log state independently of PID liveness and can diagnose and
+terminate only a verified residual JVM before an immutable restart. It is not
+yet a final result; the candidate remains outside current production.
+
+## Candidate5B signal A/B (non-production)
+
+The matched Candidate5B signal A/B keeps the original plans and PT supply,
+adds only Candidate11 safe-boundary TOD signals, and exits zero after a
+combined signals-plus-explicit-road-supply factory repair. Completion rises
+from 94.8452% to 97.1698% (+17,286 trips), while the 704,685 trips completed in
+both arms take 1.835 minutes longer on average. Signals cut stuck states and
+flow-override-link blocking but create bounded queues on more approaches. See
+`HONG_KONG_CANDIDATE5B_SIGNAL_AB.md`.
+With those signals held fixed, the experienced PT/day-2 follow-up rebuilds
+ordinary PT itineraries and raises completion again to 98.4483%; common trips
+become 1.809 minutes faster and unresolved PT passenger states fall 45.54%
+relative to the original-PT signal arm. The follow-up schedule attribution
+shows that all 850 regular-PT road-state aborts occur exactly at 30:00: 843 are
+day-2 vehicles and 840 of those are scheduled to terminate after the horizon,
+while original-service road aborts fall from 9 to 7. They are reported as
+horizon censoring rather than pre-horizon road stuck; the result remains
+non-production pending the active multi-iteration sensitivity. See
+`HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.

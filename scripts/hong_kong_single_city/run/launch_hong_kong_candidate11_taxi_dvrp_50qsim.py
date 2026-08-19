@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import gzip
@@ -48,6 +49,12 @@ class RunProfile:
 
 RUN_PROFILES = {
     "formal-50": RunProfile(0, 49, 0.1, 15_500, 385_820),
+    "formal-50-candidate5b": RunProfile(
+        0, 49, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=False,
+        traffic_signals=True, requires_network_override=True,
+        expected_initial_taxi_legs=44_000,
+    ),
     "smoke-0p5": RunProfile(
         0, 0, 0.01, 1_550, 38_582,
         taxi_execution="dvrp", requires_plans_override=True, fixed_selected_plans=True,
@@ -70,6 +77,12 @@ RUN_PROFILES = {
         0, 0, 0.1, 15_500, 385_820,
         taxi_execution="dvrp", fixed_selected_plans=False,
         traffic_signals=False, requires_network_override=True,
+        expected_initial_taxi_legs=44_000,
+    ),
+    "signal-candidate5b-original-it0": RunProfile(
+        0, 0, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=False,
+        traffic_signals=True, requires_network_override=True,
         expected_initial_taxi_legs=44_000,
     ),
     "nosignal-run7-teleported-control-it0": RunProfile(
@@ -112,6 +125,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--network-input", type=Path,
         help="Override the network in the template; required by nosignal-run7-it0.",
+    )
+    parser.add_argument(
+        "--transit-schedule-input", type=Path,
+        help="Override the PT schedule; must be paired with --transit-vehicles-input.",
+    )
+    parser.add_argument(
+        "--transit-vehicles-input", type=Path,
+        help="Override PT vehicles; must be paired with --transit-schedule-input.",
+    )
+    parser.add_argument(
+        "--road-supply-registry", type=Path,
+        help=(
+            "Optional full-network explicit storage/QSim-flow registry; "
+            "requires DVRP Taxi PCU=0.05."
+        ),
     )
     parser.add_argument("--release-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
@@ -226,6 +254,8 @@ def derive_config(
     *,
     plans_input: Path | None = None,
     network_input: Path | None = None,
+    transit_schedule_input: Path | None = None,
+    transit_vehicles_input: Path | None = None,
 ) -> list[str]:
     tree = ET.parse(template)
     root = tree.getroot()
@@ -260,6 +290,8 @@ def derive_config(
     )
     if profile.taxi_execution == "dvrp":
         set_param(qsim, "simStarttimeInterpretation", "onlyUseStarttime")
+    if profile.traffic_signals:
+        set_param(qsim, "usingFastCapacityUpdate", "false")
 
     controller = module(root, "controller")
     updates = {
@@ -295,8 +327,16 @@ def derive_config(
         set_param(module(root, "plans"), "inputPlansFile", str(plans_input))
     if network_input is not None:
         set_param(module(root, "network"), "inputNetworkFile", str(network_input))
-    if not profile.traffic_signals:
-        set_param(module(root, "signalsystems"), "useSignalsystems", "false")
+    if (transit_schedule_input is None) != (transit_vehicles_input is None):
+        raise ValueError("PT schedule and vehicle overrides must be supplied together")
+    if transit_schedule_input is not None and transit_vehicles_input is not None:
+        transit = module(root, "transit")
+        set_param(transit, "transitScheduleFile", str(transit_schedule_input))
+        set_param(transit, "vehiclesFile", str(transit_vehicles_input))
+    set_param(
+        module(root, "signalsystems"), "useSignalsystems",
+        "true" if profile.traffic_signals else "false",
+    )
 
     destination.parent.mkdir(parents=True, exist_ok=False)
     with destination.open("x", encoding="utf-8", newline="\n") as handle:
@@ -382,6 +422,36 @@ def audit_population(path: Path) -> PopulationAudit:
     return PopulationAudit(persons, taxi_legs)
 
 
+@dataclass(frozen=True)
+class RoadSupplyRegistryAudit:
+    road_links: int
+    storage_overrides: int
+    flow_overrides: int
+
+
+def audit_road_supply_registry(path: Path) -> RoadSupplyRegistryAudit:
+    road_links = 0
+    storage_overrides = 0
+    flow_overrides = 0
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        required = {
+            "link_id", "storage_capacity_override", "flow_capacity_override"
+        }
+        if reader.fieldnames is None or not required.issubset(reader.fieldnames):
+            raise ValueError(f"Road-supply registry lacks required columns: {path}")
+        for row in reader:
+            road_links += 1
+            storage_overrides += row["storage_capacity_override"].lower() == "true"
+            flow_overrides += row["flow_capacity_override"].lower() == "true"
+    if road_links == 0 or storage_overrides == 0:
+        raise ValueError(
+            "Road-supply registry must contain road links and storage overrides: "
+            f"{path}"
+        )
+    return RoadSupplyRegistryAudit(road_links, storage_overrides, flow_overrides)
+
+
 def count_population_persons(path: Path) -> int:
     return audit_population(path).persons
 
@@ -415,6 +485,7 @@ def build_command(
     profile: RunProfile,
     xms: str,
     xmx: str,
+    road_supply_registry: Path | None = None,
 ) -> list[str]:
     command = [
         str(java), f"-Xms{xms}", f"-Xmx{xmx}", "-cp", str(jar),
@@ -444,6 +515,8 @@ def build_command(
             f"--taxi-dvrp-pcu={taxi_pcu:g}",
             f"--taxi-wait-utility-per-hour={taxi_wait_utility_per_hour:g}",
         ])
+        if road_supply_registry is not None:
+            command.append(f"--road-supply-registry={road_supply_registry}")
     elif profile.taxi_execution == "proxy":
         if fleet is not None:
             raise ValueError("Proxy command construction must not receive a Taxi fleet")
@@ -488,7 +561,9 @@ def main() -> int:
     if not profile.requires_network_override and args.network_input is not None:
         raise ValueError(f"--network-input is forbidden for profile {args.profile}")
     if args.profile in {
-        "formal-50", "nosignal-run7-original-it0",
+        "formal-50", "formal-50-candidate5b",
+        "nosignal-run7-original-it0",
+        "signal-candidate5b-original-it0",
         "nosignal-run7-teleported-control-it0",
         "nosignal-run7-teleported-oldstuck-it0",
     } \
@@ -506,6 +581,16 @@ def main() -> int:
         raise ValueError("Non-DVRP profiles do not accept Taxi DVRP PCU/wait overrides")
     if args.taxi_wait_utility_per_hour >= 0:
         raise ValueError("Taxi wait utility per hour must be negative")
+    if args.road_supply_registry is not None and (
+        profile.taxi_execution != "dvrp" or args.taxi_pcu != 0.05
+    ):
+        raise ValueError("--road-supply-registry requires DVRP Taxi PCU=0.05")
+    if args.road_supply_registry is not None and args.network_input is None:
+        raise ValueError("--road-supply-registry requires --network-input")
+    if (args.transit_schedule_input is None) != (args.transit_vehicles_input is None):
+        raise ValueError(
+            "--transit-schedule-input and --transit-vehicles-input must be supplied together"
+        )
 
     runtime = safe(args.runtime_input_release, exists=True)
     previous = safe(args.previous_app_release, exists=True)
@@ -514,6 +599,22 @@ def main() -> int:
     source_fleet = safe(args.taxi_fleet, exists=True) if args.taxi_fleet else None
     plans_input = safe(args.plans_input, exists=True) if args.plans_input else None
     source_network = safe(args.network_input, exists=True) if args.network_input else None
+    source_transit_schedule = (
+        safe(args.transit_schedule_input, exists=True)
+        if args.transit_schedule_input else None
+    )
+    source_transit_vehicles = (
+        safe(args.transit_vehicles_input, exists=True)
+        if args.transit_vehicles_input else None
+    )
+    source_road_supply_registry = (
+        safe(args.road_supply_registry, exists=True)
+        if args.road_supply_registry else None
+    )
+    road_supply_audit = (
+        audit_road_supply_registry(source_road_supply_registry)
+        if source_road_supply_registry is not None else None
+    )
     effective_plans = plans_input or safe(
         plans_path_from_template(template), exists=True
     )
@@ -533,6 +634,12 @@ def main() -> int:
         required_files.append(source_fleet)
     if source_network is not None:
         required_files.append(source_network)
+    if source_transit_schedule is not None:
+        required_files.append(source_transit_schedule)
+    if source_transit_vehicles is not None:
+        required_files.append(source_transit_vehicles)
+    if source_road_supply_registry is not None:
+        required_files.append(source_road_supply_registry)
     if (
         not profile.fixed_selected_plans
         and profile.taxi_execution != "teleported"
@@ -596,6 +703,21 @@ def main() -> int:
         network_suffix = ".xml.gz" if source_network.suffix.lower() == ".gz" else ".xml"
         network = release / f"input/network{network_suffix}"
         shutil.copy2(source_network, network)
+    road_supply_registry = None
+    if source_road_supply_registry is not None:
+        (release / "input").mkdir(exist_ok=True)
+        road_supply_registry = release / f"input/{source_road_supply_registry.name}"
+        shutil.copy2(source_road_supply_registry, road_supply_registry)
+    transit_schedule = None
+    transit_vehicles = None
+    if source_transit_schedule is not None and source_transit_vehicles is not None:
+        (release / "input").mkdir(exist_ok=True)
+        schedule_suffix = ".xml.gz" if source_transit_schedule.suffix.lower() == ".gz" else ".xml"
+        vehicles_suffix = ".xml.gz" if source_transit_vehicles.suffix.lower() == ".gz" else ".xml"
+        transit_schedule = release / f"input/transitSchedule{schedule_suffix}"
+        transit_vehicles = release / f"input/transitVehicles{vehicles_suffix}"
+        shutil.copy2(source_transit_schedule, transit_schedule)
+        shutil.copy2(source_transit_vehicles, transit_vehicles)
     cost_root = release / "data/transport_costs/hongkong"
     cost_root.mkdir(parents=True)
     shutil.copytree(pt_source, cost_root / "pt_fare_v1")
@@ -607,6 +729,8 @@ def main() -> int:
     frozen_strategies = derive_config(
         template, config, run, profile, plans_input=plans_input,
         network_input=network,
+        transit_schedule_input=transit_schedule,
+        transit_vehicles_input=transit_vehicles,
     )
     java = runtime / "runtime/jdk-25/bin/java"
     command = build_command(
@@ -616,6 +740,7 @@ def main() -> int:
         cost_root=cost_root,
         runtime=runtime,
         fleet=fleet,
+        road_supply_registry=road_supply_registry,
         taxi_pcu=args.taxi_pcu,
         taxi_wait_utility_per_hour=args.taxi_wait_utility_per_hour,
         profile=profile,
@@ -717,6 +842,46 @@ def main() -> int:
             }
             if source_network is not None and network is not None
             else {"override_source": None}
+        ),
+        "road_supply_registry": (
+            {
+                "enabled": True,
+                "source": str(source_road_supply_registry),
+                "source_sha256": sha256(source_road_supply_registry),
+                "release_copy": str(road_supply_registry),
+                "release_copy_sha256": sha256(road_supply_registry),
+                "road_links": road_supply_audit.road_links,
+                "storage_override_links": road_supply_audit.storage_overrides,
+                "flow_override_links": road_supply_audit.flow_overrides,
+                "storage_override_contract": (
+                    "S=max(registry storage floor,physical default,queue safety)"
+                ),
+                "flow_override_contract": (
+                    "per-link QSim-only override; physical scenario network unchanged"
+                    if road_supply_audit.flow_overrides
+                    else "none; physical network flow capacities unchanged"
+                ),
+            }
+            if source_road_supply_registry is not None and road_supply_registry is not None
+            else {"enabled": False}
+        ),
+        "transit_supply": (
+            {
+                "override_enabled": True,
+                "schedule_source": str(source_transit_schedule),
+                "schedule_source_sha256": sha256(source_transit_schedule),
+                "schedule_release_copy": str(transit_schedule),
+                "schedule_release_sha256": sha256(transit_schedule),
+                "vehicles_source": str(source_transit_vehicles),
+                "vehicles_source_sha256": sha256(source_transit_vehicles),
+                "vehicles_release_copy": str(transit_vehicles),
+                "vehicles_release_sha256": sha256(transit_vehicles),
+            }
+            if source_transit_schedule is not None
+            and source_transit_vehicles is not None
+            and transit_schedule is not None
+            and transit_vehicles is not None
+            else {"override_enabled": False}
         ),
         "runtime_input_release": str(runtime),
         "previous_app_release": str(previous),

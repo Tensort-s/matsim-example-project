@@ -39,6 +39,9 @@ import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanSelectionSchedule;
 import org.matsim.project.hongkong.pt.HongKongOrdinaryPtRaptorModule;
 import org.matsim.project.hongkong.road.HongKongRoadHotspotRepairV1;
+import org.matsim.project.hongkong.road.HongKongExplicitStorageModule;
+import org.matsim.project.hongkong.road.HongKongExplicitStorageQSimModule;
+import org.matsim.project.hongkong.road.HongKongRoadSupplyRegistry;
 import org.matsim.project.hongkong.road.HongKongCarOriginAnchorObservationCatalog;
 import org.matsim.project.hongkong.road.HongKongCarOriginAnchorRepairModule;
 import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
@@ -78,6 +81,7 @@ public final class RunHongKong5Pct {
 	}
 
 	public static void main(String[] args) {
+		installFatalMainThreadExitHandler();
 		if (args.length < 1) {
 			throw new IllegalArgumentException(
 				"Usage: RunHongKong5Pct <config.xml> [routed-plans.xml.gz] [--simulate] "
@@ -91,10 +95,11 @@ public final class RunHongKong5Pct {
 						+ "[--physical-nontaxi-modes] [--unlimited-ordinary-pt-capacity] "
 						+ "[--traffic-signals]"
 						+ " [--road-hotspot-repair-v1]"
+						+ " [--road-supply-registry=<road_supply_parameters_v2.csv>]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
 						+ " [--fixed-plans-network-taxi-proxy]"
-						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.1>]"
+						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
 						+ " [--household-joint-selection-iterations=5,15,25,35]"
 			);
@@ -125,6 +130,7 @@ public final class RunHongKong5Pct {
 		Path householdJointPlanCandidates = optionPath(args, "--household-joint-plan-candidates=");
 		Path studentSchoolModeCandidates = optionPath(args, "--student-school-mode-candidates=");
 		Path carOriginAnchorObservations = optionPath(args, "--car-origin-anchor-observations=");
+		Path roadSupplyRegistryPath = optionPath(args, "--road-supply-registry=");
 		Path taxiDvrpFleet = optionPath(args, "--taxi-dvrp-fleet=");
 		Double taxiDvrpPcuOption = optionDouble(args, "--taxi-dvrp-pcu=");
 		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
@@ -142,6 +148,14 @@ public final class RunHongKong5Pct {
 		if (physicalTaxi && !multimodalCosts) {
 			throw new IllegalArgumentException(
 					"Physical Taxi requires --multimodal-costs so fare and time are scored exactly once.");
+		}
+		if (roadSupplyRegistryPath != null && (!physicalTaxi || Math.abs(taxiDvrpPcu - 0.05) > 1e-9)) {
+			throw new IllegalArgumentException(
+					"Explicit road storage requires physical Taxi with PCU=0.05.");
+		}
+		if (roadSupplyRegistryPath != null && roadHotspotRepairV1) {
+			throw new IllegalArgumentException(
+					"Explicit road storage and the historical runtime road-hotspot repair are mutually exclusive.");
 		}
 		if (physicalTaxi && networkTaxiProxy) {
 			throw new IllegalArgumentException(
@@ -300,6 +314,23 @@ public final class RunHongKong5Pct {
 				? DrtControlerCreator.createScenarioWithDrtRouteFactory(config)
 				: ScenarioUtils.createScenario(config);
 		ScenarioUtils.loadScenario(scenario);
+		HongKongRoadSupplyRegistry roadSupplyRegistry = null;
+		if (roadSupplyRegistryPath != null) {
+			String networkInput = config.network().getInputFile();
+			if (networkInput == null || networkInput.isBlank()) {
+				throw new IllegalArgumentException("Explicit road storage requires a file-backed network input.");
+			}
+			Path networkPath = Path.of(networkInput);
+			if (!networkPath.isAbsolute()) {
+				networkPath = Path.of(args[0]).toAbsolutePath().getParent().resolve(networkPath).normalize();
+			}
+			roadSupplyRegistry = HongKongRoadSupplyRegistry.load(
+					roadSupplyRegistryPath, networkPath, scenario, taxiDvrpPcu);
+			System.out.printf(
+					"Validated explicit road-supply registry: roadLinks=%,d, storageOverrides=%,d, networkSHA=%s.%n",
+					roadSupplyRegistry.roadLinkCount(), roadSupplyRegistry.overrides().size(),
+					roadSupplyRegistry.sourceNetworkSha256());
+		}
 		if (physicalTaxi) {
 			int restoredHomeOnlyPlans = normalizeEmptyHomeOnlyPlans(scenario);
 			System.out.printf(
@@ -466,6 +497,13 @@ public final class RunHongKong5Pct {
 		System.out.printf("Loaded %,d persons; assigned %,d explicit car vehicles.%n",
 			scenario.getPopulation().getPersons().size(), assignedVehicles);
 		Controler controler = new Controler(scenario);
+		if (roadSupplyRegistry != null) {
+			controler.addOverridingModule(new HongKongExplicitStorageModule(roadSupplyRegistry));
+			System.out.println(
+					"Enabled independent explicit QSim storage on "
+							+ roadSupplyRegistry.overrides().size()
+							+ " road links; physical length, lanes, free speed, and flow capacity remain unchanged.");
+		}
 		if (physicalTaxi) {
 			MultiModeTaxiConfigGroup taxiConfig = MultiModeTaxiConfigGroup.get(config);
 			controler.addOverridingModule(new DvrpModule());
@@ -483,6 +521,12 @@ public final class RunHongKong5Pct {
 		if (trafficSignals) {
 			Signals.configure(controler);
 			System.out.println("Enabled explicit movement-level traffic-signal control.");
+		}
+		if (roadSupplyRegistry != null) {
+			// Signals installs its own QNetworkFactory. Install the combined Hong Kong
+			// factory last so signal turn acceptance and explicit per-link road supply
+			// are both active in the same QSim network.
+			controler.addOverridingQSimModule(new HongKongExplicitStorageQSimModule());
 		}
 		controler.addOverridingModule(new SwissRailRaptorModule());
 		if (physicalNonTaxiModes) {
@@ -647,6 +691,16 @@ public final class RunHongKong5Pct {
 			restored++;
 		}
 		return restored;
+	}
+
+	private static void installFatalMainThreadExitHandler() {
+		Thread.currentThread().setUncaughtExceptionHandler((thread, failure) -> {
+			System.err.println("FATAL_HK_MAIN_THREAD: terminating JVM after uncaught failure on "
+					+ thread.getName());
+			failure.printStackTrace(System.err);
+			System.err.flush();
+			System.exit(1);
+		});
 	}
 
 	static boolean usesNetworkTaxiProxy(
