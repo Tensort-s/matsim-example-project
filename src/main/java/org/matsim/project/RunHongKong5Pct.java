@@ -35,6 +35,7 @@ import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
 import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorModule;
 import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
+import org.matsim.project.hongkong.household.HouseholdJointPlanCheckpointRestorer;
 import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanSelectionSchedule;
 import org.matsim.project.hongkong.pt.HongKongOrdinaryPtRaptorModule;
@@ -102,6 +103,7 @@ public final class RunHongKong5Pct {
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
 						+ " [--household-joint-selection-iterations=5,15,25,35]"
+						+ " [--household-joint-restore-selected-bindings=<expected-count>]"
 			);
 		}
 		boolean simulate = Arrays.asList(args).contains("--simulate");
@@ -136,6 +138,8 @@ public final class RunHongKong5Pct {
 		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
 		String householdSelectionIterationsOption = optionString(
 				args, "--household-joint-selection-iterations=");
+		String restoreHouseholdBindingsOption = optionString(
+				args, "--household-joint-restore-selected-bindings=");
 		boolean physicalTaxi = taxiDvrpFleet != null;
 		boolean networkTaxiProxy = usesNetworkTaxiProxy(
 				allPersonNetworkTaxiInnovation, fixedPlansNetworkTaxiProxy, physicalTaxi);
@@ -169,6 +173,11 @@ public final class RunHongKong5Pct {
 				&& (!householdJointPlanWithOrdinaryInnovation || householdJointPlanCandidates == null)) {
 			throw new IllegalArgumentException(
 					"--household-joint-selection-iterations requires protected household ordinary innovation.");
+		}
+		if (restoreHouseholdBindingsOption != null
+				&& (!householdJointPlanWithOrdinaryInnovation || householdJointPlanCandidates == null)) {
+			throw new IllegalArgumentException(
+					"--household-joint-restore-selected-bindings requires household joint candidates.");
 		}
 		if (multimodalCosts && (ptFareRoot == null || carCostRoot == null)) {
 			throw new IllegalArgumentException(
@@ -390,6 +399,13 @@ public final class RunHongKong5Pct {
 				: HouseholdEscortBindingCatalog.load(householdEscortBindings, scenario);
 		HouseholdJointPlanCandidateCatalog householdJointCatalog = householdJointPlanCandidates == null
 				? null : HouseholdJointPlanCandidateCatalog.load(householdJointPlanCandidates);
+		if (restoreHouseholdBindingsOption != null) {
+			int expected = Integer.parseInt(restoreHouseholdBindingsOption);
+			int restored = HouseholdJointPlanCheckpointRestorer.restore(
+					scenario, householdJointCatalog, householdEscortCatalog, expected);
+			System.out.printf("Restored %,d frozen physical household bindings from selected checkpoint plans.%n",
+					restored);
+		}
 		StudentSchoolModeCandidateCatalog studentSchoolCatalog = studentSchoolModeCandidates == null
 				? StudentSchoolModeCandidateCatalog.empty()
 				: StudentSchoolModeCandidateCatalog.load(studentSchoolModeCandidates);

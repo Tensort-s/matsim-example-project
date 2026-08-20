@@ -857,19 +857,30 @@ and the immutable failed directory was preserved. Run2 then completed
 iterations 0--4 and reached the iteration-5 QSim before a `jcmd` thread dump
 confirmed a Java-level lock inversion between the teleportation engine and
 QSim state monitor. Its exact process was terminated after evidence capture;
-run2 is preserved with exit code 143. The current active 50-QSim sensitivity
-is `...candidate5b_signal_pttime1_formal50_run3`: Candidate5B road supply,
+run2 is preserved with exit code 143. Run3 used Candidate5B road supply,
 Candidate11 TOD signals, calibrated/day-2 PT, 15,500 physical Taxi vehicles at
 PCU 0.05, a 30:00 horizon, and retained stuck vehicles. It uses 16 threads,
 ends innovation after iteration 34, and applies protected joint selection at
 5, 15, 25, and 35. Run3 uses JAR SHA256
 `fb9457792d15efe98e695522755c50888dda1fa9eed85e1923d1ba42f3728897`.
 Its teleportation collections use a narrow dedicated lock which is always
-released before events or QSim callbacks; both a direct lock-inversion test
-and all 181 Maven tests pass. The revised 30-minute Heartbeat checks fatal log
-state and explicit JVM deadlocks independently of PID liveness, and can
-terminate only a verified residual JVM before an immutable restart. It is not
-yet a final result; the candidate remains outside current production.
+released before events or QSim callbacks. Run3 completed iterations 0--42 but
+deadlocked in iteration 43 near 18:00 on a second lock cycle: QSim main held
+the agent-state monitor while entering the household escort engine, while an
+events worker held MATSim's outer per-handler monitor and called back into
+QSim. The exact thread dump is preserved in run3 and the verified process was
+terminated with exit code 143.
+
+The household event handler is now a separate forwarding object, so MATSim's
+outer event lock is never the engine state lock needed by QSim departures.
+The reverse-lock regression, iteration-checkpoint binding restore, launcher
+tests, and all 183 Maven tests pass. The recovery profile reads run3's complete
+iteration-40 plans, restores exactly 3,378 frozen physical bindings, runs
+iterations 41--49, and cannot repeat the 5/15/25/35 joint selection. Its
+reserved immutable suffix is `...formal50_resume40_{payload4,release4,run4}`.
+This is explicitly a checkpoint recovery rather than a bit-identical one-JAR
+0--49 run and remains outside current production until iteration 49 and final
+audits pass.
 
 ## Candidate5B signal A/B (non-production)
 

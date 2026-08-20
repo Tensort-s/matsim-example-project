@@ -10,15 +10,10 @@ import org.matsim.api.core.v01.events.PersonLeavesVehicleEvent;
 import org.matsim.api.core.v01.events.PersonStuckEvent;
 import org.matsim.api.core.v01.events.LinkEnterEvent;
 import org.matsim.api.core.v01.events.VehicleEntersTrafficEvent;
-import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonArrivalEventHandler;
-import org.matsim.api.core.v01.events.handler.PersonStuckEventHandler;
-import org.matsim.api.core.v01.events.handler.VehicleEntersTrafficEventHandler;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.events.MobsimScopeEventHandler;
 import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.framework.MobsimPassengerAgent;
@@ -39,8 +34,7 @@ import java.util.Set;
 
 /** Boards fixed school passengers into their household driver's actual QVehicle. */
 public final class HouseholdEscortPhysicalEngine implements MobsimEngine, DepartureHandler,
-		PersonArrivalEventHandler, PersonStuckEventHandler, LinkEnterEventHandler,
-		VehicleEntersTrafficEventHandler, MobsimScopeEventHandler {
+		HouseholdEscortPhysicalEventSink {
 
 	private static final Logger LOG = LogManager.getLogger(HouseholdEscortPhysicalEngine.class);
 
@@ -135,17 +129,17 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 	}
 
 	@Override
-	public void handleEvent(VehicleEntersTrafficEvent event) {
+	public void onVehicleEntersTraffic(VehicleEntersTrafficEvent event) {
 		handleVehicleAtWaypoint(event.getTime(), event.getVehicleId(), event.getLinkId());
 	}
 
 	@Override
-	public void handleEvent(LinkEnterEvent event) {
+	public void onLinkEnter(LinkEnterEvent event) {
 		handleVehicleAtWaypoint(event.getTime(), event.getVehicleId(), event.getLinkId());
 	}
 
 	@Override
-	public void handleEvent(PersonArrivalEvent event) {
+	public void onPersonArrival(PersonArrivalEvent event) {
 		if (!"car".equals(event.getLegMode()) || !activeDriverIds.contains(event.getPersonId())) {
 			return;
 		}
@@ -257,7 +251,7 @@ public final class HouseholdEscortPhysicalEngine implements MobsimEngine, Depart
 	}
 
 	@Override
-	public void handleEvent(PersonStuckEvent event) {
+	public void onPersonStuck(PersonStuckEvent event) {
 		if (!activeDriverIds.contains(event.getPersonId()) && !activePassengerIds.contains(event.getPersonId())) {
 			return;
 		}

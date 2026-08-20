@@ -45,6 +45,7 @@ class RunProfile:
     expected_initial_taxi_legs: int | None = None
     stuck_time_s: int = 3600
     remove_stuck_vehicles: bool = False
+    restored_household_bindings: int | None = None
 
 
 RUN_PROFILES = {
@@ -54,6 +55,12 @@ RUN_PROFILES = {
         taxi_execution="dvrp", fixed_selected_plans=False,
         traffic_signals=True, requires_network_override=True,
         expected_initial_taxi_legs=44_000,
+    ),
+    "formal-50-candidate5b-resume40": RunProfile(
+        41, 49, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=False, traffic_signals=True,
+        requires_network_override=True, restored_household_bindings=3_378,
     ),
     "smoke-0p5": RunProfile(
         0, 0, 0.01, 1_550, 38_582,
@@ -548,6 +555,11 @@ def build_command(
             )
         if "--all-person-network-taxi-innovation" not in command:
             command.append("--all-person-network-taxi-innovation")
+        if profile.restored_household_bindings is not None:
+            command.append(
+                "--household-joint-restore-selected-bindings="
+                + str(profile.restored_household_bindings)
+            )
     return command
 
 

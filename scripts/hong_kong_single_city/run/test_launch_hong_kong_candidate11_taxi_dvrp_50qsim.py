@@ -169,6 +169,28 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertEqual("34", settings["ReRoute"]["disableAfterIteration"])
         self.assertEqual("34", settings["SubtourModeChoice"]["disableAfterIteration"])
 
+    def test_candidate5b_checkpoint_resume_contract(self) -> None:
+        plans = Path("/mnt/DiskM/by/example/40.plans.xml.zst")
+        root = self.derive("formal-50-candidate5b-resume40", plans=plans)
+        controller = values(root, "controller")
+        self.assertEqual("41", controller["firstIteration"])
+        self.assertEqual("49", controller["lastIteration"])
+        self.assertEqual(str(plans), values(root, "plans")["inputPlansFile"])
+        profile = RUN_PROFILES["formal-50-candidate5b-resume40"]
+        self.assertEqual(3_378, profile.restored_household_bindings)
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-12.0,
+            profile=profile, xms="16g", xmx="128g",
+        )
+        self.assertIn("--household-joint-restore-selected-bindings=3378", command)
+        self.assertFalse(any(
+            item.startswith("--household-joint-selection-iterations=")
+            for item in command
+        ))
+
     def test_smoke_and_gate_profiles_have_safe_fixed_bounds(self) -> None:
         plans = Path("/mnt/DiskM/by/example/plans_0p5.xml.gz")
         smoke = self.derive("smoke-0p5", plans=plans)

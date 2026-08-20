@@ -36,7 +36,9 @@ public final class HouseholdEscortPhysicalQSimModule extends AbstractQSimModule 
 	@Override
 	protected void configureQSim() {
 		bind(HouseholdEscortPhysicalEngine.class).in(Singleton.class);
+		bind(HouseholdEscortPhysicalEventSink.class).to(HouseholdEscortPhysicalEngine.class);
+		bind(HouseholdEscortPhysicalEventHandler.class).in(Singleton.class);
 		addQSimComponentBinding(COMPONENT_NAME).to(HouseholdEscortPhysicalEngine.class);
-		addMobsimScopeEventHandlerBinding().to(HouseholdEscortPhysicalEngine.class);
+		addMobsimScopeEventHandlerBinding().to(HouseholdEscortPhysicalEventHandler.class);
 	}
 }

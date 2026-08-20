@@ -267,11 +267,44 @@ Run3 started in new immutable `payload3`, `release3`, and `run3` directories.
 Its shaded JAR SHA256 is
 `fb9457792d15efe98e695522755c50888dda1fa9eed85e1923d1ba42f3728897`.
 The engine now protects only its internal queue and map with a dedicated lock,
-and releases that lock before emitting events or calling QSim callbacks. A
-direct lock-inversion regression, the focused Taxi tests, and the complete
-181-test Maven suite pass. The heartbeat also treats an explicit JVM deadlock
-as an interruption even when the PID remains alive. Run3 is the active
-sensitivity and is not an adopted production run.
+and releases that lock before emitting events or calling QSim callbacks. That
+repair passed the former iteration-5 failure and run3 completed QSim 0--42.
+Iteration 43 then exposed a second independent Java-level deadlock near 18:00:
+the main thread held QSim's agent-state monitor while entering the household
+escort departure handler, while a parallel event worker was externally locked
+by `EventsManagerImpl` on that same handler object and called back into QSim.
+The exact `jcmd` evidence is preserved as
+`run3/heartbeat_thread_dump_20260820T1420.txt`; run3 was terminated only after
+the lock cycle and PID/command tree were verified and is retained with exit
+code 143.
+
+The repair separates the monitor used by MATSim event delivery from
+`HouseholdEscortPhysicalEngine`. A lightweight event forwarder is now the
+registered handler; the engine retains only narrow internal state locks and
+never holds them across QSim callbacks. A deterministic reverse-lock test,
+the earlier teleportation concurrency regression, checkpoint-binding restore
+test, launcher tests, and all 183 Maven tests pass. The complete iteration-40
+checkpoint contains 385,820 people and 743,614 selected trips; 741,781 complete
+(99.7535%). Because plans were written at a ten-iteration interval, iteration
+40 rather than 42 is the latest complete population checkpoint.
+
+The immutable recovery contract uses `40.plans.xml.zst`, starts at iteration
+41, ends at 49, restores exactly 3,378 frozen physical household bindings, and
+does not rerun the 5/15/25/35 joint selections. It retains only the already
+configured post-34 non-innovative choice behavior. The reserved recovery
+directories are:
+
+```text
+/mnt/DiskM/by/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_payload4/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_release4/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_run4/
+```
+
+This is a documented checkpoint recovery, not a bit-identical single-process
+0--49 run: JVM random state is not checkpointed and iterations 0--40 used the
+run3 JAR. It remains a non-production sensitivity until iteration 49 and final
+accounting pass.
 
 ## Limitations and next gate
 
