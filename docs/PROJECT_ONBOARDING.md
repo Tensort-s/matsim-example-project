@@ -883,6 +883,11 @@ ambiguous binding. Selected passenger legs already persist the exact stable
 candidate ID, so the corrected restorer requires that ID before checking the
 driver, vehicle, and route. Run4 remains preserved with exit code 1; the
 successor immutable suffix is `...formal50_resume40_{payload5,release5,run5}`.
+Run5 started on 2026-08-20 from commit `af48734` with shaded JAR SHA256
+`335ca4ed28227ed31fabb623466485719a0dfbeedca5ed1c9b51263ba708a765`;
+startup restored all 3,378 bindings and entered full-population
+`PrepareForSim`. It remains active under a 30-minute Heartbeat and is not a
+completed or production result.
 This is explicitly a checkpoint recovery rather than a bit-identical one-JAR
 0--49 run and remains outside current production until iteration 49 and final
 audits pass.

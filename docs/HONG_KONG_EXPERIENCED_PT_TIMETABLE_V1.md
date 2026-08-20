@@ -308,6 +308,13 @@ is preserved with exit code 1. The successor recovery directories are:
   hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_run5/
 ```
 
+Run5 started on 2026-08-20 with source commit `af48734`, shaded JAR SHA256
+`335ca4ed28227ed31fabb623466485719a0dfbeedca5ed1c9b51263ba708a765`,
+and initial worker/time/Java PIDs 2053966/2053967/2053968. Full-data startup
+restored all 3,378 bindings before `PrepareForSim`; the run is active and is
+tracked by the 30-minute `formal50-resume-heartbeat` automation. These launch
+facts do not constitute completion or production adoption.
+
 This is a documented checkpoint recovery, not a bit-identical single-process
 0--49 run: JVM random state is not checkpointed and iterations 0--40 used the
 run3 JAR. It remains a non-production sensitivity until iteration 49 and final
