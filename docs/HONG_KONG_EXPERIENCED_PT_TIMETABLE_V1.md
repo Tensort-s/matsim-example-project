@@ -326,13 +326,44 @@ waypoints. The refresh requires exactly 3,378 bindings and routes or aborts
 before QSim. The focused replacement-leg regression, both lock-order
 regressions, and all 183 Maven tests pass. Run5 is preserved; the successor
 uses new immutable `...formal50_resume40_{payload6,release6,run6}` directories
-and remains tracked by automation 50. Launch facts do not constitute
-completion or production adoption.
+and was tracked by automation 50 through completion.
+
+Run6 uses commit `8b1bf6e` and shaded JAR SHA256
+`693bed17d1769d49a50c0c704a4e5fe471e6650d9325f96ca8bf3704e2b233c0`.
+It completed iterations 41--49, ended iteration 49 at 2026-08-20 20:17 HKT,
+shut down normally, and recorded exit code 0. The wall time was 2:21:34 and
+maximum RSS was 43,095,808 KiB. The post-prepare refresh restored exactly
+3,378 bindings and no protected joint-selection point was rerun.
+
+The final selected population contains 743,614 trips; 742,189 complete
+(99.8084%). Mode-level selected share / completion / completed-trip mean time
+are: car 3.6996% / 99.7637% / 24.19 min; car passenger 0.4543% / 98.0462% /
+33.70 min; PT 52.1759% / 99.7191% / 37.31 min; Taxi 25.0444% / 99.9517% /
+29.65 min; walk 18.6258% / 99.9177% / 46.44 min. The overall executed-person
+score mean is 45.4758.
+
+Taxi accounting closes exactly: 186,161 submitted = 186,144 completed + 17
+waiting; none are onboard or rejected. The pickup wait quantiles are 148 s
+(p50), 802 s (p90), 1,162 s (p95), and 2,030 s (p99). All 15,500 vehicles are
+used, with 12.009 completed services per fleet vehicle, 24.004% onboard-time
+utilization, and 16.454% empty-VKT share. Request IDs and vehicle IDs are
+unique, every completed request has pickup/drop-off/vehicle references, and
+every wait equals pickup minus submission time.
+
+There are no pre-horizon stuck-and-abort events in iteration 49. All 1,398
+occur exactly at the declared 30:00 boundary; 905 are regular-PT vehicle
+events. Of the 848 PT events joined to a driver start and schedule, 841 are
+day-2 services, 838 are scheduled to finish after 30:00, three are day-2
+services scheduled by the boundary but still active, and seven are original
+services. These are boundary-censoring results, not 3,600-second road-stuck
+timeouts. Explicit-storage blocked-inflow falls from 148,978 link-seconds in
+iteration 41 to 44,764 in iteration 49 (-69.95%); requested and actual storage
+and flow capacities match on all 86,417 audited links.
 
 This is a documented checkpoint recovery, not a bit-identical single-process
 0--49 run: JVM random state is not checkpointed and iterations 0--40 used the
-run3 JAR. It remains a non-production sensitivity until iteration 49 and final
-accounting pass.
+run3 JAR. It has passed the recovery and accounting gates but remains a
+non-production sensitivity pending substantive calibration review.
 
 ## Limitations and next gate
 

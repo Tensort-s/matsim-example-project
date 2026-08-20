@@ -894,8 +894,14 @@ the saved driver waypoint route. Replacement-leg and lock-order regressions
 and all 183 Maven tests pass. Run5 remains preserved; automation 50 tracks the
 successor immutable suffix `...formal50_resume40_{payload6,release6,run6}`.
 This is explicitly a checkpoint recovery rather than a bit-identical one-JAR
-0--49 run and remains outside current production until iteration 49 and final
-audits pass.
+0--49 run. Run6 uses commit `8b1bf6e`, JAR SHA256
+`693bed17d1769d49a50c0c704a4e5fe471e6650d9325f96ca8bf3704e2b233c0`,
+completed iterations 41--49, shut down normally, and recorded exit code 0.
+Final completion is 742,189 / 743,614 trips (99.8084%); Taxi accounting is
+186,161 submitted = 186,144 completed + 17 waiting. There are zero
+pre-horizon stuck-and-abort events; all 1,398 aborts occur at the 30:00
+boundary. The recovery and accounting gates pass, but the result remains a
+non-production sensitivity pending substantive calibration review.
 
 ## Candidate5B signal A/B (non-production)
 
