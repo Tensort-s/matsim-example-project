@@ -50,6 +50,13 @@ public final class HouseholdJointPlanCheckpointRestorer {
 				throw new IllegalStateException("Checkpoint passenger binding key mismatch: "
 						+ passenger.getId() + ", expected=" + bindingKey + ", actual=" + persistentKey);
 			}
+			Object persistentCandidateId = passengerLeg.getAttributes().getAttribute(
+					HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE);
+			if (persistentCandidateId == null) {
+				throw new IllegalStateException("Checkpoint passenger binding lacks its candidate ID: "
+						+ bindingKey);
+			}
+			if (!candidate.candidateId().equals(persistentCandidateId.toString())) continue;
 			observedBindingKeys.add(bindingKey);
 
 			Person driver = requiredPerson(scenario, candidate.driverPersonId());

@@ -876,8 +876,13 @@ outer event lock is never the engine state lock needed by QSim departures.
 The reverse-lock regression, iteration-checkpoint binding restore, launcher
 tests, and all 183 Maven tests pass. The recovery profile reads run3's complete
 iteration-40 plans, restores exactly 3,378 frozen physical bindings, runs
-iterations 41--49, and cannot repeat the 5/15/25/35 joint selection. Its
-reserved immutable suffix is `...formal50_resume40_{payload4,release4,run4}`.
+iterations 41--49, and cannot repeat the 5/15/25/35 joint selection. The first
+recovery attempt (`payload4`/`release4`/`run4`) exited before QSim because the
+restorer treated two geometrically equivalent catalog candidates as an
+ambiguous binding. Selected passenger legs already persist the exact stable
+candidate ID, so the corrected restorer requires that ID before checking the
+driver, vehicle, and route. Run4 remains preserved with exit code 1; the
+successor immutable suffix is `...formal50_resume40_{payload5,release5,run5}`.
 This is explicitly a checkpoint recovery rather than a bit-identical one-JAR
 0--49 run and remains outside current production until iteration 49 and final
 audits pass.

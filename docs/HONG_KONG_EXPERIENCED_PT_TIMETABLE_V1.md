@@ -291,14 +291,21 @@ checkpoint contains 385,820 people and 743,614 selected trips; 741,781 complete
 The immutable recovery contract uses `40.plans.xml.zst`, starts at iteration
 41, ends at 49, restores exactly 3,378 frozen physical household bindings, and
 does not rerun the 5/15/25/35 joint selections. It retains only the already
-configured post-34 non-innovative choice behavior. The reserved recovery
-directories are:
+configured post-34 non-innovative choice behavior. The first recovery attempt
+(`payload4`/`release4`/`run4`) exited before QSim because two catalog rows could
+share the same passenger trip and geometrically match the saved driver route.
+The saved passenger leg already carries the exact
+`hkHouseholdJointCandidateId`; the restorer now requires that stable ID before
+matching the driver/vehicle/path and therefore rejects neither legitimate
+catalog redundancy nor a genuinely missing identity. The focused lock and
+recovery regressions and all 183 Maven tests pass after this correction. Run4
+is preserved with exit code 1. The successor recovery directories are:
 
 ```text
 /mnt/DiskM/by/
-  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_payload4/
-  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_release4/
-  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_run4/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_payload5/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_release5/
+  hk_stage11_candidate11_taxi_dvrp_20260820_candidate5b_signal_pttime1_formal50_resume40_run5/
 ```
 
 This is a documented checkpoint recovery, not a bit-identical single-process

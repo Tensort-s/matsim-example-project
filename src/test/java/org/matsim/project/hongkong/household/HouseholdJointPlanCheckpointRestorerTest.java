@@ -44,6 +44,8 @@ class HouseholdJointPlanCheckpointRestorerTest {
 		Leg passengerLeg = PopulationUtils.createLeg("car_passenger");
 		passengerLeg.getAttributes().putAttribute(
 				HouseholdEscortBindingCatalog.BINDING_KEY_ATTRIBUTE, "passenger/0");
+		passengerLeg.getAttributes().putAttribute(
+				HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE, "candidate_1");
 		passengerPlan.addLeg(passengerLeg);
 		passengerPlan.addActivity(PopulationUtils.createActivityFromLinkId("school", dropoff));
 		passenger.addPlan(passengerPlan);
@@ -71,7 +73,12 @@ class HouseholdJointPlanCheckpointRestorerTest {
 				"candidate_1", "household_1", "passenger", 0, "pt",
 				"driver", 0, "car", vehicleId.toString(), false,
 				100, 90, pickup.toString(), dropoff.toString(), destination.toString(), 0, 0);
-		var candidates = HouseholdJointPlanCandidateCatalog.of(List.of(candidate));
+		var duplicateGeometryCandidate = new HouseholdJointPlanCandidateCatalog.Candidate(
+				"candidate_2", "household_1", "passenger", 0, "pt",
+				"driver", 0, "car", vehicleId.toString(), false,
+				100, 90, pickup.toString(), dropoff.toString(), destination.toString(), 0, 0);
+		var candidates = HouseholdJointPlanCandidateCatalog.of(
+				List.of(candidate, duplicateGeometryCandidate));
 		var bindings = HouseholdEscortBindingCatalog.empty();
 
 		assertEquals(1, HouseholdJointPlanCheckpointRestorer.restore(
