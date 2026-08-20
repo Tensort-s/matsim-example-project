@@ -36,6 +36,7 @@ import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorMo
 import org.matsim.project.hongkong.household.HouseholdEscortPhysicalQSimModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCheckpointRestorer;
+import org.matsim.project.hongkong.household.HouseholdJointPlanCheckpointRefreshListener;
 import org.matsim.project.hongkong.household.HouseholdJointPlanInnovationModule;
 import org.matsim.project.hongkong.household.HouseholdJointPlanSelectionSchedule;
 import org.matsim.project.hongkong.pt.HongKongOrdinaryPtRaptorModule;
@@ -558,6 +559,17 @@ public final class RunHongKong5Pct {
 				}
 			});
 			controler.addQSimModule(new HouseholdEscortPhysicalQSimModule(householdEscortCatalog));
+			if (restoreHouseholdBindingsOption != null) {
+				int expected = Integer.parseInt(restoreHouseholdBindingsOption);
+				var refreshListener = new HouseholdJointPlanCheckpointRefreshListener(
+						scenario, householdJointCatalog, householdEscortCatalog, expected);
+				controler.addOverridingModule(new AbstractModule() {
+					@Override
+					public void install() {
+						addControlerListenerBinding().toInstance(refreshListener);
+					}
+				});
+			}
 			System.out.printf("Enabled %,d initial household physical bindings%s.%n",
 					householdEscortCatalog.bindings().size(), householdEscortBindings == null
 						? " (delayed selection after iteration 0)" : " from " + householdEscortBindings);

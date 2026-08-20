@@ -13,8 +13,10 @@ import org.matsim.core.router.TripStructureUtils;
 import org.matsim.vehicles.Vehicle;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /** Restores frozen physical household bindings from a saved selected-plan checkpoint. */
@@ -100,6 +102,73 @@ public final class HouseholdJointPlanCheckpointRestorer {
 		return restored.size();
 	}
 
+	/**
+	 * Rebinds the saved checkpoint identities to the plan elements produced by
+	 * MATSim's stock PrepareForSim pass. That pass may replace a trip's Leg
+	 * objects and remove their custom attributes before the first resumed QSim.
+	 */
+	public static int refreshAfterPrepare(
+			Scenario scenario,
+			HouseholdJointPlanCandidateCatalog candidates,
+			HouseholdEscortBindingCatalog bindings,
+			int expectedBindings) {
+		Map<String, HouseholdJointPlanCandidateCatalog.Candidate> byId = new LinkedHashMap<>();
+		for (HouseholdJointPlanCandidateCatalog.Candidate candidate : candidates.candidates()) {
+			if (byId.put(candidate.candidateId(), candidate) != null) {
+				throw new IllegalStateException("Duplicate household checkpoint candidate ID: "
+						+ candidate.candidateId());
+			}
+		}
+		List<HouseholdEscortBindingCatalog.Binding> refreshed = new ArrayList<>();
+		for (HouseholdEscortBindingCatalog.Binding binding : bindings.bindings()) {
+			if (!bindings.isActive(binding)) continue;
+			HouseholdJointPlanCandidateCatalog.Candidate candidate = byId.get(
+					binding.candidateGroupId());
+			if (candidate == null) {
+				throw new IllegalStateException("Active checkpoint binding lacks its candidate: "
+						+ binding.candidateGroupId());
+			}
+			Person passenger = requiredPerson(scenario, candidate.passengerPersonId());
+			Leg passengerLeg = uniqueLegWithMode(
+					selectedTrip(passenger, candidate.passengerTripIndex()), "car_passenger",
+					"passenger", passenger.getId(), candidate.passengerTripIndex());
+			int passengerLegIndex = allLegIndex(passenger.getSelectedPlan(), passengerLeg);
+			String bindingKey = passenger.getId() + "/" + passengerLegIndex;
+			passengerLeg.getAttributes().putAttribute(
+					HouseholdEscortBindingCatalog.BINDING_KEY_ATTRIBUTE, bindingKey);
+			passengerLeg.getAttributes().putAttribute(
+					HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE,
+					candidate.candidateId());
+			passengerLeg.setRoutingMode("car_passenger");
+
+			Person driver = requiredPerson(scenario, candidate.driverPersonId());
+			Leg driverLeg = uniqueLegWithMode(
+					selectedTrip(driver, candidate.driverTripIndex()), TransportMode.car,
+					"driver", driver.getId(), candidate.driverTripIndex());
+			refreshed.add(new HouseholdEscortBindingCatalog.Binding(
+					binding.candidateGroupId(), binding.householdId(), binding.candidateSource(),
+					binding.newCandidate(), passenger.getId(), passengerLegIndex, passengerLeg,
+					driver.getId(), allLegIndex(driver.getSelectedPlan(), driverLeg), driverLeg,
+					binding.plannedDriverRoute(), binding.vehicleId(),
+					binding.passengerPickupLinkId(), binding.passengerDropoffLinkId(),
+					binding.driverDestinationLinkId(),
+					binding.passengerPlannedDepartureTimeSeconds(),
+					binding.driverPlannedDepartureTimeSeconds(),
+					binding.originAccessGapMeters(), binding.destinationEgressGapMeters()));
+		}
+		if (refreshed.size() != expectedBindings) {
+			throw new IllegalStateException("Prepared checkpoint household binding count mismatch: expected="
+					+ expectedBindings + ", refreshed=" + refreshed.size());
+		}
+		bindings.replaceWithActiveBindings(refreshed);
+		int restoredDriverRoutes = bindings.restoreSelectedDriverWaypointRoutes();
+		if (restoredDriverRoutes != expectedBindings) {
+			throw new IllegalStateException("Prepared checkpoint driver-route count mismatch: expected="
+					+ expectedBindings + ", restored=" + restoredDriverRoutes);
+		}
+		return refreshed.size();
+	}
+
 	private static Person requiredPerson(Scenario scenario, String personId) {
 		Person person = scenario.getPopulation().getPersons().get(Id.createPersonId(personId));
 		if (person == null || person.getSelectedPlan() == null) {
@@ -120,6 +189,17 @@ public final class HouseholdJointPlanCheckpointRestorer {
 	private static List<Leg> legs(TripStructureUtils.Trip trip) {
 		return trip.getTripElements().stream().filter(Leg.class::isInstance)
 				.map(Leg.class::cast).toList();
+	}
+
+	private static Leg uniqueLegWithMode(
+			TripStructureUtils.Trip trip, String mode, String role, Id<Person> personId, int tripIndex) {
+		List<Leg> matching = legs(trip).stream().filter(leg -> mode.equals(leg.getMode())).toList();
+		if (matching.size() != 1) {
+			throw new IllegalStateException("Prepared checkpoint " + role + " trip requires exactly one "
+					+ mode + " leg: person=" + personId + ", trip=" + tripIndex
+					+ ", matching=" + matching.size());
+		}
+		return matching.getFirst();
 	}
 
 	private static int allLegIndex(Plan plan, Leg target) {

@@ -88,6 +88,47 @@ class HouseholdJointPlanCheckpointRestorerTest {
 		assertNotNull(binding);
 		assertEquals(vehicleId, binding.vehicleId());
 		assertEquals(100, binding.passengerPlannedDepartureTimeSeconds());
+
+		// Model PrepareForSim replacing both trip Leg objects, dropping the
+		// passenger attributes, shifting its all-leg index, and routing the driver
+		// directly without the pickup/drop-off waypoints.
+		Plan preparedPassengerPlan = PopulationUtils.createPlan(passenger);
+		var preparedPassengerOrigin = PopulationUtils.createActivityFromLinkId("home", pickup);
+		preparedPassengerOrigin.setEndTime(100);
+		preparedPassengerPlan.addActivity(preparedPassengerOrigin);
+		preparedPassengerPlan.addLeg(PopulationUtils.createLeg("walk"));
+		preparedPassengerPlan.addActivity(PopulationUtils.createActivityFromLinkId(
+				"pt interaction", pickup));
+		Leg preparedPassengerLeg = PopulationUtils.createLeg("car_passenger");
+		preparedPassengerPlan.addLeg(preparedPassengerLeg);
+		preparedPassengerPlan.addActivity(PopulationUtils.createActivityFromLinkId("school", dropoff));
+		passenger.addPlan(preparedPassengerPlan);
+		passenger.setSelectedPlan(preparedPassengerPlan);
+
+		Plan preparedDriverPlan = PopulationUtils.createPlan(driver);
+		var preparedDriverOrigin = PopulationUtils.createActivityFromLinkId("home", origin);
+		preparedDriverOrigin.setEndTime(90);
+		preparedDriverPlan.addActivity(preparedDriverOrigin);
+		Leg preparedDriverLeg = PopulationUtils.createLeg("car");
+		var preparedDirectRoute = RouteUtils.createLinkNetworkRouteImpl(
+				origin, List.of(), destination);
+		preparedDirectRoute.setVehicleId(vehicleId);
+		preparedDriverLeg.setRoute(preparedDirectRoute);
+		preparedDriverPlan.addLeg(preparedDriverLeg);
+		preparedDriverPlan.addActivity(PopulationUtils.createActivityFromLinkId("work", destination));
+		driver.addPlan(preparedDriverPlan);
+		driver.setSelectedPlan(preparedDriverPlan);
+
+		assertEquals(1, HouseholdJointPlanCheckpointRestorer.refreshAfterPrepare(
+				scenario, candidates, bindings, 1));
+		assertEquals("passenger/1", preparedPassengerLeg.getAttributes().getAttribute(
+				HouseholdEscortBindingCatalog.BINDING_KEY_ATTRIBUTE));
+		assertEquals("candidate_1", preparedPassengerLeg.getAttributes().getAttribute(
+				HouseholdJointPlanAlternativeGenerator.CANDIDATE_ID_ATTRIBUTE));
+		assertNotNull(bindings.activeBindingForKey("passenger/1"));
+		var restoredDriverRoute = (org.matsim.core.population.routes.NetworkRoute)
+				preparedDriverLeg.getRoute();
+		assertEquals(List.of(pickup, dropoff), restoredDriverRoute.getLinkIds());
 	}
 
 	private static Id<Link> addLink(Scenario scenario, String id, int index) {

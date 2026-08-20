@@ -310,10 +310,24 @@ is preserved with exit code 1. The successor recovery directories are:
 
 Run5 started on 2026-08-20 with source commit `af48734`, shaded JAR SHA256
 `335ca4ed28227ed31fabb623466485719a0dfbeedca5ed1c9b51263ba708a765`,
-and initial worker/time/Java PIDs 2053966/2053967/2053968. Full-data startup
-restored all 3,378 bindings before `PrepareForSim`; the run is active and is
-tracked by the 30-minute `formal50-resume-heartbeat` automation. These launch
-facts do not constitute completion or production adoption.
+and initial worker/time/Java PIDs 2053966/2053967/2053968. It exited with code
+1 in iteration 41. Full-data startup restored all 3,378 bindings before
+`PrepareForSim`, but that stock pass replaced trip `Leg` objects and removed
+the custom passenger binding attributes. The first `car_passenger` departure
+therefore had no live binding even though the checkpoint identity itself was
+valid. This was a post-prepare identity invalidation, not a recurrence of the
+iteration-43 deadlock.
+
+The recovery now performs a one-shot `BeforeMobsim` refresh after
+`PrepareForSim`: every active binding is resolved through its stable candidate
+ID, reattached to the current passenger and driver leg objects, assigned its
+current all-leg indices, and given back the saved driver pickup/drop-off
+waypoints. The refresh requires exactly 3,378 bindings and routes or aborts
+before QSim. The focused replacement-leg regression, both lock-order
+regressions, and all 183 Maven tests pass. Run5 is preserved; the successor
+uses new immutable `...formal50_resume40_{payload6,release6,run6}` directories
+and remains tracked by automation 50. Launch facts do not constitute
+completion or production adoption.
 
 This is a documented checkpoint recovery, not a bit-identical single-process
 0--49 run: JVM random state is not checkpointed and iterations 0--40 used the
