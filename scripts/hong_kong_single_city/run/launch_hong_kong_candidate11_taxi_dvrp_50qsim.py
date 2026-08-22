@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import gzip
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shlex
@@ -27,7 +28,7 @@ HOUSEHOLD_SELECTION_ITERATIONS = (5, 15, 25, 35)
 NON_INNOVATIVE_STRATEGIES = frozenset(
     {"ChangeExpBeta", "SelectExpBeta", "KeepLastSelected"}
 )
-ALLOWED_TAXI_PCU = (1.0, 0.75, 0.5, 0.25, 0.1, 0.05)
+ALLOWED_TAXI_PCU = (1.0, 0.75, 0.5, 0.25, 1.0 / 6.0, 0.1, 0.05)
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,8 @@ class RunProfile:
     stuck_time_s: int = 3600
     remove_stuck_vehicles: bool = False
     restored_household_bindings: int | None = None
+    taxi_operational_sample_share: float = 1.0
+    clear_pt_routes: bool | None = None
 
 
 RUN_PROFILES = {
@@ -91,6 +94,14 @@ RUN_PROFILES = {
         taxi_execution="dvrp", fixed_selected_plans=False,
         traffic_signals=True, requires_network_override=True,
         expected_initial_taxi_legs=44_000,
+    ),
+    "freeze44k-shadow6-30pct-it0": RunProfile(
+        0, 0, 0.1, 4_650, 604_800,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=True, traffic_signals=True,
+        requires_network_override=True, expected_initial_taxi_legs=262_980,
+        taxi_operational_sample_share=0.30,
+        clear_pt_routes=True,
     ),
     "nosignal-run7-teleported-control-it0": RunProfile(
         0, 0, 0.1, None, 385_820,
@@ -145,7 +156,8 @@ def parse_args() -> argparse.Namespace:
         "--road-supply-registry", type=Path,
         help=(
             "Optional full-network explicit storage/QSim-flow registry; "
-            "requires DVRP Taxi PCU=0.05."
+            "requires actual Taxi PCU multiplied by the profile's operational "
+            "sample share to equal 0.05."
         ),
     )
     parser.add_argument("--release-root", type=Path, required=True)
@@ -512,16 +524,31 @@ def build_command(
     # can split a school-bus trip into inconsistent per-leg routing modes.  The
     # formal profile starts from the original generic Candidate11 plans, so it
     # still requires the established SwissRailRaptor rebuild.
-    if not profile.fixed_selected_plans:
+    clear_pt_routes = (
+        not profile.fixed_selected_plans
+        if profile.clear_pt_routes is None
+        else profile.clear_pt_routes
+    )
+    if clear_pt_routes:
         command.append("--clear-pt-routes")
     if profile.taxi_execution == "dvrp":
         if fleet is None:
             raise ValueError("A Taxi fleet is required for DVRP command construction")
+        taxi_pcu_text = (
+            f"{taxi_pcu:.17g}"
+            if math.isclose(taxi_pcu, 1.0 / 6.0, rel_tol=0.0, abs_tol=1e-15)
+            else f"{taxi_pcu:g}"
+        )
         command.extend([
             f"--taxi-dvrp-fleet={fleet}",
-            f"--taxi-dvrp-pcu={taxi_pcu:g}",
+            f"--taxi-dvrp-pcu={taxi_pcu_text}",
             f"--taxi-wait-utility-per-hour={taxi_wait_utility_per_hour:g}",
         ])
+        if not math.isclose(profile.taxi_operational_sample_share, 1.0):
+            command.append(
+                "--taxi-operational-sample-share="
+                f"{profile.taxi_operational_sample_share:g}"
+            )
         if road_supply_registry is not None:
             command.append(f"--road-supply-registry={road_supply_registry}")
     elif profile.taxi_execution == "proxy":
@@ -593,10 +620,15 @@ def main() -> int:
         raise ValueError("Non-DVRP profiles do not accept Taxi DVRP PCU/wait overrides")
     if args.taxi_wait_utility_per_hour >= 0:
         raise ValueError("Taxi wait utility per hour must be negative")
+    equivalent_taxi_pcu = args.taxi_pcu * profile.taxi_operational_sample_share
     if args.road_supply_registry is not None and (
-        profile.taxi_execution != "dvrp" or args.taxi_pcu != 0.05
+        profile.taxi_execution != "dvrp"
+        or not math.isclose(equivalent_taxi_pcu, 0.05, rel_tol=0.0, abs_tol=1e-9)
     ):
-        raise ValueError("--road-supply-registry requires DVRP Taxi PCU=0.05")
+        raise ValueError(
+            "--road-supply-registry requires DVRP Taxi actual PCU multiplied by "
+            "operational sample share to equal the registry basis 0.05"
+        )
     if args.road_supply_registry is not None and args.network_input is None:
         raise ValueError("--road-supply-registry requires --network-input")
     if (args.transit_schedule_input is None) != (args.transit_vehicles_input is None):
@@ -819,6 +851,8 @@ def main() -> int:
                 "execution": "dvrp",
                 "fleet_size": actual_fleet_size,
                 "pcu": args.taxi_pcu,
+                "operational_sample_share": profile.taxi_operational_sample_share,
+                "full_fleet_equivalent_pcu": equivalent_taxi_pcu,
                 "wait_utility_per_hour": args.taxi_wait_utility_per_hour,
                 "fleet_source": str(source_fleet),
                 "fleet_source_sha256": sha256(source_fleet),

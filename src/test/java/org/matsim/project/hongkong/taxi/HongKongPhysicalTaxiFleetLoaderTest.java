@@ -59,4 +59,9 @@ class HongKongPhysicalTaxiFleetLoaderTest {
 		assertThrows(IllegalArgumentException.class,
 				() -> HongKongPhysicalTaxiFleetLoader.load(scenario, temp.resolve("missing.xml"), 0.2));
 	}
+
+	@Test
+	void acceptsThirtyPercentOperationalSamplePcu() {
+		assertTrue(HongKongPhysicalTaxiFleetLoader.ALLOWED_PCU.contains(1.0 / 6.0));
+	}
 }

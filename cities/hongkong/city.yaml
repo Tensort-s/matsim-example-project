@@ -292,6 +292,37 @@ physical_taxi_dvrp_v1_candidate:
   failed_attempt_policy: "retain every immutable payload, release, and run directory; never overwrite or relabel a failed attempt"
   limitation: "PCU 1 passes a bounded same-input congestion gate but is not an observed calibration; iteration 49, final request conservation, and output integrity remain outstanding"
 
+taxi_operational_sampling_30pct_shadow6_sensitivity:
+  status: "completed_exit0_technical_execution_validated_service_calibration_rejected"
+  documentation: "docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md"
+  server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260822_freeze44k_shadow6_30pct_run4"
+  iteration_range: [0, 0]
+  qsim_horizon: "30:00:00"
+  fixed_selected_plans: true
+  source_persons: 385820
+  source_taxi_legs: 44000
+  baseline_submitted_parent_requests: 43796
+  operational_shadow_requests: 218980
+  output_persons: 604800
+  operating_fleet: 4650
+  fleet_by_type: {urban: 3925, new_territories: 706, lantau: 19}
+  vehicle_pcu: 0.16666666666666666
+  operational_fleet_share: 0.30
+  full_fleet_equivalent_pcu: 0.05
+  submitted_requests: 244716
+  completed_requests: 35331
+  waiting_at_horizon: 205199
+  onboard_at_horizon: 4152
+  rejected: 34
+  served_wait_mean_s: 3727.911835473495
+  served_wait_p50_s: 1737
+  served_wait_p90_s: 10337
+  served_wait_p95_s: 12912.9
+  not_picked_rate: 0.83865787279949
+  empty_vkt_share: 0.369570863862311
+  decision: "reject: misses mean, median, p90, p95 and unserved service targets; do not adopt as behavioral or production scenario"
+  limitation: "Only 25736 original multi-trip requests were reached while all one-trip shadows submitted; raw MATSim mode statistics include zero-weight shadow persons unless explicitly filtered"
+
 simulation_parameters:
   iterations: 50
   flow_capacity_factor: 0.1
@@ -315,6 +346,7 @@ documentation:
   dynamic_car_cost_runtime: "docs/HONG_KONG_DYNAMIC_CAR_COST_RUNTIME.md"
   household_selector: "docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md"
   physical_taxi_dvrp_v1: "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md"
+  taxi_operational_sampling_sensitivity: "docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md"
 
 offline_audits:
   car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"

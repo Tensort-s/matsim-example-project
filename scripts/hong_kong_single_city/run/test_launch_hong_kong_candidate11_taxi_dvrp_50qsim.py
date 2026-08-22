@@ -327,6 +327,32 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertIn("--traffic-signals", command)
         self.assertIn("--clear-pt-routes", command)
 
+    def test_freeze44k_shadow6_profile_is_fixed_30pct_operational_layer(self) -> None:
+        profile = RUN_PROFILES["freeze44k-shadow6-30pct-it0"]
+        self.assertEqual((0, 0), (profile.first_iteration, profile.last_iteration))
+        self.assertEqual(4_650, profile.expected_fleet_size)
+        self.assertEqual(604_800, profile.expected_population_size)
+        self.assertEqual(262_980, profile.expected_initial_taxi_legs)
+        self.assertTrue(profile.fixed_selected_plans)
+        self.assertTrue(profile.traffic_signals)
+        self.assertTrue(profile.requires_network_override)
+        self.assertAlmostEqual(0.30, profile.taxi_operational_sample_share)
+        self.assertIn(1.0 / 6.0, ALLOWED_TAXI_PCU)
+
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=1.0 / 6.0, taxi_wait_utility_per_hour=-12.0,
+            profile=profile, xms="16g", xmx="128g",
+            road_supply_registry=Path("/release/road_supply.csv"),
+        )
+        self.assertIn("--taxi-dvrp-pcu=0.16666666666666666", command)
+        self.assertIn("--taxi-operational-sample-share=0.3", command)
+        self.assertIn(f"--road-supply-registry={Path('/release/road_supply.csv')}", command)
+        self.assertIn("--clear-pt-routes", command)
+        self.assertNotIn("--all-person-network-taxi-innovation", command)
+
     def test_transit_schedule_and_vehicle_overrides_are_atomic(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

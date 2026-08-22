@@ -525,6 +525,62 @@
       "heartbeat_id": "formal50-heartbeat",
       "documentation": "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md",
       "notes": "Iteration 0 exits zero and request states conserve exactly. The long p90 wait and 1,298 waiting/onboard requests at the horizon are retained supply-demand feedback, so run25 validates mechanics and accounting only. The exact frozen-plan proxy/physical A/B exits zero and PCU 1 passes the bounded congestion gate. Formal run4 is active after the run3 zero-distance Taxi candidate repair, and iteration 49 remains outstanding. Failed attempts stay in immutable server directories. This candidate does not replace current_final_run or adopt Candidate11 signals."
+    },
+    {
+      "name": "candidate5b_taxi_30pct_shadow6_frozen_iteration0_run4",
+      "role": "operational_sampling_sensitivity_rejected_not_current_final_output",
+      "status": "completed_exit0_request_conservation_validated_service_targets_failed",
+      "iterations": 1,
+      "iteration_range": [0, 0],
+      "server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260822_freeze44k_shadow6_30pct_run4",
+      "release_jar_sha256": "076168a513b40b830e35bfa866ef53c8883494bd03aeac025fa98856c59db531",
+      "input_plans_sha256": "88907ab2f157c99fe57fa8930725db1567b968625d1d690d13cf2bc73f2d4811",
+      "fixed_selected_plans": true,
+      "source_population": {
+        "persons": 385820,
+        "taxi_legs": 44000,
+        "baseline_submitted_parent_requests": 43796
+      },
+      "operational_expansion": {
+        "shadow_requests_per_parent": 5,
+        "shadow_persons": 218980,
+        "output_persons": 604800,
+        "output_taxi_legs": 262980
+      },
+      "fleet": {
+        "vehicles": 4650,
+        "urban": 3925,
+        "new_territories": 706,
+        "lantau": 19,
+        "pcu": 0.16666666666666666,
+        "operational_sample_share": 0.30,
+        "full_fleet_equivalent_pcu": 0.05
+      },
+      "request_accounting": {
+        "submitted": 244716,
+        "completed": 35331,
+        "waiting": 205199,
+        "onboard": 4152,
+        "rejected": 34,
+        "conservation_passed": true
+      },
+      "served_wait_seconds": {
+        "mean": 3727.911835473495,
+        "p50": 1737,
+        "p90": 10337,
+        "p95": 12912.9
+      },
+      "not_picked_rate": 0.83865787279949,
+      "vehicle_operations": {
+        "vehicles_used": 4650,
+        "completed_services": 35331,
+        "services_per_vehicle": 7.598064516129032,
+        "empty_vkt_km": 274064.496449,
+        "occupied_vkt_km": 467510.45776899986,
+        "empty_vkt_share": 0.369570863862311
+      },
+      "decision": "Rejected as a calibrated Taxi scenario: every wait and unserved target failed. Retained as a successful technical execution and supply-demand sensitivity only.",
+      "documentation": "docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md"
     }
   ],
   "shared_inputs": {

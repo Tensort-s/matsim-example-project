@@ -21,7 +21,8 @@ public final class HongKongPhysicalTaxiFleetLoader {
 
 	public static final String VEHICLE_TYPE_ID = "hk_physical_taxi";
 	public static final int PASSENGER_CAPACITY = 4;
-	public static final Set<Double> ALLOWED_PCU = Set.of(1.0, 0.75, 0.5, 0.25, 0.1, 0.05);
+	public static final Set<Double> ALLOWED_PCU = Set.of(
+			1.0, 0.75, 0.5, 0.25, 1.0 / 6.0, 0.1, 0.05);
 
 	private HongKongPhysicalTaxiFleetLoader() {
 	}

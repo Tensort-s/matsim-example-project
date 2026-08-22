@@ -101,8 +101,9 @@ public final class RunHongKong5Pct {
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
 						+ " [--fixed-plans-network-taxi-proxy]"
-						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.1|.05>]"
+						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
+						+ " [--taxi-operational-sample-share=1.0]"
 						+ " [--household-joint-selection-iterations=5,15,25,35]"
 						+ " [--household-joint-restore-selected-bindings=<expected-count>]"
 			);
@@ -137,6 +138,8 @@ public final class RunHongKong5Pct {
 		Path taxiDvrpFleet = optionPath(args, "--taxi-dvrp-fleet=");
 		Double taxiDvrpPcuOption = optionDouble(args, "--taxi-dvrp-pcu=");
 		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
+		Double taxiOperationalSampleShareOption = optionDouble(
+				args, "--taxi-operational-sample-share=");
 		String householdSelectionIterationsOption = optionString(
 				args, "--household-joint-selection-iterations=");
 		String restoreHouseholdBindingsOption = optionString(
@@ -146,17 +149,28 @@ public final class RunHongKong5Pct {
 				allPersonNetworkTaxiInnovation, fixedPlansNetworkTaxiProxy, physicalTaxi);
 		double taxiDvrpPcu = taxiDvrpPcuOption == null ? 1.0 : taxiDvrpPcuOption;
 		double taxiWaitUtility = taxiWaitUtilityOption == null ? -12.0 : taxiWaitUtilityOption;
-		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null)) {
+		double taxiOperationalSampleShare = taxiOperationalSampleShareOption == null
+				? 1.0 : taxiOperationalSampleShareOption;
+		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null
+				|| taxiOperationalSampleShareOption != null)) {
 			throw new IllegalArgumentException(
-					"Taxi DVRP PCU/wait options require --taxi-dvrp-fleet.");
+					"Taxi DVRP PCU/wait/operational-sample options require --taxi-dvrp-fleet.");
+		}
+		if (!Double.isFinite(taxiOperationalSampleShare)
+				|| taxiOperationalSampleShare <= 0 || taxiOperationalSampleShare > 1) {
+			throw new IllegalArgumentException(
+					"Taxi operational sample share must be in (0,1].");
 		}
 		if (physicalTaxi && !multimodalCosts) {
 			throw new IllegalArgumentException(
 					"Physical Taxi requires --multimodal-costs so fare and time are scored exactly once.");
 		}
-		if (roadSupplyRegistryPath != null && (!physicalTaxi || Math.abs(taxiDvrpPcu - 0.05) > 1e-9)) {
+		double fullFleetEquivalentTaxiPcu = taxiDvrpPcu * taxiOperationalSampleShare;
+		if (roadSupplyRegistryPath != null && (!physicalTaxi
+				|| Math.abs(fullFleetEquivalentTaxiPcu - 0.05) > 1e-9)) {
 			throw new IllegalArgumentException(
-					"Explicit road storage requires physical Taxi with PCU=0.05.");
+					"Explicit road storage requires physical Taxi actual PCU multiplied by "
+							+ "operational sample share to equal the registry basis 0.05.");
 		}
 		if (roadSupplyRegistryPath != null && roadHotspotRepairV1) {
 			throw new IllegalArgumentException(
@@ -335,7 +349,7 @@ public final class RunHongKong5Pct {
 				networkPath = Path.of(args[0]).toAbsolutePath().getParent().resolve(networkPath).normalize();
 			}
 			roadSupplyRegistry = HongKongRoadSupplyRegistry.load(
-					roadSupplyRegistryPath, networkPath, scenario, taxiDvrpPcu);
+					roadSupplyRegistryPath, networkPath, scenario, fullFleetEquivalentTaxiPcu);
 			System.out.printf(
 					"Validated explicit road-supply registry: roadLinks=%,d, storageOverrides=%,d, networkSHA=%s.%n",
 					roadSupplyRegistry.roadLinkCount(), roadSupplyRegistry.overrides().size(),
@@ -485,10 +499,12 @@ public final class RunHongKong5Pct {
 					scenario, taxiDvrpFleet, taxiDvrpPcu);
 			var routeStats = HongKongPhysicalTaxiRoutePreparation.prepare(scenario);
 			System.out.printf(
-					"Enabled physical Taxi fleet: vehicles=%,d, pcu=%.2f, service=%.0f..%.0f, "
+					"Enabled physical Taxi fleet: vehicles=%,d, pcu=%.6f, operationalSampleShare=%.3f, "
+							+ "fullFleetEquivalentPcu=%.6f, service=%.0f..%.0f, "
 							+ "taxiLegs=%,d, convertedRoutes=%,d, copiedTripAttributes=%,d, "
 							+ "removedLegacyProxyVehicles=%,d, removedLegacyPersonMappings=%,d.%n",
 					physicalTaxiFleetStats.vehicles(), physicalTaxiFleetStats.pcu(),
+					taxiOperationalSampleShare, fullFleetEquivalentTaxiPcu,
 					physicalTaxiFleetStats.earliestServiceBegin(),
 					physicalTaxiFleetStats.latestServiceEnd(), routeStats.taxiLegs(),
 					routeStats.convertedRoutes(), routeStats.copiedTripAttributes(),
@@ -883,7 +899,10 @@ public final class RunHongKong5Pct {
 			if (!scenario.getVehicles().getVehicles().containsKey(vehicleId)) {
 				scenario.getVehicles().addVehicle(VehicleUtils.createVehicle(vehicleId, vehicleType));
 			}
-			var ids = new java.util.LinkedHashMap<>(VehicleUtils.getVehicleIds(person));
+			java.util.Map<String, Id<Vehicle>> existing =
+					person.getAttributes().getAttribute("vehicles") == null
+							? java.util.Map.of() : VehicleUtils.getVehicleIds(person);
+			var ids = new java.util.LinkedHashMap<>(existing);
 			ids.put(org.matsim.api.core.v01.TransportMode.walk, vehicleId);
 			VehicleUtils.insertVehicleIdsIntoAttributes(person, ids);
 			assigned++;

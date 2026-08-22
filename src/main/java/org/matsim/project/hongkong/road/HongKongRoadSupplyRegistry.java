@@ -55,7 +55,7 @@ public final class HongKongRoadSupplyRegistry {
 			Path registryPath,
 			Path networkPath,
 			Scenario scenario,
-			double expectedTaxiPcu) {
+			double expectedFullFleetEquivalentTaxiPcu) {
 		Path registry = registryPath.toAbsolutePath().normalize();
 		Path network = networkPath.toAbsolutePath().normalize();
 		if (!Files.isRegularFile(registry) || !Files.isRegularFile(network)) {
@@ -172,10 +172,10 @@ public final class HongKongRoadSupplyRegistry {
 				|| Math.abs(qsim.getFlowCapFactor() - 0.1) > EPSILON
 				|| Math.abs(qsim.getTimeStepSize() - 1.0) > EPSILON
 				|| Math.abs(scenario.getNetwork().getEffectiveCellSize() - 7.5) > EPSILON
-				|| Math.abs(expectedTaxiPcu - 0.05) > EPSILON) {
+				|| Math.abs(expectedFullFleetEquivalentTaxiPcu - 0.05) > EPSILON) {
 			throw new IllegalArgumentException(
 					"Explicit-storage registry requires storage/flow factors=0.1, time step=1 s, "
-							+ "effective cell size=7.5 m, Taxi PCU=0.05");
+							+ "effective cell size=7.5 m, and full-fleet-equivalent Taxi PCU=0.05");
 		}
 		for (StorageOverride override : overrides.values()) {
 			double flowPerSecond = override.qsimFlowCapacityVehiclesPerHour() / 3600.0;

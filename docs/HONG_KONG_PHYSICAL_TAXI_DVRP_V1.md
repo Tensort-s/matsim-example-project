@@ -447,6 +447,12 @@ there is no active automatic monitor or relaunch task.
 
 ## Adoption boundary
 
+The operational-sampling sensitivity with a 30% fleet, five shadow requests
+per submitted behavioral Taxi request, and full-fleet-equivalent Taxi PCU 0.05
+is documented separately in
+`docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md`. It remains a frozen
+iteration-0 technical experiment and does not alter the adoption boundary.
+
 Until formal iteration 49 completes successfully:
 
 - this fleet remains opt-in candidate supply;
