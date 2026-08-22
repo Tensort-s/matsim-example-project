@@ -1092,6 +1092,23 @@ uses payload32 JAR SHA256
 No current production path, `current_final_run`, or adopted Candidate11 status
 is changed by this candidate metadata.
 
+## TCS full-fleet Taxi calibration sensitivity (rejected)
+
+A later frozen iteration-0 experiment keeps the full 15,500-vehicle fleet and
+PCU 0.05, converts the January-April 2026 median 723,763 official passenger
+journeys to 579,011 provisional hires at 1.25 passengers per hire, and only
+releases operational replicas after their behavioral parent actually submits.
+The corrected central run exits 0 and conserves 283,096 submitted requests,
+but 71.3730% are not picked up. Completed-request mean/p50/p90/p95 wait is
+2,423.4/465/7,718/10,782.7 seconds. Behavioral trip completion is 87.2490%,
+versus 98.4483% for the matched frozen baseline.
+
+The one-sided 1.35-passenger sensitivity reduces the target to 536,121 hires
+and also exits 0, yet not-picked remains 69.8217%, completed mean wait is
+3,284.0 seconds, and behavioral completion is 86.3972%. Both are retained as
+technically valid but service-rejected sensitivities; neither changes the
+adopted workflow. See `HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md`.
+
 ## Candidate5B signal A/B (opt-in)
 
 The Candidate5B signal A/B deliberately retains the original transit schedule

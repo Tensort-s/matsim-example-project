@@ -60,6 +60,8 @@ import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiFleetLoader;
 import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiFleetRegistry;
 import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiParameters;
 import org.matsim.project.hongkong.taxi.HongKongPhysicalTaxiRoutePreparation;
+import org.matsim.project.hongkong.taxi.HongKongTaxiOperationalRequestGateModule;
+import org.matsim.project.hongkong.taxi.HongKongTaxiOperationalRequestGateQSimModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkQSimModule;
 import org.matsim.project.hongkong.walk.HongKongWalkOvertimeScoringComponentModule;
@@ -104,6 +106,7 @@ public final class RunHongKong5Pct {
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
 						+ " [--taxi-operational-sample-share=1.0]"
+						+ " [--taxi-operational-parent-triggered]"
 						+ " [--household-joint-selection-iterations=5,15,25,35]"
 						+ " [--household-joint-restore-selected-bindings=<expected-count>]"
 			);
@@ -128,6 +131,8 @@ public final class RunHongKong5Pct {
 		boolean fixedPlansNetworkTaxiProxy = Arrays.asList(args)
 				.contains("--fixed-plans-network-taxi-proxy");
 		boolean walkOvertimeScoring = Arrays.asList(args).contains("--walk-overtime-scoring");
+		boolean taxiOperationalParentTriggered = Arrays.asList(args)
+				.contains("--taxi-operational-parent-triggered");
 		Path ptFareRoot = optionPath(args, "--pt-fare-root=");
 		Path carCostRoot = optionPath(args, "--car-cost-root=");
 		Path householdEscortBindings = optionPath(args, "--household-escort-bindings=");
@@ -155,6 +160,10 @@ public final class RunHongKong5Pct {
 				|| taxiOperationalSampleShareOption != null)) {
 			throw new IllegalArgumentException(
 					"Taxi DVRP PCU/wait/operational-sample options require --taxi-dvrp-fleet.");
+		}
+		if (taxiOperationalParentTriggered && !physicalTaxi) {
+			throw new IllegalArgumentException(
+					"Parent-triggered operational Taxi requests require a physical Taxi fleet.");
 		}
 		if (!Double.isFinite(taxiOperationalSampleShare)
 				|| taxiOperationalSampleShare <= 0 || taxiOperationalSampleShare > 1) {
@@ -286,6 +295,13 @@ public final class RunHongKong5Pct {
 										config.controller().getLastIteration()));
 		if (physicalTaxi) {
 			configurePhysicalTaxi(config, taxiDvrpPcu, taxiWaitUtility);
+		}
+		if (taxiOperationalParentTriggered) {
+			if (config.controller().getFirstIteration() != config.controller().getLastIteration()) {
+				throw new IllegalArgumentException(
+						"Parent-triggered operational Taxi population is restricted to a frozen one-iteration test.");
+			}
+			HongKongTaxiOperationalRequestGateQSimModule.activateInConfig(config);
 		}
 		SignalSystemsConfigGroup signalConfig = ConfigUtils.addOrGetModule(
 				config, SignalSystemsConfigGroup.class);
@@ -547,6 +563,12 @@ public final class RunHongKong5Pct {
 							physicalTaxiFleetStats.serviceWindows())));
 			controler.configureQSimComponents(
 					DvrpQSimComponents.activateAllModes(taxiConfig));
+			if (taxiOperationalParentTriggered) {
+				controler.addOverridingModule(new HongKongTaxiOperationalRequestGateModule());
+				controler.addQSimModule(new HongKongTaxiOperationalRequestGateQSimModule());
+				System.out.println("Enabled parent-triggered operational Taxi requests; "
+						+ "a separate zero-weight-shadow-filtered behavioral audit is written.");
+			}
 			System.out.println(
 					"Enabled official Taxi/DVRP passenger engine and assignment optimizer; "
 							+ "person-local Taxi proxy is disabled.");

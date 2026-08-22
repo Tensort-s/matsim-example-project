@@ -323,6 +323,43 @@ taxi_operational_sampling_30pct_shadow6_sensitivity:
   decision: "reject: misses mean, median, p90, p95 and unserved service targets; do not adopt as behavioral or production scenario"
   limitation: "Only 25736 original multi-trip requests were reached while all one-trip shadows submitted; raw MATSim mode statistics include zero-weight shadow persons unless explicitly filtered"
 
+taxi_tcs_fullfleet_parent_triggered_calibration:
+  status: "completed_exit0_technical_execution_validated_service_calibration_rejected"
+  documentation: "docs/HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md"
+  official_control: "Jan-Apr 2026 median 723763 Taxi passenger journeys/day"
+  central_party_occupancy_assumption: 1.25
+  central_hire_target: 579011
+  central_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260823_tcs579011_fullfleet_run2"
+  central_submitted: 283096
+  central_completed: 69507
+  central_waiting: 202001
+  central_onboard: 11535
+  central_rejected: 53
+  central_completed_wait_mean_s: 2423.4138432100362
+  central_completed_wait_p50_s: 465
+  central_completed_wait_p90_s: 7718
+  central_completed_wait_p95_s: 10782.7
+  central_not_picked_rate: 0.7137296182213807
+  central_behavioral_trip_completion: 0.872490297385471
+  high_occupancy_assumption: 1.35
+  high_occupancy_hire_target: 536121
+  high_occupancy_server_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260823_tcs536121_fullfleet_run1"
+  high_occupancy_submitted: 265051
+  high_occupancy_completed: 68780
+  high_occupancy_waiting: 185014
+  high_occupancy_onboard: 11208
+  high_occupancy_rejected: 49
+  high_occupancy_completed_wait_mean_s: 3283.992803140448
+  high_occupancy_completed_wait_p50_s: 508
+  high_occupancy_completed_wait_p90_s: 8629.2
+  high_occupancy_completed_wait_p95_s: 14060.05
+  high_occupancy_not_picked_rate: 0.6982165696413143
+  high_occupancy_behavioral_trip_completion: 0.863972437312907
+  fleet: 15500
+  vehicle_pcu: 0.05
+  parent_triggered: true
+  decision: "reject both: aggregate waits, not-picked, blackout and behavioral completion gates fail; do not run the demand-increasing 1.15 sensitivity"
+
 simulation_parameters:
   iterations: 50
   flow_capacity_factor: 0.1
@@ -347,6 +384,7 @@ documentation:
   household_selector: "docs/HONG_KONG_HOUSEHOLD_MAX_UTILITY_SELECTOR.md"
   physical_taxi_dvrp_v1: "docs/HONG_KONG_PHYSICAL_TAXI_DVRP_V1.md"
   taxi_operational_sampling_sensitivity: "docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md"
+  taxi_tcs_fullfleet_calibration: "docs/HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md"
 
 offline_audits:
   car_cost_v1: "data/transport_costs/hongkong/car_cost_v1/"

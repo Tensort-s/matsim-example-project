@@ -33,6 +33,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** Scores physical Taxi waiting and writes one compact request row per iteration. */
 public final class HongKongTaxiRequestAuditHandler implements
@@ -54,6 +55,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 	private final double totalWaitUtilityPerSecond;
 	private final HongKongPhysicalTaxiFleetRegistry fleetRegistry;
 	private final Network network;
+	private final Set<Id<Person>> operationalPersons;
 	private final Map<Id<Request>, RequestState> requests = new LinkedHashMap<>();
 	private final Map<Id<Vehicle>, VehicleState> vehicles = new LinkedHashMap<>();
 	private int iteration = -1;
@@ -67,7 +69,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 			Scenario scenario) {
 		this(events, output, parameters.extraWaitUtilityPerSecond(),
 				parameters.baseTravelUtilityPerSecond(), parameters.totalWaitUtilityPerSecond(),
-				fleetRegistry, scenario.getNetwork());
+				fleetRegistry, scenario.getNetwork(), operationalPersons(scenario));
 	}
 
 	HongKongTaxiRequestAuditHandler(
@@ -75,7 +77,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 			OutputDirectoryHierarchy output,
 			double extraWaitUtilityPerSecond) {
 		this(events, output, extraWaitUtilityPerSecond, -6.0 / 3600.0,
-				extraWaitUtilityPerSecond - 6.0 / 3600.0, null, null);
+				extraWaitUtilityPerSecond - 6.0 / 3600.0, null, null, Set.of());
 	}
 
 	HongKongTaxiRequestAuditHandler(
@@ -86,6 +88,19 @@ public final class HongKongTaxiRequestAuditHandler implements
 			double totalWaitUtilityPerSecond,
 			HongKongPhysicalTaxiFleetRegistry fleetRegistry,
 			Network network) {
+		this(events, output, extraWaitUtilityPerSecond, baseTravelUtilityPerSecond,
+				totalWaitUtilityPerSecond, fleetRegistry, network, Set.of());
+	}
+
+	HongKongTaxiRequestAuditHandler(
+			EventsManager events,
+			OutputDirectoryHierarchy output,
+			double extraWaitUtilityPerSecond,
+			double baseTravelUtilityPerSecond,
+			double totalWaitUtilityPerSecond,
+			HongKongPhysicalTaxiFleetRegistry fleetRegistry,
+			Network network,
+			Set<Id<Person>> operationalPersons) {
 		this.events = events;
 		this.output = output;
 		if (!Double.isFinite(extraWaitUtilityPerSecond) || extraWaitUtilityPerSecond > 0
@@ -100,6 +115,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 		this.totalWaitUtilityPerSecond = totalWaitUtilityPerSecond;
 		this.fleetRegistry = fleetRegistry;
 		this.network = network;
+		this.operationalPersons = Set.copyOf(operationalPersons);
 	}
 
 	@Override
@@ -115,8 +131,14 @@ public final class HongKongTaxiRequestAuditHandler implements
 	@Override
 	public void handleEvent(PassengerRequestSubmittedEvent event) {
 		if (!isTaxi(event.getMode())) return;
+		boolean operational = event.getPersonIds().stream().allMatch(operationalPersons::contains);
+		boolean anyOperational = event.getPersonIds().stream().anyMatch(operationalPersons::contains);
+		if (operational != anyOperational) {
+			throw new IllegalStateException("Taxi request mixes behavioral and operational passengers: "
+					+ event.getRequestId());
+		}
 		RequestState state = new RequestState(
-				event.getRequestId(), event.getPersonIds(), event.getTime());
+				event.getRequestId(), event.getPersonIds(), event.getTime(), operational);
 		if (requests.put(event.getRequestId(), state) != null) {
 			throw new IllegalStateException("Duplicate Taxi request submitted: " + event.getRequestId());
 		}
@@ -227,6 +249,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 		double wait = Math.max(0, endTime - state.submissionTime);
 		double score = utilityPerSecond * wait;
 		state.waitScored.put(personId, wait);
+		if (state.operational) return;
 		events.processEvent(new PersonScoreEvent(endTime, personId, score, kind));
 	}
 
@@ -236,7 +259,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 		List<RequestState> rows = new ArrayList<>(requests.values());
 		rows.sort(Comparator.comparing(state -> state.requestId.toString()));
 		try (BufferedWriter writer = IOUtils.getBufferedWriter(filename)) {
-			writer.write("request_id,person_ids,submitted_s,picked_up_s,dropped_off_s,wait_s,vehicle_id,status,rejection_cause,horizon_s\n");
+			writer.write("request_id,person_ids,operational_only,submitted_s,picked_up_s,dropped_off_s,wait_s,vehicle_id,status,rejection_cause,horizon_s\n");
 			for (RequestState state : rows) {
 				double pickup = state.pickupTimes.values().stream().mapToDouble(Double::doubleValue).min().orElse(Double.NaN);
 				double dropoff = state.dropoffTimes.values().stream().mapToDouble(Double::doubleValue).max().orElse(Double.NaN);
@@ -246,6 +269,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 						: state.pickupTimes.isEmpty() ? "waiting" : "onboard";
 				writer.write(csv(state.requestId.toString()) + ","
 						+ csv(state.personIds.stream().map(Object::toString).sorted().reduce((a, b) -> a + "|" + b).orElse("")) + ","
+						+ state.operational + ","
 						+ state.submissionTime + "," + number(pickup) + "," + number(dropoff) + ","
 						+ number(wait) + "," + csv(state.vehicleId) + "," + status + ","
 						+ csv(state.rejectionCause) + "," + horizon + "\n");
@@ -261,6 +285,8 @@ public final class HongKongTaxiRequestAuditHandler implements
 		long waiting = requests.values().stream().filter(s -> "waiting".equals(status(s))).count();
 		long onboard = requests.values().stream().filter(s -> "onboard".equals(status(s))).count();
 		long rejected = requests.values().stream().filter(s -> "rejected".equals(status(s))).count();
+		long operationalSubmitted = requests.values().stream().filter(s -> s.operational).count();
+		long behavioralSubmitted = requests.size() - operationalSubmitted;
 		if (requests.size() != completed + waiting + onboard + rejected) {
 			throw new IllegalStateException("Taxi request conservation failed");
 		}
@@ -276,10 +302,11 @@ public final class HongKongTaxiRequestAuditHandler implements
 		double totalMeters = emptyMeters + occupiedMeters;
 		String summary = output.getIterationFilename(iteration, "taxi_operating_summary.csv");
 		try (BufferedWriter writer = IOUtils.getBufferedWriter(summary)) {
-			writer.write("submitted,completed,waiting,onboard,rejected,wait_p50_s,wait_p90_s,wait_p95_s,wait_p99_s,"
+			writer.write("submitted,behavioral_submitted,operational_submitted,completed,waiting,onboard,rejected,wait_p50_s,wait_p90_s,wait_p95_s,wait_p99_s,"
 					+ "fleet_vehicles,vehicles_used,completed_services,services_per_fleet_vehicle,services_per_used_vehicle,"
 					+ "empty_vkt_km,occupied_vkt_km,empty_vkt_ratio,onboard_utilization,horizon_s\n");
-			writer.write(requests.size() + "," + completed + "," + waiting + "," + onboard + "," + rejected + ","
+			writer.write(requests.size() + "," + behavioralSubmitted + "," + operationalSubmitted
+					+ "," + completed + "," + waiting + "," + onboard + "," + rejected + ","
 					+ quantile(waits, .50) + "," + quantile(waits, .90) + "," + quantile(waits, .95) + ","
 					+ quantile(waits, .99) + "," + vehicles.size() + "," + used + "," + services + ","
 					+ ratio(services, vehicles.size()) + "," + ratio(services, used) + ","
@@ -336,6 +363,12 @@ public final class HongKongTaxiRequestAuditHandler implements
 		return HongKongTaxiScoringParameters.TAXI_MODE.equals(mode);
 	}
 
+	private static Set<Id<Person>> operationalPersons(Scenario scenario) {
+		return scenario.getPopulation().getPersons().values().stream()
+				.filter(HongKongTaxiOperationalRequestGate::isShadow)
+				.map(Person::getId).collect(java.util.stream.Collectors.toUnmodifiableSet());
+	}
+
 	private static String number(double value) {
 		return Double.isFinite(value) ? Double.toString(value) : "";
 	}
@@ -349,6 +382,7 @@ public final class HongKongTaxiRequestAuditHandler implements
 		private final Id<Request> requestId;
 		private final List<Id<Person>> personIds;
 		private final double submissionTime;
+		private final boolean operational;
 		private final Map<Id<Person>, Double> pickupTimes = new LinkedHashMap<>();
 		private final Map<Id<Person>, Double> dropoffTimes = new LinkedHashMap<>();
 		private final Map<Id<Person>, Double> waitScored = new LinkedHashMap<>();
@@ -357,10 +391,12 @@ public final class HongKongTaxiRequestAuditHandler implements
 		private Double rejectionTime;
 		private String rejectionCause = "";
 
-		private RequestState(Id<Request> requestId, List<Id<Person>> personIds, double submissionTime) {
+		private RequestState(Id<Request> requestId, List<Id<Person>> personIds,
+				double submissionTime, boolean operational) {
 			this.requestId = requestId;
 			this.personIds = List.copyOf(personIds);
 			this.submissionTime = submissionTime;
+			this.operational = operational;
 		}
 	}
 

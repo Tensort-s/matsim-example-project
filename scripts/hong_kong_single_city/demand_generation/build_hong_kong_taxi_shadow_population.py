@@ -2,11 +2,11 @@
 
 The original selected plans are copied byte-for-byte.  For every selected Taxi
 leg that submitted a request in the frozen baseline audit, ``shadow_copies``
-one-trip synthetic passengers are appended.  Their departure time is
-deterministically resampled inside the parent's 15-minute bucket, while their
-origin/destination inherit the parent's already validated car links.  Shadows
-are tagged and must be excluded from behavioral demand,
-mode-share, and score statistics.
+one-trip synthetic passengers are appended.  The runtime gate holds them until
+the matching parent actually submits, then releases them over a deterministic
+0-899 second interval.  Their origin/destination inherit the parent's already
+validated car links.  Shadows are tagged and must be excluded from behavioral
+demand, mode-share, and score statistics.
 """
 
 from __future__ import annotations
@@ -35,6 +35,7 @@ SHADOW_ATTRIBUTE = "hkTaxiOperationalShadow"
 PARENT_ATTRIBUTE = "hkTaxiShadowParentPersonId"
 PARENT_LEG_ATTRIBUTE = "hkTaxiShadowParentLegIndex"
 REPLICA_ATTRIBUTE = "hkTaxiShadowReplica"
+RELEASE_DELAY_ATTRIBUTE = "hkTaxiShadowReleaseDelaySeconds"
 DEFAULT_SEED = 20260822
 DEFAULT_SHADOW_COPIES = 5
 BUCKET_SECONDS = 15 * 60
@@ -299,6 +300,7 @@ def shadow_xml(
     origin_link: str,
     destination_link: str,
     departure_s: float,
+    release_delay_s: int = 0,
 ) -> str:
     person_id = f"hk_taxi_shadow_{parent.person_id}_{parent.leg_index}_{replica}"
     attrs = "".join([
@@ -306,13 +308,14 @@ def shadow_xml(
         attribute(PARENT_ATTRIBUTE, "java.lang.String", parent.person_id),
         attribute(PARENT_LEG_ATTRIBUTE, "java.lang.Integer", str(parent.leg_index)),
         attribute(REPLICA_ATTRIBUTE, "java.lang.Integer", str(replica)),
+        attribute(RELEASE_DELAY_ATTRIBUTE, "java.lang.Integer", str(release_delay_s)),
         attribute("role", "java.lang.String", "taxi_operational_shadow"),
         attribute("subpopulation", "java.lang.String", "resident"),
         attribute("expansionWeight", "java.lang.Double", "0.0"),
     ])
     leg_attrs = "".join([
         attribute("routingMode", "java.lang.String", "taxi"),
-        attribute("hkTaxiClassificationSource", "java.lang.String", "freeze44k_shadow6_30pct_v1"),
+        attribute("hkTaxiClassificationSource", "java.lang.String", "tcs_hires_parent_triggered_v1"),
         attribute(SHADOW_ATTRIBUTE, "java.lang.Boolean", "true"),
     ])
     return (
@@ -374,6 +377,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output-plans", type=Path, required=True)
     parser.add_argument("--output-audit", type=Path, required=True)
     parser.add_argument("--shadow-copies", type=int, default=DEFAULT_SHADOW_COPIES)
+    parser.add_argument(
+        "--target-total-requests", type=int,
+        help=(
+            "Exact parent-plus-shadow operational request target. When supplied, "
+            "each submitted parent receives a deterministic integer total and "
+            "--shadow-copies is ignored."
+        ),
+    )
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     return parser.parse_args(argv)
 
@@ -391,6 +402,35 @@ def run(args: argparse.Namespace) -> dict:
     all_parents, original_persons = extract_taxi_legs(args.plans)
     submitted = submitted_requests_by_person(args.submitted_request_audit)
     parents, submitted_request_rows = retain_submitted_parent_legs(all_parents, submitted)
+    if args.target_total_requests is not None:
+        if args.target_total_requests < len(parents):
+            raise ValueError(
+                "--target-total-requests cannot be smaller than the submitted parent count"
+            )
+        base_total, remainder = divmod(args.target_total_requests, len(parents))
+        ranked = sorted(
+            parents,
+            key=lambda parent: (
+                hashlib.sha256(
+                    f"{args.seed}|target|{parent.person_id}|{parent.leg_index}".encode("utf-8")
+                ).digest(),
+                parent.person_id,
+                parent.leg_index,
+            ),
+        )
+        extra_keys = {
+            (parent.person_id, parent.leg_index) for parent in ranked[:remainder]
+        }
+        total_by_parent = {
+            (parent.person_id, parent.leg_index): base_total
+            + ((parent.person_id, parent.leg_index) in extra_keys)
+            for parent in parents
+        }
+    else:
+        total_by_parent = {
+            (parent.person_id, parent.leg_index): args.shadow_copies + 1
+            for parent in parents
+        }
     shadows: list[str] = []
     counters: Counter[str] = Counter()
     for parent in parents:
@@ -399,12 +439,17 @@ def run(args: argparse.Namespace) -> dict:
         # graph, so spatial perturbation is deliberately prohibited here.
         nearby_candidates(parent.origin_link, links, incident)
         nearby_candidates(parent.destination_link, links, incident)
-        bucket_start = math.floor(parent.departure_s / BUCKET_SECONDS) * BUCKET_SECONDS
-        for replica in range(1, args.shadow_copies + 1):
+        total_requests = total_by_parent[(parent.person_id, parent.leg_index)]
+        counters[f"parents_with_{total_requests}_total_requests"] += 1
+        for replica in range(1, total_requests):
             rng = stable_rng(args.seed, parent.person_id, parent.leg_index, replica)
             origin = parent.origin_link
             destination = parent.destination_link
-            departure = bucket_start + rng.randint(0, BUCKET_SECONDS - 1)
+            # The plan reaches the gate at the parent's planned departure. The
+            # gate releases it only after the real parent request is submitted,
+            # with this deterministic offset spreading replicas over 15 minutes.
+            departure = parent.departure_s
+            release_delay = rng.randint(0, BUCKET_SECONDS - 1)
             if origin == parent.origin_link:
                 counters["origin_unchanged"] += 1
             else:
@@ -413,7 +458,9 @@ def run(args: argparse.Namespace) -> dict:
                 counters["destination_unchanged"] += 1
             else:
                 counters["destination_perturbed"] += 1
-            shadows.append(shadow_xml(parent, replica, origin, destination, departure))
+            shadows.append(shadow_xml(
+                parent, replica, origin, destination, departure, release_delay
+            ))
     write_population(args.plans, args.output_plans, shadows)
     audit = {
         "status": "validated",
@@ -427,8 +474,13 @@ def run(args: argparse.Namespace) -> dict:
             "submitted_request_audit_sha256": sha256(args.submitted_request_audit),
         },
         "parameters": {
-            "shadow_copies_per_parent_taxi_leg": args.shadow_copies,
-            "operational_multiplier": args.shadow_copies + 1,
+            "shadow_copies_per_parent_taxi_leg": (
+                None if args.target_total_requests is not None else args.shadow_copies
+            ),
+            "target_total_requests": args.target_total_requests,
+            "mean_operational_multiplier": (
+                (len(parents) + len(shadows)) / len(parents)
+            ),
             "seed": args.seed,
             "time_bucket_seconds": BUCKET_SECONDS,
             "spatial_perturbation_m": 0.0,
@@ -452,7 +504,9 @@ def run(args: argparse.Namespace) -> dict:
             "original_population_bytes_preserved_before_closing_tag": True,
             "shadow_expansion_weight_zero": True,
             "shadow_behavioral_statistics_excluded": True,
-            "shadow_departure_preserves_parent_15min_bucket": True,
+            "shadow_requires_runtime_parent_request_trigger": True,
+            "shadow_release_delay_range_seconds": [0, BUCKET_SECONDS - 1],
+            "shadow_departure_preserves_parent_15min_bucket": False,
             "shadow_od_inherits_parent_validated_links": True,
             "shadows_only_for_baseline_submitted_parent_requests": True,
         },

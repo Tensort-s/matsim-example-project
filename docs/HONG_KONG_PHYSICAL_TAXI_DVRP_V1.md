@@ -453,6 +453,13 @@ is documented separately in
 `docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md`. It remains a frozen
 iteration-0 technical experiment and does not alter the adoption boundary.
 
+The subsequent TCS passenger-to-hire experiment restores all 15,500 vehicles,
+uses parent-triggered zero-weight operational replicas, and tests 579,011 and
+536,121 daily-hire targets. Both runs exit 0 and conserve requests, but retain
+69.82%--71.37% not-picked shares and fail the behavioral-completion gate. They
+are documented in `docs/HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md` and do
+not alter the adoption boundary.
+
 Until formal iteration 49 completes successfully:
 
 - this fleet remains opt-in candidate supply;

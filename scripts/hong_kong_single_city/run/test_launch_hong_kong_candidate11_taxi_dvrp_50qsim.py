@@ -214,6 +214,25 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertEqual(2, len(fixed_settings))
         self.assertTrue(all(item["strategyName"] == "KeepLastSelected" for item in fixed_settings))
         self.assertTrue(all(item["weight"] == "1.0" for item in fixed_settings))
+
+        tcs_profile = RUN_PROFILES["freeze44k-tcs579011-fullfleet-it0"]
+        self.assertEqual(15_500, tcs_profile.expected_fleet_size)
+        self.assertEqual(921_035, tcs_profile.expected_population_size)
+        self.assertEqual(579_215, tcs_profile.expected_initial_taxi_legs)
+        self.assertTrue(tcs_profile.taxi_operational_parent_triggered)
+        tcs_command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-12.0,
+            profile=tcs_profile, xms="16g", xmx="128g",
+        )
+        self.assertIn("--taxi-operational-parent-triggered", tcs_command)
+        high_occupancy_profile = RUN_PROFILES["freeze44k-tcs536121-fullfleet-it0"]
+        self.assertEqual(15_500, high_occupancy_profile.expected_fleet_size)
+        self.assertEqual(878_145, high_occupancy_profile.expected_population_size)
+        self.assertEqual(536_325, high_occupancy_profile.expected_initial_taxi_legs)
+        self.assertTrue(high_occupancy_profile.taxi_operational_parent_triggered)
         physical_profile = RUN_PROFILES["gate-0-1"]
         proxy_profile = RUN_PROFILES["gate-0-1-proxy"]
         self.assertEqual(

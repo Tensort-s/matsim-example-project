@@ -114,6 +114,43 @@ class TaxiShadowPopulationTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "lacks route"):
                 MODULE.extract_taxi_legs(plans)
 
+    def test_exact_target_uses_parent_trigger_delays(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            network = root / "network.xml.gz"
+            plans = root / "plans.xml.gz"
+            submitted = root / "requests.csv.gz"
+            output = root / "output.xml.gz"
+            audit = root / "audit.json"
+            with gzip.open(network, "wt", encoding="utf-8") as handle:
+                handle.write(NETWORK)
+            with gzip.open(plans, "wt", encoding="utf-8") as handle:
+                handle.write(PLANS)
+            with gzip.open(submitted, "wt", encoding="utf-8") as handle:
+                handle.write("request_id,person_ids,status\nrequest,p1,completed\n")
+            result = MODULE.run(MODULE.parse_args([
+                "--plans", str(plans), "--network", str(network),
+                "--submitted-request-audit", str(submitted),
+                "--output-plans", str(output), "--output-audit", str(audit),
+                "--target-total-requests", "14", "--seed", "23",
+            ]))
+            self.assertEqual(13, result["counts"]["shadow_persons"])
+            self.assertEqual(14, result["counts"]["output_taxi_legs"])
+            with gzip.open(output, "rb") as handle:
+                population = ET.parse(handle).getroot()
+            shadows = population.findall("person")[2:]
+            delays = []
+            for person in shadows:
+                attrs = {
+                    item.get("name"): item.text
+                    for item in person.find("attributes").findall("attribute")
+                }
+                delays.append(int(attrs[MODULE.RELEASE_DELAY_ATTRIBUTE]))
+                leg = list(person.find("plan"))[1]
+                self.assertEqual("07:07:30", leg.get("dep_time"))
+            self.assertTrue(all(0 <= delay < 900 for delay in delays))
+            self.assertGreater(len(set(delays)), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -49,6 +49,7 @@ class RunProfile:
     restored_household_bindings: int | None = None
     taxi_operational_sample_share: float = 1.0
     clear_pt_routes: bool | None = None
+    taxi_operational_parent_triggered: bool = False
 
 
 RUN_PROFILES = {
@@ -102,6 +103,22 @@ RUN_PROFILES = {
         requires_network_override=True, expected_initial_taxi_legs=262_980,
         taxi_operational_sample_share=0.30,
         clear_pt_routes=True,
+    ),
+    "freeze44k-tcs579011-fullfleet-it0": RunProfile(
+        0, 0, 0.1, 15_500, 921_035,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=True, traffic_signals=True,
+        requires_network_override=True, expected_initial_taxi_legs=579_215,
+        taxi_operational_sample_share=1.0, clear_pt_routes=True,
+        taxi_operational_parent_triggered=True,
+    ),
+    "freeze44k-tcs536121-fullfleet-it0": RunProfile(
+        0, 0, 0.1, 15_500, 878_145,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=True, traffic_signals=True,
+        requires_network_override=True, expected_initial_taxi_legs=536_325,
+        taxi_operational_sample_share=1.0, clear_pt_routes=True,
+        taxi_operational_parent_triggered=True,
     ),
     "nosignal-run7-teleported-control-it0": RunProfile(
         0, 0, 0.1, None, 385_820,
@@ -551,6 +568,8 @@ def build_command(
             )
         if road_supply_registry is not None:
             command.append(f"--road-supply-registry={road_supply_registry}")
+        if profile.taxi_operational_parent_triggered:
+            command.append("--taxi-operational-parent-triggered")
     elif profile.taxi_execution == "proxy":
         if fleet is not None:
             raise ValueError("Proxy command construction must not receive a Taxi fleet")
@@ -852,6 +871,7 @@ def main() -> int:
                 "fleet_size": actual_fleet_size,
                 "pcu": args.taxi_pcu,
                 "operational_sample_share": profile.taxi_operational_sample_share,
+                "operational_parent_triggered": profile.taxi_operational_parent_triggered,
                 "full_fleet_equivalent_pcu": equivalent_taxi_pcu,
                 "wait_utility_per_hour": args.taxi_wait_utility_per_hour,
                 "fleet_source": str(source_fleet),

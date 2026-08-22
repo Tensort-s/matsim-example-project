@@ -581,6 +581,77 @@
       },
       "decision": "Rejected as a calibrated Taxi scenario: every wait and unserved target failed. Retained as a successful technical execution and supply-demand sensitivity only.",
       "documentation": "docs/HONG_KONG_TAXI_30PCT_SHADOW6_FREEZE_TEST.md"
+    },
+    {
+      "name": "candidate5b_taxi_tcs579011_fullfleet_parent_triggered_it0_run2",
+      "role": "tcs_passenger_to_hire_fullfleet_calibration_rejected_not_current_final_output",
+      "status": "completed_exit0_request_conservation_validated_service_targets_failed",
+      "server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260823_tcs579011_fullfleet_run2",
+      "release_jar_sha256": "09c6b0b0e637abb02bce7261f5cb12df61535e49fc8592c7d1104cc9bb7a5b98",
+      "iterations": 1,
+      "fleet": {"vehicles": 15500, "pcu": 0.05},
+      "demand": {
+        "official_passenger_journeys": 723763,
+        "party_occupancy_assumption": 1.25,
+        "hire_target": 579011,
+        "behavioral_persons": 385820,
+        "operational_persons": 535215,
+        "parent_triggered": true
+      },
+      "request_accounting": {
+        "submitted": 283096,
+        "completed": 69507,
+        "waiting": 202001,
+        "onboard": 11535,
+        "rejected": 53,
+        "conservation_passed": true
+      },
+      "completed_wait_seconds": {
+        "mean": 2423.4138432100362,
+        "p50": 465,
+        "p90": 7718,
+        "p95": 10782.7
+      },
+      "not_picked_rate": 0.7137296182213807,
+      "behavioral_trip_completion": 0.872490297385471,
+      "matched_baseline_trip_completion": 0.984483,
+      "decision": "Rejected: wait, not-picked, pickup-blackout and behavioral completion gates fail.",
+      "documentation": "docs/HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md"
+    },
+    {
+      "name": "candidate5b_taxi_tcs536121_fullfleet_parent_triggered_it0_run1",
+      "role": "high_party_occupancy_sensitivity_rejected_not_current_final_output",
+      "status": "completed_exit0_request_conservation_validated_service_targets_failed",
+      "server_run": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260823_tcs536121_fullfleet_run1",
+      "release_jar_sha256": "09c6b0b0e637abb02bce7261f5cb12df61535e49fc8592c7d1104cc9bb7a5b98",
+      "iterations": 1,
+      "fleet": {"vehicles": 15500, "pcu": 0.05},
+      "demand": {
+        "official_passenger_journeys": 723763,
+        "party_occupancy_assumption": 1.35,
+        "hire_target": 536121,
+        "behavioral_persons": 385820,
+        "operational_persons": 492325,
+        "parent_triggered": true
+      },
+      "request_accounting": {
+        "submitted": 265051,
+        "completed": 68780,
+        "waiting": 185014,
+        "onboard": 11208,
+        "rejected": 49,
+        "conservation_passed": true
+      },
+      "completed_wait_seconds": {
+        "mean": 3283.992803140448,
+        "p50": 508,
+        "p90": 8629.2,
+        "p95": 14060.05
+      },
+      "not_picked_rate": 0.6982165696413143,
+      "behavioral_trip_completion": 0.863972437312907,
+      "decision": "Rejected: a 7.4% task reduction is insufficient and does not improve completed waits or behavioral completion monotonically.",
+      "documentation": "docs/HONG_KONG_TAXI_TCS_FULL_FLEET_CALIBRATION.md"
     }
   ],
   "shared_inputs": {
