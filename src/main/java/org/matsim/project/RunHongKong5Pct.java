@@ -492,8 +492,8 @@ public final class RunHongKong5Pct {
 			System.out.printf(
 					"Protected %,d household joint/escort or student candidate people from ordinary "
 							+ "individual replanning; %,d additional people with unpriced border activities "
-							+ "retain route and time innovation but cannot generate a new Car mode; all other "
-							+ "agents retain route, mode, and time innovation.%n",
+							+ "use the no-new-Car subpopulation. Permitted replanning for border and ordinary "
+							+ "agents follows the configured strategy table.%n",
 					protectedPeople, borderPeople);
 		}
 		HongKongCarOriginAnchorObservationCatalog carOriginAnchorCatalog =

@@ -58,6 +58,14 @@ The launcher profiles are `score-factorial-frozen-it0` and
 `score-factorial-10`, with required `--scoring-arm=a0|a1|a2|a3`. Every attempt
 uses new immutable payload, release, and run directories.
 
+After all four arms exit successfully,
+`audit_hong_kong_walk_taxi_scoring_factorial.py` reads each iteration's plans,
+completed trips, compact Taxi request audit, and score statistics. It writes a
+single JSON report plus long-form iteration metrics and initial-to-final mode
+transition matrices. Durations and completion rates are grouped by the planned
+main mode, so PT-to-Walk fallback trips cannot silently inflate the Walk result;
+the actual-mode mismatch counts remain explicit.
+
 The Java startup contract validates this screening topology separately from
 the maximum-utility joint-selector topology: the protected subpopulation must
 contain only `KeepLastSelected` at weight 1; the unpriced-border no-car
