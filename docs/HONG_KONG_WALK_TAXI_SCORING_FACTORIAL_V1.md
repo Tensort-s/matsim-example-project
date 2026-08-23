@@ -50,6 +50,8 @@ iterations 0--9 with a common seed. Ordinary residents/visitors may use only
 `ChangeExpBeta`. Route and departure-time innovation are disabled. Household
 and student people are assigned the protected subpopulation once and remain
 frozen; no joint selector runs during the factorial screen.
+Selected plans and trips are written every screening iteration so iterations
+7--9 can be audited directly; events retain the ten-iteration interval.
 
 The launcher profiles are `score-factorial-frozen-it0` and
 `score-factorial-10`, with required `--scoring-arm=a0|a1|a2|a3`. Every attempt
@@ -70,4 +72,3 @@ uses new immutable payload, release, and run directories.
 Only if A3 passes the screening gates may a separate 25-iteration confirmation
 be launched from the same original plans. That confirmation is not part of the
 initial factorial run and must receive its own immutable provenance.
-

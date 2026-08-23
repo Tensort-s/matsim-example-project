@@ -408,9 +408,9 @@ def derive_config(
         "createGraphsInterval": "10",
         "legDurationsInterval": "10",
         "legHistogramInterval": "10",
-        "writeTripsInterval": "10",
+        "writeTripsInterval": "1" if profile.mode_choice_screening else "10",
         "writeEventsInterval": "10",
-        "writePlansInterval": "10",
+        "writePlansInterval": "1" if profile.mode_choice_screening else "10",
         "writeSnapshotsInterval": "0",
         "createScoringFunctionType": "BeforeMobsim",
     }

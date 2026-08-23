@@ -194,6 +194,8 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
     def test_score_factorial_screening_changes_only_ordinary_mode_choice(self) -> None:
         root = self.derive("score-factorial-10")
         self.assertEqual("9", values(root, "controller")["lastIteration"])
+        self.assertEqual("1", values(root, "controller")["writeTripsInterval"])
+        self.assertEqual("1", values(root, "controller")["writePlansInterval"])
         self.assertEqual(
             "0.4", values(root, "replanning")["fractionOfIterationsToDisableInnovation"]
         )
