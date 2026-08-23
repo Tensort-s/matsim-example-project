@@ -142,3 +142,58 @@ overall-completion, and stability gates. The script
 `audit_hong_kong_walk_taxi_scoring_v3_incremental.py` enforces these component
 gates and writes `b3_allowed=false` whenever either arm fails. Only
 `b3_allowed=true` authorizes creation of a new immutable B3 attempt.
+
+## Completed V3 audit and PT-aligned Taxi-cost sensitivity
+
+The immutable B1/B2 audit completed successfully as an analysis process but
+failed the behavioral gates, so B3 was not launched. B1 ended at 11.4300%
+Taxi share. It retained 99.9941% Taxi-request completion and exact request
+conservation; completed-request wait was 106.54 s mean, 62 s p50, 248 s p90,
+and 371 s p95. B2 ended at 8.7767% Walk share, 84.23 min mean completed Walk
+duration, 9.16% at or below ten minutes, and 81.87% above fifteen minutes. The
+last-three Walk mean-duration range was 5.234%, also above the 5% stability
+gate. These results show that ten iterations were insufficient for a final
+calibration and that the V3 score changes were directionally too weak.
+
+The next sensitivity therefore uses a 25-iteration profile. Ordinary
+mode-choice innovation is available in iterations 0--9 and disabled after
+iteration 9; iterations 10--24 are selection-only. Protected household/student
+plans remain frozen. All other demand, network, signals, calibrated PT, Taxi
+fleet, PCU, QSim horizon, stuck settings, random seed, and output intervals are
+unchanged.
+
+The authorized C1 arm isolates the user's requested Taxi coefficient. Walk
+remains at V2, while Taxi uses the same marginal money coefficient and waiting
+time coefficient as PT:
+
+```text
+U_taxi = -9.60
+       - 6 T_in_vehicle,h
+       - 6 T_wait,h
+       - 1.0 fare_HKD
+```
+
+The adult and student fare coefficients are both exactly `-1 util/HKD` in the
+score. The launcher accepts their positive magnitudes (`1`) and the Java Taxi
+scorer applies the negative sign. This is an intentionally strong upper-bound
+sensitivity, not an adopted calibration: the preceding selected Taxi fares
+averaged about HKD 140, so the fare term is expected to dominate the modest
+reduction in waiting disutility.
+
+For later, separately authorized tests, Walk V4 is defined but is not active in
+C1:
+
+```text
+U_walk = U_walk,base
+       + 2.0
+       - 3.278342 max(0, T_walk,h - 10/60)
+       - 60.0     max(0, T_walk,h - 15/60)
+       - 240.0    max(0, T_walk,h - 30/60)
+```
+
+C2 would combine Taxi V2 with Walk V4, while C3 would combine the PT-aligned
+Taxi formula with Walk V4. Neither is authorized by the C1 test. C1 acceptance
+reports Taxi share against the 5--7% TCS target, exact request conservation,
+request completion, wait distribution, overall trip completion, and
+last-five-iteration stability; a very low Taxi share is a valid diagnostic
+outcome rather than a technical failure.

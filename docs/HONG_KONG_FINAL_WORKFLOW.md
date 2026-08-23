@@ -1136,3 +1136,20 @@ unresolved PT passenger states fall 45.54% relative to the original-PT signal
 arm. Because regular PT vehicle stuck events at 30:00 rise from 9 to 850, this
 also remains an opt-in sensitivity pending vehicle-block/horizon attribution;
 see `HONG_KONG_EXPERIENCED_PT_TIMETABLE_V1.md`.
+
+## Walk/Taxi score calibration sensitivities (non-production)
+
+The completed A0--A3 and B1/B2 score screens remain non-production
+sensitivities. The B1 Taxi V3 arm retained 11.4300% Taxi share despite exact
+request conservation and 99.9941% request completion; B2 retained only 8.7767%
+Walk share while completed Walk trips averaged 84.23 minutes. B3 was therefore
+not authorized.
+
+The subsequent C1 sensitivity holds Walk at V2 and changes one Taxi formula
+globally to `-9.6 - 6*T_in_vehicle,h - 6*T_wait,h - 1*fare_HKD` for both adults
+and students. It runs 25 iterations from the same original plans, with ordinary
+mode innovation in iterations 0--9 and selection only in iterations 10--24.
+This deliberately strong PT-money-aligned Taxi coefficient is an upper-bound
+test, not an adopted production input. Production pointers, Candidate11 status,
+fleet, PCU, network, signals, calibrated PT, and QSim settings remain unchanged.
+Full design and provenance are in `HONG_KONG_WALK_TAXI_SCORING_FACTORIAL_V1.md`.

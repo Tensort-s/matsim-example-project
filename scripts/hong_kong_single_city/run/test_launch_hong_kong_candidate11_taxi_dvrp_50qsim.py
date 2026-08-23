@@ -218,6 +218,29 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         ]
         self.assertEqual(["KeepLastSelected"], [item["strategyName"] for item in protected])
 
+    def test_score_calibration_25_keeps_ten_innovation_iterations(self) -> None:
+        root = self.derive("score-calibration-25")
+        controller = values(root, "controller")
+        self.assertEqual("0", controller["firstIteration"])
+        self.assertEqual("24", controller["lastIteration"])
+        self.assertEqual("1", controller["writeTripsInterval"])
+        self.assertEqual("1", controller["writePlansInterval"])
+        self.assertEqual(
+            "0.4", values(root, "replanning")["fractionOfIterationsToDisableInnovation"]
+        )
+        replanning = root.find("./module[@name='replanning']")
+        assert replanning is not None
+        settings = [
+            {p.get("name"): p.get("value") for p in block.findall("./param")}
+            for block in replanning.findall("./parameterset")
+        ]
+        subtour = next(
+            item for item in settings
+            if item.get("subpopulation", "") == ""
+            and item.get("strategyName") == "SubtourModeChoice"
+        )
+        self.assertEqual("9", subtour["disableAfterIteration"])
+
     def test_score_factorial_arms_emit_exact_walk_and_taxi_parameters(self) -> None:
         profile = RUN_PROFILES["score-factorial-10"]
         common = dict(
@@ -238,6 +261,17 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         b2 = build_command(
             **common, taxi_wait_utility_per_hour=-18.0, scoring_arm="b2"
         )
+        calibration_profile = RUN_PROFILES["score-calibration-25"]
+        calibration_common = {**common, "profile": calibration_profile}
+        c1 = build_command(
+            **calibration_common, taxi_wait_utility_per_hour=-6.0, scoring_arm="c1"
+        )
+        c2 = build_command(
+            **calibration_common, taxi_wait_utility_per_hour=-18.0, scoring_arm="c2"
+        )
+        c3 = build_command(
+            **calibration_common, taxi_wait_utility_per_hour=-6.0, scoring_arm="c3"
+        )
         self.assertNotIn("--walk-scoring-profile=calibration-v2", a0)
         self.assertNotIn("--taxi-adult-fare-utility-per-hkd=0.12", a0)
         self.assertIn("--walk-scoring-profile=calibration-v2", a3)
@@ -256,6 +290,18 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertNotIn("--taxi-constant-per-trip=-9.6", b2)
         self.assertIn("--taxi-adult-fare-utility-per-hkd=0.12", b2)
         self.assertIn("--taxi-student-fare-utility-per-hkd=0.18", b2)
+        self.assertIn("--walk-scoring-profile=calibration-v2", c1)
+        self.assertIn("--taxi-constant-per-trip=-9.6", c1)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=1", c1)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=1", c1)
+        self.assertIn("--taxi-wait-utility-per-hour=-6", c1)
+        self.assertIn("--walk-scoring-profile=calibration-v4", c2)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=0.12", c2)
+        self.assertIn("--taxi-wait-utility-per-hour=-18", c2)
+        self.assertIn("--walk-scoring-profile=calibration-v4", c3)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=1", c3)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=1", c3)
+        self.assertIn("--taxi-wait-utility-per-hour=-6", c3)
 
     def test_smoke_and_gate_profiles_have_safe_fixed_bounds(self) -> None:
         plans = Path("/mnt/DiskM/by/example/plans_0p5.xml.gz")

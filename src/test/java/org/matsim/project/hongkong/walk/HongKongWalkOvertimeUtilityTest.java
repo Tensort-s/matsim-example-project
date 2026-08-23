@@ -57,4 +57,15 @@ class HongKongWalkOvertimeUtilityTest {
 		assertEquals(-41.53195166666667,
 				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(60 * 60.0, parameters), 1e-12);
 	}
+
+	@Test
+	void calibrationV4RewardsEligibleShortWalkAndSharplyRejectsLongWalk() {
+		var parameters = HongKongWalkScoringParameters.calibrationV4();
+		assertEquals(2.0,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(5 * 60.0, parameters), 1e-12);
+		assertEquals(-14.092780666666667,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(30 * 60.0, parameters), 1e-12);
+		assertEquals(-165.73195166666667,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(60 * 60.0, parameters), 1e-12);
+	}
 }

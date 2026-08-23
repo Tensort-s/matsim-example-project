@@ -103,7 +103,7 @@ public final class RunHongKong5Pct {
 						+ " [--road-supply-registry=<road_supply_parameters_v2.csv>]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
-						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2|calibration-v3>]"
+						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2|calibration-v3|calibration-v4>]"
 						+ " [--household-joint-protection-only]"
 						+ " [--fixed-plans-network-taxi-proxy]"
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
@@ -183,6 +183,7 @@ public final class RunHongKong5Pct {
 			case "legacy-v1" -> HongKongWalkScoringParameters.legacyV1();
 			case "calibration-v2" -> HongKongWalkScoringParameters.calibrationV2();
 			case "calibration-v3" -> HongKongWalkScoringParameters.calibrationV3();
+			case "calibration-v4" -> HongKongWalkScoringParameters.calibrationV4();
 			default -> throw new IllegalArgumentException(
 					"Unsupported Walk scoring profile: " + walkScoringProfileOption);
 		};
