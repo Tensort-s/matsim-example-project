@@ -955,10 +955,13 @@ def main() -> int:
             else 0.4 if profile.mode_choice_screening else 0.70
         ),
         "frozen_innovative_strategies": (
-            [] if profile.fixed_selected_plans else frozen_strategies
+            [] if profile.fixed_selected_plans
+            else ["SubtourModeChoice"] if profile.mode_choice_screening
+            else frozen_strategies
         ),
         "removed_replanning_strategies": (
-            frozen_strategies if profile.fixed_selected_plans else []
+            frozen_strategies
+            if profile.fixed_selected_plans or profile.mode_choice_screening else []
         ),
         "protected_selection_target_iterations": (
             [] if profile.fixed_selected_plans or profile.household_protection_only else [
