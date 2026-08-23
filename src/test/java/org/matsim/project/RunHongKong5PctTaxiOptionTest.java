@@ -97,6 +97,7 @@ class RunHongKong5PctTaxiOptionTest {
 	@Test
 	void protectionOnlyAcceptsFrozenProtectedAndModeOnlyOrdinaryScreening() {
 		var config = ConfigUtils.createConfig();
+		config.controller().setLastIteration(9);
 		addStrategy(config, "resident", "ChangeExpBeta", 0.8, -1);
 		addStrategy(config, "resident", "SubtourModeChoice", 0.2, 5);
 		addStrategy(config, "visitor", "ChangeExpBeta", 0.8, -1);
@@ -110,6 +111,22 @@ class RunHongKong5PctTaxiOptionTest {
 		addStrategy(config, "resident", "ReRoute", 0.1, -1);
 		assertThrows(IllegalArgumentException.class,
 				() -> RunHongKong5Pct.requireHouseholdProtectionOnly(config));
+	}
+
+	@Test
+	void protectionOnlyAcceptsTenInnovationIterationsInCalibrationRun() {
+		var config = ConfigUtils.createConfig();
+		config.controller().setLastIteration(24);
+		addStrategy(config, "resident", "ChangeExpBeta", 0.8, -1);
+		addStrategy(config, "resident", "SubtourModeChoice", 0.2, 9);
+		addStrategy(config, "visitor", "ChangeExpBeta", 0.8, -1);
+		addStrategy(config, "visitor", "SubtourModeChoice", 0.2, 9);
+		addStrategy(config, "hk_unpriced_border_no_car_mode_innovation",
+				"ChangeExpBeta", 1.0, -1);
+		addStrategy(config, "hk_household_student_protected",
+				"KeepLastSelected", 1.0, -1);
+
+		assertDoesNotThrow(() -> RunHongKong5Pct.requireHouseholdProtectionOnly(config));
 	}
 
 	private static void addStrategy(

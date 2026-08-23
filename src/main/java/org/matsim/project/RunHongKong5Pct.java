@@ -1237,6 +1237,7 @@ public final class RunHongKong5Pct {
 	static void requireHouseholdProtectionOnly(Config config) {
 		Map<String, Map<String, Double>> positiveStrategies = new HashMap<>();
 		Map<String, Map<String, Integer>> disableAfter = new HashMap<>();
+		Integer ordinaryModeChoiceCutoff = null;
 		for (var settings : config.replanning().getStrategySettings()) {
 			String subpopulation = settings.getSubpopulation();
 			if (subpopulation == null || subpopulation.isBlank()) {
@@ -1272,10 +1273,18 @@ public final class RunHongKong5Pct {
 				requireExactScreeningStrategies(subpopulation, strategies,
 						Map.of("ChangeExpBeta", 0.8, "SubtourModeChoice", 0.2));
 				int cutoff = disableAfter.get(subpopulation).get("SubtourModeChoice");
-				if (cutoff != 5) {
+				if (cutoff < 0 || cutoff >= config.controller().getLastIteration()) {
 					throw new IllegalArgumentException(
-							"Ordinary SubtourModeChoice must disable after iteration 5 for "
+							"Ordinary SubtourModeChoice cutoff must be within the run for "
 									+ subpopulation + ": " + cutoff);
+				}
+				if (ordinaryModeChoiceCutoff == null) {
+					ordinaryModeChoiceCutoff = cutoff;
+				} else if (cutoff != ordinaryModeChoiceCutoff) {
+					throw new IllegalArgumentException(
+							"Ordinary SubtourModeChoice cutoff must be identical across "
+									+ "subpopulations: expected=" + ordinaryModeChoiceCutoff
+									+ ", actual=" + cutoff + " for " + subpopulation);
 				}
 			}
 		}
