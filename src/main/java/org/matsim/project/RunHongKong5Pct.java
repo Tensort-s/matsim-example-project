@@ -103,11 +103,12 @@ public final class RunHongKong5Pct {
 						+ " [--road-supply-registry=<road_supply_parameters_v2.csv>]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
-						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2>]"
+						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2|calibration-v3>]"
 						+ " [--household-joint-protection-only]"
 						+ " [--fixed-plans-network-taxi-proxy]"
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
+						+ " [--taxi-constant-per-trip=-9]"
 						+ " [--taxi-adult-fare-utility-per-hkd=.10]"
 						+ " [--taxi-student-fare-utility-per-hkd=.15]"
 						+ " [--taxi-operational-sample-share=1.0]"
@@ -150,6 +151,7 @@ public final class RunHongKong5Pct {
 		Path taxiDvrpFleet = optionPath(args, "--taxi-dvrp-fleet=");
 		Double taxiDvrpPcuOption = optionDouble(args, "--taxi-dvrp-pcu=");
 		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
+		Double taxiConstantOption = optionDouble(args, "--taxi-constant-per-trip=");
 		Double taxiAdultFareUtilityOption = optionDouble(
 				args, "--taxi-adult-fare-utility-per-hkd=");
 		Double taxiStudentFareUtilityOption = optionDouble(
@@ -180,12 +182,14 @@ public final class RunHongKong5Pct {
 				walkScoringProfileOption == null ? "legacy-v1" : walkScoringProfileOption) {
 			case "legacy-v1" -> HongKongWalkScoringParameters.legacyV1();
 			case "calibration-v2" -> HongKongWalkScoringParameters.calibrationV2();
+			case "calibration-v3" -> HongKongWalkScoringParameters.calibrationV3();
 			default -> throw new IllegalArgumentException(
 					"Unsupported Walk scoring profile: " + walkScoringProfileOption);
 		};
 		double taxiOperationalSampleShare = taxiOperationalSampleShareOption == null
 				? 1.0 : taxiOperationalSampleShareOption;
 		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null
+				|| taxiConstantOption != null
 				|| taxiAdultFareUtilityOption != null || taxiStudentFareUtilityOption != null
 				|| taxiOperationalSampleShareOption != null)) {
 			throw new IllegalArgumentException(
@@ -327,6 +331,19 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0], new SignalSystemsConfigGroup());
+		if (taxiConstantOption != null) {
+			if (!Double.isFinite(taxiConstantOption) || taxiConstantOption > 0.0) {
+				throw new IllegalArgumentException(
+						"Taxi constant per trip must be finite and non-positive.");
+			}
+			var taxiModeParams = config.scoring().getModes()
+					.get(HongKongTaxiScoringParameters.TAXI_MODE);
+			if (taxiModeParams == null) {
+				throw new IllegalArgumentException(
+						"Taxi constant override requires scoring mode params for taxi.");
+			}
+			taxiModeParams.setConstant(taxiConstantOption);
+		}
 		HouseholdJointPlanSelectionSchedule householdSelectionSchedule =
 				householdSelectionIterationsOption == null
 						? (allPersonNetworkTaxiInnovation
@@ -338,6 +355,13 @@ public final class RunHongKong5Pct {
 										config.controller().getLastIteration()));
 		if (physicalTaxi) {
 			configurePhysicalTaxi(config, taxiDvrpPcu, taxiWaitUtility);
+			System.out.printf(
+					"Physical Taxi scoring: constant=%.6f util/trip; wait=%.6f util/h; "
+							+ "adultFare=-%.6f util/HKD; studentFare=-%.6f util/HKD.%n",
+					config.scoring().getModes().get(HongKongTaxiScoringParameters.TAXI_MODE)
+							.getConstant(), taxiWaitUtility,
+					taxiFarePolicy.adultFareUtilityPerHkd(),
+					taxiFarePolicy.studentFareUtilityPerHkd());
 		}
 		if (taxiOperationalParentTriggered) {
 			if (config.controller().getFirstIteration() != config.controller().getLastIteration()) {
@@ -768,13 +792,16 @@ public final class RunHongKong5Pct {
 			controler.addOverridingModule(
 					new HongKongWalkOvertimeScoringComponentModule(walkScoringParameters));
 			System.out.printf("Enabled Walk scoring %s: constant=%.6f util/main-Walk-trip; "
-					+ "thresholds=%.0f/%.0f s; slopes=%.6f/%.6f util/h; mainWalkOnly=%s.%n",
+					+ "thresholds=%.0f/%.0f/%.0f s; slopes=%.6f/%.6f/%.6f util/h; "
+					+ "mainWalkOnly=%s.%n",
 					walkScoringParameters.version(),
 					walkScoringParameters.constantPerMainWalkTrip(),
 					walkScoringParameters.firstThresholdSeconds(),
 					walkScoringParameters.secondThresholdSeconds(),
+					walkScoringParameters.thirdThresholdSeconds(),
 					walkScoringParameters.firstOvertimeUtilityPerHour(),
 					walkScoringParameters.secondOvertimeUtilityPerHour(),
+					walkScoringParameters.thirdOvertimeUtilityPerHour(),
 					walkScoringParameters.mainWalkTripsOnly());
 		}
 		if (!simulate) {

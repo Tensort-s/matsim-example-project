@@ -27,7 +27,9 @@ public final class HongKongWalkOvertimeUtility {
 				- parameters.firstOvertimeUtilityPerHour()
 				* Math.max(0.0, (walkSeconds - parameters.firstThresholdSeconds()) / 3_600.0)
 				- parameters.secondOvertimeUtilityPerHour()
-				* Math.max(0.0, (walkSeconds - parameters.secondThresholdSeconds()) / 3_600.0);
+				* Math.max(0.0, (walkSeconds - parameters.secondThresholdSeconds()) / 3_600.0)
+				- parameters.thirdOvertimeUtilityPerHour()
+				* Math.max(0.0, (walkSeconds - parameters.thirdThresholdSeconds()) / 3_600.0);
 	}
 
 	public static double penaltyForTrip(List<? extends PlanElement> elements) {

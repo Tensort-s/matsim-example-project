@@ -232,6 +232,12 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         a3 = build_command(
             **common, taxi_wait_utility_per_hour=-18.0, scoring_arm="a3"
         )
+        b1 = build_command(
+            **common, taxi_wait_utility_per_hour=-18.0, scoring_arm="b1"
+        )
+        b2 = build_command(
+            **common, taxi_wait_utility_per_hour=-18.0, scoring_arm="b2"
+        )
         self.assertNotIn("--walk-scoring-profile=calibration-v2", a0)
         self.assertNotIn("--taxi-adult-fare-utility-per-hkd=0.12", a0)
         self.assertIn("--walk-scoring-profile=calibration-v2", a3)
@@ -242,6 +248,14 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertFalse(any(
             item.startswith("--household-joint-selection-iterations=") for item in a3
         ))
+        self.assertIn("--walk-scoring-profile=calibration-v2", b1)
+        self.assertIn("--taxi-constant-per-trip=-9.6", b1)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=0.125", b1)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=0.1875", b1)
+        self.assertIn("--walk-scoring-profile=calibration-v3", b2)
+        self.assertNotIn("--taxi-constant-per-trip=-9.6", b2)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=0.12", b2)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=0.18", b2)
 
     def test_smoke_and_gate_profiles_have_safe_fixed_bounds(self) -> None:
         plans = Path("/mnt/DiskM/by/example/plans_0p5.xml.gz")

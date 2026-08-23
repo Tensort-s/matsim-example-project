@@ -94,3 +94,51 @@ no scoring, plans, supply, seed, or QSim setting changed.
 Only if A3 passes the screening gates may a separate 25-iteration confirmation
 be launched from the same original plans. That confirmation is not part of the
 initial factorial run and must receive its own immutable provenance.
+
+## Incremental V3 screen after the four-arm result
+
+The completed A0--A3 screen did not permit a 25-iteration confirmation. At
+iteration 9, A3 retained 12.3064% Taxi and 10.0827% Walk; Walk mean completed
+duration was 87.23 minutes and 84.06% of completed planned-Walk trips exceeded
+15 minutes. Taxi request conservation and service completion passed, but the
+Taxi share remained above the 5--7% target. A3 is therefore reused as the B0
+baseline; it is not rerun.
+
+Taxi V3 applies one Hong-Kong-wide formula:
+
+```text
+U_taxi = -9.60 - 6 T_in_vehicle,h - 18 T_wait,h - beta_fare fare_HKD
+beta_fare = 0.125 adult; 0.1875 student
+```
+
+Walk V3 is still applied exactly once per main-mode Walk trip and excludes PT
+access/egress Walk:
+
+```text
+U_walk = U_walk,base
+       + 0.20
+       - 3.278342 max(0, T_walk,h - 10/60)
+       - 12.0     max(0, T_walk,h - 15/60)
+       - 60.0     max(0, T_walk,h - 30/60)
+```
+
+The incremental sequence is deliberately gated:
+
+| Arm | Taxi score | Walk score | Execution |
+|---|---|---|---|
+| B0 | V2 | V2 | reuse completed A3 |
+| B1 | V3 | V2 | run first |
+| B2 | V2 | V3 | run first, in parallel with B1 when resources allow |
+| B3 | V3 | V3 | forbidden until both B1 and B2 pass |
+
+B1 passes on Taxi share 5--7%, request completion at least 99%, unpicked at
+most 0.5%, exact conservation, relative overall completion, and last-three
+stability. Taxi median/mean wait remain diagnostic rather than score-formula
+gates because lower demand with a fixed fleet mechanically shortens wait; fleet
+availability and dispatch require a separate supply calibration.
+
+B2 passes on the existing Walk share, duration-band, completion, relative
+overall-completion, and stability gates. The script
+`audit_hong_kong_walk_taxi_scoring_v3_incremental.py` enforces these component
+gates and writes `b3_allowed=false` whenever either arm fails. Only
+`b3_allowed=true` authorizes creation of a new immutable B3 attempt.

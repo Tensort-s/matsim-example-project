@@ -13,6 +13,12 @@ Candidate5B road supply, Candidate11 signals, calibrated PT, and the
 15,500-vehicle Taxi fleet remain fixed; no adopted input or final-run pointer
 changes before acceptance.
 
+The completed V2 factorial failed its share and Walk-duration gates. The next
+opt-in stage reuses A3 as B0, runs Taxi-only B1 and Walk-only B2 V3 changes,
+and forbids combined B3 until both component arms pass the machine-readable
+incremental audit. This remains sensitivity work and does not change the
+production scenario.
+
 Use this precedence when documents disagree:
 
 1. `AGENTS.md` for repository operating rules.
