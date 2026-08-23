@@ -50,6 +50,9 @@ class RunProfile:
     taxi_operational_sample_share: float = 1.0
     clear_pt_routes: bool | None = None
     taxi_operational_parent_triggered: bool = False
+    mode_choice_screening: bool = False
+    household_protection_only: bool = False
+    scoring_arm_required: bool = False
 
 
 RUN_PROFILES = {
@@ -65,6 +68,21 @@ RUN_PROFILES = {
         taxi_execution="dvrp", requires_plans_override=True,
         fixed_selected_plans=False, traffic_signals=True,
         requires_network_override=True, restored_household_bindings=3_378,
+    ),
+    "score-factorial-frozen-it0": RunProfile(
+        0, 0, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=True,
+        traffic_signals=True, requires_network_override=True,
+        expected_initial_taxi_legs=44_000, clear_pt_routes=True,
+        scoring_arm_required=True,
+    ),
+    "score-factorial-10": RunProfile(
+        0, 9, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=False,
+        traffic_signals=True, requires_network_override=True,
+        expected_initial_taxi_legs=44_000, clear_pt_routes=True,
+        mode_choice_screening=True, household_protection_only=True,
+        scoring_arm_required=True,
     ),
     "smoke-0p5": RunProfile(
         0, 0, 0.01, 1_550, 38_582,
@@ -181,6 +199,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--taxi-pcu", type=float, choices=ALLOWED_TAXI_PCU, default=1.0)
     parser.add_argument("--taxi-wait-utility-per-hour", type=float, default=-12.0)
+    parser.add_argument(
+        "--scoring-arm", choices=("a0", "a1", "a2", "a3"),
+        help="Factorial Walk/Taxi scoring arm; required only by score-factorial profiles.",
+    )
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="128g")
     parser.add_argument("--prepare-only", action="store_true")
@@ -282,6 +304,54 @@ def keep_last_selected_only(replanning: ET.Element) -> list[str]:
     return sorted(set(removed))
 
 
+def mode_choice_screening_only(replanning: ET.Element) -> list[str]:
+    """Keep protected people frozen; allow only ordinary mode innovation through it.5."""
+    strategies = replanning.findall("./parameterset[@type='strategysettings']")
+    if not strategies:
+        raise ValueError("The replanning module has no strategysettings blocks")
+    by_subpopulation: dict[str, list[ET.Element]] = {}
+    for settings in strategies:
+        parameters = {
+            item.get("name", ""): item.get("value", "")
+            for item in settings.findall("./param")
+        }
+        by_subpopulation.setdefault(parameters.get("subpopulation", ""), []).append(settings)
+
+    removed: list[str] = []
+    for subpopulation, blocks in by_subpopulation.items():
+        protected = subpopulation == "hk_household_student_protected"
+        no_car_border = subpopulation == "hk_unpriced_border_no_car_mode_innovation"
+        keep_names = (
+            {"KeepLastSelected"} if protected
+            else {"ChangeExpBeta"} if no_car_border
+            else {"ChangeExpBeta", "SubtourModeChoice"}
+        )
+        kept: dict[str, ET.Element] = {}
+        for settings in blocks:
+            name = strategy_name(settings)
+            if name not in keep_names or name in kept:
+                removed.append(name)
+                replanning.remove(settings)
+                continue
+            kept[name] = settings
+        if set(kept) != keep_names:
+            raise ValueError(
+                f"Missing screening strategy for {subpopulation!r}: "
+                f"required={sorted(keep_names)}, found={sorted(kept)}"
+            )
+        for name, settings in kept.items():
+            set_param(settings, "weight", (
+                "1.0" if protected or no_car_border
+                else "0.8" if name == "ChangeExpBeta" else "0.2"
+            ))
+            for item in list(settings.findall("./param")):
+                if item.get("name") == "disableAfterIteration":
+                    settings.remove(item)
+            if name == "SubtourModeChoice":
+                set_param(settings, "disableAfterIteration", "5")
+    return sorted(set(removed))
+
+
 def derive_config(
     template: Path,
     destination: Path,
@@ -352,6 +422,9 @@ def derive_config(
     if profile.fixed_selected_plans:
         set_param(replanning, "fractionOfIterationsToDisableInnovation", "0.0")
         frozen_strategies = keep_last_selected_only(replanning)
+    elif profile.mode_choice_screening:
+        set_param(replanning, "fractionOfIterationsToDisableInnovation", "0.4")
+        frozen_strategies = mode_choice_screening_only(replanning)
     else:
         set_param(replanning, "fractionOfIterationsToDisableInnovation", "0.70")
         frozen_strategies = freeze_innovation_after_iteration(replanning, 34)
@@ -522,6 +595,7 @@ def build_command(
     xms: str,
     xmx: str,
     road_supply_registry: Path | None = None,
+    scoring_arm: str | None = None,
 ) -> list[str]:
     command = [
         str(java), f"-Xms{xms}", f"-Xmx{xmx}", "-cp", str(jar),
@@ -534,6 +608,8 @@ def build_command(
     ]
     if profile.taxi_execution != "teleported":
         command.append("--walk-overtime-scoring")
+    if scoring_arm in {"a2", "a3"}:
+        command.append("--walk-scoring-profile=calibration-v2")
     if profile.traffic_signals:
         command.append("--traffic-signals")
     # Fixed gate/smoke plans are experienced physical itineraries from run14b.
@@ -561,6 +637,11 @@ def build_command(
             f"--taxi-dvrp-pcu={taxi_pcu_text}",
             f"--taxi-wait-utility-per-hour={taxi_wait_utility_per_hour:g}",
         ])
+        if scoring_arm in {"a1", "a3"}:
+            command.extend([
+                "--taxi-adult-fare-utility-per-hkd=0.12",
+                "--taxi-student-fare-utility-per-hkd=0.18",
+            ])
         if not math.isclose(profile.taxi_operational_sample_share, 1.0):
             command.append(
                 "--taxi-operational-sample-share="
@@ -585,7 +666,12 @@ def build_command(
         return command
     else:
         raise ValueError(f"Unsupported Taxi execution: {profile.taxi_execution}")
-    if not profile.fixed_selected_plans:
+    if profile.household_protection_only:
+        command.append(
+            f"--household-joint-plan-candidates={runtime / 'input/household_joint_plan_potential_candidates.csv'}"
+        )
+        command.append("--household-joint-protection-only")
+    elif not profile.fixed_selected_plans:
         command.append(
             f"--household-joint-plan-candidates={runtime / 'input/household_joint_plan_potential_candidates.csv'}"
         )
@@ -612,6 +698,20 @@ def build_command(
 def main() -> int:
     args = parse_args()
     profile = RUN_PROFILES[args.profile]
+    if profile.scoring_arm_required != (args.scoring_arm is not None):
+        raise ValueError(
+            f"Profile {args.profile} scoring-arm requirement is "
+            f"{profile.scoring_arm_required}; received {args.scoring_arm!r}"
+        )
+    if args.scoring_arm is not None and args.taxi_wait_utility_per_hour != -12.0:
+        raise ValueError(
+            "Factorial profiles derive the Taxi wait coefficient from --scoring-arm; "
+            "do not also override --taxi-wait-utility-per-hour"
+        )
+    effective_taxi_wait_utility = (
+        -18.0 if args.scoring_arm in {"a1", "a3"}
+        else args.taxi_wait_utility_per_hour
+    )
     if profile.requires_plans_override and args.plans_input is None:
         raise ValueError(f"--plans-input is required for profile {args.profile}")
     if profile.requires_network_override and args.network_input is None:
@@ -622,6 +722,7 @@ def main() -> int:
         "formal-50", "formal-50-candidate5b",
         "nosignal-run7-original-it0",
         "signal-candidate5b-original-it0",
+        "score-factorial-frozen-it0", "score-factorial-10",
         "nosignal-run7-teleported-control-it0",
         "nosignal-run7-teleported-oldstuck-it0",
     } \
@@ -637,7 +738,7 @@ def main() -> int:
         args.taxi_pcu != 1.0 or args.taxi_wait_utility_per_hour != -12.0
     ):
         raise ValueError("Non-DVRP profiles do not accept Taxi DVRP PCU/wait overrides")
-    if args.taxi_wait_utility_per_hour >= 0:
+    if effective_taxi_wait_utility >= 0:
         raise ValueError("Taxi wait utility per hour must be negative")
     equivalent_taxi_pcu = args.taxi_pcu * profile.taxi_operational_sample_share
     if args.road_supply_registry is not None and (
@@ -704,7 +805,7 @@ def main() -> int:
     if source_road_supply_registry is not None:
         required_files.append(source_road_supply_registry)
     if (
-        not profile.fixed_selected_plans
+        (not profile.fixed_selected_plans or profile.household_protection_only)
         and profile.taxi_execution != "teleported"
     ):
         required_files.append(
@@ -805,8 +906,9 @@ def main() -> int:
         fleet=fleet,
         road_supply_registry=road_supply_registry,
         taxi_pcu=args.taxi_pcu,
-        taxi_wait_utility_per_hour=args.taxi_wait_utility_per_hour,
+        taxi_wait_utility_per_hour=effective_taxi_wait_utility,
         profile=profile,
+        scoring_arm=args.scoring_arm,
         xms=args.xms,
         xmx=args.xmx,
     )
@@ -844,9 +946,13 @@ def main() -> int:
         "fixed_selected_plans": profile.fixed_selected_plans,
         "traffic_signals": profile.traffic_signals,
         "taxi_execution": profile.taxi_execution,
-        "innovation_disable_after_iteration": None if profile.fixed_selected_plans else 34,
+        "innovation_disable_after_iteration": (
+            None if profile.fixed_selected_plans
+            else 5 if profile.mode_choice_screening else 34
+        ),
         "fraction_of_iterations_to_disable_innovation": (
-            0.0 if profile.fixed_selected_plans else 0.70
+            0.0 if profile.fixed_selected_plans
+            else 0.4 if profile.mode_choice_screening else 0.70
         ),
         "frozen_innovative_strategies": (
             [] if profile.fixed_selected_plans else frozen_strategies
@@ -855,14 +961,47 @@ def main() -> int:
             frozen_strategies if profile.fixed_selected_plans else []
         ),
         "protected_selection_target_iterations": (
-            [] if profile.fixed_selected_plans else [
+            [] if profile.fixed_selected_plans or profile.household_protection_only else [
                 iteration for iteration in HOUSEHOLD_SELECTION_ITERATIONS
                 if profile.first_iteration <= iteration <= profile.last_iteration
             ]
         ),
         "household_joint_catalog_loaded": (
-            not profile.fixed_selected_plans
+            (not profile.fixed_selected_plans or profile.household_protection_only)
             and profile.taxi_execution != "teleported"
+        ),
+        "household_protection_only": profile.household_protection_only,
+        "mode_choice_screening": profile.mode_choice_screening,
+        "scoring_arm": args.scoring_arm,
+        "scoring_parameters": (
+            {
+                "walk": (
+                    {
+                        "version": "calibration-v2",
+                        "constant_per_main_walk_trip": -0.15,
+                        "first_threshold_s": 600.0,
+                        "first_slope_util_per_h": -3.278342,
+                        "second_threshold_s": 900.0,
+                        "second_slope_util_per_h": -9.0,
+                        "main_walk_trips_only": True,
+                    }
+                    if args.scoring_arm in {"a2", "a3"}
+                    else {"version": "legacy-v1"}
+                ),
+                "taxi": (
+                    {
+                        "version": "calibration-v2",
+                        "constant_per_trip": -9.0,
+                        "in_vehicle_utility_per_h": -6.0,
+                        "wait_utility_per_h": -18.0,
+                        "adult_fare_utility_per_hkd": -0.12,
+                        "student_fare_utility_per_hkd": -0.18,
+                    }
+                    if args.scoring_arm in {"a1", "a3"}
+                    else {"version": "formal50-v1"}
+                ),
+            }
+            if args.scoring_arm is not None else None
         ),
         "student_school_catalog_loaded": True,
         "taxi": (
@@ -873,7 +1012,7 @@ def main() -> int:
                 "operational_sample_share": profile.taxi_operational_sample_share,
                 "operational_parent_triggered": profile.taxi_operational_parent_triggered,
                 "full_fleet_equivalent_pcu": equivalent_taxi_pcu,
-                "wait_utility_per_hour": args.taxi_wait_utility_per_hour,
+                "wait_utility_per_hour": effective_taxi_wait_utility,
                 "fleet_source": str(source_fleet),
                 "fleet_source_sha256": sha256(source_fleet),
                 "fleet_release_copy": str(fleet),

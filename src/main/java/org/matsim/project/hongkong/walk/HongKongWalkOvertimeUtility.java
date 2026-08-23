@@ -14,21 +14,37 @@ public final class HongKongWalkOvertimeUtility {
 	private HongKongWalkOvertimeUtility() { }
 
 	public static double penaltyForWalkSeconds(double walkSeconds) {
+		return penaltyForWalkSeconds(walkSeconds, HongKongWalkScoringParameters.legacyV1());
+	}
+
+	public static double penaltyForWalkSeconds(
+			double walkSeconds, HongKongWalkScoringParameters parameters) {
 		if (!Double.isFinite(walkSeconds) || walkSeconds < 0.0) {
 			throw new IllegalArgumentException("Invalid cumulative Walk time " + walkSeconds);
 		}
-		if (walkSeconds <= THRESHOLD_SECONDS) return 0.0;
-		return -OVERTIME_UTILITY_PER_HOUR
-				* Math.max(0.0, (walkSeconds - THRESHOLD_SECONDS) / 3_600.0);
+		if (walkSeconds == 0.0) return 0.0;
+		return parameters.constantPerMainWalkTrip()
+				- parameters.firstOvertimeUtilityPerHour()
+				* Math.max(0.0, (walkSeconds - parameters.firstThresholdSeconds()) / 3_600.0)
+				- parameters.secondOvertimeUtilityPerHour()
+				* Math.max(0.0, (walkSeconds - parameters.secondThresholdSeconds()) / 3_600.0);
 	}
 
 	public static double penaltyForTrip(List<? extends PlanElement> elements) {
+		return penaltyForTrip(elements, HongKongWalkScoringParameters.legacyV1());
+	}
+
+	public static double penaltyForTrip(
+			List<? extends PlanElement> elements, HongKongWalkScoringParameters parameters) {
 		double seconds = 0.0;
+		boolean hasNonWalkLeg = false;
 		for (PlanElement element : elements) {
-			if (!(element instanceof Leg leg) || !isWalkLeg(leg)) continue;
-			seconds += requiredTravelTime(leg);
+			if (!(element instanceof Leg leg)) continue;
+			if (isWalkLeg(leg)) seconds += requiredTravelTime(leg);
+			else hasNonWalkLeg = true;
 		}
-		return penaltyForWalkSeconds(seconds);
+		if (parameters.mainWalkTripsOnly() && hasNonWalkLeg) return 0.0;
+		return penaltyForWalkSeconds(seconds, parameters);
 	}
 
 	public static boolean isWalkLeg(Leg leg) {

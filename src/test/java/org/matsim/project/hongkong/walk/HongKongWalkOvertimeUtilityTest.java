@@ -25,4 +25,25 @@ class HongKongWalkOvertimeUtilityTest {
 		assertEquals(-2.7319516666666667,
 				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(3_600.0), 1e-12);
 	}
+
+	@Test
+	void calibrationV2AppliesConstantAndTwoHingesToMainWalkTrip() {
+		var parameters = HongKongWalkScoringParameters.calibrationV2();
+		assertEquals(-0.15,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(600.0, parameters), 1e-12);
+		assertEquals(-0.42319516666666665,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(900.0, parameters), 1e-12);
+		assertEquals(-3.4927806666666667,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(1_800.0, parameters), 1e-12);
+	}
+
+	@Test
+	void calibrationV2DoesNotPenalizePtAccessWalk() {
+		var access = PopulationUtils.createLeg(TransportMode.non_network_walk);
+		access.setTravelTime(12 * 60.0);
+		var pt = PopulationUtils.createLeg(TransportMode.pt);
+		pt.setTravelTime(20 * 60.0);
+		assertEquals(0.0, HongKongWalkOvertimeUtility.penaltyForTrip(
+				List.of(access, pt), HongKongWalkScoringParameters.calibrationV2()));
+	}
 }

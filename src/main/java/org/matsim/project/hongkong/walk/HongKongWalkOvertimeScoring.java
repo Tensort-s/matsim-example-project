@@ -7,9 +7,19 @@ import org.matsim.project.hongkong.scoring.HongKongScoringComponent;
 
 /** Runtime implementation of the cumulative per-main-trip Walk penalty. */
 public final class HongKongWalkOvertimeScoring implements HongKongScoringComponent {
+	private final HongKongWalkScoringParameters parameters;
 	private double score;
 	private double currentTripWalkSeconds;
+	private boolean currentTripHasNonWalkLeg;
 	private boolean sawMainActivity;
+
+	public HongKongWalkOvertimeScoring() {
+		this(HongKongWalkScoringParameters.legacyV1());
+	}
+
+	public HongKongWalkOvertimeScoring(HongKongWalkScoringParameters parameters) {
+		this.parameters = parameters;
+	}
 
 	@Override
 	public String componentId() {
@@ -25,7 +35,10 @@ public final class HongKongWalkOvertimeScoring implements HongKongScoringCompone
 
 	@Override
 	public void handleLeg(Leg leg) {
-		if (!HongKongWalkOvertimeUtility.isWalkLeg(leg)) return;
+		if (!HongKongWalkOvertimeUtility.isWalkLeg(leg)) {
+			currentTripHasNonWalkLeg = true;
+			return;
+		}
 		if (leg.getTravelTime().isDefined()) {
 			currentTripWalkSeconds += leg.getTravelTime().seconds();
 		} else if (leg.getRoute() != null && leg.getRoute().getTravelTime().isDefined()) {
@@ -46,7 +59,11 @@ public final class HongKongWalkOvertimeScoring implements HongKongScoringCompone
 	}
 
 	private void closeTrip() {
-		score += HongKongWalkOvertimeUtility.penaltyForWalkSeconds(currentTripWalkSeconds);
+		if (!parameters.mainWalkTripsOnly() || !currentTripHasNonWalkLeg) {
+			score += HongKongWalkOvertimeUtility.penaltyForWalkSeconds(
+					currentTripWalkSeconds, parameters);
+		}
 		currentTripWalkSeconds = 0.0;
+		currentTripHasNonWalkLeg = false;
 	}
 }

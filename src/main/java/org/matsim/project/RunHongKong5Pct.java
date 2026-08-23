@@ -65,6 +65,7 @@ import org.matsim.project.hongkong.taxi.HongKongTaxiOperationalRequestGateQSimMo
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkModule;
 import org.matsim.project.hongkong.walk.HongKongPhysicalWalkQSimModule;
 import org.matsim.project.hongkong.walk.HongKongWalkOvertimeScoringComponentModule;
+import org.matsim.project.hongkong.walk.HongKongWalkScoringParameters;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleUtils;
 
@@ -102,9 +103,13 @@ public final class RunHongKong5Pct {
 						+ " [--road-supply-registry=<road_supply_parameters_v2.csv>]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
+						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2>]"
+						+ " [--household-joint-protection-only]"
 						+ " [--fixed-plans-network-taxi-proxy]"
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
 						+ " [--taxi-wait-utility-per-hour=-12]]"
+						+ " [--taxi-adult-fare-utility-per-hkd=.10]"
+						+ " [--taxi-student-fare-utility-per-hkd=.15]"
 						+ " [--taxi-operational-sample-share=1.0]"
 						+ " [--taxi-operational-parent-triggered]"
 						+ " [--household-joint-selection-iterations=5,15,25,35]"
@@ -126,6 +131,8 @@ public final class RunHongKong5Pct {
 				.contains("--household-escort-max-utility");
 		boolean householdJointPlanWithOrdinaryInnovation = Arrays.asList(args)
 				.contains("--household-joint-plan-with-ordinary-innovation");
+		boolean householdJointProtectionOnly = Arrays.asList(args)
+				.contains("--household-joint-protection-only");
 		boolean allPersonNetworkTaxiInnovation = Arrays.asList(args)
 				.contains("--all-person-network-taxi-innovation");
 		boolean fixedPlansNetworkTaxiProxy = Arrays.asList(args)
@@ -143,6 +150,11 @@ public final class RunHongKong5Pct {
 		Path taxiDvrpFleet = optionPath(args, "--taxi-dvrp-fleet=");
 		Double taxiDvrpPcuOption = optionDouble(args, "--taxi-dvrp-pcu=");
 		Double taxiWaitUtilityOption = optionDouble(args, "--taxi-wait-utility-per-hour=");
+		Double taxiAdultFareUtilityOption = optionDouble(
+				args, "--taxi-adult-fare-utility-per-hkd=");
+		Double taxiStudentFareUtilityOption = optionDouble(
+				args, "--taxi-student-fare-utility-per-hkd=");
+		String walkScoringProfileOption = optionString(args, "--walk-scoring-profile=");
 		Double taxiOperationalSampleShareOption = optionDouble(
 				args, "--taxi-operational-sample-share=");
 		String householdSelectionIterationsOption = optionString(
@@ -154,9 +166,27 @@ public final class RunHongKong5Pct {
 				allPersonNetworkTaxiInnovation, fixedPlansNetworkTaxiProxy, physicalTaxi);
 		double taxiDvrpPcu = taxiDvrpPcuOption == null ? 1.0 : taxiDvrpPcuOption;
 		double taxiWaitUtility = taxiWaitUtilityOption == null ? -12.0 : taxiWaitUtilityOption;
+		HongKongTaxiFareUtilityPolicy taxiFarePolicy =
+				taxiAdultFareUtilityOption == null && taxiStudentFareUtilityOption == null
+						? HongKongTaxiFareUtilityPolicy.openInnovationV1()
+						: new HongKongTaxiFareUtilityPolicy(
+								requiredPairedOption(taxiAdultFareUtilityOption,
+										"--taxi-adult-fare-utility-per-hkd",
+										"--taxi-student-fare-utility-per-hkd"),
+								requiredPairedOption(taxiStudentFareUtilityOption,
+										"--taxi-student-fare-utility-per-hkd",
+										"--taxi-adult-fare-utility-per-hkd"));
+		HongKongWalkScoringParameters walkScoringParameters = switch (
+				walkScoringProfileOption == null ? "legacy-v1" : walkScoringProfileOption) {
+			case "legacy-v1" -> HongKongWalkScoringParameters.legacyV1();
+			case "calibration-v2" -> HongKongWalkScoringParameters.calibrationV2();
+			default -> throw new IllegalArgumentException(
+					"Unsupported Walk scoring profile: " + walkScoringProfileOption);
+		};
 		double taxiOperationalSampleShare = taxiOperationalSampleShareOption == null
 				? 1.0 : taxiOperationalSampleShareOption;
 		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null
+				|| taxiAdultFareUtilityOption != null || taxiStudentFareUtilityOption != null
 				|| taxiOperationalSampleShareOption != null)) {
 			throw new IllegalArgumentException(
 					"Taxi DVRP PCU/wait/operational-sample options require --taxi-dvrp-fleet.");
@@ -188,6 +218,19 @@ public final class RunHongKong5Pct {
 		if (physicalTaxi && networkTaxiProxy) {
 			throw new IllegalArgumentException(
 					"Physical Taxi and the person-local network Taxi proxy are mutually exclusive.");
+		}
+		if (walkScoringProfileOption != null && !walkOvertimeScoring) {
+			throw new IllegalArgumentException(
+					"--walk-scoring-profile requires --walk-overtime-scoring.");
+		}
+		if (householdJointProtectionOnly && householdJointPlanWithOrdinaryInnovation) {
+			throw new IllegalArgumentException(
+					"Household protection-only and joint innovation are mutually exclusive.");
+		}
+		if (householdJointProtectionOnly
+				&& (householdJointPlanCandidates == null || studentSchoolModeCandidates == null)) {
+			throw new IllegalArgumentException(
+					"Household protection-only requires household and student candidate catalogs.");
 		}
 		if (fixedPlansNetworkTaxiProxy && householdJointPlanWithOrdinaryInnovation) {
 			throw new IllegalArgumentException(
@@ -440,7 +483,7 @@ public final class RunHongKong5Pct {
 		StudentSchoolModeCandidateCatalog studentSchoolCatalog = studentSchoolModeCandidates == null
 				? StudentSchoolModeCandidateCatalog.empty()
 				: StudentSchoolModeCandidateCatalog.load(studentSchoolModeCandidates);
-		if (householdJointPlanWithOrdinaryInnovation) {
+		if (householdJointPlanWithOrdinaryInnovation || householdJointProtectionOnly) {
 			int protectedPeople = protectHouseholdAndStudentCandidates(
 					scenario, householdJointCatalog, studentSchoolCatalog);
 			int borderPeople = restrictUnpricedBorderCarModeInnovation(scenario);
@@ -633,6 +676,24 @@ public final class RunHongKong5Pct {
 				}
 			});
 		}
+		if (householdJointProtectionOnly) {
+			StudentSchoolModeCandidateCatalog sharedStudentCatalog = studentSchoolCatalog;
+			HouseholdJointPlanCandidateCatalog sharedJointCatalog = householdJointCatalog;
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					bind(StudentSchoolModeCandidateCatalog.class).toInstance(sharedStudentCatalog);
+					bind(HouseholdJointPlanCandidateCatalog.class).toInstance(sharedJointCatalog);
+					if (sharedStudentCatalog.enabled()) {
+						bind(org.matsim.core.controler.PrepareForMobsimImpl.class);
+						bind(org.matsim.core.controler.PrepareForMobsim.class)
+								.to(SchoolBusAwarePrepareForMobsim.class);
+					}
+				}
+			});
+			System.out.println("Enabled household/student protection-only mode; "
+					+ "joint bindings remain frozen and no joint selector is installed.");
+		}
 		if (studentSchoolCatalog.enabled() || physicalNonTaxiModes) {
 			controler.addQSimModule(new SchoolBusPassengerPhysicalQSimModule());
 			System.out.println(physicalNonTaxiModes
@@ -646,7 +707,7 @@ public final class RunHongKong5Pct {
 					? "Enabled capacity-free network-physical Walk; Taxi uses the finite DVRP fleet."
 					: "Enabled capacity-free network-physical Walk; Taxi remains teleported.");
 		}
-		if (householdJointCatalog != null) {
+		if (householdJointCatalog != null && householdJointPlanWithOrdinaryInnovation) {
 			HouseholdJointPlanCandidateCatalog sharedJointCatalog = householdJointCatalog;
 			controler.addOverridingModule(new AbstractModule() {
 				@Override
@@ -690,7 +751,7 @@ public final class RunHongKong5Pct {
 		if (multimodalCosts) {
 			controler.addOverridingModule(new HongKongMultimodalCostScoringModule(
 					physicalTaxi || networkTaxiProxy
-							? HongKongTaxiFareUtilityPolicy.openInnovationV1()
+							? taxiFarePolicy
 							: HongKongTaxiFareUtilityPolicy.historicalCentralV1(),
 					ptFareRoot,
 					carCostRoot,
@@ -702,9 +763,17 @@ public final class RunHongKong5Pct {
 					dynamicCarCosts);
 		}
 		if (walkOvertimeScoring) {
-			controler.addOverridingModule(new HongKongWalkOvertimeScoringComponentModule());
-			System.out.println("Enabled cumulative per-main-trip Walk overtime scoring: "
-					+ "threshold=600 s; slope=3.278342 util/h.");
+			controler.addOverridingModule(
+					new HongKongWalkOvertimeScoringComponentModule(walkScoringParameters));
+			System.out.printf("Enabled Walk scoring %s: constant=%.6f util/main-Walk-trip; "
+					+ "thresholds=%.0f/%.0f s; slopes=%.6f/%.6f util/h; mainWalkOnly=%s.%n",
+					walkScoringParameters.version(),
+					walkScoringParameters.constantPerMainWalkTrip(),
+					walkScoringParameters.firstThresholdSeconds(),
+					walkScoringParameters.secondThresholdSeconds(),
+					walkScoringParameters.firstOvertimeUtilityPerHour(),
+					walkScoringParameters.secondOvertimeUtilityPerHour(),
+					walkScoringParameters.mainWalkTripsOnly());
 		}
 		if (!simulate) {
 			controler.addOverridingModule(new AbstractModule() {
@@ -994,6 +1063,15 @@ public final class RunHongKong5Pct {
 			}
 		}
 		return result;
+	}
+
+	private static double requiredPairedOption(
+			Double value, String optionName, String pairedOptionName) {
+		if (value == null) {
+			throw new IllegalArgumentException(
+					optionName + " is required when " + pairedOptionName + " is supplied.");
+		}
+		return value;
 	}
 
 	private static String optionString(String[] args, String prefix) {

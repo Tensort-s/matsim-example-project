@@ -7,6 +7,12 @@ fixed-link OD and MATSim workflow. It identifies the production inputs,
 scripts, outputs, simulation parameters, and visualization. Topic-specific
 documents retain detailed methodology and QA.
 
+Calibration note (2026-08-23): uniform Walk/Taxi score changes are evaluated as
+an opt-in four-arm factorial in `HONG_KONG_WALK_TAXI_SCORING_FACTORIAL_V1.md`.
+Candidate5B road supply, Candidate11 signals, calibrated PT, and the
+15,500-vehicle Taxi fleet remain fixed; no adopted input or final-run pointer
+changes before acceptance.
+
 Use this precedence when documents disagree:
 
 1. `AGENTS.md` for repository operating rules.

@@ -17,6 +17,11 @@ Get-Content -Encoding UTF8 .\docs\PROJECT_ONBOARDING.md
 
 For Python-based readers, always use `encoding="utf-8"` when opening project Markdown files.
 
+The opt-in Hong Kong joint Walk/Taxi scoring calibration and its four-arm
+frozen-supply acceptance design are documented in
+`docs/HONG_KONG_WALK_TAXI_SCORING_FACTORIAL_V1.md`. It remains a sensitivity
+workflow and does not change the current final run until its gates pass.
+
 ## PowerShell operating rules
 
 The integrated terminal and the Codex agent command runner are separate shell environments. The integrated/manual

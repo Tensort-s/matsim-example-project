@@ -191,6 +191,56 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             for item in command
         ))
 
+    def test_score_factorial_screening_changes_only_ordinary_mode_choice(self) -> None:
+        root = self.derive("score-factorial-10")
+        self.assertEqual("9", values(root, "controller")["lastIteration"])
+        self.assertEqual(
+            "0.4", values(root, "replanning")["fractionOfIterationsToDisableInnovation"]
+        )
+        replanning = root.find("./module[@name='replanning']")
+        assert replanning is not None
+        settings = [
+            {p.get("name"): p.get("value") for p in block.findall("./param")}
+            for block in replanning.findall("./parameterset")
+        ]
+        ordinary = [item for item in settings if item.get("subpopulation", "") == ""]
+        self.assertEqual({"ChangeExpBeta", "SubtourModeChoice"}, {
+            item["strategyName"] for item in ordinary
+        })
+        subtour = next(item for item in ordinary if item["strategyName"] == "SubtourModeChoice")
+        self.assertEqual("5", subtour["disableAfterIteration"])
+        self.assertEqual("0.2", subtour["weight"])
+        protected = [
+            item for item in settings
+            if item.get("subpopulation") == "hk_household_student_protected"
+        ]
+        self.assertEqual(["KeepLastSelected"], [item["strategyName"] for item in protected])
+
+    def test_score_factorial_arms_emit_exact_walk_and_taxi_parameters(self) -> None:
+        profile = RUN_PROFILES["score-factorial-10"]
+        common = dict(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, profile=profile, xms="16g", xmx="128g",
+        )
+        a0 = build_command(
+            **common, taxi_wait_utility_per_hour=-12.0, scoring_arm="a0"
+        )
+        a3 = build_command(
+            **common, taxi_wait_utility_per_hour=-18.0, scoring_arm="a3"
+        )
+        self.assertNotIn("--walk-scoring-profile=calibration-v2", a0)
+        self.assertNotIn("--taxi-adult-fare-utility-per-hkd=0.12", a0)
+        self.assertIn("--walk-scoring-profile=calibration-v2", a3)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=0.12", a3)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=0.18", a3)
+        self.assertIn("--taxi-wait-utility-per-hour=-18", a3)
+        self.assertIn("--household-joint-protection-only", a3)
+        self.assertFalse(any(
+            item.startswith("--household-joint-selection-iterations=") for item in a3
+        ))
+
     def test_smoke_and_gate_profiles_have_safe_fixed_bounds(self) -> None:
         plans = Path("/mnt/DiskM/by/example/plans_0p5.xml.gz")
         smoke = self.derive("smoke-0p5", plans=plans)
