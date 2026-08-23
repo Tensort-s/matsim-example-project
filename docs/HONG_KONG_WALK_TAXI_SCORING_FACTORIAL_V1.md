@@ -45,9 +45,10 @@ above ten cumulative Walk minutes per main trip.
 
 Phase 1 runs frozen iteration 0 for A0 and A3. The selected plans and mode
 shares must be identical; only scores may differ. Phase 2 runs A0--A3 for
-iterations 0--9 with a common seed. Ordinary residents/visitors may use only
-`SubtourModeChoice` through iteration 5; iterations 6--9 retain only
-`ChangeExpBeta`. Route and departure-time innovation are disabled. Household
+iterations 0--9 with a common seed. Ordinary residents/visitors use
+`ChangeExpBeta` (weight 0.8) plus mode-only `SubtourModeChoice` (weight 0.2)
+through iteration 5; iterations 6--9 retain only `ChangeExpBeta`. Route and
+departure-time innovation are disabled. Household
 and student people are assigned the protected subpopulation once and remain
 frozen; no joint selector runs during the factorial screen.
 Selected plans and trips are written every screening iteration so iterations
@@ -56,6 +57,19 @@ Selected plans and trips are written every screening iteration so iterations
 The launcher profiles are `score-factorial-frozen-it0` and
 `score-factorial-10`, with required `--scoring-arm=a0|a1|a2|a3`. Every attempt
 uses new immutable payload, release, and run directories.
+
+The Java startup contract validates this screening topology separately from
+the maximum-utility joint-selector topology: the protected subpopulation must
+contain only `KeepLastSelected` at weight 1; the unpriced-border no-car
+subpopulation must contain only `ChangeExpBeta` at weight 1; every other
+subpopulation must contain exactly `ChangeExpBeta` at 0.8 and
+`SubtourModeChoice` at 0.2, with the latter disabled after iteration 5.
+
+The first Phase-2 A0 attempt (`scorefactorial10_a0_run1`) is a preserved
+technical failure. It exited before scenario loading because the new
+protection-only flag still invoked the older maximum-utility-selector
+validation. The dedicated topology validation above is the minimal correction;
+no scoring, plans, supply, seed, or QSim setting changed.
 
 ## Acceptance targets
 

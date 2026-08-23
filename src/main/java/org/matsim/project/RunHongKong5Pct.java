@@ -365,7 +365,9 @@ public final class RunHongKong5Pct {
 			HongKongNetworkTaxiRoutingModule.configure(config);
 		}
 		if (householdJointPlanCandidates != null) {
-			if (householdJointPlanWithOrdinaryInnovation) {
+			if (householdJointProtectionOnly) {
+				requireHouseholdProtectionOnly(config);
+			} else if (householdJointPlanWithOrdinaryInnovation) {
 				requireHouseholdSelectionWithOrdinaryInnovation(config);
 			} else {
 				requireHouseholdSelectionOnly(config);
@@ -1200,6 +1202,71 @@ public final class RunHongKong5Pct {
 			if (keepLastSelectedBySubpopulation.getOrDefault(subpopulation, 0) != 1) {
 				throw new IllegalArgumentException(
 						"Expected exactly one KeepLastSelected strategy for " + subpopulation);
+			}
+		}
+	}
+
+	static void requireHouseholdProtectionOnly(Config config) {
+		Map<String, Map<String, Double>> positiveStrategies = new HashMap<>();
+		Map<String, Map<String, Integer>> disableAfter = new HashMap<>();
+		for (var settings : config.replanning().getStrategySettings()) {
+			String subpopulation = settings.getSubpopulation();
+			if (subpopulation == null || subpopulation.isBlank()) {
+				throw new IllegalArgumentException(
+						"Household protection-only screening requires explicit strategy subpopulations.");
+			}
+			if (settings.getWeight() <= 0.0) continue;
+			Double previous = positiveStrategies
+					.computeIfAbsent(subpopulation, ignored -> new HashMap<>())
+					.put(settings.getStrategyName(), settings.getWeight());
+			if (previous != null) {
+				throw new IllegalArgumentException(
+						"Duplicate positive screening strategy for " + subpopulation + ": "
+								+ settings.getStrategyName());
+			}
+			disableAfter.computeIfAbsent(subpopulation, ignored -> new HashMap<>())
+					.put(settings.getStrategyName(), settings.getDisableAfter());
+		}
+		if (positiveStrategies.isEmpty()) {
+			throw new IllegalArgumentException("No positive replanning strategies were configured.");
+		}
+		for (var entry : positiveStrategies.entrySet()) {
+			String subpopulation = entry.getKey();
+			Map<String, Double> strategies = entry.getValue();
+			if (org.matsim.project.hongkong.household.HouseholdJointPlanSelector
+					.PROTECTED_SUBPOPULATION.equals(subpopulation)) {
+				requireExactScreeningStrategies(subpopulation, strategies,
+						Map.of("KeepLastSelected", 1.0));
+			} else if (UNPRICED_BORDER_SUBPOPULATION.equals(subpopulation)) {
+				requireExactScreeningStrategies(subpopulation, strategies,
+						Map.of("ChangeExpBeta", 1.0));
+			} else {
+				requireExactScreeningStrategies(subpopulation, strategies,
+						Map.of("ChangeExpBeta", 0.8, "SubtourModeChoice", 0.2));
+				int cutoff = disableAfter.get(subpopulation).get("SubtourModeChoice");
+				if (cutoff != 5) {
+					throw new IllegalArgumentException(
+							"Ordinary SubtourModeChoice must disable after iteration 5 for "
+									+ subpopulation + ": " + cutoff);
+				}
+			}
+		}
+	}
+
+	private static void requireExactScreeningStrategies(
+			String subpopulation, Map<String, Double> actual, Map<String, Double> expected) {
+		if (!actual.keySet().equals(expected.keySet())) {
+			throw new IllegalArgumentException(
+					"Unexpected household protection-only screening strategies for "
+							+ subpopulation + ": expected=" + expected.keySet()
+							+ ", actual=" + actual.keySet());
+		}
+		for (var entry : expected.entrySet()) {
+			if (Math.abs(actual.get(entry.getKey()) - entry.getValue()) > 1e-12) {
+				throw new IllegalArgumentException(
+						"Unexpected " + entry.getKey() + " weight for " + subpopulation
+								+ ": expected=" + entry.getValue()
+								+ ", actual=" + actual.get(entry.getKey()));
 			}
 		}
 	}

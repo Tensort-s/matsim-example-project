@@ -12,6 +12,7 @@ import java.util.Set;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ScoringConfigGroup;
 import org.matsim.core.config.groups.RoutingConfigGroup;
+import org.matsim.core.config.groups.ReplanningConfigGroup;
 import org.matsim.contrib.taxi.run.MultiModeTaxiConfigGroup;
 import org.matsim.contrib.taxi.optimizer.rules.RuleBasedTaxiOptimizerParams;
 import org.matsim.contrib.taxi.optimizer.rules.RuleBasedRequestInserter;
@@ -91,5 +92,34 @@ class RunHongKong5PctTaxiOptionTest {
 		assertFalse(RunHongKong5Pct.usesNetworkTaxiProxy(true, false, true));
 		assertTrue(RunHongKong5Pct.usesNetworkTaxiProxy(true, false, false));
 		assertTrue(RunHongKong5Pct.usesNetworkTaxiProxy(false, true, true));
+	}
+
+	@Test
+	void protectionOnlyAcceptsFrozenProtectedAndModeOnlyOrdinaryScreening() {
+		var config = ConfigUtils.createConfig();
+		addStrategy(config, "resident", "ChangeExpBeta", 0.8, -1);
+		addStrategy(config, "resident", "SubtourModeChoice", 0.2, 5);
+		addStrategy(config, "visitor", "ChangeExpBeta", 0.8, -1);
+		addStrategy(config, "visitor", "SubtourModeChoice", 0.2, 5);
+		addStrategy(config, "hk_unpriced_border_no_car_mode_innovation",
+				"ChangeExpBeta", 1.0, -1);
+		addStrategy(config, "hk_household_student_protected",
+				"KeepLastSelected", 1.0, -1);
+
+		assertDoesNotThrow(() -> RunHongKong5Pct.requireHouseholdProtectionOnly(config));
+		addStrategy(config, "resident", "ReRoute", 0.1, -1);
+		assertThrows(IllegalArgumentException.class,
+				() -> RunHongKong5Pct.requireHouseholdProtectionOnly(config));
+	}
+
+	private static void addStrategy(
+			org.matsim.core.config.Config config, String subpopulation,
+			String name, double weight, int disableAfter) {
+		var settings = new ReplanningConfigGroup.StrategySettings()
+				.setSubpopulation(subpopulation)
+				.setStrategyName(name)
+				.setWeight(weight);
+		if (disableAfter >= 0) settings.setDisableAfter(disableAfter);
+		config.replanning().addStrategySettings(settings);
 	}
 }
