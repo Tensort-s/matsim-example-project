@@ -224,3 +224,32 @@ production formula. It uses profile `score-calibration-22` with
 directories. Acceptance uses the same Taxi share, request-service, wait,
 completion, and last-five stability outputs as C1, with explicit comparison to
 C1, B1, A3, and the TCS target.
+
+## Split fare plus Walk V4 sensitivity D2
+
+D1 completed all 22 iterations and exited zero. Its iteration-21 Taxi share
+was 3.4221%, up 0.6967 percentage points from C1 but still below the 5--7%
+TCS target. Its last-five Taxi-share range was only 0.0449 percentage points,
+so the residual gap is not an iteration-count artifact. D2 therefore keeps
+the same 22-iteration schedule and all fixed demand and supply inputs, reduces
+the Taxi fare disutility by one further bounded step, and activates the
+already unit-tested Walk V4 formula:
+
+```text
+U_taxi,adult = -9.60 - 6 T_in_vehicle,h - 6 T_wait,h - 0.5 fare_HKD
+U_taxi,student = -9.60 - 6 T_in_vehicle,h - 6 T_wait,h - 0.6 fare_HKD
+
+U_walk = U_walk,base + 2.0
+         - 3.278342 max(0, T_walk,h - 10/60)
+         - 60.0     max(0, T_walk,h - 15/60)
+         - 240.0    max(0, T_walk,h - 30/60)
+```
+
+Walk V4 applies only to main-mode Walk trips; PT access/egress walk is not
+rewarded. The launcher receives positive Taxi fare magnitudes `0.5` and `0.6`,
+while the Java scorer applies their negative sign. D2 is an opt-in sensitivity,
+not an adopted production formula. It uses profile `score-calibration-22` with
+`--scoring-arm=d2`: iterations 0--9 retain ordinary mode-choice innovation and
+iterations 10--21 are selection-only. Acceptance compares D2 with D1, C1, B1,
+A3, and the TCS targets, including Walk distribution and Taxi request-service
+and wait metrics.

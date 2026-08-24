@@ -219,7 +219,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--scoring-arm", choices=(
             "a0", "a1", "a2", "a3", "b1", "b2", "b3",
-            "c1", "c2", "c3", "d1",
+            "c1", "c2", "c3", "d1", "d2",
         ),
         help="Factorial Walk/Taxi scoring arm; required only by score-factorial profiles.",
     )
@@ -642,7 +642,7 @@ def build_command(
         command.append("--walk-scoring-profile=calibration-v2")
     elif scoring_arm in {"b2", "b3"}:
         command.append("--walk-scoring-profile=calibration-v3")
-    elif scoring_arm in {"c2", "c3"}:
+    elif scoring_arm in {"c2", "c3", "d2"}:
         command.append("--walk-scoring-profile=calibration-v4")
     if profile.traffic_signals:
         command.append("--traffic-signals")
@@ -693,6 +693,12 @@ def build_command(
                 "--taxi-constant-per-trip=-9.6",
                 "--taxi-adult-fare-utility-per-hkd=0.6",
                 "--taxi-student-fare-utility-per-hkd=0.7",
+            ])
+        elif scoring_arm == "d2":
+            command.extend([
+                "--taxi-constant-per-trip=-9.6",
+                "--taxi-adult-fare-utility-per-hkd=0.5",
+                "--taxi-student-fare-utility-per-hkd=0.6",
             ])
         if not math.isclose(profile.taxi_operational_sample_share, 1.0):
             command.append(
@@ -761,7 +767,7 @@ def main() -> int:
             "do not also override --taxi-wait-utility-per-hour"
         )
     effective_taxi_wait_utility = (
-        -6.0 if args.scoring_arm in {"c1", "c3", "d1"}
+        -6.0 if args.scoring_arm in {"c1", "c3", "d1", "d2"}
         else -18.0 if args.scoring_arm in {"a1", "a3", "b1", "b2", "b3", "c2"}
         else args.taxi_wait_utility_per_hour
     )
@@ -1069,7 +1075,7 @@ def main() -> int:
                                 "third_slope_util_per_h": -240.0,
                                 "main_walk_trips_only": True,
                             }
-                            if args.scoring_arm in {"c2", "c3"}
+                            if args.scoring_arm in {"c2", "c3", "d2"}
                             else {"version": "legacy-v1"}
                         )
                     )
@@ -1114,7 +1120,18 @@ def main() -> int:
                                     "student_fare_utility_per_hkd": -0.7,
                                 }
                                 if args.scoring_arm == "d1"
-                                else {"version": "formal50-v1"}
+                                else (
+                                    {
+                                        "version": "split-fare-walk-v4-v6",
+                                        "constant_per_trip": -9.6,
+                                        "in_vehicle_utility_per_h": -6.0,
+                                        "wait_utility_per_h": -6.0,
+                                        "adult_fare_utility_per_hkd": -0.5,
+                                        "student_fare_utility_per_hkd": -0.6,
+                                    }
+                                    if args.scoring_arm == "d2"
+                                    else {"version": "formal50-v1"}
+                                )
                             )
                         )
                     )

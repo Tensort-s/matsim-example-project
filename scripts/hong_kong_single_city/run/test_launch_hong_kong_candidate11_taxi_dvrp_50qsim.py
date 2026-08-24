@@ -296,6 +296,10 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             **{**common, "profile": RUN_PROFILES["score-calibration-22"]},
             taxi_wait_utility_per_hour=-6.0, scoring_arm="d1",
         )
+        d2 = build_command(
+            **{**common, "profile": RUN_PROFILES["score-calibration-22"]},
+            taxi_wait_utility_per_hour=-6.0, scoring_arm="d2",
+        )
         self.assertNotIn("--walk-scoring-profile=calibration-v2", a0)
         self.assertNotIn("--taxi-adult-fare-utility-per-hkd=0.12", a0)
         self.assertIn("--walk-scoring-profile=calibration-v2", a3)
@@ -331,6 +335,11 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         self.assertIn("--taxi-adult-fare-utility-per-hkd=0.6", d1)
         self.assertIn("--taxi-student-fare-utility-per-hkd=0.7", d1)
         self.assertIn("--taxi-wait-utility-per-hour=-6", d1)
+        self.assertIn("--walk-scoring-profile=calibration-v4", d2)
+        self.assertIn("--taxi-constant-per-trip=-9.6", d2)
+        self.assertIn("--taxi-adult-fare-utility-per-hkd=0.5", d2)
+        self.assertIn("--taxi-student-fare-utility-per-hkd=0.6", d2)
+        self.assertIn("--taxi-wait-utility-per-hour=-6", d2)
 
     def test_smoke_and_gate_profiles_have_safe_fixed_bounds(self) -> None:
         plans = Path("/mnt/DiskM/by/example/plans_0p5.xml.gz")
