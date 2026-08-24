@@ -197,3 +197,30 @@ reports Taxi share against the 5--7% TCS target, exact request conservation,
 request completion, wait distribution, overall trip completion, and
 last-five-iteration stability; a very low Taxi share is a valid diagnostic
 outcome rather than a technical failure.
+
+## Split adult/student fare sensitivity D1
+
+C1 completed all 25 iterations and exited zero. Its iteration-24 Taxi share
+was 2.7253%, below the 5--7% TCS target, while the last-five share range was
+only 0.0391 percentage points. The `-1 util/HKD` fare coefficient is therefore
+a stable but excessive penalty rather than a technical failure. Iteration 21
+was already within 0.0117 percentage points of the iteration-24 Taxi share, so
+the next bounded sensitivity uses 22 total iterations (0--21): mode-choice
+innovation remains available in iterations 0--9 and iterations 10--21 are
+selection-only.
+
+The authorized D1 arm keeps Walk V2 and all C1 demand and supply inputs fixed,
+but separates adult and student Taxi fare sensitivity:
+
+```text
+U_taxi,adult = -9.60 - 6 T_in_vehicle,h - 6 T_wait,h - 0.6 fare_HKD
+U_taxi,student = -9.60 - 6 T_in_vehicle,h - 6 T_wait,h - 0.7 fare_HKD
+```
+
+The launcher receives positive magnitudes `0.6` and `0.7`; the Java scorer
+applies the negative sign. D1 is an opt-in sensitivity, not an adopted
+production formula. It uses profile `score-calibration-22` with
+`--scoring-arm=d1` and must run in new immutable payload, release, and run
+directories. Acceptance uses the same Taxi share, request-service, wait,
+completion, and last-five stability outputs as C1, with explicit comparison to
+C1, B1, A3, and the TCS target.

@@ -93,6 +93,14 @@ RUN_PROFILES = {
         mode_choice_screening=True, household_protection_only=True,
         scoring_arm_required=True, screening_innovation_end_iteration=9,
     ),
+    "score-calibration-22": RunProfile(
+        0, 21, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", fixed_selected_plans=False,
+        traffic_signals=True, requires_network_override=True,
+        expected_initial_taxi_legs=44_000, clear_pt_routes=True,
+        mode_choice_screening=True, household_protection_only=True,
+        scoring_arm_required=True, screening_innovation_end_iteration=9,
+    ),
     "smoke-0p5": RunProfile(
         0, 0, 0.01, 1_550, 38_582,
         taxi_execution="dvrp", requires_plans_override=True, fixed_selected_plans=True,
@@ -210,7 +218,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--taxi-wait-utility-per-hour", type=float, default=-12.0)
     parser.add_argument(
         "--scoring-arm", choices=(
-            "a0", "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3",
+            "a0", "a1", "a2", "a3", "b1", "b2", "b3",
+            "c1", "c2", "c3", "d1",
         ),
         help="Factorial Walk/Taxi scoring arm; required only by score-factorial profiles.",
     )
@@ -629,7 +638,7 @@ def build_command(
     ]
     if profile.taxi_execution != "teleported":
         command.append("--walk-overtime-scoring")
-    if scoring_arm in {"a2", "a3", "b1", "c1"}:
+    if scoring_arm in {"a2", "a3", "b1", "c1", "d1"}:
         command.append("--walk-scoring-profile=calibration-v2")
     elif scoring_arm in {"b2", "b3"}:
         command.append("--walk-scoring-profile=calibration-v3")
@@ -678,6 +687,12 @@ def build_command(
                 "--taxi-constant-per-trip=-9.6",
                 "--taxi-adult-fare-utility-per-hkd=1",
                 "--taxi-student-fare-utility-per-hkd=1",
+            ])
+        elif scoring_arm == "d1":
+            command.extend([
+                "--taxi-constant-per-trip=-9.6",
+                "--taxi-adult-fare-utility-per-hkd=0.6",
+                "--taxi-student-fare-utility-per-hkd=0.7",
             ])
         if not math.isclose(profile.taxi_operational_sample_share, 1.0):
             command.append(
@@ -746,7 +761,7 @@ def main() -> int:
             "do not also override --taxi-wait-utility-per-hour"
         )
     effective_taxi_wait_utility = (
-        -6.0 if args.scoring_arm in {"c1", "c3"}
+        -6.0 if args.scoring_arm in {"c1", "c3", "d1"}
         else -18.0 if args.scoring_arm in {"a1", "a3", "b1", "b2", "b3", "c2"}
         else args.taxi_wait_utility_per_hour
     )
@@ -760,7 +775,8 @@ def main() -> int:
         "formal-50", "formal-50-candidate5b",
         "nosignal-run7-original-it0",
         "signal-candidate5b-original-it0",
-        "score-factorial-frozen-it0", "score-factorial-10", "score-calibration-25",
+        "score-factorial-frozen-it0", "score-factorial-10",
+        "score-calibration-25", "score-calibration-22",
         "nosignal-run7-teleported-control-it0",
         "nosignal-run7-teleported-oldstuck-it0",
     } \
@@ -1027,7 +1043,7 @@ def main() -> int:
                         "second_slope_util_per_h": -9.0,
                         "main_walk_trips_only": True,
                     }
-                    if args.scoring_arm in {"a2", "a3", "b1", "c1"}
+                    if args.scoring_arm in {"a2", "a3", "b1", "c1", "d1"}
                     else (
                         {
                             "version": "calibration-v3",
@@ -1088,7 +1104,18 @@ def main() -> int:
                                 "student_fare_utility_per_hkd": -1.0,
                             }
                             if args.scoring_arm in {"c1", "c3"}
-                            else {"version": "formal50-v1"}
+                            else (
+                                {
+                                    "version": "split-fare-cost-v5",
+                                    "constant_per_trip": -9.6,
+                                    "in_vehicle_utility_per_h": -6.0,
+                                    "wait_utility_per_h": -6.0,
+                                    "adult_fare_utility_per_hkd": -0.6,
+                                    "student_fare_utility_per_hkd": -0.7,
+                                }
+                                if args.scoring_arm == "d1"
+                                else {"version": "formal50-v1"}
+                            )
                         )
                     )
                 ),
