@@ -253,3 +253,34 @@ not an adopted production formula. It uses profile `score-calibration-22` with
 iterations 10--21 are selection-only. Acceptance compares D2 with D1, C1, B1,
 A3, and the TCS targets, including Walk distribution and Taxi request-service
 and wait metrics.
+
+### D2 final audit
+
+D2 completed iterations 0--21 and exited zero with complete output and no
+fatal runtime marker. The iteration-21 Taxi share was 6.4243%, inside the
+5--7% TCS target, and the last-five share range was only 0.1838 percentage
+points. Taxi request conservation held: 47,313 requests were submitted,
+47,308 completed, two were rejected, and three remained waiting at 30:00.
+This gives 99.9894% request completion and 0.0106% unpicked. Mean Taxi wait
+was 1.209 minutes, with p50/p90/p95 of 0.667/2.567/3.817 minutes. Service
+reliability therefore passed, but p50 and mean wait remained below the
+calibration bands of 3--5 and 5--7 minutes.
+
+Walk V4 did not pass its calibration targets. The final Walk share was
+7.8510% versus the 10.5--12% target, completed-Walk mean duration was 73.763
+minutes versus 12--15 minutes, 10.216% were no longer than 10 minutes versus
+60--68%, and 78.896% exceeded 15 minutes versus 12--18%. Its completion rate
+was 99.6146%, and the last-five Walk share and mean-duration ranges were only
+0.0425 percentage points and 0.512 minutes, respectively. The discrepancy is
+therefore stable rather than an insufficient-iteration artifact. Before any
+further Walk coefficient change, the main-mode Walk population and duration
+construction should be audited because increasing the long-walk penalty
+reduced share without removing the very long selected alternatives.
+
+Overall trip completion was 99.0534%, below the 99.5% gate. Of 7,039 final
+incomplete trips, 6,381 were PT trips at the 30-hour boundary, compared with
+318 Taxi, 225 Walk, and 115 car trips. This overall gate failure is therefore
+dominated by PT boundary/right-censor behavior rather than Taxi request
+service. Absolute executed-score levels are not welfare-comparable with
+A3/B1/C1/D1 because D2 changes the utility scale. D2 remains a sensitivity
+result, not an adopted production formula.
