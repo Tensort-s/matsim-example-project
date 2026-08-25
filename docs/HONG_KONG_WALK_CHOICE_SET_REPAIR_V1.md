@@ -48,6 +48,12 @@ one in-memory routing-only Walk vehicle and references that vehicle in Walk
 requests. Its type uses the same 1.34 m/s speed; it is not written into the
 formal fleet, demand, or QSim vehicle supply.
 
+MATSim may return facility access/egress legs around the single physical Walk
+`NetworkRoute`. Feasibility time therefore includes every routed leg in the
+compound trip, while audited network distance comes from the one physical Walk
+leg. The stage still rejects a result without exactly one such physical leg or
+with any unrouted/undefined-time component.
+
 ## Atomic frozen-plan repair
 
 Protected people are defined by the same household candidate registry used by

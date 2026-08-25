@@ -172,23 +172,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 						FacilitiesUtils.toFacility(origin, scenario.getActivityFacilities()),
 						FacilitiesUtils.toFacility(destination, scenario.getActivityFacilities()),
 						departure, person, routeRequestAttributes(TransportMode.walk));
-				double timeS = 0.0;
-				double distanceM = 0.0;
-				int walkLegs = 0;
-				for (PlanElement element : routed) {
-					if (!(element instanceof Leg leg)) continue;
-					if (!TransportMode.walk.equals(leg.getMode()) || leg.getRoute() == null
-							|| !leg.getTravelTime().isDefined()) {
-						throw new IllegalStateException("Physical Walk assessment returned an invalid route");
-					}
-					timeS += leg.getTravelTime().seconds();
-					distanceM += leg.getRoute().getDistance();
-					walkLegs++;
-				}
-				if (walkLegs != 1) {
-					throw new IllegalStateException("Walk assessment requires exactly one Walk leg");
-				}
-				return HongKongWalkChoiceSetRepair.WalkAssessment.routed(timeS, distanceM);
+				return assessRoutedWalk(routed);
 			});
 		}
 
@@ -245,6 +229,29 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 					DefaultRoutingRequest.ATTRIBUTE_VEHICLE_ID, WALK_ROUTING_VEHICLE_ID);
 		}
 		return attributes;
+	}
+
+	static HongKongWalkChoiceSetRepair.WalkAssessment assessRoutedWalk(
+			List<? extends PlanElement> routed) {
+		double timeS = 0.0;
+		double distanceM = 0.0;
+		int physicalWalkLegs = 0;
+		for (PlanElement element : routed) {
+			if (!(element instanceof Leg leg)) continue;
+			if (leg.getRoute() == null || !leg.getTravelTime().isDefined()) {
+				throw new IllegalStateException(
+						"Physical Walk assessment returned an unrouted leg mode=" + leg.getMode());
+			}
+			timeS += leg.getTravelTime().seconds();
+			if (TransportMode.walk.equals(leg.getMode())) {
+				distanceM += leg.getRoute().getDistance();
+				physicalWalkLegs++;
+			}
+		}
+		if (physicalWalkLegs != 1) {
+			throw new IllegalStateException("Walk assessment requires exactly one Walk leg");
+		}
+		return HongKongWalkChoiceSetRepair.WalkAssessment.routed(timeS, distanceM);
 	}
 
 	private static Set<String> protectedPeople(Scenario scenario, Path candidateCsv) {
