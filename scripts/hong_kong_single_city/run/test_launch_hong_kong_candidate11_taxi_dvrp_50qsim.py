@@ -218,15 +218,33 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         ]
         self.assertEqual(["KeepLastSelected"], [item["strategyName"] for item in protected])
 
-    def test_walk_repair_profile_uses_prepared_plans_and_disables_new_walk_innovation(self) -> None:
+    def test_walk_repair_profile_allows_walk_and_scheduled_joint_selection(self) -> None:
         plans = Path("/mnt/DiskM/by/example/walk_choice_set_plans.xml.gz")
         root = self.derive("score-calibration-walk-repair-22", plans=plans)
         self.assertEqual(str(plans), values(root, "plans")["inputPlansFile"])
-        self.assertEqual("car,pt,taxi", values(root, "subtourModeChoice")["modes"])
+        self.assertEqual("car,pt,walk,taxi", values(root, "subtourModeChoice")["modes"])
         profile = RUN_PROFILES["score-calibration-walk-repair-22"]
         self.assertTrue(profile.requires_plans_override)
         self.assertTrue(profile.walk_choice_set_prepared)
+        self.assertFalse(profile.household_protection_only)
         self.assertEqual(44_000, profile.expected_initial_taxi_legs)
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-6.0,
+            profile=profile, xms="16g", xmx="128g", scoring_arm="d2",
+        )
+        self.assertIn("--household-joint-plan-with-ordinary-innovation", command)
+        self.assertIn("--household-joint-selection-iterations=5,15", command)
+        student_catalog = next(
+            item for item in command
+            if item.startswith("--student-school-mode-candidates=")
+        )
+        self.assertTrue(student_catalog.replace("\\", "/").endswith(
+            "/runtime/input/school_bus_plan_candidates_5pct_v6"
+        ))
+        self.assertNotIn("--household-joint-protection-only", command)
 
     def test_score_calibration_25_keeps_ten_innovation_iterations(self) -> None:
         root = self.derive("score-calibration-25")

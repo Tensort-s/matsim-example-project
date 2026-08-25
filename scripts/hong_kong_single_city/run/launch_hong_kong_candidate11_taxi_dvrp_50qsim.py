@@ -108,7 +108,7 @@ RUN_PROFILES = {
         fixed_selected_plans=False, traffic_signals=True,
         requires_network_override=True, expected_initial_taxi_legs=44_000,
         clear_pt_routes=True, mode_choice_screening=True,
-        household_protection_only=True, scoring_arm_required=True,
+        household_protection_only=False, scoring_arm_required=True,
         screening_innovation_end_iteration=9, walk_choice_set_prepared=True,
     ),
     "smoke-0p5": RunProfile(
@@ -470,12 +470,12 @@ def derive_config(
         frozen_strategies = freeze_innovation_after_iteration(replanning, 34)
 
     subtour = module(root, "subtourModeChoice")
-    # A prepared Walk choice set already contains network-routed <=15 minute
-    # alternatives and has removed replaceable >30 minute Walk selections.
-    # Do not let unconstrained SubtourModeChoice recreate arbitrary Walk legs.
+    # The preparation profile repairs the initial choice set, but it does not
+    # impose a runtime Walk cap. Ordinary mode innovation remains free to
+    # regenerate Walk, including long Walks that the final audit must expose.
     set_param(
         subtour, "modes",
-        "car,pt,taxi" if profile.walk_choice_set_prepared else "car,pt,walk,taxi",
+        "car,pt,walk,taxi",
     )
     set_param(subtour, "chainBasedModes", "car")
     if plans_input is not None:
