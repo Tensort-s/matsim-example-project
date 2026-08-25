@@ -32,6 +32,11 @@ minutes is safely marked `not_short_by_straight_line_lower_bound` without an
 unnecessary network search. The audit records time/distance when routed, class,
 action, protected status, person, trip index, and home-tour index.
 
+Before routing, the preparation command enables Walk on every Car-capable road
+link in memory through the same shared helper used by the formal QSim. This is
+required for parity with the production physical-Walk graph and does not write
+or modify the adopted Candidate5B network file.
+
 ## Atomic frozen-plan repair
 
 Protected people are defined by the same household candidate registry used by

@@ -476,7 +476,7 @@ public final class RunHongKong5Pct {
 					+ "runtime vehicle types; adopted 10%% supply files remain unchanged.%n", overriddenTypes);
 		}
 		if (physicalNonTaxiModes) {
-			int walkLinks = enableWalkOnRoadLinks(scenario);
+			int walkLinks = HongKongPhysicalWalkModule.enableOnCarLinks(scenario.getNetwork());
 			WalkRouteNormalizationStats walkStats = clearWalkRoutes(scenario);
 			System.out.printf("Enabled capacity-free physical Walk on %,d road links and cleared "
 					+ "%,d independent Walk routes for network rerouting; normalized %,d legs "
@@ -904,21 +904,6 @@ public final class RunHongKong5Pct {
 		// PrepareForSim demand a vehicle id for every pedestrian.
 		networkModes.remove(org.matsim.api.core.v01.TransportMode.walk);
 		config.routing().setNetworkModes(networkModes);
-	}
-
-	private static int enableWalkOnRoadLinks(Scenario scenario) {
-		int changed = 0;
-		for (var link : scenario.getNetwork().getLinks().values()) {
-			if (!link.getAllowedModes().contains(org.matsim.api.core.v01.TransportMode.car)
-					|| link.getAllowedModes().contains(org.matsim.api.core.v01.TransportMode.walk)) {
-				continue;
-			}
-			var modes = new java.util.LinkedHashSet<>(link.getAllowedModes());
-			modes.add(org.matsim.api.core.v01.TransportMode.walk);
-			link.setAllowedModes(modes);
-			changed++;
-		}
-		return changed;
 	}
 
 	private static WalkRouteNormalizationStats clearWalkRoutes(Scenario scenario) {

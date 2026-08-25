@@ -76,6 +76,11 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 		config.controller().setOutputDirectory(controllerOutput.toString());
 		config.replanning().clearStrategySettings();
 		Scenario scenario = ScenarioUtils.loadScenario(config);
+		int enabledWalkLinks = HongKongPhysicalWalkModule.enableOnCarLinks(
+				scenario.getNetwork());
+		System.out.printf(
+				"Enabled the production physical-Walk graph on %,d additional Car road links for preparation.%n",
+				enabledWalkLinks);
 		Set<String> protectedIds = protectedPeople(scenario, householdCandidates);
 		Settings settings = new Settings(outputPlans, auditCsv, unresolvedCsv, maxAlternatives);
 

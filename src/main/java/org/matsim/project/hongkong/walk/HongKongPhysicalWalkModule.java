@@ -1,6 +1,7 @@
 package org.matsim.project.hongkong.walk;
 
 import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.router.NetworkRoutingProvider;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
@@ -12,6 +13,22 @@ public final class HongKongPhysicalWalkModule extends AbstractModule {
 
 	public static final double WALK_SPEED_M_S = 1.34;
 	static final String DELEGATE_BINDING = "hongKongPhysicalWalkNetworkDelegate";
+
+	/** Enables the production physical-Walk graph on every Car-capable road link. */
+	public static int enableOnCarLinks(Network network) {
+		int changed = 0;
+		for (var link : network.getLinks().values()) {
+			if (!link.getAllowedModes().contains(TransportMode.car)
+					|| link.getAllowedModes().contains(TransportMode.walk)) {
+				continue;
+			}
+			var modes = new java.util.LinkedHashSet<>(link.getAllowedModes());
+			modes.add(TransportMode.walk);
+			link.setAllowedModes(modes);
+			changed++;
+		}
+		return changed;
+	}
 
 	@Override
 	public void install() {
