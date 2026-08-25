@@ -43,6 +43,10 @@ when no optional request attribute is set; passing `null` would make every
 physical-network assessment fail before graph search. The first five genuine
 assessment exceptions are written with stack traces so a systematic routing
 failure cannot be mistaken for an unreachable OD in the aggregate audit.
+Because this immutable stage runs before MATSim `PrepareForSim`, it also adds
+one in-memory routing-only Walk vehicle and references that vehicle in Walk
+requests. Its type uses the same 1.34 m/s speed; it is not written into the
+formal fleet, demand, or QSim vehicle supply.
 
 ## Atomic frozen-plan repair
 

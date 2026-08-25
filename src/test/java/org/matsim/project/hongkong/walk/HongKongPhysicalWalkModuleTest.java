@@ -7,11 +7,17 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.router.DefaultRoutingRequest;
+import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.vehicles.Vehicle;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HongKongPhysicalWalkModuleTest {
@@ -34,5 +40,27 @@ class HongKongPhysicalWalkModuleTest {
 		assertTrue(car.getAllowedModes().contains(TransportMode.walk));
 		assertFalse(transit.getAllowedModes().contains(TransportMode.walk));
 		assertEquals(0, HongKongPhysicalWalkModule.enableOnCarLinks(network));
+	}
+
+	@Test
+	void preparationInstallsAndReferencesRoutingOnlyWalkVehicle() {
+		var scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		PrepareHongKongWalkChoiceSetPlans.installWalkRoutingVehicle(scenario);
+		PrepareHongKongWalkChoiceSetPlans.installWalkRoutingVehicle(scenario);
+
+		Object value = PrepareHongKongWalkChoiceSetPlans
+				.routeRequestAttributes(TransportMode.walk)
+				.getAttribute(DefaultRoutingRequest.ATTRIBUTE_VEHICLE_ID);
+		assertNotNull(value);
+		@SuppressWarnings("unchecked")
+		Id<Vehicle> vehicleId = (Id<Vehicle>) value;
+		var vehicle = scenario.getVehicles().getVehicles().get(vehicleId);
+		assertNotNull(vehicle);
+		assertEquals(1, scenario.getVehicles().getVehicles().size());
+		assertEquals(HongKongPhysicalWalkModule.WALK_SPEED_M_S,
+				vehicle.getType().getMaximumVelocity());
+		assertEquals(TransportMode.walk, vehicle.getType().getNetworkMode());
+		assertNull(PrepareHongKongWalkChoiceSetPlans.routeRequestAttributes(TransportMode.pt)
+				.getAttribute(DefaultRoutingRequest.ATTRIBUTE_VEHICLE_ID));
 	}
 }

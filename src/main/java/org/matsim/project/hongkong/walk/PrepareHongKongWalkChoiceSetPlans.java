@@ -6,6 +6,7 @@ import com.google.inject.Provider;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.Coord;
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -19,6 +20,7 @@ import org.matsim.core.controler.listener.StartupListener;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.population.io.PopulationWriter;
 import org.matsim.core.router.TripRouter;
+import org.matsim.core.router.DefaultRoutingRequest;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.contrib.signals.SignalSystemsConfigGroup;
@@ -26,6 +28,9 @@ import org.matsim.facilities.FacilitiesUtils;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
+import org.matsim.vehicles.Vehicle;
+import org.matsim.vehicles.VehicleType;
+import org.matsim.vehicles.VehicleUtils;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -41,6 +46,10 @@ import java.util.Set;
 
 /** Immutable route-and-repair stage for the Hong Kong Walk calibration choice set. */
 public final class PrepareHongKongWalkChoiceSetPlans {
+	private static final Id<VehicleType> WALK_ROUTING_VEHICLE_TYPE_ID =
+			Id.create("hk_walk_choice_set_routing_type", VehicleType.class);
+	private static final Id<Vehicle> WALK_ROUTING_VEHICLE_ID =
+			Id.createVehicleId("hk_walk_choice_set_routing_vehicle");
 
 	private record Settings(
 			Path outputPlans,
@@ -81,6 +90,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		int enabledWalkLinks = HongKongPhysicalWalkModule.enableOnCarLinks(
 				scenario.getNetwork());
+		installWalkRoutingVehicle(scenario);
 		System.out.printf(
 				"Enabled the production physical-Walk graph on %,d additional Car road links for preparation.%n",
 				enabledWalkLinks);
@@ -136,7 +146,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 							mode,
 							FacilitiesUtils.toFacility(origin, scenario.getActivityFacilities()),
 							FacilitiesUtils.toFacility(destination, scenario.getActivityFacilities()),
-							departure, person, new AttributesImpl()),
+							departure, person, routeRequestAttributes(mode)),
 					settings.maxAlternatives());
 			writeOutputs(result);
 		}
@@ -161,7 +171,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 						TransportMode.walk,
 						FacilitiesUtils.toFacility(origin, scenario.getActivityFacilities()),
 						FacilitiesUtils.toFacility(destination, scenario.getActivityFacilities()),
-						departure, person, new AttributesImpl());
+						departure, person, routeRequestAttributes(TransportMode.walk));
 				double timeS = 0.0;
 				double distanceM = 0.0;
 				int walkLegs = 0;
@@ -213,6 +223,28 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 					result.shortWalkAlternativesAdded(), result.unresolvedLongWalkTrips(),
 					result.actionCounts());
 		}
+	}
+
+	static void installWalkRoutingVehicle(Scenario scenario) {
+		if (scenario.getVehicles().getVehicles().containsKey(WALK_ROUTING_VEHICLE_ID)) return;
+		VehicleType type = scenario.getVehicles().getVehicleTypes().get(WALK_ROUTING_VEHICLE_TYPE_ID);
+		if (type == null) {
+			type = VehicleUtils.createVehicleType(
+					WALK_ROUTING_VEHICLE_TYPE_ID, TransportMode.walk);
+			type.setMaximumVelocity(HongKongPhysicalWalkModule.WALK_SPEED_M_S);
+			scenario.getVehicles().addVehicleType(type);
+		}
+		scenario.getVehicles().addVehicle(
+				VehicleUtils.createVehicle(WALK_ROUTING_VEHICLE_ID, type));
+	}
+
+	static AttributesImpl routeRequestAttributes(String mode) {
+		AttributesImpl attributes = new AttributesImpl();
+		if (TransportMode.walk.equals(mode)) {
+			attributes.putAttribute(
+					DefaultRoutingRequest.ATTRIBUTE_VEHICLE_ID, WALK_ROUTING_VEHICLE_ID);
+		}
+		return attributes;
 	}
 
 	private static Set<String> protectedPeople(Scenario scenario, Path candidateCsv) {
