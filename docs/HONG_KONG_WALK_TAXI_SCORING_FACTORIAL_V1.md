@@ -284,3 +284,9 @@ dominated by PT boundary/right-censor behavior rather than Taxi request
 service. Absolute executed-score levels are not welfare-comparable with
 A3/B1/C1/D1 because D2 changes the utility scale. D2 remains a sensitivity
 result, not an adopted production formula.
+
+The structural steps that follow this audit are specified in
+[`HONG_KONG_WALK_CHOICE_SET_REPAIR_V1.md`](HONG_KONG_WALK_CHOICE_SET_REPAIR_V1.md).
+They use a universal physical-network 15/30-minute Walk choice-set rule,
+atomically repair frozen home-based tours, and add network-routed short-Walk
+alternatives before any further coefficient sensitivity.

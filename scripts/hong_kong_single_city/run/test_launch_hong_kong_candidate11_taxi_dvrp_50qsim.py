@@ -218,6 +218,16 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         ]
         self.assertEqual(["KeepLastSelected"], [item["strategyName"] for item in protected])
 
+    def test_walk_repair_profile_uses_prepared_plans_and_disables_new_walk_innovation(self) -> None:
+        plans = Path("/mnt/DiskM/by/example/walk_choice_set_plans.xml.gz")
+        root = self.derive("score-calibration-walk-repair-22", plans=plans)
+        self.assertEqual(str(plans), values(root, "plans")["inputPlansFile"])
+        self.assertEqual("car,pt,taxi", values(root, "subtourModeChoice")["modes"])
+        profile = RUN_PROFILES["score-calibration-walk-repair-22"]
+        self.assertTrue(profile.requires_plans_override)
+        self.assertTrue(profile.walk_choice_set_prepared)
+        self.assertEqual(44_000, profile.expected_initial_taxi_legs)
+
     def test_score_calibration_25_keeps_ten_innovation_iterations(self) -> None:
         root = self.derive("score-calibration-25")
         controller = values(root, "controller")
@@ -699,11 +709,14 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
             plans = Path(directory) / "plans.xml.gz"
             with gzip.open(plans, "wt", encoding="utf-8") as handle:
                 handle.write(
-                    '<population><person id="1"><plan><leg mode="taxi"/></plan></person>'
+                    '<population><person id="1">'
+                    '<plan selected="yes"><leg mode="taxi"/></plan>'
+                    '<plan selected="no"><leg mode="taxi"/></plan></person>'
                     '<person id="2"/></population>'
                 )
             self.assertEqual(2, count_population_persons(plans))
             self.assertEqual(1, audit_population(plans).taxi_legs)
+            self.assertEqual(2, audit_population(plans).all_plan_taxi_legs)
         validate_run_name(Path(f"/mnt/DiskM/by/{RUN_NAME_PREFIX}20260815_run15"))
         with self.assertRaises(ValueError):
             validate_run_name(Path("/mnt/DiskM/by/run15"))

@@ -54,6 +54,7 @@ class RunProfile:
     household_protection_only: bool = False
     scoring_arm_required: bool = False
     screening_innovation_end_iteration: int | None = None
+    walk_choice_set_prepared: bool = False
 
 
 RUN_PROFILES = {
@@ -100,6 +101,15 @@ RUN_PROFILES = {
         expected_initial_taxi_legs=44_000, clear_pt_routes=True,
         mode_choice_screening=True, household_protection_only=True,
         scoring_arm_required=True, screening_innovation_end_iteration=9,
+    ),
+    "score-calibration-walk-repair-22": RunProfile(
+        0, 21, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=False, traffic_signals=True,
+        requires_network_override=True, expected_initial_taxi_legs=44_000,
+        clear_pt_routes=True, mode_choice_screening=True,
+        household_protection_only=True, scoring_arm_required=True,
+        screening_innovation_end_iteration=9, walk_choice_set_prepared=True,
     ),
     "smoke-0p5": RunProfile(
         0, 0, 0.01, 1_550, 38_582,
@@ -460,7 +470,13 @@ def derive_config(
         frozen_strategies = freeze_innovation_after_iteration(replanning, 34)
 
     subtour = module(root, "subtourModeChoice")
-    set_param(subtour, "modes", "car,pt,walk,taxi")
+    # A prepared Walk choice set already contains network-routed <=15 minute
+    # alternatives and has removed replaceable >30 minute Walk selections.
+    # Do not let unconstrained SubtourModeChoice recreate arbitrary Walk legs.
+    set_param(
+        subtour, "modes",
+        "car,pt,taxi" if profile.walk_choice_set_prepared else "car,pt,walk,taxi",
+    )
     set_param(subtour, "chainBasedModes", "car")
     if plans_input is not None:
         set_param(module(root, "plans"), "inputPlansFile", str(plans_input))
@@ -544,21 +560,38 @@ def open_xml_binary(path: Path) -> Iterator[BinaryIO]:
 @dataclass(frozen=True)
 class PopulationAudit:
     persons: int
+    # Selected-plan Taxi legs are the initial demand invariant. Alternative
+    # plans created by the Walk choice-set stage may legitimately duplicate
+    # Taxi legs elsewhere in plan memory.
     taxi_legs: int
+    all_plan_taxi_legs: int
 
 
 def audit_population(path: Path) -> PopulationAudit:
     persons = 0
     taxi_legs = 0
+    all_plan_taxi_legs = 0
+    selected_plan = False
     with open_xml_binary(path) as handle:
-        for _, element in ET.iterparse(handle, events=("end",)):
+        for event, element in ET.iterparse(handle, events=("start", "end")):
             name = element.tag.rsplit("}", 1)[-1]
+            if event == "start" and name == "plan":
+                selected_plan = element.get("selected", "yes").lower() in {
+                    "yes", "true", "1",
+                }
+                continue
+            if event != "end":
+                continue
             if name == "person":
                 persons += 1
             elif name == "leg" and element.get("mode") == "taxi":
-                taxi_legs += 1
+                all_plan_taxi_legs += 1
+                if selected_plan:
+                    taxi_legs += 1
+            elif name == "plan":
+                selected_plan = False
             element.clear()
-    return PopulationAudit(persons, taxi_legs)
+    return PopulationAudit(persons, taxi_legs, all_plan_taxi_legs)
 
 
 @dataclass(frozen=True)
@@ -760,6 +793,12 @@ def main() -> int:
         raise ValueError(
             f"Profile {args.profile} scoring-arm requirement is "
             f"{profile.scoring_arm_required}; received {args.scoring_arm!r}"
+        )
+    if args.profile == "score-calibration-walk-repair-22" \
+            and args.scoring_arm != "d2":
+        raise ValueError(
+            "score-calibration-walk-repair-22 is the structural follow-up to D2 "
+            "and therefore requires --scoring-arm d2"
         )
     if args.scoring_arm is not None and args.taxi_wait_utility_per_hour != -12.0:
         raise ValueError(
@@ -1035,6 +1074,7 @@ def main() -> int:
             and profile.taxi_execution != "teleported"
         ),
         "household_protection_only": profile.household_protection_only,
+        "walk_choice_set_prepared": profile.walk_choice_set_prepared,
         "mode_choice_screening": profile.mode_choice_screening,
         "scoring_arm": args.scoring_arm,
         "scoring_parameters": (
@@ -1171,7 +1211,8 @@ def main() -> int:
             "effective_input": str(effective_plans),
             "override": str(plans_input) if plans_input else None,
             "population_size": population_audit.persons,
-            "taxi_legs_in_plan_memory": population_audit.taxi_legs,
+            "selected_plan_taxi_legs": population_audit.taxi_legs,
+            "taxi_legs_in_plan_memory": population_audit.all_plan_taxi_legs,
             "sha256": sha256(effective_plans),
         },
         "network": (
