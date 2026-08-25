@@ -85,7 +85,10 @@ The follow-up run must use launcher profile
 
 - requires the prepared plans through `--plans-input`;
 - preserves the D2 formula through `--scoring-arm d2`;
-- keeps ordinary `ChangeExpBeta` and `SubtourModeChoice` through iteration 9;
+- restores the formal-50 ordinary strategy set: `ChangeExpBeta`, `ReRoute`,
+  `SubtourModeChoice`, and `TimeAllocationMutator_ReRoute`; the three
+  innovative strategies remain enabled through iteration 9, followed by 12
+  selection-only iterations;
 - keeps `walk` in unconstrained `SubtourModeChoice`; the preparation stage
   repairs and supplements the initial choice set but is not a hard runtime
   feasibility cap, so later innovation may regenerate a long Walk and the

@@ -55,6 +55,11 @@ TEMPLATE = """<config>
       <param name="weight" value="0.15"/>
     </parameterset>
     <parameterset type="strategysettings">
+      <param name="strategyName" value="TimeAllocationMutator_ReRoute"/>
+      <param name="weight" value="0.05"/>
+      <param name="disableAfterIteration" value="40"/>
+    </parameterset>
+    <parameterset type="strategysettings">
       <param name="strategyName" value="KeepLastSelected"/>
       <param name="subpopulation" value="hk_household_student_protected"/>
       <param name="weight" value="1.0"/>
@@ -223,6 +228,22 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         root = self.derive("score-calibration-walk-repair-22", plans=plans)
         self.assertEqual(str(plans), values(root, "plans")["inputPlansFile"])
         self.assertEqual("car,pt,walk,taxi", values(root, "subtourModeChoice")["modes"])
+        replanning = root.find("./module[@name='replanning']")
+        assert replanning is not None
+        ordinary = [
+            {p.get("name"): p.get("value") for p in block.findall("./param")}
+            for block in replanning.findall("./parameterset")
+            if not any(
+                p.get("name") == "subpopulation" for p in block.findall("./param")
+            )
+        ]
+        self.assertEqual({
+            "ChangeExpBeta", "ReRoute", "SubtourModeChoice",
+            "TimeAllocationMutator_ReRoute",
+        }, {item["strategyName"] for item in ordinary})
+        for item in ordinary:
+            if item["strategyName"] != "ChangeExpBeta":
+                self.assertEqual("9", item["disableAfterIteration"])
         profile = RUN_PROFILES["score-calibration-walk-repair-22"]
         self.assertTrue(profile.requires_plans_override)
         self.assertTrue(profile.walk_choice_set_prepared)

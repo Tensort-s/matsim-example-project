@@ -335,9 +335,10 @@ def keep_last_selected_only(replanning: ET.Element) -> list[str]:
 
 
 def mode_choice_screening_only(
-    replanning: ET.Element, innovation_end_iteration: int,
+    replanning: ET.Element, innovation_end_iteration: int, *,
+    keep_full_ordinary_innovation: bool = False,
 ) -> list[str]:
-    """Keep protected people frozen and bound ordinary mode innovation."""
+    """Keep protected people frozen and bound ordinary innovation."""
     if innovation_end_iteration < 0:
         raise ValueError("Screening innovation end iteration must be non-negative")
     strategies = replanning.findall("./parameterset[@type='strategysettings']")
@@ -355,11 +356,21 @@ def mode_choice_screening_only(
     for subpopulation, blocks in by_subpopulation.items():
         protected = subpopulation == "hk_household_student_protected"
         no_car_border = subpopulation == "hk_unpriced_border_no_car_mode_innovation"
-        keep_names = (
-            {"KeepLastSelected"} if protected
-            else {"ChangeExpBeta"} if no_car_border
-            else {"ChangeExpBeta", "SubtourModeChoice"}
-        )
+        if protected:
+            keep_names = {"KeepLastSelected"}
+        elif keep_full_ordinary_innovation and no_car_border:
+            keep_names = {
+                "ChangeExpBeta", "ReRoute", "TimeAllocationMutator_ReRoute",
+            }
+        elif keep_full_ordinary_innovation:
+            keep_names = {
+                "ChangeExpBeta", "ReRoute", "SubtourModeChoice",
+                "TimeAllocationMutator_ReRoute",
+            }
+        elif no_car_border:
+            keep_names = {"ChangeExpBeta"}
+        else:
+            keep_names = {"ChangeExpBeta", "SubtourModeChoice"}
         kept: dict[str, ET.Element] = {}
         for settings in blocks:
             name = strategy_name(settings)
@@ -374,14 +385,17 @@ def mode_choice_screening_only(
                 f"required={sorted(keep_names)}, found={sorted(kept)}"
             )
         for name, settings in kept.items():
-            set_param(settings, "weight", (
-                "1.0" if protected or no_car_border
-                else "0.8" if name == "ChangeExpBeta" else "0.2"
-            ))
+            if not keep_full_ordinary_innovation:
+                set_param(settings, "weight", (
+                    "1.0" if protected or no_car_border
+                    else "0.8" if name == "ChangeExpBeta" else "0.2"
+                ))
             for item in list(settings.findall("./param")):
                 if item.get("name") == "disableAfterIteration":
                     settings.remove(item)
-            if name == "SubtourModeChoice":
+            if name in {
+                "ReRoute", "SubtourModeChoice", "TimeAllocationMutator_ReRoute",
+            }:
                 set_param(
                     settings, "disableAfterIteration", str(innovation_end_iteration),
                 )
@@ -464,6 +478,7 @@ def derive_config(
             raise ValueError("Mode-choice screening profile lacks an innovation cutoff")
         frozen_strategies = mode_choice_screening_only(
             replanning, profile.screening_innovation_end_iteration,
+            keep_full_ordinary_innovation=profile.walk_choice_set_prepared,
         )
     else:
         set_param(replanning, "fractionOfIterationsToDisableInnovation", "0.70")
@@ -1056,6 +1071,9 @@ def main() -> int:
         ),
         "frozen_innovative_strategies": (
             [] if profile.fixed_selected_plans
+            else [
+                "ReRoute", "SubtourModeChoice", "TimeAllocationMutator_ReRoute",
+            ] if profile.walk_choice_set_prepared
             else ["SubtourModeChoice"] if profile.mode_choice_screening
             else frozen_strategies
         ),
