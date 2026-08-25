@@ -30,6 +30,7 @@ import org.matsim.contrib.taxi.run.MultiModeTaxiConfigGroup;
 import org.matsim.contrib.taxi.run.MultiModeTaxiModule;
 import org.matsim.contrib.taxi.run.TaxiConfigGroup;
 import org.matsim.project.hongkong.scoring.HongKongMultimodalCostScoringModule;
+import org.matsim.project.hongkong.scoring.HongKongScoringGrade;
 import org.matsim.project.hongkong.household.HouseholdEscortBindingCatalog;
 import org.matsim.project.hongkong.household.HouseholdEscortJointReRouteModule;
 import org.matsim.project.hongkong.household.HouseholdEscortMaxUtilitySelectorModule;
@@ -103,7 +104,8 @@ public final class RunHongKong5Pct {
 						+ " [--road-supply-registry=<road_supply_parameters_v2.csv>]"
 						+ " [--car-origin-anchor-observations=<path>]"
 						+ " [--all-person-network-taxi-innovation] [--walk-overtime-scoring]"
-						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2|calibration-v3|calibration-v4>]"
+						+ " [--scoring-grade=<GradeV1|GradeV2>]"
+						+ " [--walk-scoring-profile=<legacy-v1|calibration-v2|calibration-v3|calibration-v4|calibration-v5>]"
 						+ " [--household-joint-protection-only]"
 						+ " [--fixed-plans-network-taxi-proxy]"
 						+ " [--taxi-dvrp-fleet=<path> [--taxi-dvrp-pcu=<1|.75|.5|.25|.166667|.1|.05>]"
@@ -156,6 +158,7 @@ public final class RunHongKong5Pct {
 				args, "--taxi-adult-fare-utility-per-hkd=");
 		Double taxiStudentFareUtilityOption = optionDouble(
 				args, "--taxi-student-fare-utility-per-hkd=");
+		String scoringGradeOption = optionString(args, "--scoring-grade=");
 		String walkScoringProfileOption = optionString(args, "--walk-scoring-profile=");
 		Double taxiOperationalSampleShareOption = optionDouble(
 				args, "--taxi-operational-sample-share=");
@@ -166,10 +169,21 @@ public final class RunHongKong5Pct {
 		boolean physicalTaxi = taxiDvrpFleet != null;
 		boolean networkTaxiProxy = usesNetworkTaxiProxy(
 				allPersonNetworkTaxiInnovation, fixedPlansNetworkTaxiProxy, physicalTaxi);
+		HongKongScoringGrade scoringGrade = scoringGradeOption == null
+				? null : HongKongScoringGrade.parse(scoringGradeOption);
+		if (scoringGrade != null && (taxiWaitUtilityOption != null
+				|| taxiConstantOption != null || taxiAdultFareUtilityOption != null
+				|| taxiStudentFareUtilityOption != null || walkScoringProfileOption != null)) {
+			throw new IllegalArgumentException(
+					"--scoring-grade is mutually exclusive with Taxi/Walk scoring overrides");
+		}
 		double taxiDvrpPcu = taxiDvrpPcuOption == null ? 1.0 : taxiDvrpPcuOption;
-		double taxiWaitUtility = taxiWaitUtilityOption == null ? -12.0 : taxiWaitUtilityOption;
-		HongKongTaxiFareUtilityPolicy taxiFarePolicy =
-				taxiAdultFareUtilityOption == null && taxiStudentFareUtilityOption == null
+		double taxiWaitUtility = scoringGrade == null
+				? (taxiWaitUtilityOption == null ? -12.0 : taxiWaitUtilityOption)
+				: HongKongScoringGrade.TAXI_WAIT_UTILITY_PER_HOUR;
+		HongKongTaxiFareUtilityPolicy taxiFarePolicy = scoringGrade != null
+				? scoringGrade.taxiFarePolicy()
+				: taxiAdultFareUtilityOption == null && taxiStudentFareUtilityOption == null
 						? HongKongTaxiFareUtilityPolicy.openInnovationV1()
 						: new HongKongTaxiFareUtilityPolicy(
 								requiredPairedOption(taxiAdultFareUtilityOption,
@@ -178,18 +192,20 @@ public final class RunHongKong5Pct {
 								requiredPairedOption(taxiStudentFareUtilityOption,
 										"--taxi-student-fare-utility-per-hkd",
 										"--taxi-adult-fare-utility-per-hkd"));
-		HongKongWalkScoringParameters walkScoringParameters = switch (
+		HongKongWalkScoringParameters walkScoringParameters = scoringGrade != null
+				? scoringGrade.walkParameters() : switch (
 				walkScoringProfileOption == null ? "legacy-v1" : walkScoringProfileOption) {
 			case "legacy-v1" -> HongKongWalkScoringParameters.legacyV1();
 			case "calibration-v2" -> HongKongWalkScoringParameters.calibrationV2();
 			case "calibration-v3" -> HongKongWalkScoringParameters.calibrationV3();
 			case "calibration-v4" -> HongKongWalkScoringParameters.calibrationV4();
+			case "calibration-v5" -> HongKongWalkScoringParameters.calibrationV5();
 			default -> throw new IllegalArgumentException(
 					"Unsupported Walk scoring profile: " + walkScoringProfileOption);
 		};
 		double taxiOperationalSampleShare = taxiOperationalSampleShareOption == null
 				? 1.0 : taxiOperationalSampleShareOption;
-		if (!physicalTaxi && (taxiDvrpPcuOption != null || taxiWaitUtilityOption != null
+		if (!physicalTaxi && (scoringGrade != null || taxiDvrpPcuOption != null || taxiWaitUtilityOption != null
 				|| taxiConstantOption != null
 				|| taxiAdultFareUtilityOption != null || taxiStudentFareUtilityOption != null
 				|| taxiOperationalSampleShareOption != null)) {
@@ -227,6 +243,10 @@ public final class RunHongKong5Pct {
 		if (walkScoringProfileOption != null && !walkOvertimeScoring) {
 			throw new IllegalArgumentException(
 					"--walk-scoring-profile requires --walk-overtime-scoring.");
+		}
+		if (scoringGrade != null && !walkOvertimeScoring) {
+			throw new IllegalArgumentException(
+					"--scoring-grade requires --walk-overtime-scoring.");
 		}
 		if (householdJointProtectionOnly && householdJointPlanWithOrdinaryInnovation) {
 			throw new IllegalArgumentException(
@@ -332,6 +352,18 @@ public final class RunHongKong5Pct {
 		}
 
 		Config config = ConfigUtils.loadConfig(args[0], new SignalSystemsConfigGroup());
+		if (scoringGrade != null) {
+			scoringGrade.applyTo(config);
+			System.out.printf(
+					"HK_SCORING_GRADE name=%s marginalUtilityOfMoney=%.6f "
+							+ "taxiAdultFare=-%.6f taxiStudentFare=-%.6f taxiWait=%.6f "
+							+ "carPassengerConstant=%.6f schoolBusConstant=%.6f walkVersion=%s%n",
+					scoringGrade.name(), scoringGrade.marginalUtilityOfMoney(),
+					scoringGrade.adultTaxiFareUtilityPerHkd(),
+					scoringGrade.studentTaxiFareUtilityPerHkd(), taxiWaitUtility,
+					scoringGrade.carPassengerConstant(), scoringGrade.schoolBusConstant(),
+					walkScoringParameters.version());
+		}
 		if (taxiConstantOption != null) {
 			if (!Double.isFinite(taxiConstantOption) || taxiConstantOption > 0.0) {
 				throw new IllegalArgumentException(
@@ -743,7 +775,7 @@ public final class RunHongKong5Pct {
 				}
 			});
 			controler.addOverridingModule(new HouseholdJointPlanInnovationModule(
-					studentSchoolCatalog, householdSelectionSchedule));
+					studentSchoolCatalog, householdSelectionSchedule, walkScoringParameters));
 			System.out.printf("Enabled %,d all-car-household joint-plan candidates from %s; "
 					+ "baseline selection is preserved in iteration 0; independent student choices="
 					+ "%s.%n",

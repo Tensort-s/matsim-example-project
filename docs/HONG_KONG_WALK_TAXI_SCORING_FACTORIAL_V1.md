@@ -290,3 +290,46 @@ The structural steps that follow this audit are specified in
 They use a universal physical-network 15/30-minute Walk choice-set rule,
 atomically repair frozen home-based tours, and add network-routed short-Walk
 alternatives before any further coefficient sensitivity.
+
+## Named GradeV1/GradeV2 scoring snapshots
+
+The post-repair experiment replaces independent command-line coefficient
+overrides with the single `--scoring-grade=GradeV1|GradeV2` contract.
+`GradeV1` is the actual run3 baseline: global marginal utility of money 1.0,
+Taxi adult/student fare magnitudes 0.5/0.6, `car_passenger` and `school_bus`
+constants -1.5, and the original Walk V4 first slope 3.278342. Historical run3
+is labelled `GradeV1/pre-selector-fix`; a new GradeV1 run would use the
+corrected joint selector and is therefore not expected to reproduce its Walk
+injection defect.
+
+`GradeV2` is the complete new snapshot:
+
+```text
+U_car = -0.5 - 6 T_h - 0.28 (energy_HKD + toll_HKD + parking_HKD)
+U_pt = -6 T_h - 0.28 fare_HKD
+U_taxi,adult = -9.6 - 6 T_wait,h - 6 T_ride,h - 0.28 fare_HKD
+U_taxi,student = -9.6 - 6 T_wait,h - 6 T_ride,h - 0.4 fare_HKD
+U_car_passenger = -6 T_h
+U_school_bus = -6 T_h
+U_walk = -6 T_h + 2
+         - 3   max(0, T_h - 10/60)
+         - 60  max(0, T_h - 15/60)
+         - 240 max(0, T_h - 30/60)
+```
+
+PT and Car share the global 0.28 money coefficient. Taxi fare remains an
+independent adult/student score and the standard Taxi monetary-distance rate
+must be zero, preventing a second multiplication by 0.28. Walk V5 is injected
+as the same immutable parameter instance into final scoring and
+`HouseholdJointPlanSelector`. The V5 constant and hinges apply only when every
+leg of the candidate's main trip is Walk. PT and School bus access/egress Walk
+continues to score linearly at `-6 util/h`, without the `+2` or any hinge.
+
+The corresponding immutable server profile is
+`score-gradev2-walk-repair-22`. It reuses the accepted prepare7 plans, retains
+ordinary innovation in iterations 0--9, switches to selection-only in
+iterations 10--21, and runs the household/student/School-bus selector at
+iterations 5 and 15. Candidate5B, explicit road supply, Candidate11 signals,
+calibrated PT, 15,500 Taxi, PCU 0.05, 16 threads, the 30-hour boundary, and
+stuck policy remain fixed. This remains a sensitivity experiment and does not
+replace the adopted production configuration unless its audit gates pass.

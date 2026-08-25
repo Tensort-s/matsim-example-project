@@ -106,6 +106,15 @@ The selected-plan Taxi count remains the 44,000-demand invariant. The launcher
 separately records the total Taxi-leg count across plan memory, which may be
 higher because a short-Walk alternative is a complete plan copy.
 
+The subsequent named-score experiment uses
+`score-gradev2-walk-repair-22 --scoring-grade GradeV2` with the same prepared
+plans and the same strategy/selection schedule. It changes only the complete
+GradeV2 scoring snapshot documented in
+`HONG_KONG_WALK_TAXI_SCORING_FACTORIAL_V1.md`; it does not rerun or alter the
+choice-set preparation. The launch metadata records the Grade name, global
+money coefficient, independent adult/student Taxi coefficients, all relevant
+mode constants, Walk version, access-Walk rule, and selection iterations.
+
 ## Immutable preparation command
 
 Build the repository-root shaded JAR, then run:

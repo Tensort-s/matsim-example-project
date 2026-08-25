@@ -267,6 +267,33 @@ class Candidate11TaxiDvrpLauncherTest(unittest.TestCase):
         ))
         self.assertNotIn("--household-joint-protection-only", command)
 
+    def test_gradev2_profile_emits_one_named_scoring_contract(self) -> None:
+        plans = Path("/mnt/DiskM/by/example/prepared_plans.xml.gz")
+        root = self.derive("score-gradev2-walk-repair-22", plans=plans)
+        self.assertEqual("21", values(root, "controller")["lastIteration"])
+        profile = RUN_PROFILES["score-gradev2-walk-repair-22"]
+        self.assertTrue(profile.scoring_grade_required)
+        self.assertFalse(profile.scoring_arm_required)
+        command = build_command(
+            java=Path("/runtime/java"), jar=Path("/release/app.jar"),
+            config=Path("/run/config.xml"), cost_root=Path("/release/cost"),
+            runtime=Path("/runtime"), fleet=Path("/release/fleet.xml.gz"),
+            taxi_pcu=0.05, taxi_wait_utility_per_hour=-6.0,
+            profile=profile, xms="16g", xmx="128g",
+            scoring_grade="GradeV2",
+        )
+        self.assertIn("--scoring-grade=GradeV2", command)
+        self.assertIn("--household-joint-selection-iterations=5,15", command)
+        self.assertFalse(any(
+            item.startswith("--taxi-wait-utility-per-hour=") for item in command
+        ))
+        self.assertFalse(any(
+            item.startswith("--taxi-adult-fare-utility-per-hkd=") for item in command
+        ))
+        self.assertFalse(any(
+            item.startswith("--walk-scoring-profile=") for item in command
+        ))
+
     def test_score_calibration_25_keeps_ten_innovation_iterations(self) -> None:
         root = self.derive("score-calibration-25")
         controller = values(root, "controller")

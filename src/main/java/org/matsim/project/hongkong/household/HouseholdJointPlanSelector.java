@@ -44,6 +44,7 @@ import org.matsim.project.hongkong.taxi.HongKongTaxiLegAttributes;
 import org.matsim.project.hongkong.taxi.HongKongTaxiScoringParameters;
 import org.matsim.project.hongkong.taxi.HongKongTaxiFareUtilityPolicy;
 import org.matsim.project.hongkong.walk.HongKongWalkOvertimeUtility;
+import org.matsim.project.hongkong.walk.HongKongWalkScoringParameters;
 import org.matsim.utils.objectattributes.attributable.Attributes;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 import org.matsim.vehicles.Vehicle;
@@ -73,9 +74,6 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 
 	private static final Logger LOG = LogManager.getLogger(HouseholdJointPlanSelector.class);
 	public static final String PROTECTED_SUBPOPULATION = "hk_household_student_protected";
-	private static final double DRIVER_CONSTANT = -0.5;
-	private static final double PASSENGER_CONSTANT = -1.5;
-	private static final double TRAVEL_UTILITY_PER_HOUR = -6.0;
 	private static final double SCHOOL_BUS_BOARDING_READY_MARGIN_S = 5.0;
 	private static final String RELEASED_MODE_ATTRIBUTE = "hkHouseholdEscortReleasedPassengerMode";
 	private static final String RELEASED_TRIP_INDEX_ATTRIBUTE = "hkHouseholdEscortOriginalPassengerLegIndex";
@@ -101,10 +99,6 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private record CarMetric(
 			NetworkRoute route, double travelTimeS, double arrivalTimeS,
 			double energyHkd, double tollHkd, double parkingHkd) {
-		double utility() {
-			return DRIVER_CONSTANT + TRAVEL_UTILITY_PER_HOUR * travelTimeS / 3_600.0
-					- energyHkd - tollHkd - parkingHkd;
-		}
 	}
 
 	private record WaypointRoute(CarMetric car, double passengerArrivalTimeS) {
@@ -141,6 +135,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	private final HongKongPtFareRuntimeCatalog ptFareCatalog;
 	private final HongKongTaxiFareCalculator taxiFareCalculator;
 	private final HongKongTaxiFareUtilityPolicy taxiPolicy;
+	private final HongKongWalkScoringParameters walkScoringParameters;
 	private final Config config;
 	private final HouseholdJointPlanSelectionSchedule selectionSchedule;
 	private final double qsimEndTimeS;
@@ -161,6 +156,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			HongKongPtFareRuntimeCatalog ptFareCatalog,
 			HongKongTaxiFareCalculator taxiFareCalculator,
 			HongKongTaxiFareUtilityPolicy taxiPolicy,
+			HongKongWalkScoringParameters walkScoringParameters,
 			HouseholdJointPlanSelectionSchedule selectionSchedule,
 			Config config) {
 		this.candidates = candidates;
@@ -176,6 +172,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		this.ptFareCatalog = ptFareCatalog;
 		this.taxiFareCalculator = taxiFareCalculator;
 		this.taxiPolicy = taxiPolicy;
+		this.walkScoringParameters = walkScoringParameters;
 		this.selectionSchedule = selectionSchedule;
 		this.config = config;
 		this.qsimEndTimeS = config.qsim().getEndTime().orElse(30.0 * 3_600.0);
@@ -456,7 +453,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 							nextMainTripDeparture(driverPlan, tripIndex));
 				}
 				routedDay.put(tripIndex, metric);
-				joint += metric.utility();
+				joint += carUtility(metric);
 				feasible &= metric.arrivalTimeS() <= nextMainTripDeparture(driverPlan, tripIndex) + 1e-9;
 			}
 			switchedDay = routedDay;
@@ -466,7 +463,7 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			CarMetric baseline = evaluateCar(
 					copyRoute(original), candidate.driverDepartureTimeS(), driver, vehicleId,
 					driverTrip.destination(), nextDeparture);
-			driverDelta = waypoint.utility() - baseline.utility();
+			driverDelta = carUtility(waypoint) - carUtility(baseline);
 		}
 		return new CandidateEvaluation(
 				candidate, waypoint, switchedDay, passengerDeparture, passengerJointTime,
@@ -864,7 +861,8 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		elements.addAll(egress);
 		double earlyScheduleShift = Math.max(0.0, desiredDeparture - start);
 		double utility = standardTripUtility(elements)
-				+ TRAVEL_UTILITY_PER_HOUR * earlyScheduleShift / 3_600.0;
+				+ requiredModeParams("school_bus").getMarginalUtilityOfTraveling()
+				* earlyScheduleShift / 3_600.0;
 		return new PassengerModeCandidate("school_bus", elements, utility,
 				tripTravelTime(elements) + earlyScheduleShift, 0.0, true,
 				start, option.candidateId());
@@ -1035,8 +1033,16 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 			Plan plan, int tripIndex, MainTrip trip, Person driver, Id<Vehicle> vehicleId) {
 		if (!TransportMode.car.equals(mainMode(trip))) return originalTripUtility(driver, trip);
 		NetworkRoute route = copyRoute(originalCarRoute(trip, vehicleId));
-		return evaluateCar(route, tripDeparture(trip), driver, vehicleId, trip.destination(),
-				nextCarTripDeparture(plan, tripIndex)).utility();
+		return carUtility(evaluateCar(route, tripDeparture(trip), driver, vehicleId, trip.destination(),
+				nextCarTripDeparture(plan, tripIndex)));
+	}
+
+	private double carUtility(CarMetric metric) {
+		ScoringConfigGroup.ModeParams params = requiredModeParams(TransportMode.car);
+		double monetaryCost = metric.energyHkd() + metric.tollHkd() + metric.parkingHkd();
+		return params.getConstant()
+				+ params.getMarginalUtilityOfTraveling() * metric.travelTimeS() / 3_600.0
+				- config.scoring().getMarginalUtilityOfMoney() * monetaryCost;
 	}
 
 	private double standardTripUtility(List<PlanElement> elements) {
@@ -1054,8 +1060,19 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 					+ (params.getMarginalUtilityOfDistance()
 					+ config.scoring().getMarginalUtilityOfMoney() * params.getMonetaryDistanceRate()) * distance;
 		}
-		return utility + (taxiPolicy.equals(HongKongTaxiFareUtilityPolicy.openInnovationV1())
-				? HongKongWalkOvertimeUtility.penaltyForTrip(elements) : 0.0);
+		return utility + mainWalkAdjustment(elements, walkScoringParameters);
+	}
+
+	static double mainWalkAdjustment(
+			List<? extends PlanElement> elements,
+			HongKongWalkScoringParameters parameters) {
+		boolean hasWalk = false;
+		for (PlanElement element : elements) {
+			if (!(element instanceof Leg leg)) continue;
+			if (!HongKongWalkOvertimeUtility.isWalkLeg(leg)) return 0.0;
+			hasWalk = true;
+		}
+		return hasWalk ? HongKongWalkOvertimeUtility.penaltyForTrip(elements, parameters) : 0.0;
 	}
 
 	static String scoringModeForLeg(Leg leg) {
@@ -1087,8 +1104,16 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 		return false;
 	}
 
-	private static double passengerUtility(double travelTimeS) {
-		return PASSENGER_CONSTANT + TRAVEL_UTILITY_PER_HOUR * travelTimeS / 3_600.0;
+	private double passengerUtility(double travelTimeS) {
+		ScoringConfigGroup.ModeParams params = requiredModeParams("car_passenger");
+		return params.getConstant()
+				+ params.getMarginalUtilityOfTraveling() * travelTimeS / 3_600.0;
+	}
+
+	private ScoringConfigGroup.ModeParams requiredModeParams(String mode) {
+		ScoringConfigGroup.ModeParams params = config.scoring().getModes().get(mode);
+		if (params == null) throw new IllegalStateException("Missing scoring mode " + mode);
+		return params;
 	}
 
 	private static MainTrip mainTrip(Plan plan, int index) {

@@ -53,6 +53,7 @@ class RunProfile:
     mode_choice_screening: bool = False
     household_protection_only: bool = False
     scoring_arm_required: bool = False
+    scoring_grade_required: bool = False
     screening_innovation_end_iteration: int | None = None
     walk_choice_set_prepared: bool = False
 
@@ -109,6 +110,15 @@ RUN_PROFILES = {
         requires_network_override=True, expected_initial_taxi_legs=44_000,
         clear_pt_routes=True, mode_choice_screening=True,
         household_protection_only=False, scoring_arm_required=True,
+        screening_innovation_end_iteration=9, walk_choice_set_prepared=True,
+    ),
+    "score-gradev2-walk-repair-22": RunProfile(
+        0, 21, 0.1, 15_500, 385_820,
+        taxi_execution="dvrp", requires_plans_override=True,
+        fixed_selected_plans=False, traffic_signals=True,
+        requires_network_override=True, expected_initial_taxi_legs=44_000,
+        clear_pt_routes=True, mode_choice_screening=True,
+        household_protection_only=False, scoring_grade_required=True,
         screening_innovation_end_iteration=9, walk_choice_set_prepared=True,
     ),
     "smoke-0p5": RunProfile(
@@ -232,6 +242,10 @@ def parse_args() -> argparse.Namespace:
             "c1", "c2", "c3", "d1", "d2",
         ),
         help="Factorial Walk/Taxi scoring arm; required only by score-factorial profiles.",
+    )
+    parser.add_argument(
+        "--scoring-grade", choices=("GradeV1", "GradeV2"),
+        help="Named complete scoring snapshot; mutually exclusive with --scoring-arm.",
     )
     parser.add_argument("--xms", default="16g")
     parser.add_argument("--xmx", default="128g")
@@ -674,6 +688,7 @@ def build_command(
     xmx: str,
     road_supply_registry: Path | None = None,
     scoring_arm: str | None = None,
+    scoring_grade: str | None = None,
 ) -> list[str]:
     command = [
         str(java), f"-Xms{xms}", f"-Xmx{xmx}", "-cp", str(jar),
@@ -686,6 +701,8 @@ def build_command(
     ]
     if profile.taxi_execution != "teleported":
         command.append("--walk-overtime-scoring")
+    if scoring_grade is not None:
+        command.append(f"--scoring-grade={scoring_grade}")
     if scoring_arm in {"a2", "a3", "b1", "c1", "d1"}:
         command.append("--walk-scoring-profile=calibration-v2")
     elif scoring_arm in {"b2", "b3"}:
@@ -717,8 +734,11 @@ def build_command(
         command.extend([
             f"--taxi-dvrp-fleet={fleet}",
             f"--taxi-dvrp-pcu={taxi_pcu_text}",
-            f"--taxi-wait-utility-per-hour={taxi_wait_utility_per_hour:g}",
         ])
+        if scoring_grade is None:
+            command.append(
+                f"--taxi-wait-utility-per-hour={taxi_wait_utility_per_hour:g}"
+            )
         if scoring_arm in {"a1", "a3", "b2", "c2"}:
             command.extend([
                 "--taxi-adult-fare-utility-per-hkd=0.12",
@@ -809,6 +829,18 @@ def main() -> int:
             f"Profile {args.profile} scoring-arm requirement is "
             f"{profile.scoring_arm_required}; received {args.scoring_arm!r}"
         )
+    if profile.scoring_grade_required != (args.scoring_grade is not None):
+        raise ValueError(
+            f"Profile {args.profile} scoring-grade requirement is "
+            f"{profile.scoring_grade_required}; received {args.scoring_grade!r}"
+        )
+    if args.scoring_arm is not None and args.scoring_grade is not None:
+        raise ValueError("--scoring-arm and --scoring-grade are mutually exclusive")
+    if args.profile == "score-gradev2-walk-repair-22" \
+            and args.scoring_grade != "GradeV2":
+        raise ValueError(
+            "score-gradev2-walk-repair-22 requires --scoring-grade GradeV2"
+        )
     if args.profile == "score-calibration-walk-repair-22" \
             and args.scoring_arm != "d2":
         raise ValueError(
@@ -820,8 +852,13 @@ def main() -> int:
             "Factorial profiles derive the Taxi wait coefficient from --scoring-arm; "
             "do not also override --taxi-wait-utility-per-hour"
         )
+    if args.scoring_grade is not None and args.taxi_wait_utility_per_hour != -12.0:
+        raise ValueError(
+            "Named scoring grades define Taxi wait utility; do not override it"
+        )
     effective_taxi_wait_utility = (
-        -6.0 if args.scoring_arm in {"c1", "c3", "d1", "d2"}
+        -6.0 if args.scoring_grade is not None
+        else -6.0 if args.scoring_arm in {"c1", "c3", "d1", "d2"}
         else -18.0 if args.scoring_arm in {"a1", "a3", "b1", "b2", "b3", "c2"}
         else args.taxi_wait_utility_per_hour
     )
@@ -1023,6 +1060,7 @@ def main() -> int:
         taxi_wait_utility_per_hour=effective_taxi_wait_utility,
         profile=profile,
         scoring_arm=args.scoring_arm,
+        scoring_grade=args.scoring_grade,
         xms=args.xms,
         xmx=args.xmx,
     )
@@ -1095,6 +1133,75 @@ def main() -> int:
         "walk_choice_set_prepared": profile.walk_choice_set_prepared,
         "mode_choice_screening": profile.mode_choice_screening,
         "scoring_arm": args.scoring_arm,
+        "scoring_grade": args.scoring_grade,
+        "scoring_grade_parameters": (
+            {
+                "name": args.scoring_grade,
+                "global_marginal_utility_of_money": (
+                    0.28 if args.scoring_grade == "GradeV2" else 1.0
+                ),
+                "car": {
+                    "constant_per_trip": -0.5,
+                    "travel_utility_per_h": -6.0,
+                    "money_utility_per_hkd": (
+                        -0.28 if args.scoring_grade == "GradeV2" else -1.0
+                    ),
+                },
+                "pt": {
+                    "constant_per_trip": 0.0,
+                    "travel_utility_per_h": -6.0,
+                    "fare_utility_per_hkd": (
+                        -0.28 if args.scoring_grade == "GradeV2" else -1.0
+                    ),
+                },
+                "taxi": {
+                    "constant_per_trip": -9.6,
+                    "in_vehicle_utility_per_h": -6.0,
+                    "wait_utility_per_h": -6.0,
+                    "adult_fare_utility_per_hkd": (
+                        -0.28 if args.scoring_grade == "GradeV2" else -0.5
+                    ),
+                    "student_fare_utility_per_hkd": (
+                        -0.4 if args.scoring_grade == "GradeV2" else -0.6
+                    ),
+                    "standard_monetary_distance_rate": 0.0,
+                },
+                "car_passenger": {
+                    "constant_per_trip": (
+                        0.0 if args.scoring_grade == "GradeV2" else -1.5
+                    ),
+                    "travel_utility_per_h": -6.0,
+                },
+                "school_bus": {
+                    "constant_per_trip": (
+                        0.0 if args.scoring_grade == "GradeV2" else -1.5
+                    ),
+                    "travel_utility_per_h": -6.0,
+                },
+                "walk": {
+                    "version": (
+                        "calibration-v5" if args.scoring_grade == "GradeV2"
+                        else "calibration-v4"
+                    ),
+                    "constant_per_main_walk_trip": 2.0,
+                    "first_threshold_s": 600.0,
+                    "first_slope_util_per_h": (
+                        -3.0 if args.scoring_grade == "GradeV2" else -3.278342
+                    ),
+                    "second_threshold_s": 900.0,
+                    "second_slope_util_per_h": -60.0,
+                    "third_threshold_s": 1_800.0,
+                    "third_slope_util_per_h": -240.0,
+                    "main_walk_trips_only": True,
+                    "pt_school_bus_access_walk_linear_utility_per_h": -6.0,
+                },
+                "joint_selection_iterations": [
+                    iteration for iteration in HOUSEHOLD_SELECTION_ITERATIONS
+                    if profile.first_iteration <= iteration <= profile.last_iteration
+                ],
+            }
+            if args.scoring_grade is not None else None
+        ),
         "scoring_parameters": (
             {
                 "walk": (

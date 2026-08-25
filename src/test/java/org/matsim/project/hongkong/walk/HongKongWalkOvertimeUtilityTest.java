@@ -63,9 +63,24 @@ class HongKongWalkOvertimeUtilityTest {
 		var parameters = HongKongWalkScoringParameters.calibrationV4();
 		assertEquals(2.0,
 				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(5 * 60.0, parameters), 1e-12);
+		assertEquals(1.7268048333333332,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(15 * 60.0, parameters), 1e-12);
 		assertEquals(-14.092780666666667,
 				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(30 * 60.0, parameters), 1e-12);
-		assertEquals(-165.73195166666667,
+		assertEquals(-165.73195166666666,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(60 * 60.0, parameters), 1e-12);
+	}
+
+	@Test
+	void calibrationV5UsesIntegerFirstSlope() {
+		var parameters = HongKongWalkScoringParameters.calibrationV5();
+		assertEquals(2.0,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(5 * 60.0, parameters), 1e-12);
+		assertEquals(1.75,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(15 * 60.0, parameters), 1e-12);
+		assertEquals(-14.0,
+				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(30 * 60.0, parameters), 1e-12);
+		assertEquals(-165.5,
 				HongKongWalkOvertimeUtility.penaltyForWalkSeconds(60 * 60.0, parameters), 1e-12);
 	}
 }

@@ -58,4 +58,10 @@ public record HongKongWalkScoringParameters(
 				2.0, 600.0, 3.278342, 900.0, 60.0, 1_800.0, 240.0, true,
 				"walk_main_mode_short_reward_strong_long_rejection_v4");
 	}
+
+	public static HongKongWalkScoringParameters calibrationV5() {
+		return new HongKongWalkScoringParameters(
+				2.0, 600.0, 3.0, 900.0, 60.0, 1_800.0, 240.0, true,
+				"walk_main_mode_integer_short_slope_strong_long_rejection_v5");
+	}
 }
