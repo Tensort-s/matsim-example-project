@@ -28,6 +28,8 @@ import java.util.Set;
  * plans are changed atomically by complete home-based tour.</p>
  */
 public final class HongKongWalkChoiceSetRepair {
+	private static final java.util.concurrent.atomic.AtomicInteger WALK_ASSESSMENT_FAILURES_LOGGED =
+			new java.util.concurrent.atomic.AtomicInteger();
 
 	public static final double SHORT_WALK_S = 15.0 * 60.0;
 	public static final double MAX_WALK_S = 30.0 * 60.0;
@@ -263,6 +265,13 @@ public final class HongKongWalkChoiceSetRepair {
 					assessment = assessmentProvider.assess(person, trip.getOriginActivity(),
 							trip.getDestinationActivity(), departure, selectedMode);
 				} catch (RuntimeException error) {
+					int failureNumber = WALK_ASSESSMENT_FAILURES_LOGGED.incrementAndGet();
+					if (failureNumber <= 5) {
+						System.err.printf(
+								"Physical Walk assessment failure %d for person=%s trip=%d mode=%s: %s%n",
+								failureNumber, person.getId(), index, selectedMode, error);
+						error.printStackTrace(System.err);
+					}
 					assessment = WalkAssessment.notEvaluated("network_unreachable");
 				}
 			}

@@ -37,6 +37,13 @@ link in memory through the same shared helper used by the formal QSim. This is
 required for parity with the production physical-Walk graph and does not write
 or modify the adopted Candidate5B network file.
 
+Every preparation-stage Walk/PT request also supplies a non-null MATSim route
+attribute container. MATSim 2026 network routing reads this container even
+when no optional request attribute is set; passing `null` would make every
+physical-network assessment fail before graph search. The first five genuine
+assessment exceptions are written with stack traces so a systematic routing
+failure cannot be mistaken for an unreachable OD in the aggregate audit.
+
 ## Atomic frozen-plan repair
 
 Protected people are defined by the same household candidate registry used by

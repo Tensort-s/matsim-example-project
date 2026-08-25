@@ -25,6 +25,7 @@ import org.matsim.contrib.signals.SignalSystemsConfigGroup;
 import org.matsim.facilities.FacilitiesUtils;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
+import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -135,7 +136,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 							mode,
 							FacilitiesUtils.toFacility(origin, scenario.getActivityFacilities()),
 							FacilitiesUtils.toFacility(destination, scenario.getActivityFacilities()),
-							departure, person, null),
+							departure, person, new AttributesImpl()),
 					settings.maxAlternatives());
 			writeOutputs(result);
 		}
@@ -160,7 +161,7 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 						TransportMode.walk,
 						FacilitiesUtils.toFacility(origin, scenario.getActivityFacilities()),
 						FacilitiesUtils.toFacility(destination, scenario.getActivityFacilities()),
-						departure, person, null);
+						departure, person, new AttributesImpl());
 				double timeS = 0.0;
 				double distanceM = 0.0;
 				int walkLegs = 0;
