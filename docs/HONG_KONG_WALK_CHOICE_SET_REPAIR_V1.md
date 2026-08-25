@@ -114,12 +114,16 @@ Build the repository-root shaded JAR, then run:
 java -cp matsim-example-project-0.0.1-SNAPSHOT.jar \
   org.matsim.project.hongkong.walk.PrepareHongKongWalkChoiceSetPlans \
   <config.xml> <input-plans.xml.gz> <household-candidates.csv> \
-  <output-plans.xml.gz> <walk_choice_set_audit.csv> <unresolved.csv> \
-  <controller-output-directory> 4
+  <student-school-candidates-directory> <output-plans.xml.gz> \
+  <walk_choice_set_audit.csv> <unresolved.csv> <controller-output-directory> 4
 ```
 
 Every output path and the controller directory must be absent. Server work is
 restricted to `/mnt/DiskM/by`, and a retry must use a new immutable directory.
+The preparation stage derives its protected-person union from both the
+household joint-candidate CSV and the complete student school-mode universe.
+This prevents a copied Walk alternative from retaining a school-bus routing
+mode without its stable physical candidate ID after PrepareForSim.
 
 Before a 22-iteration test is launched, acceptance of the preparation stage
 requires:

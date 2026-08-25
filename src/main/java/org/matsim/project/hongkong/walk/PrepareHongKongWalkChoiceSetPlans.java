@@ -26,6 +26,7 @@ import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.contrib.signals.SignalSystemsConfigGroup;
 import org.matsim.facilities.FacilitiesUtils;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
+import org.matsim.project.hongkong.schoolbus.StudentSchoolModeCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
 import org.matsim.utils.objectattributes.attributable.AttributesImpl;
 import org.matsim.vehicles.Vehicle;
@@ -62,20 +63,22 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 	}
 
 	public static void main(String[] args) {
-		if (args.length != 8) {
+		if (args.length != 9) {
 			throw new IllegalArgumentException(
 					"Usage: PrepareHongKongWalkChoiceSetPlans <config.xml> <input-plans.xml.gz> "
-							+ "<household-candidates.csv> <output-plans.xml.gz> <audit.csv> "
+							+ "<household-candidates.csv> <student-school-candidates-dir> "
+							+ "<output-plans.xml.gz> <audit.csv> "
 							+ "<unresolved.csv> <controller-output-dir> <max-short-alternatives-per-person>");
 		}
 		Path configPath = regularFile(args[0], "config");
 		Path inputPlans = regularFile(args[1], "input plans");
 		Path householdCandidates = regularFile(args[2], "household candidates");
-		Path outputPlans = absent(args[3], "output plans");
-		Path auditCsv = absent(args[4], "audit CSV");
-		Path unresolvedCsv = absent(args[5], "unresolved CSV");
-		Path controllerOutput = absent(args[6], "controller output");
-		int maxAlternatives = Integer.parseInt(args[7]);
+		Path studentSchoolCandidates = directory(args[3], "student school-mode candidates");
+		Path outputPlans = absent(args[4], "output plans");
+		Path auditCsv = absent(args[5], "audit CSV");
+		Path unresolvedCsv = absent(args[6], "unresolved CSV");
+		Path controllerOutput = absent(args[7], "controller output");
+		int maxAlternatives = Integer.parseInt(args[8]);
 		if (maxAlternatives < 0 || maxAlternatives > 4) {
 			throw new IllegalArgumentException("Short-Walk alternatives per person must be 0..4");
 		}
@@ -94,7 +97,8 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 		System.out.printf(
 				"Enabled the production physical-Walk graph on %,d additional Car road links for preparation.%n",
 				enabledWalkLinks);
-		Set<String> protectedIds = protectedPeople(scenario, householdCandidates);
+		Set<String> protectedIds = protectedPeople(
+				scenario, householdCandidates, studentSchoolCandidates);
 		Settings settings = new Settings(outputPlans, auditCsv, unresolvedCsv, maxAlternatives);
 
 		Controler controler = new Controler(scenario);
@@ -254,12 +258,15 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 		return HongKongWalkChoiceSetRepair.WalkAssessment.routed(timeS, distanceM);
 	}
 
-	private static Set<String> protectedPeople(Scenario scenario, Path candidateCsv) {
+	static Set<String> protectedPeople(
+			Scenario scenario, Path candidateCsv, Path studentCandidateDirectory) {
 		Set<String> ids = new LinkedHashSet<>();
 		for (var candidate : HouseholdJointPlanCandidateCatalog.load(candidateCsv).candidates()) {
 			ids.add(candidate.passengerPersonId());
 			ids.add(candidate.driverPersonId());
 		}
+		StudentSchoolModeCandidateCatalog.load(studentCandidateDirectory).trips().keySet()
+				.forEach(key -> ids.add(key.personId()));
 		for (Person person : scenario.getPopulation().getPersons().values()) {
 			if (person.getSelectedPlan() == null) continue;
 			boolean carPassenger = TripStructureUtils.getTrips(person.getSelectedPlan()).stream()
@@ -304,6 +311,14 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 		Path path = Path.of(value).toAbsolutePath().normalize();
 		if (!Files.isRegularFile(path)) {
 			throw new IllegalArgumentException(label + " must be a regular file: " + path);
+		}
+		return path;
+	}
+
+	private static Path directory(String value, String label) {
+		Path path = Path.of(value).toAbsolutePath().normalize();
+		if (!Files.isDirectory(path)) {
+			throw new IllegalArgumentException(label + " must be a directory: " + path);
 		}
 		return path;
 	}
