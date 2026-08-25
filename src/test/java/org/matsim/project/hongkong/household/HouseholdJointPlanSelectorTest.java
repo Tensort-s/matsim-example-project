@@ -28,9 +28,15 @@ class HouseholdJointPlanSelectorTest {
 	void fullDayDriverSwitchReservesTheVehicleDay() {
 		var switchCandidate = candidate("switch", "passenger", 0, "driver", 0, true);
 		var existingCarCandidate = candidate("existing", "other-passenger", 0, "driver", 1, false);
+		var driverAlsoPassengerOnAnotherTrip = candidate(
+				"cross-role", "driver", 2, "other-driver", 0, false);
 
 		assertTrue(HouseholdJointPlanSelector.candidatesConflict(
 				switchCandidate, existingCarCandidate));
+		assertTrue(HouseholdJointPlanSelector.candidatesConflict(
+				switchCandidate, driverAlsoPassengerOnAnotherTrip));
+		assertTrue(HouseholdJointPlanSelector.candidatesConflict(
+				driverAlsoPassengerOnAnotherTrip, switchCandidate));
 	}
 
 	@Test

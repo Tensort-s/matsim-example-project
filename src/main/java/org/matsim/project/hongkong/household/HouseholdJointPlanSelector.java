@@ -517,6 +517,12 @@ public final class HouseholdJointPlanSelector implements ReplanningListener {
 	static boolean candidatesConflict(
 			HouseholdJointPlanCandidateCatalog.Candidate a,
 			HouseholdJointPlanCandidateCatalog.Candidate b) {
+		if (a.driverRequiresCarSwitch()
+				&& (a.driverPersonId().equals(b.passengerPersonId())
+				|| a.driverPersonId().equals(b.driverPersonId()))) return true;
+		if (b.driverRequiresCarSwitch()
+				&& (b.driverPersonId().equals(a.passengerPersonId())
+				|| b.driverPersonId().equals(a.driverPersonId()))) return true;
 		if (a.passengerPersonId().equals(b.passengerPersonId())
 				&& a.passengerTripIndex() == b.passengerTripIndex()) return true;
 		if (a.driverPersonId().equals(b.driverPersonId())
