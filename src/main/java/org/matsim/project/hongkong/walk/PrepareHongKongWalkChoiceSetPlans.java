@@ -21,6 +21,7 @@ import org.matsim.core.population.io.PopulationWriter;
 import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.TripStructureUtils;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.contrib.signals.SignalSystemsConfigGroup;
 import org.matsim.facilities.FacilitiesUtils;
 import org.matsim.project.hongkong.household.HouseholdJointPlanCandidateCatalog;
 import org.matsim.project.hongkong.taxi.HongKongNoRideTaxiRoutingModule;
@@ -69,7 +70,8 @@ public final class PrepareHongKongWalkChoiceSetPlans {
 			throw new IllegalArgumentException("Short-Walk alternatives per person must be 0..4");
 		}
 
-		Config config = ConfigUtils.loadConfig(configPath.toString());
+		Config config = ConfigUtils.loadConfig(
+				configPath.toString(), new SignalSystemsConfigGroup());
 		config.plans().setInputFile(inputPlans.toString());
 		config.controller().setFirstIteration(0);
 		config.controller().setLastIteration(0);
