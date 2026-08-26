@@ -1,0 +1,13 @@
+# Keep publishable deck artifacts and compact authoring contracts in Git.
+# Exclude duplicated source images, runtime caches, previews, and validation logs.
+*/analysis/
+*/backup/
+*/confirm_ui/
+*/images/
+*/live_preview/
+*/sources/
+*/svg_final/
+*/svg_output/
+*/validation/
+*/notes/*
+!*/notes/total.md

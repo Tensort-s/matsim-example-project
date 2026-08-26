@@ -84,6 +84,9 @@ are in [`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY
 and [`docs/integration/CURRENT_STAGE.md`](integration/CURRENT_STAGE.md).
 The staged Taxi/PT/Car merge contract and current integration evidence are in
 [`docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md`](HONG_KONG_MULTIMODAL_COST_INTEGRATION.md).
+The reproducible eight-figure supervisor progress-report set and its
+production-versus-candidate boundaries are documented in
+[`docs/HONG_KONG_PROGRESS_REPORT_FIGURES_20260824.md`](HONG_KONG_PROGRESS_REPORT_FIGURES_20260824.md).
 
 Detailed provenance documents include:
 
