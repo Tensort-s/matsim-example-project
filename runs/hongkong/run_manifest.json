@@ -7,6 +7,15 @@
   "simulated_agents": 385820,
   "iterations": 50,
   "current_final_run": "formal_50it_ptfixed_ferry_activity",
+  "experiment_registry": "runs/hongkong/experiment_registry.csv",
+  "latest_successful_experiment": {
+    "experiment_id": "CAL-GV2-02",
+    "role": "latest_successful_calibration_sensitivity_not_current_final_output",
+    "technical_success": true,
+    "calibration_decision": "REJECTED",
+    "production_status": "NOT_ADOPTED",
+    "candidate12_assessment": "NOT_READY"
+  },
   "runs": [
     {
       "name": "formal_50it_v2",
@@ -461,6 +470,43 @@
       },
       "innovation_phase": "not_started_by_scope",
       "notes": "Iterations 0-1, exit code 0. The physical Walk clock repair eliminates both run56 boarding symptoms: all 1,002 selected school-bus legs depart and all 1,002 board the correct physical vehicle. One correctly boarded passenger remains aboard a traffic-stuck school bus at the 30:00 horizon, so only the downstream completion advisory remains. The physical non-Taxi audit passes, Taxi remains the sole directly teleported main mode, the adopted 10% PT source file is unchanged, and ordinary innovation remains frozen."
+    },
+    {
+      "name": "gradev2_22it_run2",
+      "experiment_id": "CAL-GV2-02",
+      "role": "latest_successful_calibration_sensitivity_not_current_final_output",
+      "status": "technical_success_calibration_rejected_not_adopted",
+      "iterations": 22,
+      "iteration_range": [0, 21],
+      "exit_code": 0,
+      "joint_selection_iterations": [5, 15],
+      "payload": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_payload2",
+      "release": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_release2",
+      "server_output": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_run2/output",
+      "audit": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_audit1",
+      "source_git_sha": "6884cc53e16bd20a4faa09547c1d5eb59d34a2ec",
+      "implementation_git_sha": "3e6a3781fe63d49fc67cc4eb305fe6104664fc67",
+      "audit_git_sha": "8b7db746931e8ba739dc76bfda57f6d95b0212a5",
+      "jar_sha256": "024a899bd51d33dfc41cc99abc4b59b251342ad78488c3cef22e85e36a1ec10b",
+      "prepared_plans_sha256": "fbc084d7f7af7eb2f5be400f443b566ed70269dfb49eae59a5190253747dabdd",
+      "audit_script_sha256": "2295ea009cb1743501899e40572eac627ed5ca527419249b2f60a663e0a65b39",
+      "audit_result_sha256": {
+        "d2_summary.json": "3193f8147b00e9283612d484cdeb75b81f440c855d15ca05268187f0702793cd",
+        "iteration_metrics.csv": "0f066b0588f622b341aa2561a61a04d8134833e53406c58d7afad10fa96b8381",
+        "mode_transition_matrix.csv": "61daffe21efff065fa12208a09d57f10b51d09193a00742f96348711d19e00ce",
+        "comparison_final.csv": "53519d9283f8eb0fe944a7df0ed78350ec0d528ccf9805a926457b19d351ff3e"
+      },
+      "audit_metrics": {
+        "taxi_request_completion_pct": 99.9971,
+        "school_bus_trips": 8792,
+        "taxi_share_pct": 9.2994,
+        "walk_share_pct": 5.0203,
+        "walk_mean_minutes": 21.329,
+        "total_completion_pct": 99.0717
+      },
+      "candidate12_assessment": "NOT_READY",
+      "production_baseline_changed": false,
+      "notes": "GradeV2 run2 completed iterations 0-21 and both joint-selection rounds. It is the latest technical success but fails Taxi-share, Walk and total-completion calibration gates. The reused D2 audit parser leaves obsolete D2 scoring labels in d2_summary.json; run_metadata.json and HK_SCORING_GRADE are authoritative. It does not replace current_final_run and does not receive or reserve the Candidate 12 name."
     }
   ],
   "shared_inputs": {

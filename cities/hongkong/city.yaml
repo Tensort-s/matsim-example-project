@@ -48,6 +48,36 @@ current_model:
   final_visualization: "runs/hongkong/outputs/formal_50it_ptfixed_ferry_activity_simwrapper/"
   run_manifest: "runs/hongkong/run_manifest.json"
 
+matsim_experiment_tracking:
+  registry: "runs/hongkong/experiment_registry.csv"
+  latest_successful_experiment: "CAL-GV2-02"
+  latest_successful_experiment_role: "technical_success_calibration_rejected_not_production"
+  gradev2_run2:
+    payload: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_payload2"
+    release: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_release2"
+    run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_run2"
+    audit: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_audit1"
+    source_git_sha: "6884cc53e16bd20a4faa09547c1d5eb59d34a2ec"
+    implementation_git_sha: "3e6a3781fe63d49fc67cc4eb305fe6104664fc67"
+    audit_git_sha: "8b7db746931e8ba739dc76bfda57f6d95b0212a5"
+    jar_sha256: "024a899bd51d33dfc41cc99abc4b59b251342ad78488c3cef22e85e36a1ec10b"
+    prepared_plans_sha256: "fbc084d7f7af7eb2f5be400f443b566ed70269dfb49eae59a5190253747dabdd"
+    audit_script_sha256: "2295ea009cb1743501899e40572eac627ed5ca527419249b2f60a663e0a65b39"
+    iterations_completed: "0..21"
+    exit_code: 0
+    joint_selection_iterations: [5, 15]
+    taxi_request_completion_pct: 99.9971
+    school_bus_trips: 8792
+    taxi_share_pct: 9.2994
+    walk_share_pct: 5.0203
+    walk_mean_minutes: 21.329
+    total_completion_pct: 99.0717
+    calibration_decision: "REJECTED"
+    parser_caveat: "D2 scoring labels in d2_summary.json are inherited from the reused parser; run_metadata.json and HK_SCORING_GRADE are authoritative."
+  candidate12_assessment: "NOT_READY"
+  candidate12_name_reserved: false
+  production_baseline_changed: false
+
 stage11_no_ride_candidate:
   status: "technical_validation_completed_not_current_production"
   iterations: 10

@@ -499,6 +499,54 @@ candidate generation, atomic household composites, dynamic multimodal costs,
 and physical waypoint execution; it is not the adopted 50-iteration output or
 a calibrated equilibrium.
 
+## Stage 11后实验登记
+
+Stage 11以来具有独立技术或校准结论的主要immutable实验统一登记在
+`runs/hongkong/experiment_registry.csv`。编号前缀`FIX-`表示技术修复或
+运行机制门槛，`CAL-`表示校准或敏感性实验；重复的启动前错误不单独
+扩张编号，而由成功或后继条目的`supersedes`字段连接。历史上未保存的
+Git、JAR或审计哈希保持为空并标记`not_recorded`，不得从文件名反推。
+所有登记实验的`production_status`均为`NOT_ADOPTED`。
+
+登记表覆盖三组主要里程碑：Stage 11多方式计分、家庭联合选择、物理
+School bus与Walk时钟修复；Stage 11后的信号、道路、Candidate11创新、
+Taxi DVRP、Candidate5B道路/PT输入和formal-50策略修复；以及Taxi TCS、
+factorial A/B、C1、D1、D2、Walk repair和GradeV2评分校准。登记表是
+这些实验的统一索引，详细机制和限制仍以本文件及主题文档为准。
+
+### 当前最新技术成功实验：CAL-GV2-02
+
+`CAL-GV2-02`对应GradeV2 run2：
+
+```text
+payload: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_payload2
+release: /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_release2
+run:     /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_run2
+audit:   /mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_audit1
+```
+
+其source Git为`6884cc53e16bd20a4faa09547c1d5eb59d34a2ec`，GradeV2
+实现提交为`3e6a3781fe63d49fc67cc4eb305fe6104664fc67`，审计文档提交为
+`8b7db746931e8ba739dc76bfda57f6d95b0212a5`，shaded JAR SHA256为
+`024a899bd51d33dfc41cc99abc4b59b251342ad78488c3cef22e85e36a1ec10b`，
+prepared plans SHA256为
+`fbc084d7f7af7eb2f5be400f443b566ed70269dfb49eae59a5190253747dabdd`。
+run2完整执行iterations `0..21`、exit code `0`，iteration 5和15联合
+选择均成功。Taxi请求完成率为99.9971%，School bus为8,792次，达到
+8,000--8,800次诊断规模。
+
+但该实验未通过校准门槛：Taxi份额9.2994%高于5--7%目标，Walk份额
+5.0203%低于10.5--12%目标，Walk平均时长21.329分钟高于12--15分钟
+目标，总完成率99.0717%低于99.5%。因此`CAL-GV2-02`仅是“当前最新
+技术成功实验”，不是当前生产运行，也不获得或预留`Candidate 12`
+名称；`candidate12_assessment=NOT_READY`。当前生产运行仍为
+`formal_50it_ptfixed_ferry_activity`。
+
+GradeV2审计复用了D2全量解析器，所以`results/d2_summary.json`内的D2
+评分文字标签是旧解析器遗留。GradeV2实际参数必须以run2
+`run_metadata.json`和启动时`HK_SCORING_GRADE`记录为准；该标签遗留不
+改变上述份额、完成率和时长审计数值。
+
 ## Traffic-signal location registry candidate
 
 The adoption-ready location registry under
