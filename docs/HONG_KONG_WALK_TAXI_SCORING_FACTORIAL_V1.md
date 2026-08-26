@@ -333,3 +333,59 @@ iterations 5 and 15. Candidate5B, explicit road supply, Candidate11 signals,
 calibrated PT, 15,500 Taxi, PCU 0.05, 16 threads, the 30-hour boundary, and
 stuck policy remain fixed. This remains a sensitivity experiment and does not
 replace the adopted production configuration unless its audit gates pass.
+
+### GradeV2 final audit
+
+The immutable GradeV2 run2 completed iterations 0--21, exited zero, and
+successfully executed both joint-selection rounds at iterations 5 and 15. The
+authoritative scoring identity is the run metadata and startup
+`HK_SCORING_GRADE` record: global money utility 0.28, independent Taxi adult
+and student fare utilities -0.28 and -0.4, zero standard Taxi monetary-distance
+rate, zero `car_passenger` and `school_bus` constants, and Walk V5. The reused
+D2 audit parser retains historical D2 labels in its JSON, so those labels and
+hard-coded D2 coefficient annotations must not be interpreted as the actual
+GradeV2 runtime parameters.
+
+At iteration 21 there were 743,614 planned main trips and 736,711 completed
+trips, for 99.0717% overall completion. The average executed score was
+50.0906, but absolute scores are not welfare-comparable with earlier grades.
+After separating physical School bus from the audit parser's broad PT class,
+the final main-mode results were:
+
+| Mode | Planned | Share | Completed | Completion | Mean min | Median min | P90 min |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Car | 57,543 | 7.7383% | 57,443 | 99.8262% | 22.885 | 19.167 | 43.117 |
+| Car passenger | 5,212 | 0.7009% | 5,104 | 97.9279% | 33.018 | 29.183 | 63.102 |
+| PT | 565,583 | 76.0587% | 559,566 | 98.9361% | 42.618 | 36.183 | 74.333 |
+| Taxi | 69,152 | 9.2994% | 68,705 | 99.3536% | 19.163 | 16.050 | 33.950 |
+| Walk | 37,332 | 5.0203% | 37,109 | 99.4027% | 21.329 | 14.867 | 29.717 |
+| School bus | 8,792 | 1.1823% | 8,784 | 99.9090% | 37.275 | 31.600 | 64.445 |
+
+The iteration-15 independent student selector preferred 8,931 School-bus
+trips. The later household joint choice overrode 139 of those trips with
+physical `car_passenger`, leaving 8,792 final School-bus trips. The physical
+handler recorded 8,787 School-bus departures and three missed departures,
+consistent with 8,784 completed trips. This meets the 8,000--8,800 diagnostic
+volume gate.
+
+Taxi request conservation held for 68,591 submitted requests: 68,589
+completed and two remained waiting. Request completion was 99.9971% and the
+unpicked share was 0.0029%. Mean/p50/p90/p95 wait times were
+1.6226/1.0333/3.5500/5.1000 minutes. Service reliability passed, but the 9.2994%
+Taxi share exceeded the 5--7% calibration band and mean/p50 waits remained
+below their 5--7 and 3--5 minute realism bands.
+
+Walk V5 plus choice-set repair reduced the final completed-Walk mean from the
+roughly 90-minute D1 level to 21.329 minutes, but Walk still failed its
+calibration gates: 5.0203% share, 23.4175% at most 10 minutes, and 49.1929%
+over 15 minutes, versus respective targets of 10.5--12%, 60--68%, and
+12--18%. The last-five Walk share range was only 0.0440 percentage points,
+while mean duration continued down from 23.005 to 21.329 minutes.
+
+Of the 6,903 incomplete or right-censored final trips, 6,017 were ordinary PT,
+447 Taxi, 223 Walk, 108 Car passenger, 100 Car, and eight School bus. The
+overall 99.0717% completion rate therefore failed the 99.5% gate primarily
+because of PT boundary censoring. Taxi last-five share and mean-duration ranges
+were only 0.1694 percentage points and 0.120 minutes, so their final direction
+is stable. GradeV2 remains a completed sensitivity result rather than an
+adopted production configuration.
