@@ -50,8 +50,12 @@ current_model:
 
 matsim_experiment_tracking:
   registry: "runs/hongkong/experiment_registry.csv"
-  latest_successful_experiment: "CAL-GV2-02"
-  latest_successful_experiment_role: "technical_success_calibration_rejected_not_production"
+  latest_successful_experiment: "CAL-GV4-PV32332-JOINTRELAX-TAXIWAIT-PCE0195-01"
+  latest_successful_experiment_role: "technical_success_sensitivity_not_adopted_not_present_on_integration_branch"
+  latest_successful_experiment_handoff: "docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md"
+  latest_successful_experiment_run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_run2"
+  latest_successful_experiment_audit: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_audit3"
+  latest_successful_experiment_production_adopted: false
   gradev2_run2:
     payload: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_payload2"
     release: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260826_gradev2_release2"

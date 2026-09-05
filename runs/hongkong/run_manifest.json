@@ -9,12 +9,13 @@
   "current_final_run": "formal_50it_ptfixed_ferry_activity",
   "experiment_registry": "runs/hongkong/experiment_registry.csv",
   "latest_successful_experiment": {
-    "experiment_id": "CAL-GV2-02",
-    "role": "latest_successful_calibration_sensitivity_not_current_final_output",
+    "experiment_id": "CAL-GV4-PV32332-JOINTRELAX-TAXIWAIT-PCE0195-01",
+    "role": "latest_successful_external_calibration_sensitivity_not_current_final_output",
     "technical_success": true,
-    "calibration_decision": "REJECTED",
+    "calibration_decision": "SENSITIVITY_REVIEW_REQUIRED",
     "production_status": "NOT_ADOPTED",
-    "candidate12_assessment": "NOT_READY"
+    "candidate12_assessment": "NOT_APPLICABLE",
+    "handoff": "docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md"
   },
   "runs": [
     {
@@ -506,7 +507,62 @@
       },
       "candidate12_assessment": "NOT_READY",
       "production_baseline_changed": false,
-      "notes": "GradeV2 run2 completed iterations 0-21 and both joint-selection rounds. It is the latest technical success but fails Taxi-share, Walk and total-completion calibration gates. The reused D2 audit parser leaves obsolete D2 scoring labels in d2_summary.json; run_metadata.json and HK_SCORING_GRADE are authoritative. It does not replace current_final_run and does not receive or reserve the Candidate 12 name."
+      "notes": "GradeV2 run2 completed iterations 0-21 and both joint-selection rounds. It was the latest technical success on 26 August 2026 but failed Taxi-share, Walk and total-completion calibration gates. The reused D2 audit parser leaves obsolete D2 scoring labels in d2_summary.json; run_metadata.json and HK_SCORING_GRADE are authoritative. It does not replace current_final_run and does not receive or reserve the Candidate 12 name."
+    },
+    {
+      "name": "gradev4_pv32332_jointrelax_taxiwait_pce0195_32it_run2",
+      "experiment_id": "CAL-GV4-PV32332-JOINTRELAX-TAXIWAIT-PCE0195-01",
+      "role": "latest_successful_external_calibration_sensitivity_not_current_final_output",
+      "status": "technical_success_sensitivity_review_required_not_adopted",
+      "iterations": 32,
+      "iteration_range": [0, 31],
+      "exit_code": 0,
+      "joint_selection_iterations": [5, 15, 25],
+      "server_output": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_run2/output",
+      "audit": "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_audit3",
+      "authoritative_analysis": "analysis3",
+      "source_git_sha": "5a2a82cc8c96e639597c84b2c9fde4ce7f1bcca8",
+      "jar_sha256": "0aeefaa6381035b5fc92dc314d15b9b09d45de1033b716f9ea0c0975bd892423",
+      "prepared_plans_sha256": "e14e93be85ade9e081a9b26a3530fd68d133fabab5b0d1dc93df135cbe4a8552",
+      "run_metadata_sha256": "c8a810ea79f13d9bc9bf77a386511cde52b6948f61d5f3a57b1a7f0bcbc964f2",
+      "audit_manifest_sha256": "25bd07d7405c25eb539c657b48e286e42abed0490296af3c16152b230ea9c674",
+      "analysis_summary_sha256": "917ecd8f19fc535014e761a9766938869b84a9ae1c37f6b154bcd2cd0055e3ca",
+      "private_vehicle_count": 32332,
+      "taxi_fleet": 3100,
+      "pce_policy": {
+        "private_car": 0.195,
+        "taxi": 0.195,
+        "motorcycle": 0.078,
+        "full_bus": 0.39,
+        "gmb": 0.2925
+      },
+      "iteration_31_main_mode_share_pct": {
+        "car": 12.080,
+        "car_passenger": 2.127,
+        "pt": 67.460,
+        "taxi": 11.994,
+        "walk": 6.339
+      },
+      "iteration_31_road": {
+        "blocked_inflow_seconds": 58829,
+        "blocked_links": 320,
+        "active_agents_at_30h": 21219
+      },
+      "taxi_wait_minutes": {
+        "mean": 62.843,
+        "p50": 57.25,
+        "p90": 126.183,
+        "p95": 134.25
+      },
+      "selected_joint_pairs": {
+        "total": 15978,
+        "ride_along": 8387,
+        "home_escort": 7591,
+        "invalid": 0
+      },
+      "production_baseline_changed": false,
+      "branch_boundary": "This immutable server experiment came from the separate Taxi DVRP development history and used the Candidate11 traffic-signal path. Its implementation is not implied to exist on this integration branch.",
+      "notes": "Completed iterations 0-31 with exact Taxi request/event conservation and a complete identity-aware TCS boarding audit. Balanced PCE materially reduced the original JointRelax road pathology, but Taxi share and waiting, resident and visitor durations, transfer counts, and several TCS boarding categories remain outside targets. This is not Candidate12 and is not adopted production. See docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md."
     }
   ],
   "shared_inputs": {

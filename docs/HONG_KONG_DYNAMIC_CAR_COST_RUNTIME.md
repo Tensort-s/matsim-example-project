@@ -55,6 +55,13 @@ Terminal parking closes at the configured QSim end time. Home remains zero
 under the adopted separate-fixed-parking rule, while other activity/zone
 groups retain the adopted hourly, part-hour, pass, minimum, and cap methods.
 
+The separate unified real-facility candidate is documented in
+`docs/HONG_KONG_PARKING_SUPPLY_2026.md`. It does not yet replace these rules.
+Its official capacities and tariffs may be used only after facility
+entrance/exit links have been direction-validated and routing selects the
+same facility that experienced-event scoring later settles. Live vacancy is
+time-varying state and is not a static capacity field.
+
 The source feasibility table resolves 44,499 destination facilities. Another
 47 facilities previously had no TCS zone. They are covered by
 `data/transport_costs/hongkong/car_cost_v1/dynamic_runtime_v1/facility_tcs_zone_repairs.csv`.

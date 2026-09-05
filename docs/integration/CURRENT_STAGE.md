@@ -7,9 +7,9 @@ structured evidence, historical briefs and append-only worklogs.
 
 ```yaml
 snapshot:
-  reconciled_on: "2026-08-26"
+  reconciled_on: "2026-09-05"
   branch: "integration/hk-multimodal-cost-v1"
-  repository_baseline_sha: "2b5ab0256345914f872b28afb7b3e0ae050b0cf3"
+  repository_baseline_sha: "ef54d52"
   scope: "Canonical facts on this integration branch; work on other branches or in uncommitted candidate files is not implicitly adopted."
 
 stage:
@@ -64,7 +64,7 @@ production_baseline:
 experiment_tracking:
   registry: "runs/hongkong/experiment_registry.csv"
   registry_scope: "Major immutable technical fixes and calibration experiments since Stage 11; repeated startup-only failures are linked through supersedes instead of receiving separate rows."
-  latest_successful_experiment: "CAL-GV2-02"
+  latest_successful_experiment: "CAL-GV4-PV32332-JOINTRELAX-TAXIWAIT-PCE0195-01"
   latest_success_definition: "Latest experiment to complete its declared technical execution and audit; this is not a production-baseline or calibration-pass designation."
   gradev2_run2:
     status: "TECHNICAL_SUCCESS_CALIBRATION_REJECTED_NOT_ADOPTED"
@@ -92,6 +92,20 @@ experiment_tracking:
   candidate12_reason: "CAL-GV2-02 is a scoring and selector calibration experiment layered on Candidate5B road supply and Candidate11 signals, and it still fails Taxi-share, Walk and total-completion gates."
   production_baseline_changed: false
 
+latest_external_sensitivity:
+  status: "TECHNICAL_SUCCESS_SENSITIVITY_NOT_ADOPTED"
+  experiment: "CAL-GV4-PV32332-JOINTRELAX-TAXIWAIT-PCE0195-01"
+  source_git_sha: "5a2a82cc8c96e639597c84b2c9fde4ce7f1bcca8"
+  jar_sha256: "0aeefaa6381035b5fc92dc314d15b9b09d45de1033b716f9ea0c0975bd892423"
+  run: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_run2"
+  audit: "/mnt/DiskM/by/hk_stage11_candidate11_taxi_dvrp_20260904_gradev4_pv32332_jointrelax_taxiwait_pce0195_audit3"
+  authoritative_analysis: "analysis3"
+  iterations_completed: "0..31"
+  exit_code: 0
+  production_adopted: false
+  branch_boundary: "The server run belongs to a separate Taxi DVRP development history and used the Candidate11 traffic-signal path; this integration branch does not implicitly contain or adopt that implementation."
+  handoff: "docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md"
+
 post_stage11_work:
   traffic_signal_pilots:
     status: "MECHANICALLY_VALIDATED_NOT_ADOPTED"
@@ -114,10 +128,13 @@ active_control_plane:
   calibration_authorized: false
   production_adoption_authorized: false
 
-next_action: "Define and explicitly authorize a new integration stage before any new server run, calibration or production adoption; do not resurrect the superseded Stage 11 hash-repair task."
+next_action: "Use docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md as the new-conversation entry point. Before another server run or production adoption, explicitly choose whether and how to integrate the separate Taxi-branch implementation; do not infer adoption from successful sensitivity evidence."
 ```
 
 Stage 11 is closed as a technical validation stage. The old canonical-hash
 failure and its replacement identities remain immutable history, not active
 blockers. The adopted 50-iteration production baseline is unchanged, and the
 later traffic-signal and road-repair work remains opt-in sensitivity evidence.
+The later GradeV4/PV32,332/JointRelax/TaxiWait/PCE experiment is also recorded
+as external sensitivity evidence only; its implementation is not silently
+adopted by this branch.

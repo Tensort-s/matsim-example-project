@@ -525,14 +525,113 @@ proven illegal turns. No `DisallowedNextLinks` restriction is adopted in v1;
 doing so now would violate the source-evidence gate and risks making the 783
 forced-reverse paths infeasible.
 
+## Run68 congestion re-audit
+
+A second bounded review on 2026-08-12 uses the unchanged run68 iteration-1
+events. The output config confirms `useSignalsystems=false`; resident, visitor,
+and mainland-resident `ReRoute`, `SubtourModeChoice`, and
+`TimeAllocationMutator` weights are all zero. The review excludes 12,442
+ordinary-PT passenger stuck/waiting events and 371 other non-road stuck events.
+It retains only actual road-vehicle movement and stuck events for private Car,
+Bus, GMB, and school bus. Its compact hotspot-neighbourhood outputs are stored
+at:
+
+```text
+/mnt/DiskM/by/hk_road_hotspot_audit_20260812_run68_v1/
+```
+
+The network-wide result remains better than run62 rather than showing a broad
+regression: run68 has 48,459.486 vehicle-hours of road delay (-8.2%) and 1,770
+road-vehicle stuck events (-6.7%). Of those stuck events, 1,646 (92.99%) occur
+from 18:00 through 26:59. Only 12 occur in the 30:00 end bucket. The residual
+problem is therefore mainly realised evening road congestion; it is not an
+artefact of counting passengers who missed a departure, although fixed PT
+vehicle schedules can still contribute road traffic to the same queues.
+
+Delay is now more spatially dispersed. Under the same cumulative-delay
+definition, the smallest leading set reaching half of all road delay contains
+53 links, compared with 48 in the run62 neighbourhood audit. The earlier
+31-link list was an inspection batch, not the exact cumulative 50% boundary.
+The run68 set reaches 50.0014% and contains 28 links with at least one
+downstream storage warning, 41 with at least 90% of observed exits using one
+downstream link, nine with a downstream link shorter than 10 m, and only one
+exact-parallel group. These flags are diagnostic: the storage proxy is
+`length * lanes * 0.1 / 7.5` and must not be treated as a literal zero-capacity
+MATSim queue.
+
+The re-audit identifies the following correction priorities:
+
+1. Seven leading links send at least 90% of their observed traffic into a
+   downstream connector shorter than 10 m. Together they contribute 3,333.725
+   vehicle-hours, or 6.88% of all run68 road delay, and ten stuck events on the
+   leading links. The pairs are `road_93502_0_f -> road_93494_0_r` (Kam Tin
+   Road, 4.853 m), `road_103564_0_f -> road_103571_0_r` (To Kwa Wan Road,
+   6.124 m), `road_4287_0_f -> road_29_0_f` (Convention Avenue, 8.229 m),
+   `road_5809_0_f -> road_1707_0_f` (Canal Road West, 4.291 m),
+   `road_57795_0_f -> road_57357_0_r` (Yeung Uk Road, 4.411 m),
+   `road_59628_0_f -> road_57804_0_r` (Hing Fong Road, 8.068 m), and
+   `road_8382_0_f -> road_9714_0_f` (Container Port Road South, 8.168 m).
+   These are high-priority source-geometry and node-splitting checks, not an
+   instruction to impose a city-wide minimum link length.
+2. The Kwai Fuk Road chain is an especially strong local storage/topology
+   candidate. `road_59641_0_f` (8.520 m) feeds `road_58201_0_f`, which carries
+   1,267.626 vehicle-hours of delay and then sends essentially all observed
+   exits into `road_59135_0_f` (11.484 m). Bus, GMB, and private Car all use the
+   chain, so it is not a passenger-waiting artefact or a single-mode route
+   choice issue.
+3. `road_269007_0_f` beside YOHO Mall has 1,479 traversals, of which 1,478 are
+   Bus, 852.824 vehicle-hours of delay, and 13 Bus stuck events. It is unnamed
+   in the road source (`-99`) but anchors the YOHO MALL / YOHO MALL I stops;
+   the adopted schedule contains 47 route-link references and 49 stop-link
+   references to it. This should be audited as a bus-stop/terminal access and
+   route-concentration problem before changing road capacity. The adjacent
+   mixed-mode Long Yat Road pair `road_95726_0_f -> road_95946_0_f` is part of
+   the same priority area: the leading link contributes 1,039.600
+   vehicle-hours and the downstream link is only 11.962 m.
+4. The 210xxx/2473xxx Lung Cheung Road--Fu Mei Street--Ma Chai Hang Road area
+   is a genuine multi-link road lock rather than a single bad record. It
+   contains the highest stuck links for Bus (`road_102664_0_f`, 17), private
+   Car (`road_102672_0_f`, 16), and GMB (`road_102430_0_f`, 15), while
+   `road_103772_0_f` alone contributes 1,730.362 vehicle-hours and 12 private-
+   Car stuck events. Several links in the cluster are 7--13 m long. The whole
+   directed junction neighbourhood, including permitted turns, stop anchors,
+   and downstream storage, must be checked together; increasing only Lung
+   Cheung Road capacity would move the queue rather than resolve it.
+5. Of 650 links outside the largest strong component, only 55 are used in
+   run68. They account for 13,931 traversals, 29.763 vehicle-hours, and six
+   road stuck events, so disconnected geometry is not a network-wide cause.
+   `road_8438_0_f` is the one material exception: all 309 traversals are GMB,
+   with 24.540 vehicle-hours and five stuck events. Its GMB route connection
+   should be checked before any broader component repair.
+
+Several severe links are not yet proven network errors. Tate's Cairn Highway
+`road_283946_0_f` is the largest single delay link (1,796.507 vehicle-hours)
+and feeds two one-lane branches from a three-lane approach. Castle Peak Road /
+Kam Tin Road, Prince Edward Road East, and the Cross-Harbour Tunnel also show
+large fixed-plan queues. They need official lane, turning, and effective-
+capacity evidence before calibration. In particular, the only exact-parallel
+hotspot is the Cross-Harbour Tunnel pair: production link `road_105124_0_f`
+carries 6,600 traversals while restricted service link `road_261323_0_f`
+carries zero. That zero is the intended run62 repair and must not be reversed
+merely to balance parallel-link flow.
+
+No city-wide short-link length inflation, blanket capacity increase, parallel-
+link equalisation, or blanket U-turn prohibition is justified by this audit.
+Private-Car route adjacency mismatches remain zero, and the 1,759 internal
+reversals are effectively unchanged from run62. The next safe implementation
+unit is therefore a source-backed local correction package for the seven short
+connector pairs, the Kwai Fuk chain, the YOHO bus access, the 210xxx/2473xxx
+cluster, and GMB-only `road_8438_0_f`, followed by one identical no-signal,
+no-innovation validation.
+
 ## Repair order before traffic signals or ordinary innovation
 
-1. Audit the 31 links contributing half the delay and their immediate
-   upstream/downstream storage. Start with parallel-link allocation around
-   `road_261323_0_f`, then the persistent 203xxx/2475xxx--2476xxx and
-   210xxx/2473xxx clusters. Compare against source road class, direction,
-   lanes, connector length, turns, and detector-derived capacity before any
-   edit.
+1. Audit the 53 run68 links contributing half the delay and their immediate
+   upstream/downstream storage. Preserve the closed restricted parallel link
+   `road_261323_0_f`; prioritise the seven dominant short-connector pairs,
+   Kwai Fuk, YOHO, and the 210xxx/2473xxx cluster. Compare source road class,
+   direction, lanes, connector geometry, permitted turns, stop anchors, and
+   detector-derived capacity before any edit.
 2. Audit short connectors inside stuck clusters. Do not apply a city-wide
    minimum length or capacity; merge or adjust only links shown to be
    topological artifacts or unrealistic queue-storage boundaries.

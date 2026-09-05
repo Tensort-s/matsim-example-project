@@ -77,6 +77,12 @@ lane handoffs, evidence, decisions, gates, blockers, and allowed next actions.
 The stable Supervisor-centered messaging protocol and active authorized task
 are in [`docs/integration/INTEGRATION_POLICY.md`](integration/INTEGRATION_POLICY.md)
 and [`docs/integration/CURRENT_STAGE.md`](integration/CURRENT_STAGE.md).
+For a new Hong Kong calibration conversation, read
+[`docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md`](HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md)
+next. It separates the adopted production baseline from the latest completed
+GradeV4/PV32,332/JointRelax/TaxiWait/PCE sensitivity, records its immutable
+server evidence and TCS audit, and states which implementation is not present
+on this integration branch.
 The staged Taxi/PT/Car merge contract and current integration evidence are in
 [`docs/HONG_KONG_MULTIMODAL_COST_INTEGRATION.md`](HONG_KONG_MULTIMODAL_COST_INTEGRATION.md).
 
@@ -664,3 +670,19 @@ fixed-route run57 road topology, congestion, stuck vehicles, and path
 anomalies are reviewed in
 `docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`; ordinary PT passengers left
 waiting at stops are explicitly outside that road audit.
+
+For the current Car-focused worktree, traffic-signal integration is closed,
+not merely omitted from one run. Historical opt-in pilots remain available
+for provenance, but no signal payload or signal-enabled config is combined
+with the active Car-link/U-turn/parking work unless the scope is explicitly
+reopened.
+
+## Hong Kong unified parking supply candidate
+
+The official real-facility candidate is documented in
+`docs/HONG_KONG_PARKING_SUPPLY_2026.md`. Its
+`hong_kong_parking_supply.csv` unifies 9,456 private-car meter poles and 569
+off-street car parks, while keeping live vacancy separate from static
+capacity and marking every nearest Car link as direction-unverified. It is a
+future parking-facility input, not an adopted MATSim facility or replacement
+for the current TCS/activity/duration parking proxy.

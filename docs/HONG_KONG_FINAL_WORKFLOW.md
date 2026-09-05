@@ -16,6 +16,12 @@ Use this precedence when documents disagree:
 4. Topic-specific documentation for methods and limitations.
 5. Historical scripts and outputs only for provenance or sensitivity analysis.
 
+The concise cross-branch handoff for the latest completed GradeV4 sensitivity
+and the current integration-branch boundary is
+`docs/HONG_KONG_CURRENT_STATUS_AND_HANDOFF.md`. It does not supersede the
+adopted inputs below; it prevents later server sensitivities from being
+mistaken for production adoption.
+
 ## Current production scenario
 
 | Item | Adopted value |
@@ -628,6 +634,10 @@ has been launched; it does not change the adopted network, city metadata, or
 run manifest.
 
 Traffic-signal expansion is now frozen without reverting the opt-in pilot.
+For the active Car-focused worktree it is now closed: historical pilot files
+remain as provenance, but no signal controller or signal-enabled config is
+combined with Car-link direction, U-turn, routing-proxy, or parking work
+unless that scope is explicitly reopened.
 The fixed-plan, no-signal run57 iteration-1 road audit is documented in
 `docs/HONG_KONG_NO_SIGNAL_ROAD_RUNTIME_AUDIT.md`. It excludes 12,892 ordinary
 PT-passenger stuck/waiting events and separately identifies 2,307 road-vehicle
@@ -685,6 +695,17 @@ joint bindings than run62. It is therefore the accepted bounded-v1
 sensitivity implementation, while remaining outside the production network
 and run manifest. No internal turn restriction is adopted without an OSM or
 official junction-layout evidence source.
+
+The next parking-data layer is the non-adopted unified real-facility candidate
+in `data/transport_costs/hongkong/parking_supply_2026_v1/`, documented by
+`docs/HONG_KONG_PARKING_SUPPLY_2026.md`. It combines 9,456 official
+private-car meter poles with 569 off-street car parks, preserves unknown
+off-street capacities as unknown rather than zero, and supplements ten
+TD-managed car parks without duplication. Availability feeds remain dynamic
+references. Its nearest Car links are audit candidates only: no row becomes a
+routing proxy or scored parking facility before entrance/exit direction and
+same-vehicle continuity are validated. The adopted production inputs and run
+manifest are unchanged.
 
 ## Known limitations
 

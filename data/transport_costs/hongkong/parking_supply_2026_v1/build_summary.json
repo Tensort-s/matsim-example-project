@@ -1,0 +1,33 @@
+{
+  "scenario": "hong_kong_parking_supply_2026_v1",
+  "status": "candidate_not_runtime_adopted",
+  "snapshot_date": "2026-08-12",
+  "output": "data/transport_costs/hongkong/parking_supply_2026_v1/hong_kong_parking_supply.csv",
+  "rows": 10025,
+  "facility_type_counts": {
+    "metered_on_street_pole": 9456,
+    "multi-storey": 26,
+    "off_street_unspecified": 543
+  },
+  "known_private_car_capacity": 25040,
+  "tcs_zone_assigned": 10023,
+  "tcs_zone_unresolved": 2,
+  "nearest_car_link_within_100m": 9969,
+  "pricing_status_counts": {
+    "structured_meter_rate": 9456,
+    "structured_offstreet_rates": 36,
+    "unparsed_or_not_provided": 533
+  },
+  "meter_raw_space_rows": 20701,
+  "meter_test_rows_excluded": 28,
+  "meter_private_car_space_rows": 17558,
+  "meter_private_car_unique_spaces": 17558,
+  "meter_poles": 9456,
+  "carpark_api_records": 572,
+  "carpark_explicit_non_private_excluded": 3,
+  "offstreet_facilities": 569,
+  "offstreet_structured_private_car_records": 26,
+  "td_government_private_car_records_supplemented": 10,
+  "offstreet_unknown_capacity": 533,
+  "runtime_boundary": "No MATSim config, facility, route, scoring or traffic-signal input is changed."
+}
