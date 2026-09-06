@@ -1,5 +1,194 @@
 # Hong Kong current status and handoff
 
+## 2026-09-06: GradeV6 Walk 20–30 minute slope run completed
+
+For the requested interpretation of congestion, identity-specific boarding
+counts/shares and completed-trip durations against TCS, see
+[GradeV6 audit results and analysis](HONG_KONG_GRADEV6_AUDIT_RESULTS.md).
+The report preserves all five identity groups, separates event counts from
+completed main trips, and documents the TCS and censoring scope limitations.
+
+**FULL-SCOPE AUDIT COMPLETED — 2026-09-06 11:38:27 +08:** verified at 12:09.
+All four follow-up stages finished and full_audit_exit_code.txt is 0;
+analysis1/status.json reports **COMPLETED_WITH_FINDINGS**. Total elapsed time
+from base launch was about 13 minutes. This supersedes the startup record below.
+All 385,820 persons and 719,048 completed trips were identified; planned-trip
+denominator is 750,967. No unknown boarding vehicles or unknown completed-trip
+persons; Taxi boardings match completed requests in every identity group.
+Selected pairs: 15,249 (7,896 ride-along, 7,353 home escort), zero pairing errors
+or duplicate passenger demands. Flow/storage implementation mismatches are zero.
+
+Outstanding model findings: PT event audit records 15,777 unfinished waiting
+legs and 363 unfinished aboard legs (censored observations, not unique-person
+counts), plus final-iteration stuck events. No event-state parsing anomalies
+were detected. Taxi requests: 84,296 completed, 11 still waiting. Road blocked
+inflow is 82,422 link-seconds on 311 links, versus GradeV5 77,436 on 305 links;
+final-iteration turn-warning occurrences 44 versus 40. These occurrence counts
+are not unique failed vehicles. Audit completion does not mean model validation
+passed without findings. Local compact copies are under
+`tmp/gradev6_full_audit_results/`; full summary is `summary.json`.
+
+**Historical audit startup — 2026-09-06 11:25:29 +08:** the base audit ran in
+`/mnt/DiskI/by/hk_stage11_candidate11_taxi_dvrp_20260906_gradev6_walk030_cap052_t32_audit1`,
+worker PID 145852. At 11:31 it had parsed 719,048 completed main trips and
+was streaming boarding events. The follow-up worker PID 146418 started at
+11:30:52 and automatically waits for base exit code 0 before executing
+identity/TCS/version comparison, trip/Taxi/road summaries, exact selected
+driver/passenger pairing checks, and PT event waiting/stuck/censoring analysis.
+It is a real background pipeline, not a pending intention.
+
+Follow-up source: `scripts/hong_kong_single_city/run/audit_hong_kong_gradev6_followup.py`;
+local/server SHA256 match:
+`15190719a7c5675693b4bf516e1a6ba8fb3b47f23c324737c3030857fdb5a670`.
+Python --help/syntax check passed; all follow-up stages subsequently exited 0.
+All source simulation files are read-only; new writes stay inside this audit1.
+Base completion uses `exit_code.txt`; full follow-up completion uses
+`full_audit_exit_code.txt`, `full_audit_finished_at.txt`, `full_audit_job.json`
+and `analysis1/status.json`. Do not confuse base completion with full completion.
+Detailed outputs are in `analysis1`; findings and known limits are retained,
+including no matched-OD counterfactuals, no inferred denial-event counts from
+long waits, and no claim of complete vehicle occupancy/spacetime continuity.
+Finishing the audit does not imply calibration acceptance or zero defects.
+Initial estimated elapsed time: 30–60 minutes, subject to I/O and findings.
+
+**COMPLETED — verified 2026-09-06 11:20 +08:** all 32 iterations (0–31)
+finished. Worker finished at **10:31:28 +08**, exit_code.txt and time exit
+status both 0; worker/Java PIDs have exited. Elapsed time **8 h 58 min 40 s**,
+zero swaps. Final average executed score is 23.421020378325736; the scoring
+function changed, so the increase over GradeV5 is not an independent quality metric.
+
+Iteration-31 main-mode shares (modestats): Car 12.0149%, Car passenger 2.0306%,
+PT 66.5888%, Taxi 11.4744%, Walk 7.8913%. Compared with GradeV5 final Walk
+7.1115%, Walk rises 0.7798 pp; PT falls 0.5199 pp and Taxi falls 0.1628 pp.
+These are not TCS boarding shares.
+
+Read-only streaming of final trips.csv gives 719,048 completed rows versus
+718,859 under GradeV5. Means in minutes (GradeV5 → GradeV6): all completed
+trips including Walk 52.1949 → 52.0862; mechanised 54.4159 → 54.5234;
+actual PT 57.5406 → 57.8071; Taxi 77.3927 → 77.0576; Walk 23.7729 → 24.3052.
+PT wait 25.3424 → 25.4686; completed-Taxi wait 57.6845 → 57.1621.
+Actual-PT classification includes school bus routed as pt; do not mix these
+means with planned-main-mode identity summaries. Completion denominators and
+person composition can change; these are not matched-person causal estimates.
+The pure-walk relaxation changes allocation but does not materially reduce
+overall completed-trip time. Group/TCS, road and household audits for GradeV6
+have not been completed by this snapshot. Raw compact result and reproduction:
+`tmp/gradev6_result_snapshot.json`, `tmp/gradev6_result_snapshot.py`.
+
+The user requested a new 32-iteration run with the pure-walk marginal penalty
+between 20 and 30 minutes reduced from 1.15 to 0.30 util/min. GradeV6 preserves
+the other slopes (0.10, 0.15, 5.15 util/min), PT/Taxi waiting -12 util/h,
+real PCE, flow/storage 0.52, 32 threads and the same neutral initial plans.
+Its continuous walk formula is
+`2 - 0.10*t - 0.05*max(t-10,0) - 0.15*max(t-20,0) - 4.85*max(t-30,0)`.
+
+Started **2026-09-06 01:32:48 +08**, worker PID **71404**, Java PID **71406**:
+`/mnt/DiskI/by/hk_stage11_candidate11_taxi_dvrp_20260906_gradev6_walk030_cap052_t32_run1`.
+At 01:34 the live Java process was preparing persons/routes (historical startup
+observation, superseded by completion above). Source commit `3a84e9b779c2bcc0dc3952257fc59289b59a5505`, JAR SHA256
+`7006fa76ec5396c1f18ba314e11d9dd5851797cba86c5ef0b08dc49dd0dbe0a3`.
+18 Java and 41 Python checks passed. Server payload checks and prelaunch
+GradeV5 parameter comparison passed; all 24 non-JAR SHA256 metadata fields
+match GradeV5. New payload/release/run/operations directories are separate;
+all server writes remain under the session-authorized `/mnt/DiskI/by`.
+See the [GradeV6 implementation and launch record](../tmp/hk-wait12-walk20-real-pce/docs/HONG_KONG_GRADEV6_WALK030.md).
+This remains an independent sensitivity, not a production adoption.
+
+## 2026-09-05 follow-up: GradeV5 implementation
+
+**BASIC AUDIT COMPLETED — 2026-09-05 23:33:37 +08:00:** final-iteration population/main-trip/
+physical-boarding/Taxi-reconciliation audit finished with exit code 0 in
+`/mnt/DiskI/by/hk_stage11_candidate11_taxi_dvrp_20260905_gradev5_cap052_t32_audit1`,
+elapsed 328.19 seconds; worker PID `62085` has exited. Source simulation files are read-only. This first stage
+does not yet complete PT wait decomposition, road/turn-warning, household-pairing
+or GradeV4 comparison analysis. See audit_job.json and audit_stdout_stderr.log.
+The job JSON's starting-state label is historical; completion is established by
+exit_code.txt, finished_at.txt and the completed result files.
+
+**IDENTITY/TCS RESULTS — 2026-09-06:** five population groups have boarding
+shares and completed-trip durations. The additional expanded-trip-weighted
+duration comparison is now complete: household-resident mechanised trips
+52.72 versus TCS 42 minutes; private vehicle + Taxi 43.96 versus 31;
+PT + school bus excluding Taxi 56.17 versus 45; overnight visitors 66.50
+versus 41. Visitor reference data are from the 2023 survey, with overnight
+reference coverage limited to hotels/guesthouses. See the
+[GradeV5 identity/TCS results and scope limitations](HONG_KONG_GRADEV5_TCS_IDENTITY_RESULTS.md).
+This completes this specific comparison, not the full audit. Later tables in
+this handoff describing PCE 0.195 remain historical GradeV4 results.
+
+**GRADE COMPARISON / PT CSV DIAGNOSTIC — 2026-09-06:** both iteration-31
+trips/legs outputs have now been streamed read-only. Overall TCS-adjusted MTR
+boarding share is 27.779% (GradeV4) versus 27.549% (GradeV5); household MTR
+27.219% versus 26.955%. Mean completed trip time falls 54.381 to 52.195 minutes
+(including walk); actual-PT trip mean falls 59.483 to 57.541, with reported
+waiting 28.078 to 25.342. GradeV5 MTR legs wait 2.672 minutes on average,
+but MTR + bus/GMB itineraries wait 50.832 minutes across their whole trip.
+This supports examining feeder/transfer chains; it is not an OD-matched
+causal comparison or a completed event-level waiting/denied-boarding audit.
+Waiting, pure-walk and road-capacity changes were simultaneous, so the
+independent waiting-coefficient effect is unidentified. Detailed evidence
+and reproducible local scripts are linked in the identity/TCS results above.
+
+**COMPLETED — verified 2026-09-05 23:20 +08:00:** the GradeV5 DiskI run1
+completed all 32 iterations (0–31). Iteration 31 ended at 22:09:06; the worker
+finished at **22:10:24**, with both `exit_code.txt` and `/usr/bin/time` reporting
+**0**. Elapsed time from launch was approximately **6 h 22 min 04 s**. Final
+average executed score is **22.93594451796484** (iteration 27: 22.474752296551372).
+Maximum resident set size was 70,313,260 KiB (about 67.1 GiB), with zero swaps.
+The Java process has exited. This supersedes the running status below.
+Population/boarding/completion results are now available as linked above;
+PT/Taxi-wait decomposition and road-warning audits remain pending.
+Successful execution is not production adoption or proof of convergence.
+
+**RUNNING — 2026-09-05 15:48:20 +08:00:** after the user confirmed DiskM
+was remounted and requested execution, all required source inputs were read
+from DiskM and copied/hash-verified into DiskI (651 files). Real PCE conversion
+passed for all 86,417 road links. The new run is now started at
+`/mnt/DiskI/by/hk_stage11_candidate11_taxi_dvrp_20260905_gradev5_cap052_t32_run1`,
+worker PID `9862`, source commit `fbd747e129013977e1a441a2e6a24046deccc4e3`.
+Its metadata verifies GradeV5, 32 global/QSim threads, iterations 0–31,
+flow/storage 0.52, and Taxi PCE 1. The Java process (PID `9864`) passed initial
+input/road-registry validation and entered iteration 0 QSim; at around 15:56,
+simulation time reached 09:00 with lost=0. Two brief SSH connection timeouts
+were followed by successful reconnection and continuous simulation logs. No completion or
+production adoption is claimed. This supersedes the earlier missing-input
+status preserved below. All runtime paths and writes remain within DiskI/by.
+
+**Latest location update:** the user authorized this run only inside
+`/mnt/DiskI/by`. The directory is accessible and was initially empty. The
+new payload
+`/mnt/DiskI/by/hk_stage11_candidate11_taxi_dvrp_20260905_gradev5_cap052_t32_payload1`
+now contains the validated JAR, launcher/conversion scripts, source-change
+snapshot, and hash-matched network/Taxi-wait crosswalk. All 25 payload files
+passed server SHA256/size checks. No simulation has started: the latest full
+plans, facilities, supply registry, joint catalog and runtime input bundle
+are missing. Local backup searches did not find a complete matching set.
+See the candidate record linked below for exact missing inputs and path guards.
+This supersedes the previous plan to deploy on DiskM; no server access outside
+DiskI/by was performed in this latest task. Python regression/path tests: 41 pass.
+
+The user subsequently specified **flow/storage factors 0.52, global/QSim
+threads 32, and 32 QSim iterations (0–31)**. The candidate now implements these
+settings, with explicit storage/floors scaled by 5.2 (+1.4% supply versus exact
+PCE normalization). The server run is authorized but has NOT started:
+read-only `ls` and `df` checks now report `Input/output error` for the entire
+permitted root `/mnt/DiskM/by`, not only the previous release directory.
+The server filesystem must become accessible before deployment can proceed.
+
+The requested common PT/Taxi waiting coefficient (−12 util/h), 10–20/20–30
+minute walking brackets, and restoration of real road PCE with equivalent
+flow/storage scaling are implemented in the separate worktree
+`F:/Matsim/worktrees/hk-cost-integration/tmp/hk-wait12-walk20-real-pce`, branch
+`codex/hk-wait12-walk20-real-pce`, based on experiment source `5a2a82c`.
+See the [candidate implementation and validation record](../tmp/hk-wait12-walk20-real-pce/docs/HONG_KONG_GRADEV5_WAIT_WALK_REAL_PCE.md).
+This is a local worktree link and requires that worktree to be present.
+
+Code and local tests are complete. The latest server `release2` input directory
+returned `Input/output error` during read-only access, so real full-network
+derived inputs and a new simulation are still pending. No production adoption,
+server deployment, or integration/master merge has occurred. Existing results
+below remain the previous experiment results.
+
 ## Purpose and authority
 
 This is the first Hong Kong status file to read in a new Codex conversation.
